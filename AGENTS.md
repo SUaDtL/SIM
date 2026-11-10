@@ -23,6 +23,11 @@ self-contained `dist/sim.html` that runs offline from `file://` with no server.
 `npm run e2e` uses the installed Microsoft Edge and Google Chrome (`msedge` and `chrome`
 channels). It does not download browsers.
 
+## CI
+
+`.github/workflows/secrets-scan.yml` runs gitleaks 8.30.1 (checksum-pinned) over the full
+git history on every push and pull request. Actions are pinned to commit SHAs.
+
 ## Layout
 
 ```

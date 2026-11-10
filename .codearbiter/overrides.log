@@ -3,3 +3,4 @@
 # Written only by /override. The statusline counts non-comment lines after the
 # last-checkpoint marker as "overrides since last checkpoint."
 [2026-11-10T22:13:16Z] | BY: SUaDtL@users.noreply.github.com | GATE: default-branch-write | REASON: Initial enrollment commit directly on main: repository has no commits, so no branch base exists. User approved the one-time exception.
+[2026-11-10T23:28:22Z] | BY: SUaDtL@users.noreply.github.com | GATE: default-branch-bootstrap | REASON: Create the default branch ref on new private repo SUaDtL/SIM at local commit b1ef516 via the GitHub API (no new content); hook H-01 blocks the initial upload. User chose option A. All later changes reach it by PR.
