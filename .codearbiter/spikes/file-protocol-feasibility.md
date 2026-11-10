@@ -26,7 +26,7 @@ offline from `file://` in current Edge and Chrome? Specifically:
 - Playwright (automated) against the installed browsers, opened via
   `file://`, with `context.setOffline(true)` and all `http(s)` requests
   aborted: Edge 157 and Chrome 156 (headless).
-- Manual save-in-place check by the user in Chrome (the native save
+- Manual save-in-place check by the user in Chrome and Edge (the native save
   dialog can't be automated).
 
 ## Answer
@@ -36,7 +36,7 @@ offline from `file://` in current Edge and Chrome? Specifically:
 | Loads offline from file://, SQLite runs | pass (auto) | pass (auto) |
 | `isSecureContext` on file:// | true | true |
 | `showSaveFilePicker` / `showOpenFilePicker` present | yes | yes |
-| Save as → save in place → reopen shows rows | not manually run | pass (manual, user) |
+| Save as → save in place → reopen shows rows | pass (manual, user) | pass (manual, user) |
 | Download fallback produces valid SQLite file | pass (auto) | pass (auto) |
 | Upload fallback restores rows | pass (auto) | pass (auto) |
 | Network requests made | none | none |
