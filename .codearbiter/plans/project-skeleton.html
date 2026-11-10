@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Plan: project skeleton and single-file build · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-PROJECT-SKELETON</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/project-skeleton.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Plan: project skeleton and single-file build</h1><p class="deck">Five tasks in one batch: toolchain and build, lint/format/unit tests, offline e2e, the check gate, and project documents.</p><div class="meta"><span>PLAN-PROJECT-SKELETON</span><span>Revision 22 · schema 0.3.2</span><span>8 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-PROJECT-SKELETON</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2>
+<!-- CA:BEGIN:PRE-1 -->
+<article class="record" id="PRE-1" data-ca-symbol="PRE-1" data-ca-kind="prerequisites"><div class="record-head"><a class="id" href="#PRE-1">PRE-1</a><h3>Edge and Chrome installed</h3></div><div class="field"><span class="label">Kind</span>fact</div><div class="field"><span class="label">Requirement</span>Microsoft Edge and Google Chrome are installed so Playwright can use the msedge and chrome channels.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-SPIKE">SRC-SPIKE</a></li></ul></div><div class="field"><span class="label">Task refs</span><ul class="items"><li><a href="#T3">T3</a></li><li><a href="#T4">T4</a></li></ul></div><details><summary>Recorded prerequisite assessment</summary><div class="fields"><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Kind</span>fact</div><div class="field"><span class="label">Needs decision</span>false</div><div class="field"><span class="label">Observation</span><div class="fields"></div></div><div class="field"><span class="label">Outcome</span>unknown</div><div class="field"><span class="label">Provenance</span>none</div><div class="field"><span class="label">Recorded state</span>not_satisfied</div><div class="field"><span class="label">Requirement</span>Microsoft Edge and Google Chrome are installed so Playwright can use the msedge and chrome channels.</div><div class="field"><span class="label">Scope</span>tasks</div><div class="field"><span class="label">Task refs</span><ul class="items"><li><a href="#T3">T3</a></li><li><a href="#T4">T4</a></li></ul></div><div class="field"><span class="label">Title</span>Edge and Chrome installed</div></div></details></article>
+<!-- CA:END:PRE-1 -->
+</section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:T1 -->
+<article class="record" id="T1" data-ca-symbol="T1" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#T1">T1</a><h3>Toolchain and single-file build</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/project-skeleton.html#AC-1">SPEC-PROJECT-SKELETON#AC-1</a></li><li><a href="../specs/project-skeleton.html#AC-4">SPEC-PROJECT-SKELETON#AC-4</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>npm run build produces only dist/sim.html</li><li>npm run typecheck exits 0</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>package.json</code></td></tr><tr><td>create</td><td><code>package-lock.json</code></td></tr><tr><td>create</td><td><code>tsconfig.json</code></td></tr><tr><td>create</td><td><code>vite.config.ts</code></td></tr><tr><td>create</td><td><code>sim.html</code></td></tr><tr><td>create</td><td><code>src/main.ts</code></td></tr><tr><td>create</td><td><code>src/db/sqlite.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Delete the created files; nothing else depends on them yet.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>npm init with type module, private, version 0.1.0, license Apache-2.0</li><li>install vite, vite-plugin-singlefile, sql.js, @types/sql.js, @types/node; TypeScript pinned to ~6.0 because typescript-eslint supports &lt;6.1</li><li>strict tsconfig (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride)</li><li>vite config with singlefile plugin and sim.html as the entry so the output is dist/sim.html directly</li><li>src/db/sqlite.ts: loadSqlite/openDatabase initializing sql.js with wasmBinary decoded from the ?url data URL</li><li>src/main.ts: render an app shell with data-testid=sqlite-version showing SELECT sqlite_version()</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;build&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>emits dist/sim.html as the only file</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;typecheck&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>tsc --noEmit exits 0 under strict</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;build&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:14Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>8412e284c91a31b1a94960cf66c2ac73f4082708a082e42f106dfd3f5c089c80</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>dist/sim.html 960.52 kB is the only file in dist</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;typecheck&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:14Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>8412e284c91a31b1a94960cf66c2ac73f4082708a082e42f106dfd3f5c089c80</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>tsc --noEmit clean under strict</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:T1 -->
+
+<!-- CA:BEGIN:T2 -->
+<article class="record" id="T2" data-ca-symbol="T2" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#T2">T2</a><h3>Lint, format and unit tests</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/project-skeleton.html#AC-1">SPEC-PROJECT-SKELETON#AC-1</a></li><li><a href="../specs/project-skeleton.html#AC-4">SPEC-PROJECT-SKELETON#AC-4</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#T1">T1</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>npm run lint, npm run format:check and npm test exit 0</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>eslint.config.js</code></td></tr><tr><td>create</td><td><code>.prettierrc.json</code></td></tr><tr><td>create</td><td><code>.prettierignore</code></td></tr><tr><td>create</td><td><code>vitest.config.ts</code></td></tr><tr><td>create</td><td><code>tests/unit/build-output.test.ts</code></td></tr><tr><td>create</td><td><code>src/db/sqlite.test.ts</code></td></tr><tr><td>modify</td><td><code>package.json</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Remove lint/test config and tests.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>install eslint, @eslint/js, typescript-eslint, prettier, vitest; override minimatch to ^11.0.1 to clear GHSA-g3hv-75wg-m249 in lint tooling</li><li>flat ESLint config with strictTypeChecked rules</li><li>unit tests for openDatabase, export round-trip and dataUrlToBytes</li><li>build-output test asserting dist contains only sim.html, inlined WASM, and no external src/href or http(s) URL outside library comments</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;lint&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>zero ESLint errors</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;format:check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Prettier reports no differences</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Vitest passes</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>tests/unit/build-output.test.ts</li><li>src/db/sqlite.test.ts</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;lint&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:15Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>eslint: zero problems</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;format:check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:15Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>All matched files use Prettier code style</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:15Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>Vitest: 3 files, 12 tests passed (sqlite, build-output, docs)</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:T2 -->
+
+<!-- CA:BEGIN:T3 -->
+<article class="record" id="T3" data-ca-symbol="T3" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#T3">T3</a><h3>Offline file:// e2e in Edge and Chrome</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/project-skeleton.html#AC-2">SPEC-PROJECT-SKELETON#AC-2</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#T1">T1</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>npm run e2e passes in both projects</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>playwright.config.ts</code></td></tr><tr><td>create</td><td><code>e2e/offline-boot.spec.ts</code></td></tr><tr><td>modify</td><td><code>package.json</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Remove Playwright config and e2e directory.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>install @playwright/test; projects msedge and chrome using installed channels</li><li>spec opens dist/sim.html via pathToFileURL with context offline and http(s) aborted, records non-file requests, page errors and console errors</li><li>asserts sqlite-version shows 3.x and both lists are empty</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>both msedge and chrome projects pass</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>e2e/offline-boot.spec.ts</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:16Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>a4dad89253575284132f63fbb3f336a88dff63968f35e2f82fbcfae5a9b40aa7</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>Playwright: offline-boot passed in msedge and chrome; negative control with an https fetch at boot failed both as expected</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:T3 -->
+
+<!-- CA:BEGIN:T4 -->
+<article class="record" id="T4" data-ca-symbol="T4" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#T4">T4</a><h3>Single check gate</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/project-skeleton.html#AC-3">SPEC-PROJECT-SKELETON#AC-3</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#T2">T2</a></li><li><a href="#T3">T3</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>npm run check exits 0 on the clean tree and non-zero with the injected type error</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>package.json</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Remove the check script.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>scripts.check runs typecheck, lint, format:check, build, test, e2e in order with &amp;&amp;</li><li>negative control: temporarily introduce a type error, confirm non-zero exit, revert</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>all six steps pass in order</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:16Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>655d5f05cbd0f8a793768e1e49ead76554eb1b2f69d76f83c0c278f5bc648836</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>All six steps passed; negative control with an injected type error exited 2</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:T4 -->
+
+<!-- CA:BEGIN:T5 -->
+<article class="record" id="T5" data-ca-symbol="T5" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#T5">T5</a><h3>Project documents and agent guide</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/project-skeleton.html#AC-5">SPEC-PROJECT-SKELETON#AC-5</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#T4">T4</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>docs test passes and documents reviewed</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>AGENTS.md</code></td></tr><tr><td>create</td><td><code>CLAUDE.md</code></td></tr><tr><td>create</td><td><code>LICENSE</code></td></tr><tr><td>create</td><td><code>CHANGELOG.md</code></td></tr><tr><td>create</td><td><code>README.md</code></td></tr><tr><td>create</td><td><code>.gitignore</code></td></tr><tr><td>create</td><td><code>tests/unit/docs.test.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Remove the documents.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>LICENSE: Apache-2.0 full text plus copyright line for the user</li><li>CHANGELOG.md in Keep a Changelog form with an Unreleased section</li><li>AGENTS.md: every npm script, directory layout, module boundaries (UI and importer write only through the repository; map reads only), rules (no network, fictional test data, IP/FQDN never stored)</li><li>CLAUDE.md pointing at AGENTS.md; README with quick start; .gitignore</li><li>docs test: every package.json script key appears in AGENTS.md; LICENSE, CHANGELOG and CLAUDE.md contain their required markers</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>docs test passes</div><div class="field"><span class="label">Availability</span>proposed</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>tests/unit/docs.test.ts</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-10T22:40:16Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>8b117ed1dbe39aee9fe376b27ed8c3d038b35215871ce4f422005d52d1e28c7d</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>npm run check / targeted runs on feat/project-skeleton, 2026-11-10</div><div class="field"><span class="label">Summary</span>docs.test.ts passed; negative control with an undocumented package script failed as expected</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:T5 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-1 -->
+<article class="record" id="CP-1" data-ca-symbol="CP-1" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-1">CP-1</a><h3>Skeleton complete</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>npm run check exits 0 and documents are present</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#T1">T1</a></li><li><a href="#T2">T2</a></li><li><a href="#T3">T3</a></li><li><a href="#T4">T4</a></li><li><a href="#T5">T5</a></li></ul></div></article>
+<!-- CA:END:CP-1 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-SPIKE -->
+<article class="record" id="SRC-SPIKE" data-ca-symbol="SRC-SPIKE" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-SPIKE">SRC-SPIKE</a><h3>file:// feasibility spike</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/spikes/file-protocol-feasibility.md</div><div class="field"><span class="label">Note</span>Proven build settings and e2e harness pattern.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-SPIKE -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-10</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 41cc634e3cefcaae7000692e6369aedc26d00ba4f8d5fd2b7e6d185b618b05fa<br>Model SHA-256: 11b94b8c9cd538c81a8287b13e9fb07232053379b1e5b597e720443335d0dc53</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-PROJECT-SKELETON",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {
+      "PRE-1": "not_satisfied"
+    },
+    "scopes": {},
+    "task_check_observations": {
+      "T1": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "criterion_subject_sha256": "287a7d28281ac731957c59dc17e077e82812f512966291a88ecc85101e0fec00",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:14Z",
+          "recording_operation_id": "skel-task-check-04",
+          "scoped_inputs_sha256": "8412e284c91a31b1a94960cf66c2ac73f4082708a082e42f106dfd3f5c089c80",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "dist/sim.html 960.52 kB is the only file in dist",
+          "task_subject_sha256": "daebaa903cb14c3a2c96f0d18eb9ea006730becbadab07ba26d7fb10eedd8e00"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "typecheck"
+          ],
+          "criterion_subject_sha256": "287a7d28281ac731957c59dc17e077e82812f512966291a88ecc85101e0fec00",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:14Z",
+          "recording_operation_id": "skel-task-check-05",
+          "scoped_inputs_sha256": "8412e284c91a31b1a94960cf66c2ac73f4082708a082e42f106dfd3f5c089c80",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "tsc --noEmit clean under strict",
+          "task_subject_sha256": "daebaa903cb14c3a2c96f0d18eb9ea006730becbadab07ba26d7fb10eedd8e00"
+        }
+      ],
+      "T2": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "lint"
+          ],
+          "criterion_subject_sha256": "287a7d28281ac731957c59dc17e077e82812f512966291a88ecc85101e0fec00",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:15Z",
+          "recording_operation_id": "skel-task-check-08",
+          "scoped_inputs_sha256": "b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "eslint: zero problems",
+          "task_subject_sha256": "549ace51c3b1bfd36af194e5f16bd28cb4e206c3248142df21162331124213ba"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "format:check"
+          ],
+          "criterion_subject_sha256": "287a7d28281ac731957c59dc17e077e82812f512966291a88ecc85101e0fec00",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:15Z",
+          "recording_operation_id": "skel-task-check-09",
+          "scoped_inputs_sha256": "b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "All matched files use Prettier code style",
+          "task_subject_sha256": "549ace51c3b1bfd36af194e5f16bd28cb4e206c3248142df21162331124213ba"
+        },
+        {
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "criterion_subject_sha256": "287a7d28281ac731957c59dc17e077e82812f512966291a88ecc85101e0fec00",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:15Z",
+          "recording_operation_id": "skel-task-check-10",
+          "scoped_inputs_sha256": "b413e71c3196f1d69b0c275246f0d103052a9db2c97b70ef852703da5cbe2f29",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "Vitest: 3 files, 12 tests passed (sqlite, build-output, docs)",
+          "task_subject_sha256": "549ace51c3b1bfd36af194e5f16bd28cb4e206c3248142df21162331124213ba"
+        }
+      ],
+      "T3": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e"
+          ],
+          "criterion_subject_sha256": "74a666b0b8353e10f1031b307b77be3e512ae965240630a901cea8a62b8a44bf",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:16Z",
+          "recording_operation_id": "skel-task-check-13",
+          "scoped_inputs_sha256": "a4dad89253575284132f63fbb3f336a88dff63968f35e2f82fbcfae5a9b40aa7",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "Playwright: offline-boot passed in msedge and chrome; negative control with an https fetch at boot failed both as expected",
+          "task_subject_sha256": "2b59afa5ebd2f0002d193acf9325ac10e3e756f22d1fe428e27976a57584ecf5"
+        }
+      ],
+      "T4": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "1d70da2b5eddab62500e003b434fd4164e40d349188649dbd7283bf2be9bd345",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:16Z",
+          "recording_operation_id": "skel-task-check-16",
+          "scoped_inputs_sha256": "655d5f05cbd0f8a793768e1e49ead76554eb1b2f69d76f83c0c278f5bc648836",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "All six steps passed; negative control with an injected type error exited 2",
+          "task_subject_sha256": "4cce0a5402013091fef8eafc5456c21ff17ffcee7877b81073177747d19dfeb0"
+        }
+      ],
+      "T5": [
+        {
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "criterion_subject_sha256": "48b25be496f97e9cd0024c35fdd9c5dd64f8d1b8fa5a538221c320b4133db03c",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-10T22:40:16Z",
+          "recording_operation_id": "skel-task-check-19",
+          "scoped_inputs_sha256": "8b117ed1dbe39aee9fe376b27ed8c3d038b35215871ce4f422005d52d1e28c7d",
+          "source": "npm run check / targeted runs on feat/project-skeleton, 2026-11-10",
+          "source_normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645",
+          "summary": "docs.test.ts passed; negative control with an undocumented package script failed as expected",
+          "task_subject_sha256": "2e94a359d2ae3791b143210b572b8c394b1cd725608e5d6fbd6b7da1355f6b5f"
+        }
+      ]
+    },
+    "tasks": {
+      "T1": {
+        "evidence_refs": [],
+        "reason": "All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "T2": {
+        "evidence_refs": [],
+        "reason": "All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "T3": {
+        "evidence_refs": [],
+        "reason": "All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "T4": {
+        "evidence_refs": [],
+        "reason": "All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "T5": {
+        "evidence_refs": [],
+        "reason": "All five skeleton tasks implemented; npm run check exits 0 and negative controls behave as planned. DONE records implementation progress, not independent verification. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "11b94b8c9cd538c81a8287b13e9fb07232053379b1e5b597e720443335d0dc53",
+    "normative_sha256": "41cc634e3cefcaae7000692e6369aedc26d00ba4f8d5fd2b7e6d185b618b05fa",
+    "symbol_count": 8
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-10",
+      "repository": null
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "npm run check exits 0 and documents are present",
+        "id": "CP-1",
+        "tasks": [
+          "T1",
+          "T2",
+          "T3",
+          "T4",
+          "T5"
+        ],
+        "title": "Skeleton complete"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [
+      {
+        "id": "PRE-1",
+        "kind": "fact",
+        "requirement": "Microsoft Edge and Google Chrome are installed so Playwright can use the msedge and chrome channels.",
+        "source_refs": [
+          "SRC-SPIKE"
+        ],
+        "task_refs": [
+          "T3",
+          "T4"
+        ],
+        "title": "Edge and Chrome installed"
+      }
+    ],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [
+      {
+        "id": "SRC-SPIKE",
+        "locator": ".codearbiter/spikes/file-protocol-feasibility.md",
+        "note": "Proven build settings and e2e harness pattern.",
+        "title": "file:// feasibility spike",
+        "type": "local_document",
+        "url": null
+      }
+    ],
+    "spec_ref": {
+      "artifact_id": "SPEC-PROJECT-SKELETON",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "5b6ab14f2f98069517aa8dbb41334c4902df589ec0b25a003a9a0f4f68f37645"
+    },
+    "summary": "Five tasks in one batch: toolchain and build, lint/format/unit tests, offline e2e, the check gate, and project documents.",
+    "tasks": [
+      {
+        "checkpoint": "CP-1",
+        "criterion_refs": [
+          "SPEC-PROJECT-SKELETON#AC-1",
+          "SPEC-PROJECT-SKELETON#AC-4"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "npm run build produces only dist/sim.html",
+          "npm run typecheck exits 0"
+        ],
+        "execution_scope": "CP-1",
+        "id": "T1",
+        "paths": [
+          {
+            "action": "create",
+            "path": "package.json"
+          },
+          {
+            "action": "create",
+            "path": "package-lock.json"
+          },
+          {
+            "action": "create",
+            "path": "tsconfig.json"
+          },
+          {
+            "action": "create",
+            "path": "vite.config.ts"
+          },
+          {
+            "action": "create",
+            "path": "sim.html"
+          },
+          {
+            "action": "create",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/db/sqlite.ts"
+          }
+        ],
+        "rollback": "Delete the created files; nothing else depends on them yet.",
+        "steps": [
+          "npm init with type module, private, version 0.1.0, license Apache-2.0",
+          "install vite, vite-plugin-singlefile, sql.js, @types/sql.js, @types/node; TypeScript pinned to ~6.0 because typescript-eslint supports \u003c6.1",
+          "strict tsconfig (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride)",
+          "vite config with singlefile plugin and sim.html as the entry so the output is dist/sim.html directly",
+          "src/db/sqlite.ts: loadSqlite/openDatabase initializing sql.js with wasmBinary decoded from the ?url data URL",
+          "src/main.ts: render an app shell with data-testid=sqlite-version showing SELECT sqlite_version()"
+        ],
+        "title": "Toolchain and single-file build",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "build"
+            ],
+            "assertion": "emits dist/sim.html as the only file",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          },
+          {
+            "argv": [
+              "npm",
+              "run",
+              "typecheck"
+            ],
+            "assertion": "tsc --noEmit exits 0 under strict",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-1",
+        "criterion_refs": [
+          "SPEC-PROJECT-SKELETON#AC-1",
+          "SPEC-PROJECT-SKELETON#AC-4"
+        ],
+        "depends_on": [
+          "T1"
+        ],
+        "done_when": [
+          "npm run lint, npm run format:check and npm test exit 0"
+        ],
+        "execution_scope": "CP-1",
+        "id": "T2",
+        "paths": [
+          {
+            "action": "create",
+            "path": "eslint.config.js"
+          },
+          {
+            "action": "create",
+            "path": ".prettierrc.json"
+          },
+          {
+            "action": "create",
+            "path": ".prettierignore"
+          },
+          {
+            "action": "create",
+            "path": "vitest.config.ts"
+          },
+          {
+            "action": "create",
+            "path": "tests/unit/build-output.test.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/db/sqlite.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "package.json"
+          }
+        ],
+        "rollback": "Remove lint/test config and tests.",
+        "steps": [
+          "install eslint, @eslint/js, typescript-eslint, prettier, vitest; override minimatch to ^11.0.1 to clear GHSA-g3hv-75wg-m249 in lint tooling",
+          "flat ESLint config with strictTypeChecked rules",
+          "unit tests for openDatabase, export round-trip and dataUrlToBytes",
+          "build-output test asserting dist contains only sim.html, inlined WASM, and no external src/href or http(s) URL outside library comments"
+        ],
+        "title": "Lint, format and unit tests",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "lint"
+            ],
+            "assertion": "zero ESLint errors",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          },
+          {
+            "argv": [
+              "npm",
+              "run",
+              "format:check"
+            ],
+            "assertion": "Prettier reports no differences",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          },
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "Vitest passes",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "tests/unit/build-output.test.ts",
+              "src/db/sqlite.test.ts"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-1",
+        "criterion_refs": [
+          "SPEC-PROJECT-SKELETON#AC-2"
+        ],
+        "depends_on": [
+          "T1"
+        ],
+        "done_when": [
+          "npm run e2e passes in both projects"
+        ],
+        "execution_scope": "CP-1",
+        "id": "T3",
+        "paths": [
+          {
+            "action": "create",
+            "path": "playwright.config.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/offline-boot.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "package.json"
+          }
+        ],
+        "rollback": "Remove Playwright config and e2e directory.",
+        "steps": [
+          "install @playwright/test; projects msedge and chrome using installed channels",
+          "spec opens dist/sim.html via pathToFileURL with context offline and http(s) aborted, records non-file requests, page errors and console errors",
+          "asserts sqlite-version shows 3.x and both lists are empty"
+        ],
+        "title": "Offline file:// e2e in Edge and Chrome",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "e2e"
+            ],
+            "assertion": "both msedge and chrome projects pass",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "e2e/offline-boot.spec.ts"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-1",
+        "criterion_refs": [
+          "SPEC-PROJECT-SKELETON#AC-3"
+        ],
+        "depends_on": [
+          "T2",
+          "T3"
+        ],
+        "done_when": [
+          "npm run check exits 0 on the clean tree and non-zero with the injected type error"
+        ],
+        "execution_scope": "CP-1",
+        "id": "T4",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "package.json"
+          }
+        ],
+        "rollback": "Remove the check script.",
+        "steps": [
+          "scripts.check runs typecheck, lint, format:check, build, test, e2e in order with \u0026\u0026",
+          "negative control: temporarily introduce a type error, confirm non-zero exit, revert"
+        ],
+        "title": "Single check gate",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "all six steps pass in order",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-1",
+        "criterion_refs": [
+          "SPEC-PROJECT-SKELETON#AC-5"
+        ],
+        "depends_on": [
+          "T4"
+        ],
+        "done_when": [
+          "docs test passes and documents reviewed"
+        ],
+        "execution_scope": "CP-1",
+        "id": "T5",
+        "paths": [
+          {
+            "action": "create",
+            "path": "AGENTS.md"
+          },
+          {
+            "action": "create",
+            "path": "CLAUDE.md"
+          },
+          {
+            "action": "create",
+            "path": "LICENSE"
+          },
+          {
+            "action": "create",
+            "path": "CHANGELOG.md"
+          },
+          {
+            "action": "create",
+            "path": "README.md"
+          },
+          {
+            "action": "create",
+            "path": ".gitignore"
+          },
+          {
+            "action": "create",
+            "path": "tests/unit/docs.test.ts"
+          }
+        ],
+        "rollback": "Remove the documents.",
+        "steps": [
+          "LICENSE: Apache-2.0 full text plus copyright line for the user",
+          "CHANGELOG.md in Keep a Changelog form with an Unreleased section",
+          "AGENTS.md: every npm script, directory layout, module boundaries (UI and importer write only through the repository; map reads only), rules (no network, fictional test data, IP/FQDN never stored)",
+          "CLAUDE.md pointing at AGENTS.md; README with quick start; .gitignore",
+          "docs test: every package.json script key appears in AGENTS.md; LICENSE, CHANGELOG and CLAUDE.md contain their required markers"
+        ],
+        "title": "Project documents and agent guide",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "docs test passes",
+            "availability": "proposed",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "tests/unit/docs.test.ts"
+            ]
+          }
+        ]
+      }
+    ],
+    "title": "Plan: project skeleton and single-file build"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/project-skeleton.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 22,
+  "schema_version": "0.3.2",
+  "slug": "project-skeleton"
+}
+</script>
+</body></html>

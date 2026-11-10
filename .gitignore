@@ -1,0 +1,9 @@
+node_modules/
+dist/
+playwright-report/
+test-results/
+*.sqlite
+
+# codeArbiter local-only metadata
+.codearbiter/.artifacts/
+.codearbiter/.markers/
