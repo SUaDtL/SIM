@@ -1,0 +1,1203 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Project decomposition · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">DECOMP-PROJECT</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-records">Records</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / decomposition</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Project decomposition</h1><p class="deck">Interview answers, intended architecture, phases and proposed work.</p><div class="meta"><span>DECOMP-PROJECT</span><span>Revision 80 · schema 0.3.2</span><span>57 addressable records</span></div></header><section class="group" id="group-records"><a class="back" href="#main-content">Top</a><h2>Records</h2>
+<!-- CA:BEGIN:Q-001 -->
+<article class="record" id="Q-001" data-ca-symbol="Q-001" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-001">Q-001</a><h3>Vision: what is SIM</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Service Integration Map. The user goes into struggling enterprises and helps them out of it by applying technology. These enterprises often span multiple network domains (e.g. SIPR, NIPR, DEV); each network has different users, services and purposes, even though it is the same overall group of people, and not everyone uses every service on every network. The first step is usually to inventory which services are provided or consumed on each network, who provides or consumes them, and who the Tier 1/2/3 support is. SIM records services (what the service is, which application provides it, which network it is on, a category such as cyber, ops or C2) and programmatically or dynamically maps the connections between services and networks into a single-pane view the user can pan around, highlight nodes or services in, and see everything that chains to a node. It is mainly used to show visually how complexity will be reduced by combining services, paths and so on. Visualization is 99% of the purpose.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>What is SIM and what problem does it solve?</div></article>
+<!-- CA:END:Q-001 -->
+
+<!-- CA:BEGIN:Q-002 -->
+<article class="record" id="Q-002" data-ca-symbol="Q-002" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-002">Q-002</a><h3>Vision: deployment form</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>A local-only HTML-based application, so the user can bring it in and use it at almost any location. It therefore needs SQLite or a similar flat file for data storage.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>How is SIM delivered and where does data live?</div></article>
+<!-- CA:END:Q-002 -->
+
+<!-- CA:BEGIN:Q-003 -->
+<article class="record" id="Q-003" data-ca-symbol="Q-003" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-003">Q-003</a><h3>Vision: primary users</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>The user, or a consultant like the user.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Who uses SIM?</div></article>
+<!-- CA:END:Q-003 -->
+
+<!-- CA:BEGIN:Q-004 -->
+<article class="record" id="Q-004" data-ca-symbol="Q-004" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-004">Q-004</a><h3>Vision: success criteria</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>It can hold 5 domains (networks) worth of services: dozens to maybe a hundred services for a large 6-network, 5000-user enterprise.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>What makes a first version successful?</div></article>
+<!-- CA:END:Q-004 -->
+
+<!-- CA:BEGIN:Q-005 -->
+<article class="record" id="Q-005" data-ca-symbol="Q-005" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-005">Q-005</a><h3>Vision: exclusions</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>SIM will not be hosted and will not have an agent at first.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>What is out of scope at first?</div></article>
+<!-- CA:END:Q-005 -->
+
+<!-- CA:BEGIN:Q-006 -->
+<article class="record" id="Q-006" data-ca-symbol="Q-006" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-006">Q-006</a><h3>Env: target machines</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Do not count on being able to run a Python server. The user personally can, but it is less likely once SIM goes on SIPR.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Can SIM rely on a local server (e.g. Python) or must it run browser-only?</div></article>
+<!-- CA:END:Q-006 -->
+
+<!-- CA:BEGIN:Q-007 -->
+<article class="record" id="Q-007" data-ca-symbol="Q-007" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-007">Q-007</a><h3>Env: data sensitivity</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>It should show a classification banner and always display the highest classification. Keeping IP addresses and FQDNs out of SIM should avoid classified data.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Does SIM need classification/CUI markings, and how is sensitive data kept out?</div></article>
+<!-- CA:END:Q-007 -->
+
+<!-- CA:BEGIN:Q-008 -->
+<article class="record" id="Q-008" data-ca-symbol="Q-008" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-008">Q-008</a><h3>Data: entities</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>That looks correct at first glance.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Are networks, services, applications, categories, organizations/user groups and support teams (Tier 1/2/3) the right entities?</div></article>
+<!-- CA:END:Q-008 -->
+
+<!-- CA:BEGIN:Q-009 -->
+<article class="record" id="Q-009" data-ca-symbol="Q-009" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-009">Q-009</a><h3>Data: connection source</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Connections are drawn strictly from the provides/consumes relationships the user enters explicitly. Services are automatically contained inside their network/domain. Connections that cross network boundaries are highlighted. SIM must show services outside the enterprise networks (third-party SaaS etc.) and display a CDS (cross-domain solution) where one connects different domains/networks.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Are connections explicit, derived from shared data, or both?</div></article>
+<!-- CA:END:Q-009 -->
+
+<!-- CA:BEGIN:Q-010 -->
+<article class="record" id="Q-010" data-ca-symbol="Q-010" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-010">Q-010</a><h3>Scope: as-is / to-be</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>As-Is/To-Be would be great.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Are as-is and to-be scenarios wanted?</div></article>
+<!-- CA:END:Q-010 -->
+
+<!-- CA:BEGIN:Q-011 -->
+<article class="record" id="Q-011" data-ca-symbol="Q-011" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-011">Q-011</a><h3>Data: input and export</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Hand entry or CSV import, and exports for slides are required.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>How does data get in and out?</div></article>
+<!-- CA:END:Q-011 -->
+
+<!-- CA:BEGIN:Q-012 -->
+<article class="record" id="Q-012" data-ca-symbol="Q-012" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-012">Q-012</a><h3>Data: provides/consumes direction</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Both (probably). Part of the complexity is that services on the same network are sometimes provided by different organizations (e.g. J7 instead of J6, and why?).</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Are provides/consumes relationships organization-to-service, service-to-service, or both?</div></article>
+<!-- CA:END:Q-012 -->
+
+<!-- CA:BEGIN:Q-013 -->
+<article class="record" id="Q-013" data-ca-symbol="Q-013" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-013">Q-013</a><h3>Classification: banner rule</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>If anything is marked Secret, it brings everything up to Secret (the banner always shows the highest classification present).</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>How is the banner&#39;s highest classification determined?</div></article>
+<!-- CA:END:Q-013 -->
+
+<!-- CA:BEGIN:Q-014 -->
+<article class="record" id="Q-014" data-ca-symbol="Q-014" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-014">Q-014</a><h3>Data: CDS representation</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Yes, its own node.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Is a CDS its own node or a label on a cross-domain connection?</div></article>
+<!-- CA:END:Q-014 -->
+
+<!-- CA:BEGIN:Q-015 -->
+<article class="record" id="Q-015" data-ca-symbol="Q-015" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-015">Q-015</a><h3>Housekeeping: copyright, license, releases</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>The user personally holds copyright right now. License: Apache (Apache-2.0). Versioning starts at 0.1.0. Keep a changelog.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Who holds copyright, what license, and what release/changelog practice?</div></article>
+<!-- CA:END:Q-015 -->
+
+<!-- CA:BEGIN:CAP-001 -->
+<article class="record" id="CAP-001" data-ca-symbol="CAP-001" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-001">CAP-001</a><h3>CAP Local dataset file</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-002">Q-002</a></li><li><a href="#Q-006">Q-006</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Create, open and save a SIM dataset as a single local SQLite file with no server and no network access. Initiator: user. Output: .sqlite file on local disk.</div></article>
+<!-- CA:END:CAP-001 -->
+
+<!-- CA:BEGIN:CAP-002 -->
+<article class="record" id="CAP-002" data-ca-symbol="CAP-002" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-002">CAP-002</a><h3>CAP Entity management</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-001">Q-001</a></li><li><a href="#Q-008">Q-008</a></li><li><a href="#Q-009">Q-009</a></li><li><a href="#Q-014">Q-014</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Hand-enter, edit and delete networks/domains (including an external zone for third-party SaaS), services, applications, categories (cyber, ops, C2, user-defined), organizations/user groups, support teams with Tier 1/2/3 assignment, and CDS nodes.</div></article>
+<!-- CA:END:CAP-002 -->
+
+<!-- CA:BEGIN:CAP-003 -->
+<article class="record" id="CAP-003" data-ca-symbol="CAP-003" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-003">CAP-003</a><h3>CAP Provides/consumes relationships</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-009">Q-009</a></li><li><a href="#Q-012">Q-012</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Explicitly record provides/consumes relationships organization-to-service and service-to-service. These are the only source of drawn connections; nothing is inferred from shared attributes.</div></article>
+<!-- CA:END:CAP-003 -->
+
+<!-- CA:BEGIN:CAP-004 -->
+<article class="record" id="CAP-004" data-ca-symbol="CAP-004" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-004">CAP-004</a><h3>CAP Service map</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-001">Q-001</a></li><li><a href="#Q-004">Q-004</a></li><li><a href="#Q-009">Q-009</a></li><li><a href="#Q-014">Q-014</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Render a single-pane pan/zoom map where each network is a container automatically holding its services; external (SaaS) services sit in an external zone; CDS nodes sit on the boundary between the networks they join; connections crossing a network boundary are visually highlighted. Must stay readable at ~100 services across 5-6 networks.</div></article>
+<!-- CA:END:CAP-004 -->
+
+<!-- CA:BEGIN:CAP-005 -->
+<article class="record" id="CAP-005" data-ca-symbol="CAP-005" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-005">CAP-005</a><h3>CAP Highlight and chain tracing</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-001">Q-001</a></li><li><a href="#Q-012">Q-012</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Selecting a node highlights it and every node that chains to it (transitive upstream and downstream through provides/consumes), dimming the rest; filter by network, category, organization.</div></article>
+<!-- CA:END:CAP-005 -->
+
+<!-- CA:BEGIN:CAP-006 -->
+<article class="record" id="CAP-006" data-ca-symbol="CAP-006" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-006">CAP-006</a><h3>CAP Classification banner</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-007">Q-007</a></li><li><a href="#Q-013">Q-013</a></li><li><a href="#Q-018">Q-018</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Each network and each service carries a classification marking; the banner shows the highest marking present in the open dataset (anything Secret raises the whole view to Secret). The banner appears in the app and on every export.</div></article>
+<!-- CA:END:CAP-006 -->
+
+<!-- CA:BEGIN:CAP-007 -->
+<article class="record" id="CAP-007" data-ca-symbol="CAP-007" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-007">CAP-007</a><h3>CAP Sensitive-data guardrails</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-007">Q-007</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>The data model has no IP address or FQDN fields; input that looks like an IP or FQDN is flagged before save.</div></article>
+<!-- CA:END:CAP-007 -->
+
+<!-- CA:BEGIN:CAP-008 -->
+<article class="record" id="CAP-008" data-ca-symbol="CAP-008" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-008">CAP-008</a><h3>CAP CSV import</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-011">Q-011</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Import each entity type and relationships from CSV templates, with a validation preview reporting rejected rows before commit.</div></article>
+<!-- CA:END:CAP-008 -->
+
+<!-- CA:BEGIN:CAP-009 -->
+<article class="record" id="CAP-009" data-ca-symbol="CAP-009" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-009">CAP-009</a><h3>CAP Slide export</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-011">Q-011</a></li><li><a href="#Q-013">Q-013</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Export the current map view (with highlight state and classification banner) as PNG and SVG for briefing slides.</div></article>
+<!-- CA:END:CAP-009 -->
+
+<!-- CA:BEGIN:CAP-010 -->
+<article class="record" id="CAP-010" data-ca-symbol="CAP-010" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-010">CAP-010</a><h3>CAP As-Is / To-Be scenarios</h3><span class="badge">capability</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-001">Q-001</a></li><li><a href="#Q-010">Q-010</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Keep an As-Is baseline and one or more To-Be scenarios expressing changes (merge services, re-home a service to another provider/network, retire, add), toggle between them and show a compare view highlighting what changed and the resulting reduction in services and cross-domain paths.</div></article>
+<!-- CA:END:CAP-010 -->
+
+<!-- CA:BEGIN:COMP-001 -->
+<article class="record" id="COMP-001" data-ca-symbol="COMP-001" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-001">COMP-001</a><h3>COMP Single-file app shell</h3><span class="badge">component</span><span class="badge">user-reported</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-002">Q-002</a></li><li><a href="#Q-006">Q-006</a></li><li><a href="#Q-016">Q-016</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>One self-contained offline sim.html opened from file://, built from strict TypeScript with Vite and a single-file plugin; all JS, CSS and WASM inlined; no runtime network or CDN fetch.</div></article>
+<!-- CA:END:COMP-001 -->
+
+<!-- CA:BEGIN:COMP-002 -->
+<article class="record" id="COMP-002" data-ca-symbol="COMP-002" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-002">COMP-002</a><h3>COMP Persistence layer</h3><span class="badge">component</span><span class="badge">user-reported</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-002">Q-002</a></li><li><a href="#Q-006">Q-006</a></li><li><a href="#Q-016">Q-016</a></li><li><a href="#CAP-001">CAP-001</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>SQLite compiled to WASM (sql.js) in memory; open/save via the File System Access API where available (Chromium), download/upload fallback otherwise; versioned schema with migrations. Owns the only write path to the dataset file.</div></article>
+<!-- CA:END:COMP-002 -->
+
+<!-- CA:BEGIN:COMP-003 -->
+<article class="record" id="COMP-003" data-ca-symbol="COMP-003" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-003">COMP-003</a><h3>COMP Domain model and repository</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-008">Q-008</a></li><li><a href="#Q-009">Q-009</a></li><li><a href="#Q-012">Q-012</a></li><li><a href="#Q-007">Q-007</a></li><li><a href="#CAP-002">CAP-002</a></li><li><a href="#CAP-003">CAP-003</a></li><li><a href="#CAP-007">CAP-007</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Entities: network (internal|external), service, application, category, organization, support team with tier, CDS, provides/consumes relationship, classification marking, scenario. Validation (including IP/FQDN guard) lives here; UI and importer write only through it.</div></article>
+<!-- CA:END:COMP-003 -->
+
+<!-- CA:BEGIN:COMP-004 -->
+<article class="record" id="COMP-004" data-ca-symbol="COMP-004" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-004">COMP-004</a><h3>COMP Data entry UI</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-011">Q-011</a></li><li><a href="#CAP-002">CAP-002</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Forms and tables for hand entry and editing of every entity and relationship.</div></article>
+<!-- CA:END:COMP-004 -->
+
+<!-- CA:BEGIN:COMP-005 -->
+<article class="record" id="COMP-005" data-ca-symbol="COMP-005" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-005">COMP-005</a><h3>COMP CSV importer</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-011">Q-011</a></li><li><a href="#CAP-008">CAP-008</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Template-driven CSV parsing with a validation preview, committing through the domain repository.</div></article>
+<!-- CA:END:COMP-005 -->
+
+<!-- CA:BEGIN:COMP-006 -->
+<article class="record" id="COMP-006" data-ca-symbol="COMP-006" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-006">COMP-006</a><h3>COMP Map view</h3><span class="badge">component</span><span class="badge">user-reported</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-016">Q-016</a></li><li><a href="#CAP-004">CAP-004</a></li><li><a href="#CAP-005">CAP-005</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Cytoscape.js (bundled) using compound nodes for network containers, an external zone, boundary CDS nodes, cross-boundary edge styling, chain highlight and filters. Reads from the domain model; never writes.</div></article>
+<!-- CA:END:COMP-006 -->
+
+<!-- CA:BEGIN:COMP-007 -->
+<article class="record" id="COMP-007" data-ca-symbol="COMP-007" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-007">COMP-007</a><h3>COMP Classification module</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-013">Q-013</a></li><li><a href="#CAP-006">CAP-006</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Computes the highest marking in the dataset or active scenario and renders the banner in the app and exports.</div></article>
+<!-- CA:END:COMP-007 -->
+
+<!-- CA:BEGIN:COMP-008 -->
+<article class="record" id="COMP-008" data-ca-symbol="COMP-008" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-008">COMP-008</a><h3>COMP Export module</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-009">CAP-009</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>PNG/SVG rendering of the current map view with banner.</div></article>
+<!-- CA:END:COMP-008 -->
+
+<!-- CA:BEGIN:COMP-009 -->
+<article class="record" id="COMP-009" data-ca-symbol="COMP-009" data-ca-kind="records"><div class="record-head"><a class="id" href="#COMP-009">COMP-009</a><h3>COMP Scenario engine</h3><span class="badge">component</span><span class="badge">inferred</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-010">Q-010</a></li><li><a href="#CAP-010">CAP-010</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Stores To-Be scenarios as change sets over the As-Is baseline, materializes a scenario graph for the map view and computes compare diffs and reduction metrics.</div></article>
+<!-- CA:END:COMP-009 -->
+
+<!-- CA:BEGIN:PHASE-001 -->
+<article class="record" id="PHASE-001" data-ca-symbol="PHASE-001" data-ca-kind="records"><div class="record-head"><a class="id" href="#PHASE-001">PHASE-001</a><h3>PHASE 0.1.0 MVP: enter, save, see</h3><span class="badge">phase</span><span class="badge">proposed</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-004">Q-004</a></li><li><a href="#Q-015">Q-015</a></li><li><a href="#Q-019">Q-019</a></li><li><a href="#CAP-001">CAP-001</a></li><li><a href="#CAP-002">CAP-002</a></li><li><a href="#CAP-003">CAP-003</a></li><li><a href="#CAP-004">CAP-004</a></li><li><a href="#CAP-005">CAP-005</a></li><li><a href="#CAP-006">CAP-006</a></li><li><a href="#CAP-007">CAP-007</a></li><li><a href="#CAP-009">CAP-009</a></li><li><a href="#CAP-011">CAP-011</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Delivers CAP-001..007, CAP-011 and PNG export. Done when: opened from file:// in offline Edge/Chrome, a 5-network ~100-service dataset (including SaaS external services and at least one CDS) can be hand-entered, saved, closed, reopened, and shown with network containers, highlighted cross-domain edges, chain highlighting, the correct highest-classification banner, and a PNG export carrying the banner.</div></article>
+<!-- CA:END:PHASE-001 -->
+
+<!-- CA:BEGIN:PHASE-002 -->
+<article class="record" id="PHASE-002" data-ca-symbol="PHASE-002" data-ca-kind="records"><div class="record-head"><a class="id" href="#PHASE-002">PHASE-002</a><h3>PHASE 0.2.0 Bulk data and slides</h3><span class="badge">phase</span><span class="badge">proposed</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-008">CAP-008</a></li><li><a href="#CAP-009">CAP-009</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Delivers CAP-008 CSV import and SVG export plus map filters. Done when: a full dataset loads from CSV templates with rejected rows reported, and SVG exports drop into slides with the banner.</div></article>
+<!-- CA:END:PHASE-002 -->
+
+<!-- CA:BEGIN:PHASE-003 -->
+<article class="record" id="PHASE-003" data-ca-symbol="PHASE-003" data-ca-kind="records"><div class="record-head"><a class="id" href="#PHASE-003">PHASE-003</a><h3>PHASE 0.3.0 As-Is / To-Be</h3><span class="badge">phase</span><span class="badge">proposed</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-010">Q-010</a></li><li><a href="#CAP-010">CAP-010</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Delivers CAP-010. Done when: at least one To-Be scenario with merge/re-home/retire changes can be toggled against As-Is and a compare view shows the changed nodes and the reduction in service count and cross-domain connections.</div></article>
+<!-- CA:END:PHASE-003 -->
+
+<!-- CA:BEGIN:WORK-001 -->
+<article class="record" id="WORK-001" data-ca-symbol="WORK-001" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-001">WORK-001</a><h3>SPIKE: file:// feasibility (time-box 1 day)</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-001</div><div class="field"><span class="label">Work id</span>WORK-07C1DBD8DD441FDF939BB858DDA896F1</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-006">Q-006</a></li><li><a href="#COMP-001">COMP-001</a></li><li><a href="#COMP-002">COMP-002</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Throwaway prototype answering: does a single Vite-built HTML with inlined sql.js WASM load from file:// in current offline Edge and Chrome; does File System Access API save-in-place work from file:// (and what happens under restrictive enterprise policy); does the download fallback work. Output: findings note and ADR candidates.</div></article>
+<!-- CA:END:WORK-001 -->
+
+<!-- CA:BEGIN:WORK-002 -->
+<article class="record" id="WORK-002" data-ca-symbol="WORK-002" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-002">WORK-002</a><h3>SPIKE: map layout at scale (time-box 1 day)</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-002</div><div class="field"><span class="label">Work id</span>WORK-63E4CE3B9816E2432180179FF61B1675</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-004">Q-004</a></li><li><a href="#COMP-006">COMP-006</a></li><li><a href="#COMP-008">COMP-008</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Throwaway prototype answering: can Cytoscape.js compound nodes render 6 networks plus external zone with ~100 services and boundary CDS nodes readably; which layout (e.g. fcose) works; do PNG/SVG exports include the banner. Output: findings note.</div></article>
+<!-- CA:END:WORK-002 -->
+
+<!-- CA:BEGIN:WORK-003 -->
+<article class="record" id="WORK-003" data-ca-symbol="WORK-003" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-003">WORK-003</a><h3>Project skeleton and single-file build</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-003</div><div class="field"><span class="label">Work id</span>WORK-2B5DD3C7B3C1B5FBA94D49D20A68E5FD</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-015">Q-015</a></li><li><a href="#Q-016">Q-016</a></li><li><a href="#Q-017">Q-017</a></li><li><a href="#COMP-001">COMP-001</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Strict TypeScript + Vite single-file build producing sim.html; ESLint + Prettier; Vitest unit tests; Playwright end-to-end tests against the built sim.html opened via file://; one npm run check gate (typecheck, lint, unit, e2e, build); AGENTS.md/CLAUDE.md with commands and module boundaries for agents; LICENSE (Apache-2.0); CHANGELOG starting at 0.1.0 with v-prefixed tags. Depends on the file:// spike.</div></article>
+<!-- CA:END:WORK-003 -->
+
+<!-- CA:BEGIN:WORK-004 -->
+<article class="record" id="WORK-004" data-ca-symbol="WORK-004" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-004">WORK-004</a><h3>Schema, persistence and open/save</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-004</div><div class="field"><span class="label">Work id</span>WORK-326B4B8E264E854F6BF801C1BF45BBCF</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-001">CAP-001</a></li><li><a href="#COMP-002">COMP-002</a></li><li><a href="#COMP-003">COMP-003</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Versioned SQLite schema for all entities, migrations, open/new/save/save-as with fallback. Depends on skeleton.</div></article>
+<!-- CA:END:WORK-004 -->
+
+<!-- CA:BEGIN:WORK-005 -->
+<article class="record" id="WORK-005" data-ca-symbol="WORK-005" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-005">WORK-005</a><h3>Domain repository and validation</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-005</div><div class="field"><span class="label">Work id</span>WORK-075DD17A8777E20C7E4E1166AC2FF78C</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-002">CAP-002</a></li><li><a href="#CAP-003">CAP-003</a></li><li><a href="#CAP-006">CAP-006</a></li><li><a href="#CAP-007">CAP-007</a></li><li><a href="#COMP-003">COMP-003</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Typed repository for all entities and provides/consumes relationships, classification markings, IP/FQDN guard. Depends on schema.</div></article>
+<!-- CA:END:WORK-005 -->
+
+<!-- CA:BEGIN:WORK-006 -->
+<article class="record" id="WORK-006" data-ca-symbol="WORK-006" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-006">WORK-006</a><h3>Hand-entry UI</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-006</div><div class="field"><span class="label">Work id</span>WORK-4ACD0A1575DBD0C9A7AFB5130D19DE69</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-002">CAP-002</a></li><li><a href="#CAP-003">CAP-003</a></li><li><a href="#COMP-004">COMP-004</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Forms and tables for every entity and relationship. Depends on repository.</div></article>
+<!-- CA:END:WORK-006 -->
+
+<!-- CA:BEGIN:WORK-007 -->
+<article class="record" id="WORK-007" data-ca-symbol="WORK-007" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-007">WORK-007</a><h3>Map view with containment and cross-domain highlight</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-007</div><div class="field"><span class="label">Work id</span>WORK-AB0D98683C3D84DC3A74FE086277DA5D</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-004">CAP-004</a></li><li><a href="#COMP-006">COMP-006</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Network containers, external zone, CDS boundary nodes, cross-boundary edge styling, pan/zoom. Depends on repository and layout spike.</div></article>
+<!-- CA:END:WORK-007 -->
+
+<!-- CA:BEGIN:WORK-008 -->
+<article class="record" id="WORK-008" data-ca-symbol="WORK-008" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-008">WORK-008</a><h3>Chain highlight and filters</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-008</div><div class="field"><span class="label">Work id</span>WORK-40ECFB05784B3439AD3DDF7935D34D30</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-005">CAP-005</a></li><li><a href="#COMP-006">COMP-006</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Transitive upstream/downstream highlight on select; filter by network, category, organization. Depends on map view.</div></article>
+<!-- CA:END:WORK-008 -->
+
+<!-- CA:BEGIN:WORK-009 -->
+<article class="record" id="WORK-009" data-ca-symbol="WORK-009" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-009">WORK-009</a><h3>Classification banner</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-009</div><div class="field"><span class="label">Work id</span>WORK-A22051C39638CA0A03C8D737C45FBADE</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-006">CAP-006</a></li><li><a href="#COMP-007">COMP-007</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Highest-marking computation and banner in app and exports. Depends on repository.</div></article>
+<!-- CA:END:WORK-009 -->
+
+<!-- CA:BEGIN:WORK-010 -->
+<article class="record" id="WORK-010" data-ca-symbol="WORK-010" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-010">WORK-010</a><h3>PNG export</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-010</div><div class="field"><span class="label">Work id</span>WORK-162D22FC0CBFBC8105018E2740814705</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-009">CAP-009</a></li><li><a href="#COMP-008">COMP-008</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Export current view with banner. Depends on map view and banner.</div></article>
+<!-- CA:END:WORK-010 -->
+
+<!-- CA:BEGIN:WORK-011 -->
+<article class="record" id="WORK-011" data-ca-symbol="WORK-011" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-011">WORK-011</a><h3>CSV import (0.2.0)</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-011</div><div class="field"><span class="label">Work id</span>WORK-C05BB06130F1CB23182FFE9E11477471</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-008">CAP-008</a></li><li><a href="#COMP-005">COMP-005</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>CSV templates per entity and relationship, validation preview, commit via repository.</div></article>
+<!-- CA:END:WORK-011 -->
+
+<!-- CA:BEGIN:WORK-012 -->
+<article class="record" id="WORK-012" data-ca-symbol="WORK-012" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-012">WORK-012</a><h3>SVG export (0.2.0)</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-012</div><div class="field"><span class="label">Work id</span>WORK-491E7949B076BF42A8F69B02207046CF</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-009">CAP-009</a></li><li><a href="#COMP-008">COMP-008</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>SVG export of current view with banner.</div></article>
+<!-- CA:END:WORK-012 -->
+
+<!-- CA:BEGIN:WORK-013 -->
+<article class="record" id="WORK-013" data-ca-symbol="WORK-013" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-013">WORK-013</a><h3>Scenario engine and compare view (0.3.0)</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-013</div><div class="field"><span class="label">Work id</span>WORK-35F1ABDE45C4AD1CC5BCE15E2A4B8215</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#CAP-010">CAP-010</a></li><li><a href="#COMP-009">COMP-009</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>To-Be change sets over As-Is, toggle, compare view and reduction metrics.</div></article>
+<!-- CA:END:WORK-013 -->
+
+<!-- CA:BEGIN:Q-016 -->
+<article class="record" id="Q-016" data-ca-symbol="Q-016" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-016">Q-016</a><h3>Stack: decision</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Works for me. Also include anything that would obviously improve UX, DX or AX (agent experience), starting with it.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Approve the proposed stack: single self-contained sim.html built from TypeScript with Vite, sql.js (SQLite WASM) with File System Access API save-in-place and download fallback, Cytoscape.js for the map?</div></article>
+<!-- CA:END:Q-016 -->
+
+<!-- CA:BEGIN:Q-017 -->
+<article class="record" id="Q-017" data-ca-symbol="Q-017" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-017">Q-017</a><h3>Release: tag prefix</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>v0.1.0 (prefix v).</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Release tag style?</div></article>
+<!-- CA:END:Q-017 -->
+
+<!-- CA:BEGIN:Q-018 -->
+<article class="record" id="Q-018" data-ca-symbol="Q-018" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-018">Q-018</a><h3>Classification: marked items</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Each network and each service carries a marking; the banner shows the highest.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Which items carry a classification marking?</div></article>
+<!-- CA:END:Q-018 -->
+
+<!-- CA:BEGIN:Q-019 -->
+<article class="record" id="Q-019" data-ca-symbol="Q-019" data-ca-kind="records"><div class="record-head"><a class="id" href="#Q-019">Q-019</a><h3>Synthesis: confirmation</h3><span class="badge">question</span><span class="badge">user-reported</span><span class="badge">answered</span></div><div class="field"><span class="label">Answer</span>Confirmed, with the stack approved, tag prefix v, markings on each network and service, and obvious UX/DX/AX improvements included from the start.</div><div class="field"><span class="label">Related refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Do the synthesized capabilities, components, phases and work items match the user&#39;s intent?</div></article>
+<!-- CA:END:Q-019 -->
+
+<!-- CA:BEGIN:CAP-011 -->
+<article class="record" id="CAP-011" data-ca-symbol="CAP-011" data-ca-kind="records"><div class="record-head"><a class="id" href="#CAP-011">CAP-011</a><h3>CAP Navigation and safety UX</h3><span class="badge">capability</span><span class="badge">proposed</span></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-016">Q-016</a></li><li><a href="#Q-019">Q-019</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Search-to-focus any node by name; undo/redo for edits; warn before closing or opening another file with unsaved changes.</div></article>
+<!-- CA:END:CAP-011 -->
+
+<!-- CA:BEGIN:WORK-014 -->
+<article class="record" id="WORK-014" data-ca-symbol="WORK-014" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-014">WORK-014</a><h3>Synthetic demo dataset</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-014</div><div class="field"><span class="label">Work id</span>WORK-AE5DC33C7BB10E07063CA19372F0258B</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-004">Q-004</a></li><li><a href="#Q-016">Q-016</a></li><li><a href="#WORK-002">WORK-002</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Generator for a fictional, UNCLASSIFIED 6-network ~100-service dataset (external SaaS, CDS nodes, multiple providing organizations) used for demos, layout spike, and e2e tests. Never real customer data.</div></article>
+<!-- CA:END:WORK-014 -->
+
+<!-- CA:BEGIN:WORK-015 -->
+<article class="record" id="WORK-015" data-ca-symbol="WORK-015" data-ca-kind="records"><div class="record-head"><a class="id" href="#WORK-015">WORK-015</a><h3>Search, undo/redo, unsaved-changes guard</h3><span class="badge">work item</span><span class="badge">proposed</span></div><div class="field"><span class="label">Promotion</span><div class="fields"><div class="field"><span class="label">Origin</span>DECOMP-PROJECT#WORK-015</div><div class="field"><span class="label">Work id</span>WORK-5533E947EFB208FC964D49F0D76705BC</div></div></div><div class="field"><span class="label">Related refs</span><ul class="items"><li><a href="#Q-016">Q-016</a></li></ul></div><div class="field"><span class="label">Scope</span><div class="fields"><div class="field"><span class="label">Paths</span><span class="missing">None recorded</span></div></div></div><div class="field"><span class="label">Source refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Statement</span>Search-to-focus node, undo/redo over repository edits, unsaved-change prompts. Depends on repository and map view.</div></article>
+<!-- CA:END:WORK-015 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-10</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 96b0b85a10c36679b918a52d80ca89c3ce0676d6f9af77263c00ad3a8e77c863<br>Model SHA-256: 01802b9b587b8cce2b4ffc71f2649996259c4040e4cb2b8fc179f63cf202424c</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "DECOMP-PROJECT",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "01802b9b587b8cce2b4ffc71f2649996259c4040e4cb2b8fc179f63cf202424c",
+    "normative_sha256": "96b0b85a10c36679b918a52d80ca89c3ce0676d6f9af77263c00ad3a8e77c863",
+    "symbol_count": 57
+  },
+  "kind": "decomposition",
+  "normative": {
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-10",
+      "repository": null
+    },
+    "records": [
+      {
+        "answer": "Service Integration Map. The user goes into struggling enterprises and helps them out of it by applying technology. These enterprises often span multiple network domains (e.g. SIPR, NIPR, DEV); each network has different users, services and purposes, even though it is the same overall group of people, and not everyone uses every service on every network. The first step is usually to inventory which services are provided or consumed on each network, who provides or consumes them, and who the Tier 1/2/3 support is. SIM records services (what the service is, which application provides it, which network it is on, a category such as cyber, ops or C2) and programmatically or dynamically maps the connections between services and networks into a single-pane view the user can pan around, highlight nodes or services in, and see everything that chains to a node. It is mainly used to show visually how complexity will be reduced by combining services, paths and so on. Visualization is 99% of the purpose.",
+        "basis": "user-reported",
+        "id": "Q-001",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "What is SIM and what problem does it solve?",
+        "status": "answered",
+        "title": "Vision: what is SIM",
+        "type": "question"
+      },
+      {
+        "answer": "A local-only HTML-based application, so the user can bring it in and use it at almost any location. It therefore needs SQLite or a similar flat file for data storage.",
+        "basis": "user-reported",
+        "id": "Q-002",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "How is SIM delivered and where does data live?",
+        "status": "answered",
+        "title": "Vision: deployment form",
+        "type": "question"
+      },
+      {
+        "answer": "The user, or a consultant like the user.",
+        "basis": "user-reported",
+        "id": "Q-003",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Who uses SIM?",
+        "status": "answered",
+        "title": "Vision: primary users",
+        "type": "question"
+      },
+      {
+        "answer": "It can hold 5 domains (networks) worth of services: dozens to maybe a hundred services for a large 6-network, 5000-user enterprise.",
+        "basis": "user-reported",
+        "id": "Q-004",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "What makes a first version successful?",
+        "status": "answered",
+        "title": "Vision: success criteria",
+        "type": "question"
+      },
+      {
+        "answer": "SIM will not be hosted and will not have an agent at first.",
+        "basis": "user-reported",
+        "id": "Q-005",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "What is out of scope at first?",
+        "status": "answered",
+        "title": "Vision: exclusions",
+        "type": "question"
+      },
+      {
+        "answer": "Do not count on being able to run a Python server. The user personally can, but it is less likely once SIM goes on SIPR.",
+        "basis": "user-reported",
+        "id": "Q-006",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Can SIM rely on a local server (e.g. Python) or must it run browser-only?",
+        "status": "answered",
+        "title": "Env: target machines",
+        "type": "question"
+      },
+      {
+        "answer": "It should show a classification banner and always display the highest classification. Keeping IP addresses and FQDNs out of SIM should avoid classified data.",
+        "basis": "user-reported",
+        "id": "Q-007",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Does SIM need classification/CUI markings, and how is sensitive data kept out?",
+        "status": "answered",
+        "title": "Env: data sensitivity",
+        "type": "question"
+      },
+      {
+        "answer": "That looks correct at first glance.",
+        "basis": "user-reported",
+        "id": "Q-008",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Are networks, services, applications, categories, organizations/user groups and support teams (Tier 1/2/3) the right entities?",
+        "status": "answered",
+        "title": "Data: entities",
+        "type": "question"
+      },
+      {
+        "answer": "Connections are drawn strictly from the provides/consumes relationships the user enters explicitly. Services are automatically contained inside their network/domain. Connections that cross network boundaries are highlighted. SIM must show services outside the enterprise networks (third-party SaaS etc.) and display a CDS (cross-domain solution) where one connects different domains/networks.",
+        "basis": "user-reported",
+        "id": "Q-009",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Are connections explicit, derived from shared data, or both?",
+        "status": "answered",
+        "title": "Data: connection source",
+        "type": "question"
+      },
+      {
+        "answer": "As-Is/To-Be would be great.",
+        "basis": "user-reported",
+        "id": "Q-010",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Are as-is and to-be scenarios wanted?",
+        "status": "answered",
+        "title": "Scope: as-is / to-be",
+        "type": "question"
+      },
+      {
+        "answer": "Hand entry or CSV import, and exports for slides are required.",
+        "basis": "user-reported",
+        "id": "Q-011",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "How does data get in and out?",
+        "status": "answered",
+        "title": "Data: input and export",
+        "type": "question"
+      },
+      {
+        "answer": "Both (probably). Part of the complexity is that services on the same network are sometimes provided by different organizations (e.g. J7 instead of J6, and why?).",
+        "basis": "user-reported",
+        "id": "Q-012",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Are provides/consumes relationships organization-to-service, service-to-service, or both?",
+        "status": "answered",
+        "title": "Data: provides/consumes direction",
+        "type": "question"
+      },
+      {
+        "answer": "If anything is marked Secret, it brings everything up to Secret (the banner always shows the highest classification present).",
+        "basis": "user-reported",
+        "id": "Q-013",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "How is the banner's highest classification determined?",
+        "status": "answered",
+        "title": "Classification: banner rule",
+        "type": "question"
+      },
+      {
+        "answer": "Yes, its own node.",
+        "basis": "user-reported",
+        "id": "Q-014",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Is a CDS its own node or a label on a cross-domain connection?",
+        "status": "answered",
+        "title": "Data: CDS representation",
+        "type": "question"
+      },
+      {
+        "answer": "The user personally holds copyright right now. License: Apache (Apache-2.0). Versioning starts at 0.1.0. Keep a changelog.",
+        "basis": "user-reported",
+        "id": "Q-015",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Who holds copyright, what license, and what release/changelog practice?",
+        "status": "answered",
+        "title": "Housekeeping: copyright, license, releases",
+        "type": "question"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-001",
+        "related_refs": [
+          "Q-002",
+          "Q-006"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Create, open and save a SIM dataset as a single local SQLite file with no server and no network access. Initiator: user. Output: .sqlite file on local disk.",
+        "title": "CAP Local dataset file",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-002",
+        "related_refs": [
+          "Q-001",
+          "Q-008",
+          "Q-009",
+          "Q-014"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Hand-enter, edit and delete networks/domains (including an external zone for third-party SaaS), services, applications, categories (cyber, ops, C2, user-defined), organizations/user groups, support teams with Tier 1/2/3 assignment, and CDS nodes.",
+        "title": "CAP Entity management",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-003",
+        "related_refs": [
+          "Q-009",
+          "Q-012"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Explicitly record provides/consumes relationships organization-to-service and service-to-service. These are the only source of drawn connections; nothing is inferred from shared attributes.",
+        "title": "CAP Provides/consumes relationships",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-004",
+        "related_refs": [
+          "Q-001",
+          "Q-004",
+          "Q-009",
+          "Q-014"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Render a single-pane pan/zoom map where each network is a container automatically holding its services; external (SaaS) services sit in an external zone; CDS nodes sit on the boundary between the networks they join; connections crossing a network boundary are visually highlighted. Must stay readable at ~100 services across 5-6 networks.",
+        "title": "CAP Service map",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-005",
+        "related_refs": [
+          "Q-001",
+          "Q-012"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Selecting a node highlights it and every node that chains to it (transitive upstream and downstream through provides/consumes), dimming the rest; filter by network, category, organization.",
+        "title": "CAP Highlight and chain tracing",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-006",
+        "related_refs": [
+          "Q-007",
+          "Q-013",
+          "Q-018"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Each network and each service carries a classification marking; the banner shows the highest marking present in the open dataset (anything Secret raises the whole view to Secret). The banner appears in the app and on every export.",
+        "title": "CAP Classification banner",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-007",
+        "related_refs": [
+          "Q-007"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "The data model has no IP address or FQDN fields; input that looks like an IP or FQDN is flagged before save.",
+        "title": "CAP Sensitive-data guardrails",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-008",
+        "related_refs": [
+          "Q-011"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Import each entity type and relationships from CSV templates, with a validation preview reporting rejected rows before commit.",
+        "title": "CAP CSV import",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-009",
+        "related_refs": [
+          "Q-011",
+          "Q-013"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Export the current map view (with highlight state and classification banner) as PNG and SVG for briefing slides.",
+        "title": "CAP Slide export",
+        "type": "capability"
+      },
+      {
+        "basis": "inferred",
+        "id": "CAP-010",
+        "related_refs": [
+          "Q-001",
+          "Q-010"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Keep an As-Is baseline and one or more To-Be scenarios expressing changes (merge services, re-home a service to another provider/network, retire, add), toggle between them and show a compare view highlighting what changed and the resulting reduction in services and cross-domain paths.",
+        "title": "CAP As-Is / To-Be scenarios",
+        "type": "capability"
+      },
+      {
+        "basis": "user-reported",
+        "id": "COMP-001",
+        "related_refs": [
+          "Q-002",
+          "Q-006",
+          "Q-016"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "One self-contained offline sim.html opened from file://, built from strict TypeScript with Vite and a single-file plugin; all JS, CSS and WASM inlined; no runtime network or CDN fetch.",
+        "title": "COMP Single-file app shell",
+        "type": "component"
+      },
+      {
+        "basis": "user-reported",
+        "id": "COMP-002",
+        "related_refs": [
+          "Q-002",
+          "Q-006",
+          "Q-016",
+          "CAP-001"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "SQLite compiled to WASM (sql.js) in memory; open/save via the File System Access API where available (Chromium), download/upload fallback otherwise; versioned schema with migrations. Owns the only write path to the dataset file.",
+        "title": "COMP Persistence layer",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-003",
+        "related_refs": [
+          "Q-008",
+          "Q-009",
+          "Q-012",
+          "Q-007",
+          "CAP-002",
+          "CAP-003",
+          "CAP-007"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Entities: network (internal|external), service, application, category, organization, support team with tier, CDS, provides/consumes relationship, classification marking, scenario. Validation (including IP/FQDN guard) lives here; UI and importer write only through it.",
+        "title": "COMP Domain model and repository",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-004",
+        "related_refs": [
+          "Q-011",
+          "CAP-002"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Forms and tables for hand entry and editing of every entity and relationship.",
+        "title": "COMP Data entry UI",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-005",
+        "related_refs": [
+          "Q-011",
+          "CAP-008"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Template-driven CSV parsing with a validation preview, committing through the domain repository.",
+        "title": "COMP CSV importer",
+        "type": "component"
+      },
+      {
+        "basis": "user-reported",
+        "id": "COMP-006",
+        "related_refs": [
+          "Q-016",
+          "CAP-004",
+          "CAP-005"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Cytoscape.js (bundled) using compound nodes for network containers, an external zone, boundary CDS nodes, cross-boundary edge styling, chain highlight and filters. Reads from the domain model; never writes.",
+        "title": "COMP Map view",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-007",
+        "related_refs": [
+          "Q-013",
+          "CAP-006"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Computes the highest marking in the dataset or active scenario and renders the banner in the app and exports.",
+        "title": "COMP Classification module",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-008",
+        "related_refs": [
+          "CAP-009"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "PNG/SVG rendering of the current map view with banner.",
+        "title": "COMP Export module",
+        "type": "component"
+      },
+      {
+        "basis": "inferred",
+        "id": "COMP-009",
+        "related_refs": [
+          "Q-010",
+          "CAP-010"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Stores To-Be scenarios as change sets over the As-Is baseline, materializes a scenario graph for the map view and computes compare diffs and reduction metrics.",
+        "title": "COMP Scenario engine",
+        "type": "component"
+      },
+      {
+        "basis": "proposed",
+        "id": "PHASE-001",
+        "related_refs": [
+          "Q-004",
+          "Q-015",
+          "Q-019",
+          "CAP-001",
+          "CAP-002",
+          "CAP-003",
+          "CAP-004",
+          "CAP-005",
+          "CAP-006",
+          "CAP-007",
+          "CAP-009",
+          "CAP-011"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Delivers CAP-001..007, CAP-011 and PNG export. Done when: opened from file:// in offline Edge/Chrome, a 5-network ~100-service dataset (including SaaS external services and at least one CDS) can be hand-entered, saved, closed, reopened, and shown with network containers, highlighted cross-domain edges, chain highlighting, the correct highest-classification banner, and a PNG export carrying the banner.",
+        "title": "PHASE 0.1.0 MVP: enter, save, see",
+        "type": "phase"
+      },
+      {
+        "basis": "proposed",
+        "id": "PHASE-002",
+        "related_refs": [
+          "CAP-008",
+          "CAP-009"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Delivers CAP-008 CSV import and SVG export plus map filters. Done when: a full dataset loads from CSV templates with rejected rows reported, and SVG exports drop into slides with the banner.",
+        "title": "PHASE 0.2.0 Bulk data and slides",
+        "type": "phase"
+      },
+      {
+        "basis": "proposed",
+        "id": "PHASE-003",
+        "related_refs": [
+          "Q-010",
+          "CAP-010"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Delivers CAP-010. Done when: at least one To-Be scenario with merge/re-home/retire changes can be toggled against As-Is and a compare view shows the changed nodes and the reduction in service count and cross-domain connections.",
+        "title": "PHASE 0.3.0 As-Is / To-Be",
+        "type": "phase"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-001",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-001",
+          "work_id": "WORK-07C1DBD8DD441FDF939BB858DDA896F1"
+        },
+        "related_refs": [
+          "Q-006",
+          "COMP-001",
+          "COMP-002"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Throwaway prototype answering: does a single Vite-built HTML with inlined sql.js WASM load from file:// in current offline Edge and Chrome; does File System Access API save-in-place work from file:// (and what happens under restrictive enterprise policy); does the download fallback work. Output: findings note and ADR candidates.",
+        "title": "SPIKE: file:// feasibility (time-box 1 day)",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-002",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-002",
+          "work_id": "WORK-63E4CE3B9816E2432180179FF61B1675"
+        },
+        "related_refs": [
+          "Q-004",
+          "COMP-006",
+          "COMP-008"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Throwaway prototype answering: can Cytoscape.js compound nodes render 6 networks plus external zone with ~100 services and boundary CDS nodes readably; which layout (e.g. fcose) works; do PNG/SVG exports include the banner. Output: findings note.",
+        "title": "SPIKE: map layout at scale (time-box 1 day)",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-003",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-003",
+          "work_id": "WORK-2B5DD3C7B3C1B5FBA94D49D20A68E5FD"
+        },
+        "related_refs": [
+          "Q-015",
+          "Q-016",
+          "Q-017",
+          "COMP-001"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Strict TypeScript + Vite single-file build producing sim.html; ESLint + Prettier; Vitest unit tests; Playwright end-to-end tests against the built sim.html opened via file://; one npm run check gate (typecheck, lint, unit, e2e, build); AGENTS.md/CLAUDE.md with commands and module boundaries for agents; LICENSE (Apache-2.0); CHANGELOG starting at 0.1.0 with v-prefixed tags. Depends on the file:// spike.",
+        "title": "Project skeleton and single-file build",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-004",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-004",
+          "work_id": "WORK-326B4B8E264E854F6BF801C1BF45BBCF"
+        },
+        "related_refs": [
+          "CAP-001",
+          "COMP-002",
+          "COMP-003"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Versioned SQLite schema for all entities, migrations, open/new/save/save-as with fallback. Depends on skeleton.",
+        "title": "Schema, persistence and open/save",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-005",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-005",
+          "work_id": "WORK-075DD17A8777E20C7E4E1166AC2FF78C"
+        },
+        "related_refs": [
+          "CAP-002",
+          "CAP-003",
+          "CAP-006",
+          "CAP-007",
+          "COMP-003"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Typed repository for all entities and provides/consumes relationships, classification markings, IP/FQDN guard. Depends on schema.",
+        "title": "Domain repository and validation",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-006",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-006",
+          "work_id": "WORK-4ACD0A1575DBD0C9A7AFB5130D19DE69"
+        },
+        "related_refs": [
+          "CAP-002",
+          "CAP-003",
+          "COMP-004"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Forms and tables for every entity and relationship. Depends on repository.",
+        "title": "Hand-entry UI",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-007",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-007",
+          "work_id": "WORK-AB0D98683C3D84DC3A74FE086277DA5D"
+        },
+        "related_refs": [
+          "CAP-004",
+          "COMP-006"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Network containers, external zone, CDS boundary nodes, cross-boundary edge styling, pan/zoom. Depends on repository and layout spike.",
+        "title": "Map view with containment and cross-domain highlight",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-008",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-008",
+          "work_id": "WORK-40ECFB05784B3439AD3DDF7935D34D30"
+        },
+        "related_refs": [
+          "CAP-005",
+          "COMP-006"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Transitive upstream/downstream highlight on select; filter by network, category, organization. Depends on map view.",
+        "title": "Chain highlight and filters",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-009",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-009",
+          "work_id": "WORK-A22051C39638CA0A03C8D737C45FBADE"
+        },
+        "related_refs": [
+          "CAP-006",
+          "COMP-007"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Highest-marking computation and banner in app and exports. Depends on repository.",
+        "title": "Classification banner",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-010",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-010",
+          "work_id": "WORK-162D22FC0CBFBC8105018E2740814705"
+        },
+        "related_refs": [
+          "CAP-009",
+          "COMP-008"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Export current view with banner. Depends on map view and banner.",
+        "title": "PNG export",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-011",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-011",
+          "work_id": "WORK-C05BB06130F1CB23182FFE9E11477471"
+        },
+        "related_refs": [
+          "CAP-008",
+          "COMP-005"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "CSV templates per entity and relationship, validation preview, commit via repository.",
+        "title": "CSV import (0.2.0)",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-012",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-012",
+          "work_id": "WORK-491E7949B076BF42A8F69B02207046CF"
+        },
+        "related_refs": [
+          "CAP-009",
+          "COMP-008"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "SVG export of current view with banner.",
+        "title": "SVG export (0.2.0)",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-013",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-013",
+          "work_id": "WORK-35F1ABDE45C4AD1CC5BCE15E2A4B8215"
+        },
+        "related_refs": [
+          "CAP-010",
+          "COMP-009"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "To-Be change sets over As-Is, toggle, compare view and reduction metrics.",
+        "title": "Scenario engine and compare view (0.3.0)",
+        "type": "work_item"
+      },
+      {
+        "answer": "Works for me. Also include anything that would obviously improve UX, DX or AX (agent experience), starting with it.",
+        "basis": "user-reported",
+        "id": "Q-016",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Approve the proposed stack: single self-contained sim.html built from TypeScript with Vite, sql.js (SQLite WASM) with File System Access API save-in-place and download fallback, Cytoscape.js for the map?",
+        "status": "answered",
+        "title": "Stack: decision",
+        "type": "question"
+      },
+      {
+        "answer": "v0.1.0 (prefix v).",
+        "basis": "user-reported",
+        "id": "Q-017",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Release tag style?",
+        "status": "answered",
+        "title": "Release: tag prefix",
+        "type": "question"
+      },
+      {
+        "answer": "Each network and each service carries a marking; the banner shows the highest.",
+        "basis": "user-reported",
+        "id": "Q-018",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Which items carry a classification marking?",
+        "status": "answered",
+        "title": "Classification: marked items",
+        "type": "question"
+      },
+      {
+        "answer": "Confirmed, with the stack approved, tag prefix v, markings on each network and service, and obvious UX/DX/AX improvements included from the start.",
+        "basis": "user-reported",
+        "id": "Q-019",
+        "related_refs": [],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Do the synthesized capabilities, components, phases and work items match the user's intent?",
+        "status": "answered",
+        "title": "Synthesis: confirmation",
+        "type": "question"
+      },
+      {
+        "basis": "proposed",
+        "id": "CAP-011",
+        "related_refs": [
+          "Q-016",
+          "Q-019"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Search-to-focus any node by name; undo/redo for edits; warn before closing or opening another file with unsaved changes.",
+        "title": "CAP Navigation and safety UX",
+        "type": "capability"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-014",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-014",
+          "work_id": "WORK-AE5DC33C7BB10E07063CA19372F0258B"
+        },
+        "related_refs": [
+          "Q-004",
+          "Q-016",
+          "WORK-002"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Generator for a fictional, UNCLASSIFIED 6-network ~100-service dataset (external SaaS, CDS nodes, multiple providing organizations) used for demos, layout spike, and e2e tests. Never real customer data.",
+        "title": "Synthetic demo dataset",
+        "type": "work_item"
+      },
+      {
+        "basis": "proposed",
+        "id": "WORK-015",
+        "promotion": {
+          "origin": "DECOMP-PROJECT#WORK-015",
+          "work_id": "WORK-5533E947EFB208FC964D49F0D76705BC"
+        },
+        "related_refs": [
+          "Q-016"
+        ],
+        "scope": {
+          "paths": []
+        },
+        "source_refs": [],
+        "statement": "Search-to-focus node, undo/redo over repository edits, unsaved-change prompts. Depends on repository and map view.",
+        "title": "Search, undo/redo, unsaved-changes guard",
+        "type": "work_item"
+      }
+    ],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [],
+    "summary": "Interview answers, intended architecture, phases and proposed work.",
+    "title": "Project decomposition"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 80,
+  "schema_version": "0.3.2",
+  "slug": "project"
+}
+</script>
+</body></html>
