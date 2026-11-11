@@ -48,8 +48,10 @@ e2e/                Playwright tests that open dist/sim.html from file://
 ## Module boundaries
 
 - `src/domain/repository.ts` is the only write path to a dataset. UI and the CSV importer
-  write through it; the map reads `repository.snapshot()` and never writes. Writes are
-  validated, run in a transaction, and fire `subscribe()` listeners only on success.
+  write through it. The map reads `repository.snapshot()`; its only write is node positions,
+  which it hands to a `savePositions` callback that the workspace turns into one `setPositions`
+  call. Writes are validated, run in a transaction, and fire `subscribe()` listeners only on
+  success; `setPositions` writes and notifies nothing when no position changed.
 - Refusals are `ValidationError` (`code`, `field`, readable message). Text that looks like an
   IP address or host name raises `SensitiveInputWarning`; repeat the call with
   `{ confirmSensitive: true }` only after the user confirms (decision Q-032).
@@ -61,7 +63,8 @@ e2e/                Playwright tests that open dist/sim.html from file://
   list and relationship rows but never rebuild a form the user is typing in.
 - The map turns `repository.snapshot()` into elements with the pure `buildGraph` (unit-tested; e2e
   reads the canvas through Cytoscape's `_cyreg` registry on the `map-canvas` container, never a
-  global). Repository changes update elements in place; only node changes re-run fcose, incrementally.
+  global). Repository changes update elements in place. Nodes sit at their saved positions; new or
+  re-parented nodes are placed by fcose with every other leaf pinned; Re-layout re-runs it on everything.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
   (`SIM1`), version, integrity and foreign keys, and caps size at 100 MB.
 - Only `src/main.ts` imports the WASM (`?url`); `src/db` stays environment-neutral so Node

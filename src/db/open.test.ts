@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { rawDatabase, wasm } from "../../tests/helpers/sqlite";
 import { createDataset, DatasetError, datasetName, exportDataset, MAX_DATASET_BYTES, openDataset } from "./dataset";
-import { LATEST_VERSION } from "./migrate";
+import { LATEST_VERSION, migrate } from "./migrate";
+import { MIGRATIONS } from "./migrations";
 
 async function simBytes(mutate?: (db: Awaited<ReturnType<typeof createDataset>>) => void): Promise<Uint8Array> {
   const db = await createDataset("Test enterprise", wasm);
@@ -162,5 +163,18 @@ describe("openDataset rejects bad rows behind a matching schema", () => {
       db.run("PRAGMA writable_schema = OFF");
     });
     expect(["CORRUPT", "SCHEMA_MISMATCH"]).toContain(await codeOf(bytes));
+  });
+});
+
+describe("openDataset upgrades older datasets", () => {
+  it("opens a schema v1 dataset and migrates it to the latest schema with no positions", async () => {
+    const v1 = await rawDatabase();
+    migrate(v1, MIGRATIONS.slice(0, 1));
+    v1.run("INSERT INTO meta (key, value) VALUES ('name', 'Old')");
+    v1.run("INSERT INTO network (name, kind, marking) VALUES ('NIPR', 'internal', 'CUI')");
+    const db = await openDataset(v1.export(), { wasm });
+    expect(LATEST_VERSION).toBeGreaterThan(1);
+    expect(db.exec("PRAGMA user_version")[0]?.values[0]?.[0]).toBe(LATEST_VERSION);
+    expect(db.exec("SELECT name, map_x, map_y FROM network")[0]?.values).toEqual([["NIPR", null, null]]);
   });
 });

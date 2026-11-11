@@ -137,3 +137,24 @@ describe("v1 schema details", () => {
     expect(MARKINGS).toEqual(V1_MARKINGS);
   });
 });
+
+describe("schema v2: map positions", () => {
+  beforeEach(seed);
+
+  it("adds an optional map position to networks, services and CDS", () => {
+    run("INSERT INTO cds (id, name) VALUES (1, 'Guard')");
+    run("UPDATE network SET map_x = 10.5, map_y = -20 WHERE id = 1");
+    run("UPDATE service SET map_x = 0, map_y = 0 WHERE id = 1");
+    run("UPDATE cds SET map_x = 1, map_y = 2 WHERE id = 1");
+    expect(db.exec("SELECT map_x, map_y FROM network WHERE id = 1")[0]?.values[0]).toEqual([10.5, -20]);
+    expect(db.exec("SELECT map_x, map_y FROM network WHERE id = 2")[0]?.values[0]).toEqual([null, null]);
+  });
+
+  it.each(["network", "service"])("refuses half a position or an out-of-range one on %s", (table) => {
+    for (const set of ["map_x = 1", "map_y = 1", "map_x = 1e9, map_y = 0", "map_x = 0, map_y = -1e9"]) {
+      expect(() => {
+        run(`UPDATE ${table} SET ${set} WHERE id = 1`);
+      }).toThrow(/constraint failed/i);
+    }
+  });
+});

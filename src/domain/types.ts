@@ -119,6 +119,14 @@ export interface WriteOptions {
   readonly confirmSensitive?: boolean;
 }
 
+/** Where a node sits on the map, in model coordinates (decomposition Q-022). */
+export interface NodePosition {
+  readonly entity: "network" | "service" | "cds";
+  readonly id: number;
+  readonly x: number;
+  readonly y: number;
+}
+
 /** Read-only view of the whole dataset for the map; never written back. */
 export interface Snapshot {
   readonly marking: Marking;
@@ -131,4 +139,6 @@ export interface Snapshot {
   readonly support: readonly SupportAssignment[];
   readonly consumption: readonly Consumption[];
   readonly dependencies: readonly Dependency[];
+  /** Saved map positions; a node without one has not been placed yet. */
+  readonly positions: readonly NodePosition[];
 }
