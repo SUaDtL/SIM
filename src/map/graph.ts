@@ -16,7 +16,15 @@ export interface GraphNode {
 
 export interface GraphEdge {
   readonly group: "edges";
-  readonly data: { readonly id: string; readonly source: string; readonly target: string; readonly dependency: string };
+  readonly data: {
+    readonly id: string;
+    readonly source: string;
+    readonly target: string;
+    readonly dependency: string;
+    readonly kind: EdgeKind;
+    /** The provider is foundational (identity, DNS): hidden by default on the map (Q-021). */
+    readonly foundational: boolean;
+  };
   readonly classes: string;
 }
 
@@ -43,6 +51,7 @@ export function buildGraph(snapshot: Snapshot): Graph {
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
   const networkOf = new Map<number, number>();
+  const foundational = new Set(snapshot.services.filter((s) => s.foundational).map((s) => s.id));
   const external = new Set(snapshot.networks.filter((n) => n.kind === "external").map((n) => n.id));
 
   for (const n of snapshot.networks) {
@@ -78,10 +87,11 @@ export function buildGraph(snapshot: Snapshot): Graph {
     const dependency = `${String(d.consumerServiceId)}-${String(d.providerServiceId)}`;
     const source = nodeId("service", d.consumerServiceId);
     const target = nodeId("service", d.providerServiceId);
+    const toFoundational = foundational.has(d.providerServiceId);
     const edge = (id: string, from: string, to: string, kind: EdgeKind): GraphEdge => ({
       group: "edges",
-      data: { id, source: from, target: to, dependency },
-      classes: kind,
+      data: { id, source: from, target: to, dependency, kind, foundational: toFoundational },
+      classes: toFoundational ? `${kind} to-foundational` : kind,
     });
     if (d.viaCdsId !== null) {
       const cds = nodeId("cds", d.viaCdsId);
@@ -107,15 +117,21 @@ export function buildGraph(snapshot: Snapshot): Graph {
 const count = (n: number, one: string, many = `${one}s`): string => `${String(n)} ${n === 1 ? one : many}`;
 
 /** The map in words, for screen readers: element counts and dependencies (not edges) by kind. */
-export function summarize(graph: Graph): string {
+export function summarize(graph: Graph, view: { readonly foundationalHidden?: boolean } = {}): string {
   const entities = (entity: MapEntity) => graph.nodes.filter((n) => n.data.entity === entity).length;
-  const kindOf = new Map<string, string>();
-  for (const e of graph.edges) kindOf.set(e.data.dependency, e.classes);
-  const kinds = [...kindOf.values()];
-  const of = (kind: EdgeKind) => String(kinds.filter((k) => k === kind).length);
+  const byDependency = new Map<string, GraphEdge["data"]>();
+  for (const e of graph.edges) byDependency.set(e.data.dependency, e.data);
+  const deps = [...byDependency.values()];
+  const of = (kind: EdgeKind) => String(deps.filter((d) => d.kind === kind).length);
+  const hidden = view.foundationalHidden ? deps.filter((d) => d.foundational).length : 0;
   return (
     `${count(entities("network"), "network")}, ${count(entities("service"), "service")}, ` +
-    `${String(entities("cds"))} CDS. ${count(kinds.length, "dependency", "dependencies")}: ${of("local")} local, ` +
-    `${of("via-cds")} via a CDS, ${of("cross-domain")} cross-domain without a CDS, ${of("external")} to an external network.`
+    `${String(entities("cds"))} CDS. ${count(deps.length, "dependency", "dependencies")}: ${of("local")} local, ` +
+    `${of("via-cds")} via a CDS, ${of("cross-domain")} cross-domain without a CDS, ${of("external")} to an external network.` +
+    (hidden === 0
+      ? ""
+      : hidden === 1
+        ? " 1 dependency on a foundational service is hidden."
+        : ` ${String(hidden)} dependencies on foundational services are hidden.`)
   );
 }

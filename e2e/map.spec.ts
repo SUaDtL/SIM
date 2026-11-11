@@ -79,11 +79,12 @@ interface NodeView {
   parent: string | null;
   box: Box;
   rendered: { x: number; y: number };
+  position: { x: number; y: number };
 }
 
 interface MapView {
   nodes: NodeView[];
-  edges: { source: string; target: string; classes: string[] }[];
+  edges: { source: string; target: string; classes: string[]; visible: boolean }[];
   zoom: number;
   width: number;
   extent: Box;
@@ -101,6 +102,8 @@ function readMap(page: Page): Promise<MapView> {
       parent(): { nonempty(): boolean; id(): string };
       boundingBox(o?: object): Box;
       renderedPosition(): { x: number; y: number };
+      position(): { x: number; y: number };
+      visible(): boolean;
       source(): Ele;
       target(): Ele;
       classes(): string[];
@@ -121,8 +124,14 @@ function readMap(page: Page): Promise<MapView> {
         parent: n.parent().nonempty() ? n.parent().id() : null,
         box: n.boundingBox({ includeLabels: false }),
         rendered: n.renderedPosition(),
+        position: n.position(),
       })),
-      edges: cy.edges().map((e) => ({ source: e.source().id(), target: e.target().id(), classes: e.classes() })),
+      edges: cy.edges().map((e) => ({
+        source: e.source().id(),
+        target: e.target().id(),
+        classes: e.classes().filter((c) => c !== "hidden"),
+        visible: e.visible(),
+      })),
       zoom: cy.zoom(),
       width: cy.width(),
       extent: cy.extent(),
@@ -143,7 +152,7 @@ test("draws networks as containers, the external zone, CDS between networks and 
   const watch = await load(page);
   await openFixture(page);
   await expect(page.getByTestId("map-summary")).toHaveText(
-    "3 networks, 6 services, 1 CDS. 4 dependencies: 1 local, 1 via a CDS, 1 cross-domain without a CDS, 1 to an external network.",
+    "3 networks, 6 services, 1 CDS. 4 dependencies: 1 local, 1 via a CDS, 1 cross-domain without a CDS, 1 to an external network. 2 dependencies on foundational services are hidden.",
   );
 
   const map = await readMap(page);
@@ -163,7 +172,7 @@ test("draws networks as containers, the external zone, CDS between networks and 
   expect(overlaps(byLabel(map, "NIPR").box, byLabel(map, "SIPR").box)).toBe(false);
 
   const kinds = map.edges.map((e) => e.classes.join(" ")).sort();
-  expect(kinds).toEqual(["cross-domain", "external", "local", "via-cds", "via-cds"]);
+  expect(kinds).toEqual(["cross-domain to-foundational", "external", "local to-foundational", "via-cds", "via-cds"]);
   const via = map.edges.filter((e) => e.classes.includes("via-cds"));
   expect(via.map((e) => [e.source, e.target])).toEqual([
     [byLabel(map, "Email").id, guard.id],
@@ -202,7 +211,7 @@ test("updates as data is edited and opens a tapped node in the editor", async ({
   await openFixture(page);
   await expect(page.getByTestId("map-summary")).toContainText("6 services");
 
-  await page.getByLabel("Show").selectOption({ label: "Services" });
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
   await page.getByRole("button", { name: "Add service" }).click();
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Calendar");
@@ -237,5 +246,52 @@ test("shows a hint instead of an empty map for a new dataset", async ({ page }) 
   await expect(page.getByTestId("map-summary")).toHaveText(
     "0 networks, 0 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.",
   );
+  expect(watch.errors).toEqual([]);
+});
+
+test("hides links to foundational services until asked, without moving anything", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  const toggle = page.getByRole("checkbox", { name: "Show foundational links (2)" });
+  await expect(toggle).not.toBeChecked();
+
+  const hidden = await readMap(page);
+  const shown = (map: MapView) =>
+    map.edges
+      .filter((e) => e.visible)
+      .map((e) => e.classes.join(" "))
+      .sort();
+  expect(shown(hidden)).toEqual(["external", "via-cds", "via-cds"]);
+
+  await toggle.check();
+  const visible = await readMap(page);
+  expect(shown(visible)).toEqual([
+    "cross-domain to-foundational",
+    "external",
+    "local to-foundational",
+    "via-cds",
+    "via-cds",
+  ]);
+  expect(visible.nodes.map((n) => [n.id, n.position])).toEqual(hidden.nodes.map((n) => [n.id, n.position]));
+  await expect(page.getByTestId("map-summary")).not.toContainText("hidden");
+
+  // The choice survives edits.
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
+  await page.getByRole("button", { name: "Add service" }).click();
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Name", { exact: true }).fill("Calendar");
+  await editor.getByRole("button", { name: "Save service" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("7 services");
+  await expect(toggle).toBeChecked();
+  expect(shown(await readMap(page))).toHaveLength(5);
+
+  await toggle.uncheck();
+  expect(shown(await readMap(page))).toEqual(["external", "via-cds", "via-cds"]);
+
+  // A newly opened dataset starts with them hidden again.
+  await toggle.check();
+  await openFixture(page);
+  await expect(toggle).not.toBeChecked();
+  expect(shown(await readMap(page))).toHaveLength(3);
   expect(watch.errors).toEqual([]);
 });

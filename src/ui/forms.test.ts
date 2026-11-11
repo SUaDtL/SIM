@@ -3,7 +3,7 @@ import { wasm } from "../../tests/helpers/sqlite";
 import { createDataset } from "../db/dataset";
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import { Repository } from "../domain/repository";
-import { ENTITY_TYPES, type EntityType, descriptor, fieldFor, type FormValues } from "./forms";
+import { ENTITY_TYPES, type EntityType, descriptor, fieldFor, type FormValues, suggestsFoundational } from "./forms";
 
 let repo: Repository;
 
@@ -114,6 +114,13 @@ describe("form model", () => {
     const s = seed();
     descriptor("cds").remove(repo, s.guard.id);
     expect(repo.listCds()).toEqual([]);
+  });
+});
+
+describe("foundational default", () => {
+  it("suggests foundational for services named Identity or DNS, ignoring case and spaces", () => {
+    for (const name of ["Identity", "DNS", " dns ", "IDENTITY"]) expect(suggestsFoundational(name), name).toBe(true);
+    for (const name of ["Email", "Identity Portal", "DNS2", ""]) expect(suggestsFoundational(name), name).toBe(false);
   });
 });
 

@@ -2,7 +2,15 @@ import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import type { Tier } from "../domain/types";
 import { button, el, option } from "./dom";
-import { descriptor, type EntityType, type FieldDef, fieldFor, type FormValues, nounOf } from "./forms";
+import {
+  descriptor,
+  type EntityType,
+  type FieldDef,
+  fieldFor,
+  type FormValues,
+  nounOf,
+  suggestsFoundational,
+} from "./forms";
 import type { Selection } from "./list-panel";
 
 export interface EditorContext {
@@ -129,7 +137,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       event.preventDefault();
       save(collect(), false);
     });
-    if (type === "service" && id === null) followNetworkMarking(form);
+    if (type === "service" && id === null) {
+      followNetworkMarking(form);
+      followFoundationalName(form);
+    }
     // Any edit withdraws a pending "Save anyway": the changed text must be checked again.
     form.addEventListener("input", () => {
       pending = null;
@@ -153,6 +164,20 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     network?.addEventListener("change", () => {
       const chosen = ctx.repo().getNetwork(Number(network.value));
       if (chosen && marking) marking.value = chosen.marking;
+    });
+  }
+
+  /** While a new service is unsaved, naming it Identity or DNS ticks Foundational, until the user sets the box. */
+  function followFoundationalName(form: HTMLFormElement): void {
+    const name = form.querySelector<HTMLInputElement>("#field-name");
+    const box = form.querySelector<HTMLInputElement>("#field-foundational");
+    if (!name || !box) return;
+    let chosen = false;
+    box.addEventListener("change", () => {
+      chosen = true;
+    });
+    name.addEventListener("input", () => {
+      if (!chosen) box.checked = suggestsFoundational(name.value);
     });
   }
 

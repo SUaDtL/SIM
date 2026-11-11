@@ -32,3 +32,6 @@ All notable changes to SIM are documented here. The format follows
   across a boundary with no CDS, tan to an external network. Pan, zoom, "Fit map", and click
   a node to edit it; the map follows edits as they are saved. Uses Cytoscape.js with the fcose
   layout, bundled into the single file.
+- Links to foundational services (such as identity and DNS) are hidden on the map by default,
+  so cross-domain paths stand out; "Show foundational links" brings them back without moving
+  anything. A new service named Identity or DNS starts out marked foundational.

@@ -41,7 +41,7 @@ const list = (page: Page) => page.getByTestId("entity-list");
 const status = (page: Page) => page.getByTestId("dataset-status");
 
 async function show(page: Page, plural: string): Promise<void> {
-  await page.getByLabel("Show").selectOption({ label: plural });
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: plural });
 }
 
 type Fill = Record<string, string | boolean | string[]>;
@@ -113,9 +113,9 @@ test("shows the list panel, map area and editor, and collapses the list", async 
   await expect(editor(page)).toContainText("Select an item or add one");
 
   await page.getByRole("button", { name: "Hide list" }).click();
-  await expect(page.getByLabel("Show")).toBeHidden();
+  await expect(page.getByLabel("Show", { exact: true })).toBeHidden();
   await page.getByRole("button", { name: "Show list" }).click();
-  await expect(page.getByLabel("Show")).toBeVisible();
+  await expect(page.getByLabel("Show", { exact: true })).toBeVisible();
   expect(watch).toEqual({ errors: [], requests: [] });
 });
 
@@ -298,4 +298,41 @@ test("saves entered data, opens another file without errors and reopens the save
   await select(page, "Services", "Email");
   await expect(editor(page).getByLabel("Tier 2 support").locator("option:checked")).toHaveText("J7");
   expect(watch).toEqual({ errors: [], requests: [] });
+});
+
+test("a new service named Identity or DNS starts out foundational unless the user chose otherwise", async ({
+  page,
+}) => {
+  const watch = await load(page);
+  await show(page, "Networks");
+  await page.getByRole("button", { name: "Add network" }).click();
+  await fill(page, { Name: "NIPR" });
+  await editor(page).getByRole("button", { name: "Save network" }).click();
+
+  await show(page, "Services");
+  await page.getByRole("button", { name: "Add service" }).click();
+  const e = editor(page);
+  const box = e.getByLabel("Foundational (e.g. identity, DNS)");
+  const name = e.getByLabel("Name", { exact: true });
+  await name.fill("Email");
+  await expect(box).not.toBeChecked();
+  await name.fill(" dns ");
+  await expect(box).toBeChecked();
+  await name.fill("Identity");
+  await expect(box).toBeChecked();
+  await e.getByRole("button", { name: "Save service" }).click();
+  await expect(list(page)).toContainText("Identity");
+
+  // Editing an existing service never changes the box.
+  await box.uncheck();
+  await name.fill("DNS");
+  await expect(box).not.toBeChecked();
+
+  // Once the user sets the box on a new service, the name no longer changes it.
+  await page.getByRole("button", { name: "Add service" }).click();
+  await box.check();
+  await box.uncheck();
+  await name.fill("DNS");
+  await expect(box).not.toBeChecked();
+  expect(watch.errors).toEqual([]);
 });
