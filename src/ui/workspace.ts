@@ -9,6 +9,8 @@ export interface Workspace {
   readonly element: HTMLElement;
   /** Show a (new or reopened) dataset: drops the old selection and listens to the new repository. */
   setRepository(repo: Repository): void;
+  /** Undo or redo ran: forms showing changed data are rebuilt. */
+  historyChanged(): void;
 }
 
 /** The three-region layout: entity list (left), map area (center), editor (right). */
@@ -31,8 +33,8 @@ export function createWorkspace(initial: Repository): Workspace {
   });
   const map = createMapView({
     snapshot: () => repo.snapshot(),
-    savePositions: (positions) => {
-      repo.setPositions(positions);
+    savePositions: (positions, history) => {
+      repo.setPositions(positions, history);
     },
     saveImage: (image) => {
       downloadBlob(image, suggestedImageName(repo.datasetName()));
@@ -57,5 +59,11 @@ export function createWorkspace(initial: Repository): Workspace {
   }
 
   setRepository(initial);
-  return { element, setRepository };
+  return {
+    element,
+    setRepository,
+    historyChanged: () => {
+      editor.reload();
+    },
+  };
 }

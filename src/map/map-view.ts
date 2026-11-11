@@ -1,6 +1,6 @@
 import cytoscape, { type Core, type NodeCollection, type NodeSingular } from "cytoscape";
 import fcose from "cytoscape-fcose";
-import type { NodePosition, Snapshot } from "../domain/types";
+import type { History, NodePosition, Snapshot } from "../domain/types";
 import { button, el, option } from "../ui/dom";
 import {
   buildGraph,
@@ -24,8 +24,12 @@ export interface MapViewContext {
   snapshot(): Snapshot;
   /** Open a tapped node in the editor. */
   open(entity: MapEntity, id: number): void;
-  /** Save where nodes sit: the map's only write, made by the caller through the repository (CONV-002). */
-  savePositions(positions: readonly NodePosition[]): void;
+  /**
+   * Save where nodes sit: the map's only write, made by the caller through the repository (CONV-002).
+   * `history` says how it enters undo: a drag or Re-layout is its own step, placing a new node merges
+   * into the edit that added it, and the first layout of an opened dataset is not undoable.
+   */
+  savePositions(positions: readonly NodePosition[], history: History): void;
   /** Hand an exported PNG to the caller to save. */
   saveImage(image: Blob): void;
 }
@@ -123,6 +127,12 @@ export function createMapView(ctx: MapViewContext): MapView {
       applyView();
     });
   }
+  // Find a node by name: pick from the suggestions (or type a full name) and press Enter.
+  const findOptions = el("datalist", { id: "map-find-options" });
+  const findBox = el("input", { id: "map-find", type: "search", list: "map-find-options", autocomplete: "off" });
+  findBox.addEventListener("change", () => {
+    if (find(findBox.value)) findBox.value = "";
+  });
   // The label sits beside its list, not around it, so the list's name is just the label.
   const filterLabel = (text: string, select: HTMLSelectElement) =>
     el("span", { class: "map-filter" }, el("label", { for: select.id }, text), select);
@@ -137,7 +147,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     if (!window.confirm("Re-layout moves every node and replaces your arrangement. Continue?")) return;
     layoutAll(cy);
     fitMap();
-    persist();
+    persist("own");
   });
   const toolbar = el(
     "div",
@@ -145,6 +155,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     el(
       "div",
       { class: "map-tools", role: "group", "aria-label": "Filter the map" },
+      el("span", { class: "map-filter" }, el("label", { for: findBox.id }, "Find on map"), findBox, findOptions),
       filterLabel("Network", filterNetwork),
       filterLabel("Category", filterCategory),
       filterLabel("Organization", filterOrg),
@@ -178,25 +189,58 @@ export function createMapView(ctx: MapViewContext): MapView {
   /** The node whose chain is highlighted (decomposition CAP-005), if any. */
   let chainRoot: string | null = null;
   let filter: MapFilter = {};
-  let persistQueued = false;
+  let pending: History | null = null;
+  const strength: Record<History, number> = { none: 0, merge: 1, own: 2 };
 
   /**
    * Save every node's position once the current work is done. Deferred so the write (and the
    * change events it fires) never runs inside a repository listener or a half-finished sync.
    */
-  function persist(): void {
-    if (persistQueued) return;
-    persistQueued = true;
+  function persist(history: History): void {
+    const queued = pending !== null;
+    if (pending === null || strength[history] > strength[pending]) pending = history;
+    if (queued) return;
     queueMicrotask(() => {
-      persistQueued = false;
+      const kind = pending ?? "own";
+      pending = null;
       ctx.savePositions(
         cy.nodes().map((n) => ({
           entity: n.data("entity") as MapEntity,
           id: n.data("entityId") as number,
           ...n.position(),
         })),
+        kind,
       );
     });
+  }
+
+  /** What Find offers for a node: services carry their network, since names repeat across networks. */
+  function findName(node: GraphNode): string {
+    const label = node.data.label.split("\n")[0] ?? "";
+    if (node.data.entity !== "service" || node.data.parent === undefined) return label;
+    const network = graph.nodes.find((n) => n.data.id === node.data.parent);
+    return `${label} (${network?.data.label.split("\n")[0] ?? ""})`;
+  }
+
+  /**
+   * Bring a node into view by name, highlight its chain and open it in the editor. A node hidden by
+   * a filter clears the filters first, since finding it is the point.
+   */
+  function find(name: string): boolean {
+    const wanted = name.trim().toLowerCase();
+    const node = graph.nodes.find((n) => findName(n).toLowerCase() === wanted);
+    if (!node) return false;
+    const target = cy.getElementById(node.data.id);
+    if (target.hasClass("filtered")) {
+      for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
+      filter = {};
+    }
+    chainRoot = node.data.id;
+    applyView();
+    if (cy.zoom() < 0.8) cy.zoom(0.8);
+    cy.center(target);
+    ctx.open(node.data.entity, node.data.entityId);
+    return true;
   }
 
   /** The id selected in a filter list, or undefined for "All". */
@@ -301,9 +345,14 @@ export function createMapView(ctx: MapViewContext): MapView {
     ctx.open(node.data("entity") as MapEntity, node.data("entityId") as number);
   });
   // Dragging a network drags its services; either way, save the new arrangement.
-  cy.on("dragfree", "node", persist);
+  cy.on("dragfree", "node", () => {
+    persist("own");
+  });
 
-  /** Sync elements with the repository; returns the nodes that were added or changed network. */
+  /**
+   * Sync elements with the repository. Every leaf with a saved position goes there (so undo and redo
+   * move nodes back); returns the added or re-parented leaves that have none and need placing.
+   */
   function sync(): NodeCollection {
     const current = ctx.snapshot();
     snapshot = current;
@@ -313,6 +362,12 @@ export function createMapView(ctx: MapViewContext): MapView {
     fillFilter(filterCategory, "All categories", current.categories);
     fillFilter(filterOrg, "All organizations", current.organizations);
     filter = readFilter();
+    findOptions.replaceChildren(
+      ...graph.nodes
+        .map(findName)
+        .sort((a, b) => a.localeCompare(b))
+        .map((name) => el("option", { value: name })),
+    );
     const wanted = new Map<string, GraphNode | GraphEdge>([...graph.nodes, ...graph.edges].map((e) => [e.data.id, e]));
     let fresh = cy.collection();
 
@@ -358,8 +413,30 @@ export function createMapView(ctx: MapViewContext): MapView {
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
     exportPng.disabled = cy.nodes().empty();
+    const unplaced = applySaved(fresh.nodes());
     applyView();
-    return fresh.nodes();
+    return unplaced;
+  }
+
+  /**
+   * Move leaves to their saved positions. Compound networks follow their services, so they never
+   * take one. Saved positions are rounded to a tenth, so smaller differences are left alone.
+   */
+  function applySaved(fresh: NodeCollection): NodeCollection {
+    const saved = new Map(positions.map((p) => [nodeId(p.entity, p.id), p]));
+    let unplaced = cy.collection();
+    cy.nodes()
+      .filter((n) => !n.isParent())
+      .forEach((n) => {
+        const p = saved.get(n.id());
+        if (!p) {
+          if (fresh.contains(n)) unplaced = unplaced.union(n);
+          return;
+        }
+        const at = n.position();
+        if (Math.abs(at.x - p.x) > 0.06 || Math.abs(at.y - p.y) > 0.06) n.position({ x: p.x, y: p.y });
+      });
+    return unplaced.nodes();
   }
 
   /** Start new top-level nodes beside the map, clear of what is already placed. */
@@ -379,7 +456,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     if (fresh.empty()) return;
     startBeside(fresh);
     place(cy, fresh);
-    persist();
+    persist("merge");
   }
 
   function reset(): void {
@@ -388,24 +465,15 @@ export function createMapView(ctx: MapViewContext): MapView {
     chainRoot = null;
     for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
     cy.elements().remove();
-    sync();
-    // Compound networks follow their services, so only leaves take a saved position.
-    const saved = new Map(positions.map((p) => [nodeId(p.entity, p.id), p]));
-    let fresh = cy.collection();
-    cy.nodes()
-      .filter((n) => !n.isParent())
-      .forEach((n) => {
-        const p = saved.get(n.id());
-        if (p) n.position({ x: p.x, y: p.y });
-        else fresh = fresh.union(n);
-      });
+    const fresh = sync();
     if (fresh.nonempty()) {
       if (fresh.length === cy.nodes().filter((n) => !n.isParent()).length) layoutAll(cy);
       else {
-        startBeside(fresh.nodes());
-        place(cy, fresh.nodes());
+        startBeside(fresh);
+        place(cy, fresh);
       }
-      persist();
+      // Laying out an opened dataset is not an edit the user can undo.
+      persist("none");
     }
     needsFit = true;
     fitWhenSized();

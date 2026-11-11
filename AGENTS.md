@@ -52,6 +52,10 @@ e2e/                Playwright tests that open dist/sim.html from file://
   which it hands to a `savePositions` callback that the workspace turns into one `setPositions`
   call. Writes are validated, run in a transaction, and fire `subscribe()` listeners only on
   success; `setPositions` writes and notifies nothing when no position changed.
+- Undo/redo lives in the repository: temporary triggers on every table log the SQL that reverses
+  each change, and one write is one step (`History`: `own`, `merge` into the write just before,
+  or `none`). Temporary objects never reach the saved file. A migration that adds a table gets
+  triggers automatically; a unit test checks every table is covered.
 - Refusals are `ValidationError` (`code`, `field`, readable message). Text that looks like an
   IP address or host name raises `SensitiveInputWarning`; repeat the call with
   `{ confirmSensitive: true }` only after the user confirms (decision Q-032).
