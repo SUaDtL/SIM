@@ -1,4 +1,5 @@
 import type { Repository } from "../domain/repository";
+import { createMapView } from "../map/map-view";
 import { el } from "./dom";
 import { createEditor } from "./editor-panel";
 import { createListPanel } from "./list-panel";
@@ -27,13 +28,13 @@ export function createWorkspace(initial: Repository): Workspace {
       editor.open(type, id);
     },
   });
-  const map = el(
-    "section",
-    { class: "map-area", "data-testid": "map-area", "aria-label": "Map" },
-    el("h2", {}, "Map"),
-    el("p", {}, "The service map will be drawn here."),
-  );
-  const element = el("main", { class: "workspace" }, list.element, map, editor.element);
+  const map = createMapView({
+    repo: () => repo,
+    open: (type, id) => {
+      editor.open(type, id);
+    },
+  });
+  const element = el("main", { class: "workspace" }, list.element, map.element, editor.element);
 
   function setRepository(next: Repository): void {
     unsubscribe();
@@ -41,9 +42,11 @@ export function createWorkspace(initial: Repository): Workspace {
     unsubscribe = repo.subscribe(() => {
       list.render();
       editor.refresh();
+      map.refresh();
     });
     editor.close();
     list.render();
+    map.reset();
   }
 
   setRepository(initial);

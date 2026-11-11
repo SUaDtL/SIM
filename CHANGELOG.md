@@ -26,3 +26,9 @@ All notable changes to SIM are documented here. The format follows
   for the map. Add, edit and delete networks, services, organizations, applications,
   categories and CDS; set Tier 1-3 support, consuming organizations and service dependencies
   (optionally through a CDS). Errors appear at the field; host-like text needs "Save anyway".
+- Service map in the center: each network is a box holding its services, external networks
+  form a dashed external zone, and each CDS sits between the networks it joins. Dependencies
+  are colored by how they travel: grey within a network, orange through a CDS, red dashed
+  across a boundary with no CDS, tan to an external network. Pan, zoom, "Fit map", and click
+  a node to edit it; the map follows edits as they are saved. Uses Cytoscape.js with the fcose
+  layout, bundled into the single file.
