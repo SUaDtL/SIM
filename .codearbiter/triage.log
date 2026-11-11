@@ -8,3 +8,4 @@
 [2026-11-11T21:53:16Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-017 saved map positions (migration 0002, repository setPositions, map placement/drag/Re-layout) | BASIS: schema migration and >2 implementation files
 [2026-11-11T22:07:08Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-008 chain highlight and map filters | BASIS: more than 2 implementation files plus new UI surface
 [2026-11-11T22:47:50Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-009 classification banner and dataset caveat | BASIS: more than 2 implementation files, security control CON-002
+[2026-11-11T22:54:21Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-010 PNG export with classification banner | BASIS: more than 2 implementation files, new export surface

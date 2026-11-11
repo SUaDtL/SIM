@@ -95,7 +95,12 @@ export async function writeToHandle(handle: FileHandle, bytes: Uint8Array): Prom
 }
 
 export function downloadDataset(bytes: Uint8Array, fileName: string): void {
-  const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "application/x-sqlite3" }));
+  downloadBlob(new Blob([new Uint8Array(bytes)], { type: "application/x-sqlite3" }), fileName);
+}
+
+/** Save a file through the browser's download, which needs no file-system permission. */
+export function downloadBlob(blob: Blob, fileName: string): void {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
@@ -105,5 +110,8 @@ export function downloadDataset(bytes: Uint8Array, fileName: string): void {
   }, 0);
 }
 
-export const suggestedFileName = (datasetName: string): string =>
-  `${datasetName.replace(/[^\w\- ]+/g, "").trim() || "dataset"}.sqlite`;
+const safeName = (datasetName: string): string => datasetName.replace(/[^\w\- ]+/g, "").trim() || "dataset";
+
+export const suggestedFileName = (datasetName: string): string => `${safeName(datasetName)}.sqlite`;
+
+export const suggestedImageName = (datasetName: string): string => `${safeName(datasetName)} map.png`;

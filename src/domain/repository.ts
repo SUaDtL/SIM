@@ -1,4 +1,5 @@
 import type { Database, SqlValue } from "sql.js";
+import { datasetName } from "../db/dataset";
 import { highestMarking, isMarking, isValidCaveat, type Marking, normalizeCaveat } from "../db/markings";
 import { SensitiveInputWarning, ValidationError } from "./errors";
 import type {
@@ -526,6 +527,11 @@ export class Repository {
   }
 
   // ---- derived views ----
+
+  /** The dataset's name from its meta table. */
+  datasetName(): string {
+    return datasetName(this.db);
+  }
 
   /** The dataset's banner caveat, e.g. "REL TO USA, FVEY" (Q-029), or null. */
   datasetCaveat(): string | null {

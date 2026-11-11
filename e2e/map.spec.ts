@@ -575,3 +575,51 @@ test("filters by network, category and organization without moving anything or w
   expect(await visible()).toHaveLength(before.nodes.length);
   expect(watch.errors).toEqual([]);
 });
+
+test("exports the current view as a PNG framed by the classification banner, without writing", async ({ page }) => {
+  const watch = await load(page);
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeDisabled();
+  await arranged(page);
+  const canvasWidth = (await readMap(page)).width;
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toBe("Map fixture map.png");
+  const bytes = readFileSync(await file.path());
+  expect(bytes.subarray(1, 4).toString("latin1")).toBe("PNG");
+  const width = bytes.readUInt32BE(16);
+  expect(width).toBeGreaterThanOrEqual(2 * canvasWidth - 2);
+
+  // Read the image back in the page: banner bands top and bottom in the app banner's color, map between.
+  const banner = await page
+    .getByTestId("banner-top")
+    .evaluate((e) => getComputedStyle(e).backgroundColor.match(/\d+/g)?.slice(0, 3).map(Number));
+  const pixels = await page.evaluate(
+    async (src) => {
+      const image = new Image();
+      image.src = src;
+      await image.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("no canvas");
+      context.drawImage(image, 0, 0);
+      const at = (x: number, y: number) => [...context.getImageData(x, y, 1, 1).data.slice(0, 3)];
+      const middle = context.getImageData(0, 80, image.width, image.height - 160).data;
+      let drawn = 0;
+      for (let i = 0; i < middle.length; i += 4) if (middle[i] !== 255 || middle[i + 1] !== 255) drawn++;
+      return { top: at(3, 3), bottom: at(3, image.height - 3), drawn };
+    },
+    `data:image/png;base64,${bytes.toString("base64")}`,
+  );
+  expect(banner).toEqual([200, 16, 46]);
+  expect(pixels.top).toEqual(banner);
+  expect(pixels.bottom).toEqual(banner);
+  expect(pixels.drawn).toBeGreaterThan(1000);
+
+  await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
+  expect(watch.errors).toEqual([]);
+  expect(watch.requests).toEqual([]);
+});

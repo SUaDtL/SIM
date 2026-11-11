@@ -47,3 +47,5 @@ All notable changes to SIM are documented here. The format follows
   dataset, colored by level (green, purple, blue, red, orange), with an optional caveat such as
   "SECRET//REL TO USA, FVEY" set from "Banner caveat". A caveat may use only letters, digits,
   spaces, commas, hyphens and slashes; a file whose stored caveat breaks that rule is refused.
+- "Export PNG" saves the map as it is shown (zoom, highlight and filters) at twice screen
+  resolution for slides, framed by the classification banner top and bottom.

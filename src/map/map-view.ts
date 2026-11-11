@@ -15,6 +15,7 @@ import {
   summarize,
   traceChain,
 } from "./graph";
+import { frameWithBanner } from "./export";
 import { mapStyle } from "./style";
 
 cytoscape.use(fcose);
@@ -25,6 +26,8 @@ export interface MapViewContext {
   open(entity: MapEntity, id: number): void;
   /** Save where nodes sit: the map's only write, made by the caller through the repository (CONV-002). */
   savePositions(positions: readonly NodePosition[]): void;
+  /** Hand an exported PNG to the caller to save. */
+  saveImage(image: Blob): void;
 }
 
 export interface MapView {
@@ -126,6 +129,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   const fit = button("Fit map", () => {
     fitMap();
   });
+  const exportPng = button("Export PNG", () => {
+    void exportView();
+  });
   const relayout = button("Re-layout", () => {
     // There is no undo yet (WORK-015), so ask first.
     if (!window.confirm("Re-layout moves every node and replaces your arrangement. Continue?")) return;
@@ -149,6 +155,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
       relayout,
       fit,
+      exportPng,
     ),
   );
   const element = el(
@@ -249,6 +256,22 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
   }
 
+  /**
+   * Export what the map shows now (zoom, highlight, filters) at twice screen resolution for slides,
+   * framed by the classification banner of the open dataset.
+   */
+  async function exportView(): Promise<void> {
+    if (snapshot === null || cy.nodes().empty()) return;
+    const { marking, caveat } = snapshot;
+    exportPng.disabled = true;
+    try {
+      const map = await cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 });
+      ctx.saveImage(await frameWithBanner(map, marking, caveat));
+    } finally {
+      exportPng.disabled = cy.nodes().empty();
+    }
+  }
+
   function fitMap(): void {
     cy.fit(undefined, FIT_MARGIN + toolbar.offsetHeight);
   }
@@ -334,6 +357,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
+    exportPng.disabled = cy.nodes().empty();
     applyView();
     return fresh.nodes();
   }
