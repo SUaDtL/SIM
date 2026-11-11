@@ -1,6 +1,7 @@
 import type { Database } from "sql.js";
 import { createDataset, DatasetError, datasetName, exportDataset, openDataset } from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
+import { Repository } from "./domain/repository";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
@@ -13,9 +14,12 @@ import {
   supportsSaveInPlace,
   writeToHandle,
 } from "./file/dataset-file";
+import "./ui/app.css";
+import { createWorkspace, type Workspace } from "./ui/workspace";
 
 interface State {
   db: Database;
+  repo: Repository;
   name: string;
   fileName: string | null;
   handle: FileHandle | null;
@@ -23,6 +27,8 @@ interface State {
 }
 
 let state: State;
+let workspace: Workspace;
+let unsubscribe = (): void => undefined;
 const status = document.createElement("p");
 status.dataset["testid"] = "dataset-status";
 const message = document.createElement("p");
@@ -38,10 +44,23 @@ function show(text: string): void {
   message.textContent = text;
 }
 
+/** Every successful write through the repository leaves the dataset with unsaved changes. */
+function track(repo: Repository): void {
+  unsubscribe();
+  unsubscribe = repo.subscribe(() => {
+    state.saved = false;
+    render();
+  });
+}
+
 function replace(db: Database, fileName: string | null, handle: FileHandle | null, saved: boolean): void {
   // Closing the previous dataset is safe: a refused file never reaches this point.
+  unsubscribe();
   state.db.close();
-  state = { db, name: datasetName(db), fileName, handle, saved };
+  const repo = new Repository(db);
+  state = { db, repo, name: datasetName(db), fileName, handle, saved };
+  track(repo);
+  workspace.setRepository(repo);
   show("");
   render();
 }
@@ -103,7 +122,10 @@ async function boot(): Promise<void> {
   if (!app) throw new Error("missing #app root");
   configureSqliteWasm(dataUrlToBytes(wasmUrl));
   const db = await createDataset("Untitled dataset");
-  state = { db, name: datasetName(db), fileName: null, handle: null, saved: false };
+  const repo = new Repository(db);
+  state = { db, repo, name: datasetName(db), fileName: null, handle: null, saved: false };
+  track(repo);
+  workspace = createWorkspace(repo);
 
   const title = document.createElement("h1");
   title.textContent = "SIM - Service Integration Map";
@@ -118,8 +140,9 @@ async function boot(): Promise<void> {
     button("Save As", () => onSave(true)),
   );
   const header = document.createElement("header");
-  header.append(title, toolbar, status, message, version);
-  app.replaceChildren(header);
+  header.className = "app-header";
+  header.append(title, toolbar, status, version, message);
+  app.replaceChildren(header, workspace.element);
   render();
 }
 

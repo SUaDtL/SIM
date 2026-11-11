@@ -37,6 +37,7 @@ src/db/             SQLite (sql.js) engine, dataset create/open validation, mark
 src/db/migrations/  Forward-only schema migrations (PRAGMA user_version)
 src/domain/         Repository (the only write path), entity types, validation, IP/FQDN detection
 src/file/           File System Access API with download/upload fallback
+src/ui/             Workspace UI: list panel, editor, form model (forms.ts), DOM helpers, CSS
 tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection)
 tests/unit/         Unit tests that are not colocated (e.g. build-output checks)
 e2e/                Playwright tests that open dist/sim.html from file://
@@ -53,6 +54,10 @@ e2e/                Playwright tests that open dist/sim.html from file://
   `{ confirmSensitive: true }` only after the user confirms (decision Q-032).
 - **Migrations are forward-only.** Never edit a migration that has been merged; add a new one
   to `src/db/migrations/index.ts`. Each runs in a transaction with its `user_version` bump.
+- UI code builds DOM with `src/ui/dom.ts` (`el`, `button`, `option`); never HTML strings.
+  The editor saves an entity's own fields with one repository call; each relationship row
+  (support tier, consumer, dependency) is its own write. Repository change events refresh the
+  list and relationship rows but never rebuild a form the user is typing in.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
   (`SIM1`), version, integrity and foreign keys, and caps size at 100 MB.
 - Only `src/main.ts` imports the WASM (`?url`); `src/db` stays environment-neutral so Node
