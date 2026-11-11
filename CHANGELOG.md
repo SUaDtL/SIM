@@ -53,3 +53,8 @@ All notable changes to SIM are documented here. The format follows
   Re-layout; adding a service and its placement on the map is one step. SIM asks before New or
   Open discards unsaved edits, and the browser warns before closing the tab. "Find on map"
   brings a node into view by name and highlights its chain.
+- Map readability: when the map is zoomed out too far to read them, service labels are hidden
+  until you hover a node, highlight its chain or zoom in; network and CDS labels grow so the
+  structure stays readable; labels have a white halo over lines. Exports show every label. An
+  end-to-end check now measures edge crossings, label overlaps and network overlaps on a
+  ~100-service map, so later changes cannot quietly make the layout worse.

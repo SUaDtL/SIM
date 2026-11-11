@@ -15,6 +15,10 @@ export const mapStyle: StylesheetJson = [
       color: ink,
       "text-wrap": "wrap",
       "text-max-width": "140px",
+      // A white halo keeps labels legible where they cross edges or network borders.
+      "text-outline-color": "#ffffff",
+      "text-outline-width": 2,
+      "text-outline-opacity": 0.85,
     },
   },
   {
@@ -30,6 +34,8 @@ export const mapStyle: StylesheetJson = [
       "text-margin-y": -4,
       "font-size": 20,
       "font-weight": "bold",
+      // Labels grow when zoomed out (up to twice the size); keep names on one line.
+      "text-max-width": "400px",
     },
   },
   {
@@ -62,6 +68,7 @@ export const mapStyle: StylesheetJson = [
       "text-valign": "bottom",
       "text-margin-y": 4,
       "font-weight": "bold",
+      "text-max-width": "280px",
     },
   },
   { selector: "node:selected", style: { "border-color": "#2457a6", "border-width": 3 } },
@@ -93,6 +100,13 @@ export const mapStyle: StylesheetJson = [
   {
     selector: "node.network.dimmed",
     style: { "background-opacity": 0.35, "border-opacity": 0.35, "text-opacity": 0.35 },
+  },
+  // Zoomed out, service labels are hidden ("quiet") unless hovered or part of a highlighted chain.
+  { selector: "node.service.quiet", style: { label: "" } },
+  { selector: "node.service.quiet.hover, node.service.quiet.chain", style: { label: "data(label)" } },
+  {
+    selector: "node.hover",
+    style: { "z-index": 20, "text-background-color": "#ffffff", "text-background-opacity": 0.9 },
   },
   // Later rules win: a chain shows its foundational links (Q-021), and a filter hides even those.
   { selector: ".hidden", style: { display: "none" } },

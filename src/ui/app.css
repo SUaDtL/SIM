@@ -264,6 +264,7 @@ textarea {
 }
 
 .map-filter label {
+  white-space: nowrap;
   color: var(--muted);
 }
 

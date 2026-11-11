@@ -10,3 +10,4 @@
 [2026-11-11T22:47:50Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-009 classification banner and dataset caveat | BASIS: more than 2 implementation files, security control CON-002
 [2026-11-11T22:54:21Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-010 PNG export with classification banner | BASIS: more than 2 implementation files, new export surface
 [2026-11-11T23:06:31Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-015 undo/redo, unsaved-edits guard, Find on map | BASIS: more than 2 implementation files, repository write path
+[2026-11-11T23:17:27Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-018 map readability and layout regression check | BASIS: more than 2 files, new e2e harness
