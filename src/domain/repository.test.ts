@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { wasm } from "../../tests/helpers/sqlite";
-import { createDataset } from "../db/dataset";
+import { createDataset, exportDataset, openDataset } from "../db/dataset";
 import { SensitiveInputWarning, ValidationError } from "./errors";
-import { Repository } from "./repository";
+import { MAX_UNDO_STEPS, Repository } from "./repository";
 
 let repo: Repository;
 
@@ -452,5 +452,135 @@ describe("banner caveat", () => {
       }),
     ).toBe("INVALID_VALUE:caveat");
     expect(repo.datasetCaveat()).toBe("NOFORN");
+  });
+});
+
+describe("undo and redo", () => {
+  const state = () => {
+    const snap = repo.snapshot();
+    return JSON.stringify({ ...snap, positions: snap.positions });
+  };
+
+  it("records a trigger for every insert, update and delete on every table", () => {
+    const db = (repo as unknown as { db: { exec(sql: string): { values: unknown[][] }[] } }).db;
+    const tables = (
+      db.exec("SELECT name FROM main.sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'")[0]?.values ?? []
+    ).map((r) => String(r[0]));
+    const triggers = new Set(
+      (db.exec("SELECT name FROM sqlite_temp_master WHERE type = 'trigger'")[0]?.values ?? []).map((r) => String(r[0])),
+    );
+    expect(tables.length).toBeGreaterThan(5);
+    for (const t of tables) {
+      for (const op of ["insert", "update", "delete"]) expect(triggers.has(`undo_${t}_${op}`), `${t} ${op}`).toBe(true);
+    }
+  });
+
+  it("undoes and redoes each write as one step", () => {
+    expect(repo.canUndo()).toBe(false);
+    const empty = state();
+    const nipr = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    const one = state();
+    repo.updateNetwork(nipr.id, { name: "NIPR-1", kind: "internal", marking: "SECRET" });
+    const two = state();
+    let calls = 0;
+    repo.subscribe(() => {
+      calls++;
+    });
+
+    expect(repo.undo()).toBe(true);
+    expect(state()).toBe(one);
+    expect(repo.undo()).toBe(true);
+    expect(state()).toBe(empty);
+    expect(repo.canUndo()).toBe(false);
+    expect(repo.undo()).toBe(false);
+    expect(repo.redo()).toBe(true);
+    expect(repo.redo()).toBe(true);
+    expect(state()).toBe(two);
+    expect(repo.canRedo()).toBe(false);
+    expect(calls).toBe(4);
+  });
+
+  it("brings back everything a delete cascaded or cleared", () => {
+    const s = seed();
+    repo.addConsumption(s.desk.id, s.mail.id);
+    repo.setSupport(s.mail.id, 1, s.desk.id);
+    repo.addDependency({ consumerServiceId: s.patch.id, providerServiceId: s.npatch.id, viaCdsId: s.cds.id });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.idam.id });
+    const before = state();
+    repo.deleteService(s.mail.id);
+    repo.deleteCds(s.cds.id);
+    repo.deleteOrganization(s.j6.id);
+    expect(state()).not.toBe(before);
+    repo.undo();
+    repo.undo();
+    repo.undo();
+    expect(state()).toBe(before);
+  });
+
+  it("keeps a refused write out of the history", async () => {
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    await codeOf(() => repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" }));
+    repo.undo();
+    expect(repo.canUndo()).toBe(false);
+  });
+
+  it("drops the redo history on a new write, which may reuse an undone id", () => {
+    const a = repo.createNetwork({ name: "A", kind: "internal", marking: "CUI" });
+    repo.undo();
+    const b = repo.createNetwork({ name: "B", kind: "internal", marking: "CUI" });
+    expect(b.id).toBe(a.id);
+    expect(repo.canRedo()).toBe(false);
+    expect(repo.redo()).toBe(false);
+    expect(repo.listNetworks().map((n) => n.name)).toEqual(["B"]);
+  });
+
+  it("merges a follow-up position write into the write before it, and leaves an opening layout out", () => {
+    const n = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    repo.setPositions([{ entity: "network", id: n.id, x: 5, y: 5 }], "none");
+    repo.undo();
+    expect(repo.listNetworks()).toHaveLength(0);
+
+    const s = repo.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
+    repo.setPositions([{ entity: "network", id: s.id, x: 1, y: 1 }], "merge");
+    repo.undo();
+    expect(repo.listNetworks()).toHaveLength(0);
+    expect(repo.canUndo()).toBe(false);
+    repo.redo();
+    expect(repo.snapshot().positions).toEqual([{ entity: "network", id: s.id, x: 1, y: 1 }]);
+
+    // After an undo or redo there is nothing to merge into, so the write stands alone and redo survives.
+    repo.setPositions([{ entity: "network", id: s.id, x: 2, y: 2 }]);
+    repo.undo();
+    repo.setPositions([{ entity: "network", id: s.id, x: 1, y: 1 }], "merge");
+    expect(repo.canRedo()).toBe(true);
+  });
+
+  it("forgets the position of a service that moves to another network, in the same step", () => {
+    const s = seed();
+    repo.setPositions([{ entity: "service", id: s.mail.id, x: 5, y: 5 }]);
+    repo.updateService(s.mail.id, { name: "Email", networkId: s.sipr.id, marking: "SECRET" });
+    expect(repo.snapshot().positions).toEqual([]);
+    repo.undo();
+    expect(repo.snapshot().positions).toEqual([{ entity: "service", id: s.mail.id, x: 5, y: 5 }]);
+    repo.updateService(s.mail.id, { name: "Mail", networkId: s.nipr.id, marking: "CUI" });
+    expect(repo.snapshot().positions).toHaveLength(1);
+  });
+
+  it("keeps working after a save and leaves nothing of itself in the saved file", async () => {
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    const db = (repo as unknown as { db: { export(): Uint8Array } }).db;
+    const bytes = exportDataset(db as never);
+    const reopened = await openDataset(bytes, { wasm });
+    expect(reopened.exec("SELECT name FROM sqlite_master WHERE name LIKE 'undo%'")).toEqual([]);
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toHaveLength(0);
+  });
+
+  it("caps the history", () => {
+    const n = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    for (let i = 0; i < MAX_UNDO_STEPS + 5; i++) repo.setPositions([{ entity: "network", id: n.id, x: i + 1, y: 0 }]);
+    let steps = 0;
+    while (repo.undo()) steps++;
+    expect(steps).toBe(MAX_UNDO_STEPS);
   });
 });

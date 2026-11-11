@@ -309,8 +309,9 @@ test("hides links to foundational services until asked, without moving anything"
   await toggle.uncheck();
   expect(shown(await readMap(page))).toEqual(["external", "via-cds", "via-cds"]);
 
-  // A newly opened dataset starts with them hidden again.
+  // A newly opened dataset starts with them hidden again (after confirming the edit may be lost).
   await toggle.check();
+  page.once("dialog", (d) => void d.accept());
   await openFixture(page);
   await expect(toggle).not.toBeChecked();
   expect(shown(await readMap(page))).toHaveLength(3);

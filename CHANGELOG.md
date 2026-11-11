@@ -49,3 +49,7 @@ All notable changes to SIM are documented here. The format follows
   spaces, commas, hyphens and slashes; a file whose stored caveat breaks that rule is refused.
 - "Export PNG" saves the map as it is shown (zoom, highlight and filters) at twice screen
   resolution for slides, framed by the classification banner top and bottom.
+- Undo and Redo (buttons, Ctrl+Z, Ctrl+Y or Ctrl+Shift+Z) for every edit, including drags and
+  Re-layout; adding a service and its placement on the map is one step. SIM asks before New or
+  Open discards unsaved edits, and the browser warns before closing the tab. "Find on map"
+  brings a node into view by name and highlights its chain.

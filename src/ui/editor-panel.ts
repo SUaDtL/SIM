@@ -26,6 +26,8 @@ export interface EditorPanel {
   close(): void;
   /** The dataset changed: refresh relationship rows, keeping any text the user is typing. */
   refresh(): void;
+  /** Undo or redo changed the data under the form: rebuild it, or close if its item is gone. */
+  reload(): void;
 }
 
 const TIERS: readonly Tier[] = [1, 2, 3];
@@ -349,6 +351,12 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     renderRelations();
   }
 
+  function reload(): void {
+    if (!current || current.id === null) return;
+    if (descriptor(current.type).get(ctx.repo(), current.id) === undefined) close();
+    else open(current.type, current.id);
+  }
+
   placeholder();
   return {
     element,
@@ -358,6 +366,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     },
     close,
     refresh,
+    reload,
   };
 }
 

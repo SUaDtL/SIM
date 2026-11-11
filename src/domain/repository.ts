@@ -12,6 +12,7 @@ import type {
   Consumption,
   Dependency,
   DependencyInput,
+  History,
   Network,
   NetworkInput,
   NetworkKind,
@@ -43,14 +44,33 @@ const NAME_FIELD: Record<string, string> = {
   cds: "CDS name",
 };
 
+/** Undo history length; the oldest steps are dropped beyond it. */
+export const MAX_UNDO_STEPS = 200;
+
+/** A range of undo_log rows that one step replays. */
+interface Step {
+  readonly from: number;
+  readonly to: number;
+}
+
 /**
  * The only write path to a SIM dataset (coding standard CONV-002). Every write is validated,
  * runs in a transaction, and notifies subscribers only when it succeeds.
+ *
+ * Undo and redo (WORK-015) use SQLite's temp-trigger technique: temporary triggers on every table
+ * log the SQL that reverses each change into a temporary table, and a step replays one write's
+ * rows in reverse. Temporary objects never reach the saved file (export copies only "main").
  */
 export class Repository {
   private readonly listeners = new Set<Listener>();
+  private readonly undoSteps: Step[] = [];
+  private readonly redoSteps: Step[] = [];
+  /** Whether the latest undo step is the write that just finished, so a merge may extend it. */
+  private mergeable = false;
 
-  constructor(private readonly db: Database) {}
+  constructor(private readonly db: Database) {
+    this.installUndo();
+  }
 
   subscribe(listener: Listener): () => void {
     this.listeners.add(listener);
@@ -278,8 +298,11 @@ export class Repository {
     return this.write(() => {
       this.update(
         `UPDATE service SET name = ?, network_id = ?, application_id = ?, category_id = ?, provider_org_id = ?,
-         marking = ?, foundational = ?, description = ? WHERE id = ?`,
-        [...v, id],
+         marking = ?, foundational = ?, description = ?,
+         map_x = CASE WHEN network_id = ? THEN map_x END, map_y = CASE WHEN network_id = ? THEN map_y END
+         WHERE id = ?`,
+        // A position belongs to the network it was placed in; a moved service is placed afresh.
+        [...v, input.networkId, input.networkId, id],
         "service",
       );
       this.requireValidRoutes("network");
@@ -501,7 +524,7 @@ export class Repository {
    * when none of them changed nothing is written and nobody is notified, so reopening an arranged
    * dataset does not mark it unsaved.
    */
-  setPositions(positions: readonly NodePosition[]): void {
+  setPositions(positions: readonly NodePosition[], history: History = "own"): void {
     const rounded = positions.map((p) => {
       if (
         !Number.isFinite(p.x) ||
@@ -519,11 +542,15 @@ export class Repository {
       return old?.x !== p.x || old.y !== p.y;
     });
     if (changed.length === 0) return;
-    this.write(() => {
-      for (const p of changed) {
-        this.update(`UPDATE ${p.entity} SET map_x = ?, map_y = ? WHERE id = ?`, [p.x, p.y, p.id], p.entity);
-      }
-    }, "position");
+    this.write(
+      () => {
+        for (const p of changed) {
+          this.update(`UPDATE ${p.entity} SET map_x = ?, map_y = ? WHERE id = ?`, [p.x, p.y, p.id], p.entity);
+        }
+      },
+      "position",
+      history,
+    );
   }
 
   // ---- derived views ----
@@ -589,7 +616,8 @@ export class Repository {
 
   // ---- plumbing ----
 
-  private write<T>(action: () => T, entity: string): T {
+  private write<T>(action: () => T, entity: string, history: History = "own"): T {
+    const start = this.lastLogged();
     this.db.run("BEGIN");
     let result: T;
     try {
@@ -603,8 +631,119 @@ export class Repository {
       }
       throw translate(error, entity);
     }
+    this.record(start, history);
     for (const listener of this.listeners) listener();
     return result;
+  }
+
+  // ---- undo and redo ----
+
+  canUndo(): boolean {
+    return this.undoSteps.length > 0;
+  }
+
+  canRedo(): boolean {
+    return this.redoSteps.length > 0;
+  }
+
+  /** Reverse the latest step; false when there is nothing to undo. */
+  undo(): boolean {
+    return this.replay(this.undoSteps, this.redoSteps);
+  }
+
+  /** Re-apply the latest undone step; false when there is nothing to redo. */
+  redo(): boolean {
+    return this.replay(this.redoSteps, this.undoSteps);
+  }
+
+  private installUndo(): void {
+    this.db.run("CREATE TEMP TABLE undo_log (seq INTEGER PRIMARY KEY AUTOINCREMENT, sql TEXT NOT NULL)");
+    const tables = this.rows("SELECT name FROM main.sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'");
+    for (const { name } of tables) {
+      const table = String(name);
+      const columns = this.rows(`SELECT name FROM pragma_table_info('${table}')`).map((c) => String(c["name"]));
+      const values = (row: "old" | "new") => columns.map((c) => `quote(${row}.${c})`).join(" || ',' || ");
+      const sets = columns.map((c) => `'${c} = ' || quote(old.${c})`).join(" || ', ' || ");
+      const log = (sql: string) => `INSERT INTO undo_log (sql) VALUES (${sql});`;
+      this.db.run(
+        `CREATE TEMP TRIGGER undo_${table}_insert AFTER INSERT ON main.${table} BEGIN ` +
+          log(`'DELETE FROM main.${table} WHERE rowid = ' || new.rowid`) +
+          " END",
+      );
+      this.db.run(
+        `CREATE TEMP TRIGGER undo_${table}_update AFTER UPDATE ON main.${table} BEGIN ` +
+          log(`'UPDATE main.${table} SET ' || ${sets} || ' WHERE rowid = ' || old.rowid`) +
+          " END",
+      );
+      this.db.run(
+        `CREATE TEMP TRIGGER undo_${table}_delete AFTER DELETE ON main.${table} BEGIN ` +
+          log(
+            `'INSERT INTO main.${table} (rowid, ${columns.join(", ")}) VALUES (' || old.rowid || ',' || ${values("old")} || ')'`,
+          ) +
+          " END",
+      );
+    }
+  }
+
+  private lastLogged(): number {
+    return Number(this.db.exec("SELECT coalesce(max(seq), 0) FROM undo_log")[0]?.values[0]?.[0] ?? 0);
+  }
+
+  private forget(steps: readonly Step[]): void {
+    for (const step of steps) this.db.run("DELETE FROM undo_log WHERE seq BETWEEN ? AND ?", [step.from, step.to]);
+  }
+
+  /** File the rows a successful write logged after `start` under the history rule. */
+  private record(start: number, history: History): void {
+    const end = this.lastLogged();
+    if (end === start) return;
+    const step = { from: start + 1, to: end };
+    if (history === "none") {
+      this.forget([step]);
+      this.mergeable = false;
+      return;
+    }
+    const last = this.undoSteps.at(-1);
+    if (history === "merge" && this.mergeable && last) {
+      this.undoSteps[this.undoSteps.length - 1] = { from: last.from, to: end };
+    } else {
+      this.undoSteps.push(step);
+      this.forget(this.redoSteps.splice(0));
+      if (this.undoSteps.length > MAX_UNDO_STEPS) this.forget(this.undoSteps.splice(0, 1));
+    }
+    this.mergeable = true;
+  }
+
+  /** Run one step's reversing SQL newest first; what it logs becomes the opposite step. */
+  private replay(from: Step[], to: Step[]): boolean {
+    const step = from.pop();
+    if (!step) return false;
+    const statements = this.rows("SELECT sql FROM undo_log WHERE seq BETWEEN ? AND ? ORDER BY seq DESC", [
+      step.from,
+      step.to,
+    ]).map((r) => String(r["sql"]));
+    const start = this.lastLogged();
+    this.db.run("BEGIN");
+    try {
+      // Rows come back in reverse order, so a child may return before its parent within the step.
+      this.db.run("PRAGMA defer_foreign_keys = ON");
+      this.db.run("DELETE FROM undo_log WHERE seq BETWEEN ? AND ?", [step.from, step.to]);
+      for (const sql of statements) this.db.run(sql);
+      this.db.run("COMMIT");
+    } catch (error) {
+      try {
+        this.db.run("ROLLBACK");
+      } catch {
+        // Already rolled back.
+      }
+      from.push(step);
+      throw error;
+    }
+    const end = this.lastLogged();
+    if (end > start) to.push({ from: start + 1, to: end });
+    this.mergeable = false;
+    for (const listener of this.listeners) listener();
+    return true;
   }
 
   private insert(sql: string, params: SqlValue[]): number {

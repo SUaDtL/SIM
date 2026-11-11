@@ -119,6 +119,13 @@ export interface WriteOptions {
   readonly confirmSensitive?: boolean;
 }
 
+/**
+ * How a write enters the undo history: as its own step, merged into the write just before it
+ * (a new node's placement belongs to the edit that added it), or not at all (the first layout of
+ * an opened dataset). A merge falls back to its own step if anything came in between.
+ */
+export type History = "own" | "merge" | "none";
+
 /** Where a node sits on the map, in model coordinates (decomposition Q-022). */
 export interface NodePosition {
   readonly entity: "network" | "service" | "cds";
