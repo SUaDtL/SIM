@@ -69,14 +69,14 @@ describe("buildGraph", () => {
     const svc = (id: number) => nodeId("service", id);
 
     expect(ends(edgesFrom(graph, `${String(s.mail.id)}-${String(s.idam.id)}`))).toEqual([
-      [svc(s.mail.id), svc(s.idam.id), "local"],
+      [svc(s.mail.id), svc(s.idam.id), "local to-foundational"],
     ]);
     expect(ends(edgesFrom(graph, `${String(s.mail.id)}-${String(s.patch.id)}`))).toEqual([
       [svc(s.mail.id), nodeId("cds", s.guard.id), "via-cds"],
       [nodeId("cds", s.guard.id), svc(s.patch.id), "via-cds"],
     ]);
     expect(ends(edgesFrom(graph, `${String(s.chat.id)}-${String(s.idam.id)}`))).toEqual([
-      [svc(s.chat.id), svc(s.idam.id), "cross-domain"],
+      [svc(s.chat.id), svc(s.idam.id), "cross-domain to-foundational"],
     ]);
     expect(ends(edgesFrom(graph, `${String(s.mail.id)}-${String(s.m365.id)}`))).toEqual([
       [svc(s.mail.id), svc(s.m365.id), "external"],
@@ -95,6 +95,21 @@ describe("buildGraph", () => {
     expect(graph.edges).toHaveLength(6);
   });
 
+  it("marks every edge whose provider is foundational, including both hops through a CDS", () => {
+    const s = seed();
+    const dns = repo.createService({ name: "DNS", networkId: s.sipr.id, marking: "SECRET", foundational: true });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: dns.id, viaCdsId: s.guard.id });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });
+    repo.addDependency({ consumerServiceId: s.idam.id, providerServiceId: s.m365.id });
+    const graph = buildGraph(repo.snapshot());
+    const classesOf = (consumer: number, provider: number) =>
+      edgesFrom(graph, `${String(consumer)}-${String(provider)}`).map((e) => e.classes);
+
+    expect(classesOf(s.mail.id, dns.id)).toEqual(["via-cds to-foundational", "via-cds to-foundational"]);
+    expect(classesOf(s.mail.id, s.patch.id)).toEqual(["via-cds", "via-cds"]);
+    expect(classesOf(s.idam.id, s.m365.id)).toEqual(["external"]);
+  });
+
   it("summarizes the map in words for screen readers, counting dependencies rather than edges", () => {
     const s = seed();
     repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });
@@ -105,6 +120,10 @@ describe("buildGraph", () => {
     repo.deleteService(s.chat.id);
     expect(summarize(buildGraph(repo.snapshot()))).toBe(
       "3 networks, 4 services, 1 CDS. 1 dependency: 0 local, 1 via a CDS, 0 cross-domain without a CDS, 0 to an external network.",
+    );
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.idam.id });
+    expect(summarize(buildGraph(repo.snapshot()), { foundationalHidden: true })).toBe(
+      "3 networks, 4 services, 1 CDS. 2 dependencies: 1 local, 1 via a CDS, 0 cross-domain without a CDS, 0 to an external network. 1 dependency on a foundational service is hidden.",
     );
   });
 

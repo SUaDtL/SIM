@@ -245,6 +245,16 @@ textarea {
   gap: 6px;
 }
 
+.map-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
 .map-empty {
   position: absolute;
   top: 50%;

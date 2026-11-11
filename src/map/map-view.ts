@@ -2,7 +2,7 @@ import cytoscape, { type Core, type NodeSingular } from "cytoscape";
 import fcose from "cytoscape-fcose";
 import type { Repository } from "../domain/repository";
 import { button, el } from "../ui/dom";
-import { buildGraph, type GraphEdge, type GraphNode, type MapEntity, summarize } from "./graph";
+import { buildGraph, type Graph, type GraphEdge, type GraphNode, type MapEntity, summarize } from "./graph";
 import { mapStyle } from "./style";
 
 cytoscape.use(fcose);
@@ -21,7 +21,8 @@ export interface MapView {
   reset(): void;
 }
 
-const FIT_PADDING = 30;
+// Leaves room for the toolbar over the top edge of the map.
+const FIT_PADDING = 56;
 
 function layout(cy: Core, randomize: boolean): void {
   if (cy.nodes().empty()) return;
@@ -36,7 +37,8 @@ function layout(cy: Core, randomize: boolean): void {
     idealEdgeLength: () => 60,
     // Pull networks together so the whole map reads at the zoom Fit chooses.
     gravity: 0.8,
-    gravityCompound: 1.5,
+    gravityCompound: 4,
+    gravityRangeCompound: 1,
     gravityRange: 2.5,
     nodeRepulsion: () => 4500,
     nodeSeparation: 50,
@@ -44,13 +46,21 @@ function layout(cy: Core, randomize: boolean): void {
     tilingPaddingVertical: 24,
     tilingPaddingHorizontal: 24,
   } satisfies fcose.FcoseLayoutOptions;
-  cy.layout(options).run();
+  // Lay out without links to foundational services, shown or not: they turn every network into a
+  // hub (layout spike), and showing them later must not move anything.
+  cy.elements().not(".to-foundational").layout(options).run();
 }
 
 export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
   const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
+  const foundationalBox = el("input", { type: "checkbox" });
+  const foundationalLabel = el("span", {});
+  foundationalBox.addEventListener("change", () => {
+    showFoundational = foundationalBox.checked;
+    applyFoundational();
+  });
   const fit = button("Fit map", () => {
     cy.fit(undefined, FIT_PADDING);
   });
@@ -59,7 +69,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     { class: "map-area", "data-testid": "map-area", "aria-label": "Map" },
     el("h2", { class: "sr-only" }, "Map"),
     canvas,
-    el("div", { class: "map-toolbar" }, fit),
+    el("div", { class: "map-toolbar" }, el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel), fit),
     empty,
     summary,
   );
@@ -67,6 +77,19 @@ export function createMapView(ctx: MapViewContext): MapView {
   // "preset" keeps Cytoscape from running its default grid layout while the container is still detached.
   const cy = cytoscape({ container: canvas, style: mapStyle, layout: { name: "preset" }, minZoom: 0.1, maxZoom: 4 });
   let needsFit = false;
+  let showFoundational = false;
+  let graph: Graph = { nodes: [], edges: [] };
+
+  /** Show or hide links to foundational services (Q-021) without laying out again. */
+  function applyFoundational(): void {
+    cy.edges(".to-foundational").toggleClass("hidden", !showFoundational);
+    // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
+    // renderer reads it, so recompute styles (cheap at this size).
+    cy.style().update();
+    const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
+    foundationalLabel.textContent = `Show foundational links (${String(links)})`;
+    summary.textContent = summarize(graph, { foundationalHidden: !showFoundational });
+  }
 
   function fitWhenSized(): void {
     if (!needsFit || canvas.clientWidth === 0 || canvas.clientHeight === 0) return;
@@ -88,7 +111,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   /** Sync elements with the repository; returns whether any node was added, removed or moved. */
   function sync(): boolean {
-    const graph = buildGraph(ctx.repo().snapshot());
+    graph = buildGraph(ctx.repo().snapshot());
     const wanted = new Map<string, GraphNode | GraphEdge>([...graph.nodes, ...graph.edges].map((e) => [e.data.id, e]));
     let structural = false;
 
@@ -134,7 +157,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
-    summary.textContent = summarize(graph);
+    applyFoundational();
     return structural;
   }
 
@@ -143,6 +166,8 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function reset(): void {
+    showFoundational = false;
+    foundationalBox.checked = false;
     cy.elements().remove();
     sync();
     layout(cy, true);

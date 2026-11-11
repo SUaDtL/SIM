@@ -328,3 +328,10 @@ export function nounOf(type: EntityType): string {
 export function fieldFor(type: EntityType, field: string): string | null {
   return DESCRIPTORS[type].errorFields[field] ?? null;
 }
+
+const FOUNDATIONAL_NAMES = new Set(["identity", "dns"]);
+
+/** A new service with one of these names starts out foundational (Q-021); the user can untick it. */
+export function suggestsFoundational(name: string): boolean {
+  return FOUNDATIONAL_NAMES.has(name.trim().toLowerCase());
+}

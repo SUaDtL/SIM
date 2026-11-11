@@ -85,4 +85,5 @@ export const mapStyle: StylesheetJson = [
     selector: "edge.external",
     style: { width: 3, "line-color": "#b08850", "target-arrow-color": "#b08850", "line-style": "dotted" },
   },
+  { selector: ".hidden", style: { display: "none" } },
 ];
