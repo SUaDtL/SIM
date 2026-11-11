@@ -1,9 +1,12 @@
 import initSqlJs, { type Database, type SqlJsStatic } from "sql.js";
-// `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
-// The single-file plugin still inlines it as a data: URL, so no fetch occurs.
-import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
 
 let engine: Promise<SqlJsStatic> | undefined;
+let configuredWasm: Uint8Array | undefined;
+
+/** Provide the sql.js WASM bytes once at startup (the browser entry decodes them from the inlined data URL). */
+export function configureSqliteWasm(bytes: Uint8Array): void {
+  configuredWasm = bytes;
+}
 
 /** Decode a base64 data: URL to bytes without fetch(), which is unavailable offline on file://. */
 export function dataUrlToBytes(url: string): Uint8Array {
@@ -15,9 +18,11 @@ export function dataUrlToBytes(url: string): Uint8Array {
   return bytes;
 }
 
-/** Load the SQLite engine once. Pass `wasmBinary` explicitly in non-browser contexts (tests). */
+/** Load the SQLite engine once, from `wasmBinary` or the bytes given to configureSqliteWasm. */
 export function loadSqlite(wasmBinary?: Uint8Array): Promise<SqlJsStatic> {
-  engine ??= initSqlJs({ wasmBinary: (wasmBinary ?? dataUrlToBytes(wasmUrl)) as unknown as ArrayBuffer });
+  const bytes = wasmBinary ?? configuredWasm;
+  if (!bytes) return Promise.reject(new Error("SQLite WASM not configured; call configureSqliteWasm first"));
+  engine ??= initSqlJs({ wasmBinary: bytes as unknown as ArrayBuffer });
   return engine;
 }
 

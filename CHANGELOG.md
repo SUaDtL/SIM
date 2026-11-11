@@ -13,3 +13,7 @@ All notable changes to SIM are documented here. The format follows
   Chrome, and one `npm run check` gate.
 - Content Security Policy in `sim.html` that blocks all network access, and lint rules that
   reject unsafe code constructs (eval, raw HTML injection, network and browser-storage APIs).
+- Datasets: New, Open, Save and Save As. Saves in place to a local `.sqlite` file in Edge and
+  Chrome (download/upload elsewhere); refuses files that are not valid SIM datasets with a
+  clear message. Schema v1 covers networks, services, applications, categories,
+  organizations, Tier 1-3 support, CDS and provides/consumes links.
