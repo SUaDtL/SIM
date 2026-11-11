@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Hand-entry UI · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-HAND-ENTRY-UI</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/hand-entry-ui.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Hand-entry UI</h1><p class="deck">Side-panel data entry: a collapsible entity list on the left, a reserved map region in the center and an editor on the right, covering every entity and relationship through the repository.</p><div class="meta"><span>SPEC-HAND-ENTRY-UI</span><span>Revision 1 · schema 0.3.2</span><span>33 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INT-1 -->
+<article class="record" id="INT-1" data-ca-symbol="INT-1" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INT-1">INT-1</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>feature</div><div class="field"><span class="label">Outcome</span>Users enter and edit networks, services, organizations, applications, categories, CDS and all provides/supports/consumes/depends links by hand, beside the space the map will occupy.</div><div class="field"><span class="label">Problem</span>A dataset can only be created and saved; nothing can be entered into it.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div></article>
+<!-- CA:END:INT-1 -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-1 -->
+<article class="record" id="SCOPE-1" data-ca-symbol="SCOPE-1" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-1">SCOPE-1</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>App shell with a collapsible left list panel (type picker, name filter, Add), a labelled center map placeholder, and a right editor; existing header controls and status remain.</div></article>
+<!-- CA:END:SCOPE-1 -->
+
+<!-- CA:BEGIN:SCOPE-2 -->
+<article class="record" id="SCOPE-2" data-ca-symbol="SCOPE-2" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-2">SCOPE-2</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Create, edit and delete networks, organizations, categories, applications, services and CDS; update sends every field; delete is a two-step confirm inside the panel.</div></article>
+<!-- CA:END:SCOPE-2 -->
+
+<!-- CA:BEGIN:SCOPE-3 -->
+<article class="record" id="SCOPE-3" data-ca-symbol="SCOPE-3" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-3">SCOPE-3</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Relationships: service provider, Tier 1-3 support organizations, consuming organizations, service dependencies with optional via-CDS, and the networks a CDS joins.</div></article>
+<!-- CA:END:SCOPE-3 -->
+
+<!-- CA:BEGIN:SCOPE-4 -->
+<article class="record" id="SCOPE-4" data-ca-symbol="SCOPE-4" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-4">SCOPE-4</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Validation errors shown at the named field; sensitive-input warnings list the matches and offer Save anyway for the same input; successful writes mark the dataset Unsaved; New/Open swap in a fresh repository.</div></article>
+<!-- CA:END:SCOPE-4 -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:NG-1 -->
+<article class="record" id="NG-1" data-ca-symbol="NG-1" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-1">NG-1</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No map rendering or cytoscape (WORK-007); the center is a placeholder.</div></article>
+<!-- CA:END:NG-1 -->
+
+<!-- CA:BEGIN:NG-2 -->
+<article class="record" id="NG-2" data-ca-symbol="NG-2" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-2">NG-2</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No classification banner (WORK-009), search, undo/redo or unsaved-changes guard (WORK-015).</div></article>
+<!-- CA:END:NG-2 -->
+
+<!-- CA:BEGIN:NG-3 -->
+<article class="record" id="NG-3" data-ca-symbol="NG-3" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-3">NG-3</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No new dependency and no schema change.</div></article>
+<!-- CA:END:NG-3 -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APP-1 -->
+<article class="record" id="APP-1" data-ca-symbol="APP-1" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APP-1">APP-1</a><h3>Approach</h3></div><div class="field"><span class="label">Binding decision refs</span><ul class="items"><li><a href="#DEC-1">DEC-1</a></li><li><a href="#DEC-2">DEC-2</a></li></ul></div><div class="field"><span class="label">Choice</span>Plain DOM modules (no framework): a pure form model per entity type (fields, form values to repository input, error field to input), a list panel, an editor panel with per-row relationship writes, and main.ts wiring that rebuilds the repository on New/Open. CSS is imported and inlined by the build.</div><div class="field"><span class="label">Tradeoff</span>Hand-built DOM is more code than a framework but adds no dependency and stays within the lint bans (no innerHTML).</div></article>
+<!-- CA:END:APP-1 -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2>
+<!-- CA:BEGIN:CON-REPO -->
+<article class="record" id="CON-REPO" data-ca-symbol="CON-REPO" data-ca-kind="constraints"><div class="record-head"><a class="id" href="#CON-REPO">CON-REPO</a><h3>Constraints</h3></div><div class="field"><span class="label">Applies to</span><ul class="items"><li>AC-2</li><li>AC-3</li><li>AC-5</li></ul></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-STD">SRC-STD</a></li></ul></div><div class="field"><span class="label">Statement</span>The UI writes only through the repository (CONV-002).</div></article>
+<!-- CA:END:CON-REPO -->
+
+<!-- CA:BEGIN:CON-DOM -->
+<article class="record" id="CON-DOM" data-ca-symbol="CON-DOM" data-ca-kind="constraints"><div class="record-head"><a class="id" href="#CON-DOM">CON-DOM</a><h3>Constraints</h3></div><div class="field"><span class="label">Applies to</span><ul class="items"><li>AC-1</li></ul></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-SEC">SRC-SEC</a></li></ul></div><div class="field"><span class="label">Statement</span>DOM is built with createElement/textContent; no innerHTML or network (FACT-002, CON-006).</div></article>
+<!-- CA:END:CON-DOM -->
+
+<!-- CA:BEGIN:CON-SENSITIVE -->
+<article class="record" id="CON-SENSITIVE" data-ca-symbol="CON-SENSITIVE" data-ca-kind="constraints"><div class="record-head"><a class="id" href="#CON-SENSITIVE">CON-SENSITIVE</a><h3>Constraints</h3></div><div class="field"><span class="label">Applies to</span><ul class="items"><li>AC-4</li></ul></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-SEC">SRC-SEC</a></li></ul></div><div class="field"><span class="label">Statement</span>IP/FQDN-like text is saved only after the user confirms the exact listed values (Q-032).</div></article>
+<!-- CA:END:CON-SENSITIVE -->
+</section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2>
+<!-- CA:BEGIN:DEC-1 -->
+<article class="record" id="DEC-1" data-ca-symbol="DEC-1" data-ca-kind="decisions"><div class="record-head"><a class="id" href="#DEC-1">DEC-1</a><h3>Layout</h3></div><div class="field"><span class="label">Authority</span>inherited</div><div class="field"><span class="label">Choice</span>Side panels: list left, map center, editor right.</div><div class="field"><span class="label">Rationale</span>User decision 2026-11-11 (WORK-006 layout question).</div><div class="field"><span class="label">Source ref</span><a href="#SRC-DECOMP">SRC-DECOMP</a></div></article>
+<!-- CA:END:DEC-1 -->
+
+<!-- CA:BEGIN:DEC-2 -->
+<article class="record" id="DEC-2" data-ca-symbol="DEC-2" data-ca-kind="decisions"><div class="record-head"><a class="id" href="#DEC-2">DEC-2</a><h3>Relationship writes</h3></div><div class="field"><span class="label">Authority</span>inherited</div><div class="field"><span class="label">Choice</span>Each relationship row change is its own repository write; entity Save covers only the entity&#39;s own fields.</div><div class="field"><span class="label">Rationale</span>Separate repository calls cannot be bundled atomically; per-row writes avoid half-applied saves.</div><div class="field"><span class="label">Source ref</span><a href="#SRC-DECOMP">SRC-DECOMP</a></div></article>
+<!-- CA:END:DEC-2 -->
+</section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:AC-1 -->
+<article class="record" id="AC-1" data-ca-symbol="AC-1" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-1">AC-1</a><h3>Side-panel shell</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the entry UI in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-DOM">CON-DOM</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>three regions</li><li>collapse toggle</li><li>existing test ids kept</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-1">SCOPE-1</a></li></ul></div><div class="field"><span class="label">Kind</span>interface</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-1-S1 -->
+<article class="record" id="AC-1-S1" data-ca-symbol="AC-1-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-1-S1">AC-1-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>dist/sim.html opened from file:// offline</div><div class="field"><span class="label">Then</span>all regions are present, the toggle works, and no network request, page error or CSP violation occurs</div><div class="field"><span class="label">When</span>the page loads and the list panel is collapsed and expanded</div></article>
+<!-- CA:END:AC-1-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>The app shows the header (New/Open/Save/Save As, status), a left list panel that can collapse and expand, a center region labelled as the map area, and a right editor, offline with no page errors or CSP violations.</div><div class="field"><span class="label">Trigger</span>the page loads and the list panel is collapsed and expanded</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-1-V -->
+<article class="record" id="AC-1-V" data-ca-symbol="AC-1-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-1-V">AC-1-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Removing the collapse handler fails the toggle assertion</div><div class="field"><span class="label">Oracle</span>Playwright locators and recorded errors</div><div class="field"><span class="label">Planned target</span>e2e/entry-ui.spec.ts</div></article>
+<!-- CA:END:AC-1-V -->
+</div></article>
+<!-- CA:END:AC-1 -->
+
+<!-- CA:BEGIN:AC-2 -->
+<article class="record" id="AC-2" data-ca-symbol="AC-2" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-2">AC-2</a><h3>Entity create, edit and delete</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the entry UI in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-REPO">CON-REPO</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>all six types</li><li>full-field update</li><li>two-step delete</li><li>in-use refusal shown</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-2">SCOPE-2</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-2-S1 -->
+<article class="record" id="AC-2-S1" data-ca-symbol="AC-2-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-2-S1">AC-2-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>a new dataset</div><div class="field"><span class="label">Then</span>lists show the items, the service keeps its other fields, and the network stays with an in-use message</div><div class="field"><span class="label">When</span>items of every type are created, one service is edited by name only, and a used network is deleted</div></article>
+<!-- CA:END:AC-2-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>For each of the six entity types the user can add, select, edit and delete an item; editing one field keeps every other field; delete asks for confirmation inside the panel; refusals such as deleting a network that still has services are shown and change nothing.</div><div class="field"><span class="label">Trigger</span>items of every type are created, one service is edited by name only, and a used network is deleted</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-2-V -->
+<article class="record" id="AC-2-V" data-ca-symbol="AC-2-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-2-V">AC-2-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Dropping a field from the service form fails the keep-other-fields test</div><div class="field"><span class="label">Oracle</span>list contents, read-back values</div><div class="field"><span class="label">Planned target</span>e2e/entry-ui.spec.ts and src/ui/forms.test.ts</div></article>
+<!-- CA:END:AC-2-V -->
+</div></article>
+<!-- CA:END:AC-2 -->
+
+<!-- CA:BEGIN:AC-3 -->
+<article class="record" id="AC-3" data-ca-symbol="AC-3" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-3">AC-3</a><h3>Relationships</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the entry UI in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-REPO">CON-REPO</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>support tiers</li><li>consumers</li><li>dependencies via CDS</li><li>CDS networks</li><li>parent excludes self</li><li>service needs a network</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-3">SCOPE-3</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-3-S1 -->
+<article class="record" id="AC-3-S1" data-ca-symbol="AC-3-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-3-S1">AC-3-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>a dataset with networks, organizations, services and a CDS</div><div class="field"><span class="label">Then</span>the repository holds exactly the chosen links after each change</div><div class="field"><span class="label">When</span>relationships are added and removed in the editor</div></article>
+<!-- CA:END:AC-3-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>On a saved service the user sets the provider, Tier 1-3 support organizations, consuming organizations and dependencies (optionally via a CDS); a CDS form selects at least two networks; an organization cannot pick itself as parent; Add service is unavailable until a network exists.</div><div class="field"><span class="label">Trigger</span>relationships are added and removed in the editor</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-3-V -->
+<article class="record" id="AC-3-V" data-ca-symbol="AC-3-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-3-V">AC-3-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Not refreshing the relationship section after a write fails the row assertion</div><div class="field"><span class="label">Oracle</span>editor rows and reopened data</div><div class="field"><span class="label">Planned target</span>e2e/entry-ui.spec.ts</div></article>
+<!-- CA:END:AC-3-V -->
+</div></article>
+<!-- CA:END:AC-3 -->
+
+<!-- CA:BEGIN:AC-4 -->
+<article class="record" id="AC-4" data-ca-symbol="AC-4" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-4">AC-4</a><h3>Errors and sensitive confirmation</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the entry UI in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-SENSITIVE">CON-SENSITIVE</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>every repository error field maps to an input</li><li>warning lists matches</li><li>Save anyway resubmits same input</li><li>edit cancels confirm</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-4">SCOPE-4</a></li></ul></div><div class="field"><span class="label">Kind</span>security</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-4-S1 -->
+<article class="record" id="AC-4-S1" data-ca-symbol="AC-4-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-4-S1">AC-4-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>an editor with a blank name or a host-like name</div><div class="field"><span class="label">Then</span>the field error or warning is shown; only the confirmed unchanged input is saved</div><div class="field"><span class="label">When</span>the user saves, then confirms or edits</div></article>
+<!-- CA:END:AC-4-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>A refused write shows its message next to the field the repository names and changes nothing; a sensitive-input warning lists each field and match and saves only when the user chooses Save anyway for that same input; editing after the warning cancels the pending confirmation.</div><div class="field"><span class="label">Trigger</span>the user saves, then confirms or edits</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-4-V -->
+<article class="record" id="AC-4-V" data-ca-symbol="AC-4-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-4-V">AC-4-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Removing a field from the map fails the completeness test</div><div class="field"><span class="label">Oracle</span>field-map table and UI state</div><div class="field"><span class="label">Planned target</span>src/ui/forms.test.ts and e2e/entry-ui.spec.ts</div></article>
+<!-- CA:END:AC-4-V -->
+</div></article>
+<!-- CA:END:AC-4 -->
+
+<!-- CA:BEGIN:AC-5 -->
+<article class="record" id="AC-5" data-ca-symbol="AC-5" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-5">AC-5</a><h3>State integrity</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the entry UI in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-REPO">CON-REPO</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Unsaved on write</li><li>typing preserved</li><li>repository swap on New/Open</li><li>save and reopen</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-4">SCOPE-4</a></li></ul></div><div class="field"><span class="label">Kind</span>invariant</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-5-S1 -->
+<article class="record" id="AC-5-S1" data-ca-symbol="AC-5-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-5-S1">AC-5-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>a dataset with entered data</div><div class="field"><span class="label">Then</span>status, typed text and reopened entities are as expected with no page errors</div><div class="field"><span class="label">When</span>the user edits, adds a consumer, saves, opens another file and reopens the saved one</div></article>
+<!-- CA:END:AC-5-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>A successful write marks the dataset Unsaved; typing in the editor survives relationship writes; New and Open replace the repository and clear the editor without errors; entities entered in the UI are present after Save and reopen.</div><div class="field"><span class="label">Trigger</span>the user edits, adds a consumer, saves, opens another file and reopens the saved one</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-5-V -->
+<article class="record" id="AC-5-V" data-ca-symbol="AC-5-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-5-V">AC-5-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Rebuilding the form on every change fails the typing test</div><div class="field"><span class="label">Oracle</span>status text, input values, list contents, error log</div><div class="field"><span class="label">Planned target</span>e2e/entry-ui.spec.ts</div></article>
+<!-- CA:END:AC-5-V -->
+</div></article>
+<!-- CA:END:AC-5 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2>
+<!-- CA:BEGIN:SEC-SMARTS -->
+<article class="record" id="SEC-SMARTS" data-ca-symbol="SEC-SMARTS" data-ca-kind="sections"><div class="record-head"><a class="id" href="#SEC-SMARTS">SEC-SMARTS</a><h3>SMARTS design rationale</h3></div><div class="field"><span class="label">Blocks</span><div class="block"><p>Layout chosen by the user from three options (side panels, Data/Map tabs, editor only). Plain DOM over a framework avoids a new dependency for a modest form surface.</p><div class="refs">References: <a href="#DEC-1">DEC-1</a> <a href="#DEC-2">DEC-2</a> </div></div></div></article>
+<!-- CA:END:SEC-SMARTS -->
+</section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-DECOMP -->
+<article class="record" id="SRC-DECOMP" data-ca-symbol="SRC-DECOMP" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-DECOMP">SRC-DECOMP</a><h3>Decomposition</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/decomposition/project.html</div><div class="field"><span class="label">Note</span>WORK-006, CAP-002, CAP-003, COMP-004.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-DECOMP -->
+
+<!-- CA:BEGIN:SRC-SEC -->
+<article class="record" id="SRC-SEC" data-ca-symbol="SRC-SEC" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-SEC">SRC-SEC</a><h3>Security controls</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/context/security-controls.html</div><div class="field"><span class="label">Note</span>CON-006, FACT-002.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-SEC -->
+
+<!-- CA:BEGIN:SRC-STD -->
+<article class="record" id="SRC-STD" data-ca-symbol="SRC-STD" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-STD">SRC-STD</a><h3>Coding standards</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/context/coding-standards.html</div><div class="field"><span class="label">Note</span>CONV-002 single write path.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-STD -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-11</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/ui/**</li><li>src/main.ts</li><li>e2e/entry-ui.spec.ts</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 524b094beb2d079dbca139b79b9f73df8db9ce853bd013803790194887469d69<br>Model SHA-256: 454750f31bc5425c87514589e52b9aee97c42a67ffed61da93558d7df6c8d139</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-HAND-ENTRY-UI",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "454750f31bc5425c87514589e52b9aee97c42a67ffed61da93558d7df6c8d139",
+    "normative_sha256": "524b094beb2d079dbca139b79b9f73df8db9ce853bd013803790194887469d69",
+    "symbol_count": 33
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "binding_decision_refs": [
+        "DEC-1",
+        "DEC-2"
+      ],
+      "choice": "Plain DOM modules (no framework): a pure form model per entity type (fields, form values to repository input, error field to input), a list panel, an editor panel with per-row relationship writes, and main.ts wiring that rebuilds the repository on New/Open. CSS is imported and inlined by the build.",
+      "id": "APP-1",
+      "tradeoff": "Hand-built DOM is more code than a framework but adds no dependency and stays within the lint bans (no innerHTML)."
+    },
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-11",
+      "repository": null
+    },
+    "constraints": [
+      {
+        "applies_to": [
+          "AC-2",
+          "AC-3",
+          "AC-5"
+        ],
+        "id": "CON-REPO",
+        "source_refs": [
+          "SRC-STD"
+        ],
+        "statement": "The UI writes only through the repository (CONV-002)."
+      },
+      {
+        "applies_to": [
+          "AC-1"
+        ],
+        "id": "CON-DOM",
+        "source_refs": [
+          "SRC-SEC"
+        ],
+        "statement": "DOM is built with createElement/textContent; no innerHTML or network (FACT-002, CON-006)."
+      },
+      {
+        "applies_to": [
+          "AC-4"
+        ],
+        "id": "CON-SENSITIVE",
+        "source_refs": [
+          "SRC-SEC"
+        ],
+        "statement": "IP/FQDN-like text is saved only after the user confirms the exact listed values (Q-032)."
+      }
+    ],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the entry UI in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-DOM"
+        ],
+        "guarantees": [
+          "three regions",
+          "collapse toggle",
+          "existing test ids kept"
+        ],
+        "id": "AC-1",
+        "intent_refs": [
+          "SCOPE-1"
+        ],
+        "kind": "interface",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "dist/sim.html opened from file:// offline",
+            "id": "AC-1-S1",
+            "then": "all regions are present, the toggle works, and no network request, page error or CSP violation occurs",
+            "when": "the page loads and the list panel is collapsed and expanded"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "The app shows the header (New/Open/Save/Save As, status), a left list panel that can collapse and expand, a center region labelled as the map area, and a right editor, offline with no page errors or CSP violations.",
+        "title": "Side-panel shell",
+        "trigger": "the page loads and the list panel is collapsed and expanded",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-1-V",
+          "method": "automated",
+          "negative_control": "Removing the collapse handler fails the toggle assertion",
+          "oracle": "Playwright locators and recorded errors",
+          "planned_target": "e2e/entry-ui.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the entry UI in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-REPO"
+        ],
+        "guarantees": [
+          "all six types",
+          "full-field update",
+          "two-step delete",
+          "in-use refusal shown"
+        ],
+        "id": "AC-2",
+        "intent_refs": [
+          "SCOPE-2"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "a new dataset",
+            "id": "AC-2-S1",
+            "then": "lists show the items, the service keeps its other fields, and the network stays with an in-use message",
+            "when": "items of every type are created, one service is edited by name only, and a used network is deleted"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "For each of the six entity types the user can add, select, edit and delete an item; editing one field keeps every other field; delete asks for confirmation inside the panel; refusals such as deleting a network that still has services are shown and change nothing.",
+        "title": "Entity create, edit and delete",
+        "trigger": "items of every type are created, one service is edited by name only, and a used network is deleted",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-2-V",
+          "method": "automated",
+          "negative_control": "Dropping a field from the service form fails the keep-other-fields test",
+          "oracle": "list contents, read-back values",
+          "planned_target": "e2e/entry-ui.spec.ts and src/ui/forms.test.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the entry UI in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-REPO"
+        ],
+        "guarantees": [
+          "support tiers",
+          "consumers",
+          "dependencies via CDS",
+          "CDS networks",
+          "parent excludes self",
+          "service needs a network"
+        ],
+        "id": "AC-3",
+        "intent_refs": [
+          "SCOPE-3"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "a dataset with networks, organizations, services and a CDS",
+            "id": "AC-3-S1",
+            "then": "the repository holds exactly the chosen links after each change",
+            "when": "relationships are added and removed in the editor"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "On a saved service the user sets the provider, Tier 1-3 support organizations, consuming organizations and dependencies (optionally via a CDS); a CDS form selects at least two networks; an organization cannot pick itself as parent; Add service is unavailable until a network exists.",
+        "title": "Relationships",
+        "trigger": "relationships are added and removed in the editor",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-3-V",
+          "method": "automated",
+          "negative_control": "Not refreshing the relationship section after a write fails the row assertion",
+          "oracle": "editor rows and reopened data",
+          "planned_target": "e2e/entry-ui.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the entry UI in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-SENSITIVE"
+        ],
+        "guarantees": [
+          "every repository error field maps to an input",
+          "warning lists matches",
+          "Save anyway resubmits same input",
+          "edit cancels confirm"
+        ],
+        "id": "AC-4",
+        "intent_refs": [
+          "SCOPE-4"
+        ],
+        "kind": "security",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "an editor with a blank name or a host-like name",
+            "id": "AC-4-S1",
+            "then": "the field error or warning is shown; only the confirmed unchanged input is saved",
+            "when": "the user saves, then confirms or edits"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "A refused write shows its message next to the field the repository names and changes nothing; a sensitive-input warning lists each field and match and saves only when the user chooses Save anyway for that same input; editing after the warning cancels the pending confirmation.",
+        "title": "Errors and sensitive confirmation",
+        "trigger": "the user saves, then confirms or edits",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-4-V",
+          "method": "automated",
+          "negative_control": "Removing a field from the map fails the completeness test",
+          "oracle": "field-map table and UI state",
+          "planned_target": "src/ui/forms.test.ts and e2e/entry-ui.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the entry UI in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-REPO"
+        ],
+        "guarantees": [
+          "Unsaved on write",
+          "typing preserved",
+          "repository swap on New/Open",
+          "save and reopen"
+        ],
+        "id": "AC-5",
+        "intent_refs": [
+          "SCOPE-4"
+        ],
+        "kind": "invariant",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "a dataset with entered data",
+            "id": "AC-5-S1",
+            "then": "status, typed text and reopened entities are as expected with no page errors",
+            "when": "the user edits, adds a consumer, saves, opens another file and reopens the saved one"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "A successful write marks the dataset Unsaved; typing in the editor survives relationship writes; New and Open replace the repository and clear the editor without errors; entities entered in the UI are present after Save and reopen.",
+        "title": "State integrity",
+        "trigger": "the user edits, adds a consumer, saves, opens another file and reopens the saved one",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-5-V",
+          "method": "automated",
+          "negative_control": "Rebuilding the form on every change fails the typing test",
+          "oracle": "status text, input values, list contents, error log",
+          "planned_target": "e2e/entry-ui.spec.ts"
+        }
+      }
+    ],
+    "decisions": [
+      {
+        "authority": "inherited",
+        "choice": "Side panels: list left, map center, editor right.",
+        "id": "DEC-1",
+        "rationale": "User decision 2026-11-11 (WORK-006 layout question).",
+        "source_ref": "SRC-DECOMP",
+        "topic": "Layout"
+      },
+      {
+        "authority": "inherited",
+        "choice": "Each relationship row change is its own repository write; entity Save covers only the entity's own fields.",
+        "id": "DEC-2",
+        "rationale": "Separate repository calls cannot be bundled atomically; per-row writes avoid half-applied saves.",
+        "source_ref": "SRC-DECOMP",
+        "topic": "Relationship writes"
+      }
+    ],
+    "governs": [
+      "src/ui/**",
+      "src/main.ts",
+      "e2e/entry-ui.spec.ts"
+    ],
+    "intent": {
+      "caller": "feature",
+      "id": "INT-1",
+      "outcome": "Users enter and edit networks, services, organizations, applications, categories, CDS and all provides/supports/consumes/depends links by hand, beside the space the map will occupy.",
+      "problem": "A dataset can only be created and saved; nothing can be entered into it.",
+      "source_refs": [
+        "SRC-DECOMP"
+      ]
+    },
+    "non_goals": [
+      {
+        "id": "NG-1",
+        "statement": "No map rendering or cytoscape (WORK-007); the center is a placeholder."
+      },
+      {
+        "id": "NG-2",
+        "statement": "No classification banner (WORK-009), search, undo/redo or unsaved-changes guard (WORK-015)."
+      },
+      {
+        "id": "NG-3",
+        "statement": "No new dependency and no schema change."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-1",
+        "statement": "App shell with a collapsible left list panel (type picker, name filter, Add), a labelled center map placeholder, and a right editor; existing header controls and status remain."
+      },
+      {
+        "id": "SCOPE-2",
+        "statement": "Create, edit and delete networks, organizations, categories, applications, services and CDS; update sends every field; delete is a two-step confirm inside the panel."
+      },
+      {
+        "id": "SCOPE-3",
+        "statement": "Relationships: service provider, Tier 1-3 support organizations, consuming organizations, service dependencies with optional via-CDS, and the networks a CDS joins."
+      },
+      {
+        "id": "SCOPE-4",
+        "statement": "Validation errors shown at the named field; sensitive-input warnings list the matches and offer Save anyway for the same input; successful writes mark the dataset Unsaved; New/Open swap in a fresh repository."
+      }
+    ],
+    "sections": [
+      {
+        "blocks": [
+          {
+            "refs": [
+              "DEC-1",
+              "DEC-2"
+            ],
+            "text": "Layout chosen by the user from three options (side panels, Data/Map tabs, editor only). Plain DOM over a framework avoids a new dependency for a modest form surface.",
+            "type": "paragraph"
+          }
+        ],
+        "id": "SEC-SMARTS",
+        "title": "SMARTS design rationale"
+      }
+    ],
+    "sources": [
+      {
+        "id": "SRC-DECOMP",
+        "locator": ".codearbiter/decomposition/project.html",
+        "note": "WORK-006, CAP-002, CAP-003, COMP-004.",
+        "title": "Decomposition",
+        "type": "local_document",
+        "url": null
+      },
+      {
+        "id": "SRC-SEC",
+        "locator": ".codearbiter/context/security-controls.html",
+        "note": "CON-006, FACT-002.",
+        "title": "Security controls",
+        "type": "local_document",
+        "url": null
+      },
+      {
+        "id": "SRC-STD",
+        "locator": ".codearbiter/context/coding-standards.html",
+        "note": "CONV-002 single write path.",
+        "title": "Coding standards",
+        "type": "local_document",
+        "url": null
+      }
+    ],
+    "summary": "Side-panel data entry: a collapsible entity list on the left, a reserved map region in the center and an editor on the right, covering every entity and relationship through the repository.",
+    "title": "Hand-entry UI"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/hand-entry-ui.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 1,
+  "schema_version": "0.3.2",
+  "slug": "hand-entry-ui"
+}
+</script>
+</body></html>

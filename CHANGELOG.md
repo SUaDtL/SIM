@@ -21,3 +21,7 @@ All notable changes to SIM are documented here. The format follows
   route must join the two networks it connects; text that looks like an IP address or host
   name is flagged and saved only after confirmation; a CDS takes the highest marking of the
   networks it joins.
+- Data entry: a collapsible list on the left and an editor on the right, with the center kept
+  for the map. Add, edit and delete networks, services, organizations, applications,
+  categories and CDS; set Tier 1-3 support, consuming organizations and service dependencies
+  (optionally through a CDS). Errors appear at the field; host-like text needs "Save anyway".
