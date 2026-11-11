@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { wasm } from "../../tests/helpers/sqlite";
 import { createDataset } from "../db/dataset";
 import { Repository } from "../domain/repository";
-import { buildGraph, type Graph, type GraphEdge, nodeId, summarize } from "./graph";
+import { buildGraph, filterGraph, type Graph, type GraphEdge, nodeId, summarize, traceChain } from "./graph";
 
 let repo: Repository;
 
@@ -129,5 +129,143 @@ describe("buildGraph", () => {
 
   it("draws an empty dataset as an empty graph", () => {
     expect(buildGraph(repo.snapshot())).toEqual({ nodes: [], edges: [] });
+  });
+});
+
+describe("traceChain", () => {
+  const ids = (set: ReadonlySet<string>, prefix: string) => [...set].filter((id) => id.startsWith(prefix)).sort();
+
+  /** Email -> Identity <- Chat (fan-in), Email -> Patching via the guard, Wiki -> Chat via the guard. */
+  function chained() {
+    const s = seed();
+    const wiki = repo.createService({ name: "Wiki", networkId: s.nipr.id, marking: "CUI" });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.idam.id });
+    repo.addDependency({ consumerServiceId: s.chat.id, providerServiceId: s.idam.id });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });
+    repo.addDependency({ consumerServiceId: wiki.id, providerServiceId: s.chat.id, viaCdsId: s.guard.id });
+    return { ...s, wiki, graph: buildGraph(repo.snapshot()) };
+  }
+
+  it("follows providers upstream and consumers downstream, never across a shared provider", () => {
+    const s = chained();
+    const chain = traceChain(s.graph, nodeId("service", s.mail.id));
+    expect(ids(chain.nodes, "service-")).toEqual(
+      [s.mail.id, s.idam.id, s.patch.id].map((id) => nodeId("service", id)).sort(),
+    );
+    // Chat also uses Identity, but it is not in Email's chain.
+    expect(chain.nodes.has(nodeId("service", s.chat.id))).toBe(false);
+  });
+
+  it("keeps routes through the same CDS apart", () => {
+    const s = chained();
+    const chain = traceChain(s.graph, nodeId("service", s.mail.id));
+    expect(chain.nodes.has(nodeId("cds", s.guard.id))).toBe(true);
+    expect(chain.nodes.has(nodeId("service", s.wiki.id))).toBe(false);
+    expect([...chain.edges].sort()).toEqual(
+      [
+        `dep-${String(s.mail.id)}-${String(s.idam.id)}`,
+        `dep-${String(s.mail.id)}-${String(s.patch.id)}-in`,
+        `dep-${String(s.mail.id)}-${String(s.patch.id)}-out`,
+      ].sort(),
+    );
+  });
+
+  it("includes the networks holding the chain and every consumer of a shared provider when it is the start", () => {
+    const s = chained();
+    const chain = traceChain(s.graph, nodeId("service", s.idam.id));
+    expect(ids(chain.nodes, "service-")).toEqual(
+      [s.idam.id, s.mail.id, s.chat.id, s.wiki.id].map((id) => nodeId("service", id)).sort(),
+    );
+    expect(ids(chain.nodes, "network-")).toEqual([nodeId("network", s.nipr.id), nodeId("network", s.sipr.id)].sort());
+  });
+
+  it("stops at cycles", () => {
+    const s = seed();
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.idam.id });
+    repo.addDependency({ consumerServiceId: s.idam.id, providerServiceId: s.mail.id });
+    const chain = traceChain(buildGraph(repo.snapshot()), nodeId("service", s.mail.id));
+    expect(chain.edges.size).toBe(2);
+  });
+
+  it("starts from every service in a network, or from the routes through a CDS", () => {
+    const s = chained();
+    const sipr = traceChain(s.graph, nodeId("network", s.sipr.id));
+    expect(ids(sipr.nodes, "service-")).toEqual(
+      [s.chat.id, s.patch.id, s.idam.id, s.mail.id, s.wiki.id].map((id) => nodeId("service", id)).sort(),
+    );
+    const guard = traceChain(s.graph, nodeId("cds", s.guard.id));
+    expect(guard.edges.size).toBe(5);
+    expect(guard.nodes.has(nodeId("service", s.idam.id))).toBe(true);
+  });
+
+  it("returns nothing for an unknown start", () => {
+    const chain = traceChain(buildGraph(repo.snapshot()), "service-999");
+    expect(chain.nodes.size + chain.edges.size).toBe(0);
+  });
+});
+
+describe("filterGraph", () => {
+  function filtered() {
+    const s = seed();
+    const cyber = repo.createCategory({ name: "Cyber" });
+    const j6 = repo.createOrganization({ name: "J6" });
+    const j7 = repo.createOrganization({ name: "J7" });
+    const j8 = repo.createOrganization({ name: "J8" });
+    repo.updateService(s.patch.id, { name: "Patching", networkId: s.sipr.id, marking: "SECRET", categoryId: cyber.id });
+    repo.updateService(s.mail.id, { name: "Email", networkId: s.nipr.id, marking: "CUI", providerOrgId: j6.id });
+    repo.setSupport(s.chat.id, 2, j7.id);
+    repo.addConsumption(j8.id, s.m365.id);
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });
+    repo.addDependency({ consumerServiceId: s.chat.id, providerServiceId: s.patch.id });
+    const snapshot = repo.snapshot();
+    return { ...s, cyber, j6, j7, j8, snapshot, graph: buildGraph(snapshot) };
+  }
+  const shown = (graph: Graph, hidden: ReadonlySet<string>) =>
+    graph.nodes
+      .filter((n) => !hidden.has(n.data.id))
+      .map((n) => n.data.label.split("\n")[0])
+      .sort();
+
+  it("hides nothing without a filter", () => {
+    const s = filtered();
+    expect(filterGraph(s.snapshot, s.graph, {}).size).toBe(0);
+  });
+
+  it("shows only one network's services, links and CDS on its routes", () => {
+    const s = filtered();
+    const hidden = filterGraph(s.snapshot, s.graph, { networkId: s.sipr.id });
+    expect(shown(s.graph, hidden)).toEqual(["Chat", "Patching", "SIPR"]);
+    expect(s.graph.edges.filter((e) => !hidden.has(e.data.id)).map((e) => e.data.id)).toEqual([
+      `dep-${String(s.chat.id)}-${String(s.patch.id)}`,
+    ]);
+  });
+
+  it("filters by category and keeps the networks that still hold a match", () => {
+    const s = filtered();
+    expect(shown(s.graph, filterGraph(s.snapshot, s.graph, { categoryId: s.cyber.id }))).toEqual(["Patching", "SIPR"]);
+  });
+
+  it("matches an organization that provides, supports or consumes a service", () => {
+    const s = filtered();
+    const by = (orgId: number) => shown(s.graph, filterGraph(s.snapshot, s.graph, { orgId }));
+    expect(by(s.j6.id)).toEqual(["Email", "NIPR"]);
+    expect(by(s.j7.id)).toEqual(["Chat", "SIPR"]);
+    expect(by(s.j8.id)).toEqual(["External", "Office 365"]);
+  });
+
+  it("combines filters and keeps a CDS whose route stays visible", () => {
+    const s = filtered();
+    const both = filterGraph(s.snapshot, s.graph, { categoryId: s.cyber.id, networkId: s.nipr.id });
+    expect(shown(s.graph, both)).toEqual([]);
+    repo.updateService(s.mail.id, { name: "Email", networkId: s.nipr.id, marking: "CUI", categoryId: s.cyber.id });
+    const snapshot = repo.snapshot();
+    const graph = buildGraph(snapshot);
+    expect(shown(graph, filterGraph(snapshot, graph, { categoryId: s.cyber.id }))).toEqual([
+      "Email",
+      "NIPR",
+      "NIPR-SIPR guard",
+      "Patching",
+      "SIPR",
+    ]);
   });
 });

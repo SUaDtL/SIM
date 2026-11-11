@@ -85,5 +85,17 @@ export const mapStyle: StylesheetJson = [
     selector: "edge.external",
     style: { width: 3, "line-color": "#b08850", "target-arrow-color": "#b08850", "line-style": "dotted" },
   },
+  // A highlighted chain stands out and the rest fades. A network is faded through its own fill,
+  // border and label: "opacity" on a container would also fade the services inside it.
+  { selector: "node.chain-root", style: { "border-color": "#2457a6", "border-width": 4 } },
+  { selector: "edge.chain", style: { width: 4.5 } },
+  { selector: "node.service.dimmed, node.cds.dimmed, edge.dimmed", style: { opacity: 0.25 } },
+  {
+    selector: "node.network.dimmed",
+    style: { "background-opacity": 0.35, "border-opacity": 0.35, "text-opacity": 0.35 },
+  },
+  // Later rules win: a chain shows its foundational links (Q-021), and a filter hides even those.
   { selector: ".hidden", style: { display: "none" } },
+  { selector: "edge.chain", style: { display: "element" } },
+  { selector: ".filtered", style: { display: "none" } },
 ];

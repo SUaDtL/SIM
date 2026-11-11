@@ -43,10 +43,12 @@ async function fixture(): Promise<Uint8Array> {
   const nipr = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
   const sipr = repo.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
   const saas = repo.createNetwork({ name: "External", kind: "external", marking: "UNCLASSIFIED" });
-  const mail = repo.createService({ name: "Email", networkId: nipr.id, marking: "CUI" });
+  const j6 = repo.createOrganization({ name: "J6" });
+  const cyber = repo.createCategory({ name: "Cyber" });
+  const mail = repo.createService({ name: "Email", networkId: nipr.id, marking: "CUI", providerOrgId: j6.id });
   const idam = repo.createService({ name: "Identity", networkId: nipr.id, marking: "CUI", foundational: true });
   const chat = repo.createService({ name: "Chat", networkId: sipr.id, marking: "SECRET" });
-  const patch = repo.createService({ name: "Patching", networkId: sipr.id, marking: "SECRET" });
+  const patch = repo.createService({ name: "Patching", networkId: sipr.id, marking: "SECRET", categoryId: cyber.id });
   repo.createService({ name: "Wiki", networkId: sipr.id, marking: "SECRET" });
   const m365 = repo.createService({ name: "Office 365", networkId: saas.id, marking: "UNCLASSIFIED" });
   const guard = repo.createCds({ name: "NIPR-SIPR guard", networkIds: [nipr.id, sipr.id] });
@@ -92,6 +94,8 @@ interface NodeView {
   box: Box;
   rendered: { x: number; y: number };
   position: { x: number; y: number };
+  classes: string[];
+  visible: boolean;
 }
 
 interface MapView {
@@ -139,6 +143,8 @@ function readMap(page: Page): Promise<MapView> {
         box: n.boundingBox({ includeLabels: false }),
         rendered: n.renderedPosition(),
         position: n.position(),
+        classes: n.classes(),
+        visible: n.visible(),
       })),
       edges: cy.edges().map((e) => ({
         source: e.source().id(),
@@ -450,5 +456,122 @@ test("re-lays out the whole map only after confirming", async ({ page }) => {
   await expect(page.getByTestId("dataset-status")).toContainText("| Unsaved");
   expect(message).toContain("moves every node");
   expect(near(placed(await readMap(page)), before, 1)).toBe(false);
+  expect(watch.errors).toEqual([]);
+});
+
+/** Click a node, or an empty spot of the map when `at` is a model point clear of every node. */
+async function tap(page: Page, map: MapView, at: { x: number; y: number }) {
+  const canvas = await page.getByTestId("map-canvas").boundingBox();
+  if (!canvas) throw new Error("map canvas has no size");
+  await page.mouse.click(canvas.x + at.x * map.zoom + map.pan.x, canvas.y + at.y * map.zoom + map.pan.y);
+}
+
+/** A model point below everything on the map, so a click there lands on the background. */
+const below = (map: MapView) => {
+  const bottom = Math.max(...map.nodes.map((n) => n.box.y2));
+  return { x: map.nodes[0]?.position.x ?? 0, y: bottom + 30 };
+};
+const has = (map: MapView, label: string, cls: string) => byLabel(map, label).classes.includes(cls);
+
+test("highlights everything that chains to a tapped node, with its foundational links", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  await page.getByRole("button", { name: "Fit map" }).click();
+  let map = await readMap(page);
+  const toIdentity = (m: MapView) =>
+    m.edges.find((e) => e.source === byLabel(m, "Email").id && e.target === byLabel(m, "Identity").id);
+  expect(toIdentity(map)?.visible).toBe(false);
+
+  await tap(page, map, byLabel(map, "Email").position);
+  await expect(page.getByTestId("map-summary")).toContainText(
+    "Highlighted: the chain of Email, 4 services and 3 dependencies.",
+  );
+  map = await readMap(page);
+  expect(has(map, "Email", "chain-root")).toBe(true);
+  for (const label of ["Identity", "Patching", "Office 365", "NIPR-SIPR guard"]) {
+    expect(has(map, label, "chain"), label).toBe(true);
+  }
+  // Chat also uses Identity but does not chain to Email; Wiki is unrelated.
+  for (const label of ["Chat", "Wiki"]) expect(has(map, label, "dimmed"), label).toBe(true);
+  expect(toIdentity(map)?.visible).toBe(true);
+  await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Email");
+
+  await tap(page, map, below(map));
+  await expect(page.getByTestId("map-summary")).not.toContainText("Highlighted");
+  map = await readMap(page);
+  expect(map.nodes.some((n) => n.classes.includes("dimmed") || n.classes.includes("chain"))).toBe(false);
+  expect(toIdentity(map)?.visible).toBe(false);
+  expect(watch.errors).toEqual([]);
+});
+
+test("keeps the chain through drags and edits and clears it when its start is deleted", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  await page.getByRole("button", { name: "Fit map" }).click();
+  let map = await readMap(page);
+  await tap(page, map, byLabel(map, "Email").position);
+  await expect(page.getByTestId("map-summary")).toContainText("the chain of Email");
+
+  await drag(page, await readMap(page), byLabel(map, "Wiki").position, { x: 40, y: 30 });
+  await expect.poll(async () => has(await readMap(page), "Wiki", "dimmed")).toBe(true);
+  expect(has(await readMap(page), "Email", "chain-root")).toBe(true);
+
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Depends on service").selectOption({ label: "Wiki (SIPR)" });
+  await editor.getByLabel("Via CDS").selectOption({ label: "NIPR-SIPR guard" });
+  await editor.getByRole("button", { name: "Add dependency" }).click();
+  await expect.poll(async () => has(await readMap(page), "Wiki", "chain")).toBe(true);
+
+  await editor.getByRole("button", { name: "Delete service" }).click();
+  await editor.getByRole("button", { name: "Confirm delete" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("5 services");
+  await expect(page.getByTestId("map-summary")).not.toContainText("Highlighted");
+  map = await readMap(page);
+  expect(map.nodes.some((n) => n.classes.includes("dimmed"))).toBe(false);
+  expect(watch.errors).toEqual([]);
+});
+
+test("filters by network, category and organization without moving anything or writing", async ({ page }) => {
+  const watch = await load(page);
+  await arranged(page);
+  const before = await readMap(page);
+  const visible = async () =>
+    (await readMap(page)).nodes
+      .filter((n) => n.visible)
+      .map((n) => n.label.split("\n")[0])
+      .sort();
+
+  await page.getByTestId("map-area").getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  expect(await visible()).toEqual(["Chat", "Patching", "SIPR", "Wiki"]);
+  await expect(page.getByTestId("map-summary")).toContainText("Filtered: 3 of 6 services shown.");
+
+  await page.getByTestId("map-area").getByLabel("Category", { exact: true }).selectOption({ label: "Cyber" });
+  expect(await visible()).toEqual(["Patching", "SIPR"]);
+
+  await page.getByTestId("map-area").getByLabel("Network", { exact: true }).selectOption({ label: "All networks" });
+  await page.getByTestId("map-area").getByLabel("Category", { exact: true }).selectOption({ label: "All categories" });
+  await page
+    .getByTestId("map-area")
+    .getByLabel(/^Organization/)
+    .selectOption({ label: "J6" });
+  expect(await visible()).toEqual(["Email", "NIPR"]);
+
+  // Highlighting under a filter, then clearing everything.
+  const map = await readMap(page);
+  await tap(page, map, byLabel(map, "Email").position);
+  await expect(page.getByTestId("map-summary")).toContainText("the chain of Email");
+  await page
+    .getByTestId("map-area")
+    .getByLabel(/^Organization/)
+    .selectOption({ label: "All organizations" });
+  expect(await visible()).toHaveLength(before.nodes.length);
+  expect(near(placed(await readMap(page)), placed(before), 1e-6)).toBe(true);
+  await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
+
+  // A newly opened dataset starts unfiltered.
+  await page.getByTestId("map-area").getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  await openFixture(page);
+  await expect(page.getByTestId("map-area").getByLabel("Network", { exact: true })).toHaveValue("");
+  expect(await visible()).toHaveLength(before.nodes.length);
   expect(watch.errors).toEqual([]);
 });
