@@ -38,6 +38,7 @@ src/db/migrations/  Forward-only schema migrations (PRAGMA user_version)
 src/domain/         Repository (the only write path), entity types, validation, IP/FQDN detection
 src/file/           File System Access API with download/upload fallback
 src/ui/             Workspace UI: list panel, editor, form model (forms.ts), DOM helpers, CSS
+src/map/            Map view: graph model (graph.ts, pure), Cytoscape + fcose view, map style
 tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection)
 tests/unit/         Unit tests that are not colocated (e.g. build-output checks)
 e2e/                Playwright tests that open dist/sim.html from file://
@@ -58,6 +59,9 @@ e2e/                Playwright tests that open dist/sim.html from file://
   The editor saves an entity's own fields with one repository call; each relationship row
   (support tier, consumer, dependency) is its own write. Repository change events refresh the
   list and relationship rows but never rebuild a form the user is typing in.
+- The map turns `repository.snapshot()` into elements with the pure `buildGraph` (unit-tested; e2e
+  reads the canvas through Cytoscape's `_cyreg` registry on the `map-canvas` container, never a
+  global). Repository changes update elements in place; only node changes re-run fcose, incrementally.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
   (`SIM1`), version, integrity and foreign keys, and caps size at 100 MB.
 - Only `src/main.ts` imports the WASM (`?url`); `src/db` stays environment-neutral so Node

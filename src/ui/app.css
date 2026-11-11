@@ -214,17 +214,44 @@ textarea {
   color: var(--muted);
 }
 
-.map-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.map-area h2 {
+/* The map canvas fills its grid cell; Cytoscape needs a container with a real size. */
+.map-area {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.map-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.map-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.map-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   margin: 0;
-  font-size: 16px;
+  color: var(--muted);
+  transform: translate(-50%, -50%);
 }
 
 /* ---- editor ---- */

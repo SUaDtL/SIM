@@ -1,0 +1,241 @@
+import { expect, type Page, test } from "@playwright/test";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { createDataset } from "../src/db/dataset";
+import { Repository } from "../src/domain/repository";
+import { wasm } from "../tests/helpers/sqlite";
+
+const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
+
+interface Watch {
+  errors: string[];
+  requests: string[];
+}
+
+/** Load SIM offline with the upload fallback, recording page errors, CSP violations and requests. */
+async function load(page: Page): Promise<Watch> {
+  const watch: Watch = { errors: [], requests: [] };
+  page.on("pageerror", (e) => watch.errors.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error") watch.errors.push(m.text());
+  });
+  page.on("request", (r) => {
+    if (!/^(file|data|blob):/.test(r.url())) watch.requests.push(r.url());
+  });
+  await page.context().setOffline(true);
+  await page.addInitScript(() => {
+    const w = window as unknown as Record<string, unknown>;
+    delete w["showOpenFilePicker"];
+    delete w["showSaveFilePicker"];
+    document.addEventListener("securitypolicyviolation", (e) => {
+      console.error(`CSP violation: ${e.violatedDirective}`);
+    });
+  });
+  await page.goto(simUrl);
+  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  return watch;
+}
+
+/** Fictional UNCLASSIFIED dataset with one dependency of each kind. */
+async function fixture(): Promise<Uint8Array> {
+  const db = await createDataset("Map fixture", wasm);
+  const repo = new Repository(db);
+  const nipr = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+  const sipr = repo.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
+  const saas = repo.createNetwork({ name: "External", kind: "external", marking: "UNCLASSIFIED" });
+  const mail = repo.createService({ name: "Email", networkId: nipr.id, marking: "CUI" });
+  const idam = repo.createService({ name: "Identity", networkId: nipr.id, marking: "CUI", foundational: true });
+  const chat = repo.createService({ name: "Chat", networkId: sipr.id, marking: "SECRET" });
+  const patch = repo.createService({ name: "Patching", networkId: sipr.id, marking: "SECRET" });
+  repo.createService({ name: "Wiki", networkId: sipr.id, marking: "SECRET" });
+  const m365 = repo.createService({ name: "Office 365", networkId: saas.id, marking: "UNCLASSIFIED" });
+  const guard = repo.createCds({ name: "NIPR-SIPR guard", networkIds: [nipr.id, sipr.id] });
+  repo.addDependency({ consumerServiceId: mail.id, providerServiceId: idam.id });
+  repo.addDependency({ consumerServiceId: mail.id, providerServiceId: patch.id, viaCdsId: guard.id });
+  repo.addDependency({ consumerServiceId: chat.id, providerServiceId: idam.id });
+  repo.addDependency({ consumerServiceId: mail.id, providerServiceId: m365.id });
+  return db.export();
+}
+
+async function openFixture(page: Page): Promise<void> {
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Open" }).click();
+  await (
+    await chooser
+  ).setFiles({ name: "map.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(await fixture()) });
+  await expect(page.getByTestId("dataset-status")).toHaveText("Map fixture | map.sqlite | Saved");
+}
+
+interface Box {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+interface NodeView {
+  id: string;
+  label: string;
+  entity: string;
+  parent: string | null;
+  box: Box;
+  rendered: { x: number; y: number };
+}
+
+interface MapView {
+  nodes: NodeView[];
+  edges: { source: string; target: string; classes: string[] }[];
+  zoom: number;
+  width: number;
+  extent: Box;
+}
+
+/** Read the drawn map through Cytoscape's own registry on its container (no test-only global in SIM). */
+function readMap(page: Page): Promise<MapView> {
+  return page.getByTestId("map-canvas").evaluate((container) => {
+    interface Coll {
+      map<T>(fn: (e: Ele) => T): T[];
+    }
+    interface Ele {
+      id(): string;
+      data(key: string): unknown;
+      parent(): { nonempty(): boolean; id(): string };
+      boundingBox(o?: object): Box;
+      renderedPosition(): { x: number; y: number };
+      source(): Ele;
+      target(): Ele;
+      classes(): string[];
+    }
+    interface Cy {
+      nodes(): Coll;
+      edges(): Coll;
+      zoom(): number;
+      width(): number;
+      extent(): Box;
+    }
+    const cy = (container as unknown as { _cyreg: { cy: Cy } })._cyreg.cy;
+    return {
+      nodes: cy.nodes().map((n) => ({
+        id: n.id(),
+        label: String(n.data("label")),
+        entity: String(n.data("entity")),
+        parent: n.parent().nonempty() ? n.parent().id() : null,
+        box: n.boundingBox({ includeLabels: false }),
+        rendered: n.renderedPosition(),
+      })),
+      edges: cy.edges().map((e) => ({ source: e.source().id(), target: e.target().id(), classes: e.classes() })),
+      zoom: cy.zoom(),
+      width: cy.width(),
+      extent: cy.extent(),
+    };
+  });
+}
+
+const inside = (inner: Box, outer: Box) =>
+  inner.x1 >= outer.x1 && inner.y1 >= outer.y1 && inner.x2 <= outer.x2 && inner.y2 <= outer.y2;
+const overlaps = (a: Box, b: Box) => a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
+const byLabel = (map: MapView, label: string) => {
+  const node = map.nodes.find((n) => n.label === label || n.label.startsWith(`${label}\n`));
+  if (!node) throw new Error(`no node ${label}`);
+  return node;
+};
+
+test("draws networks as containers, the external zone, CDS between networks and classified edges", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  await expect(page.getByTestId("map-summary")).toHaveText(
+    "3 networks, 6 services, 1 CDS. 4 dependencies: 1 local, 1 via a CDS, 1 cross-domain without a CDS, 1 to an external network.",
+  );
+
+  const map = await readMap(page);
+  const networks = map.nodes.filter((n) => n.entity === "network");
+  expect(networks.map((n) => n.label).sort()).toEqual(["External\nUNCLASSIFIED", "NIPR\nCUI", "SIPR\nSECRET"]);
+  for (const s of map.nodes.filter((n) => n.entity === "service")) {
+    const parent = networks.find((n) => n.id === s.parent);
+    expect(parent, s.label).toBeDefined();
+    expect(inside(s.box, parent?.box ?? s.box), `${s.label} inside its network`).toBe(true);
+  }
+  expect(byLabel(map, "Wiki").parent).toBe(byLabel(map, "SIPR").id);
+  expect(byLabel(map, "Office 365").parent).toBe(byLabel(map, "External").id);
+
+  const guard = byLabel(map, "NIPR-SIPR guard");
+  expect(guard.parent).toBeNull();
+  for (const n of networks) expect(overlaps(guard.box, n.box), `CDS outside ${n.label}`).toBe(false);
+  expect(overlaps(byLabel(map, "NIPR").box, byLabel(map, "SIPR").box)).toBe(false);
+
+  const kinds = map.edges.map((e) => e.classes.join(" ")).sort();
+  expect(kinds).toEqual(["cross-domain", "external", "local", "via-cds", "via-cds"]);
+  const via = map.edges.filter((e) => e.classes.includes("via-cds"));
+  expect(via.map((e) => [e.source, e.target])).toEqual([
+    [byLabel(map, "Email").id, guard.id],
+    [guard.id, byLabel(map, "Patching").id],
+  ]);
+
+  expect(watch.errors).toEqual([]);
+  expect(watch.requests).toEqual([]);
+});
+
+test("pans and zooms, fits everything into view and widens when the list collapses", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  const canvas = page.getByTestId("map-canvas");
+  await expect(page.getByTestId("map-summary")).toContainText("6 services");
+
+  const before = await readMap(page);
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("map canvas has no size");
+  expect(box.height).toBeGreaterThan(200);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, -400);
+  await expect.poll(async () => (await readMap(page)).zoom).toBeGreaterThan(before.zoom);
+
+  await page.getByRole("button", { name: "Fit map" }).click();
+  const fitted = await readMap(page);
+  for (const n of fitted.nodes) expect(inside(n.box, fitted.extent), `${n.label} in view`).toBe(true);
+
+  await page.getByRole("button", { name: "Hide list" }).click();
+  await expect.poll(async () => (await readMap(page)).width).toBeGreaterThan(fitted.width + 100);
+  expect(watch.errors).toEqual([]);
+});
+
+test("updates as data is edited and opens a tapped node in the editor", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  await expect(page.getByTestId("map-summary")).toContainText("6 services");
+
+  await page.getByLabel("Show").selectOption({ label: "Services" });
+  await page.getByRole("button", { name: "Add service" }).click();
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Name", { exact: true }).fill("Calendar");
+  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
+  await editor.getByRole("button", { name: "Save service" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("7 services");
+  let map = await readMap(page);
+  expect(byLabel(map, "Calendar").parent).toBe(byLabel(map, "NIPR").id);
+
+  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  await editor.getByRole("button", { name: "Save service" }).click();
+  await expect.poll(async () => byLabel(await readMap(page), "Calendar").parent).toBe(byLabel(map, "SIPR").id);
+
+  await editor.getByRole("button", { name: "Delete service" }).click();
+  await editor.getByRole("button", { name: "Confirm delete" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("6 services");
+
+  await page.getByRole("button", { name: "Fit map" }).click();
+  map = await readMap(page);
+  const chat = byLabel(map, "Chat");
+  const canvas = await page.getByTestId("map-canvas").boundingBox();
+  if (!canvas) throw new Error("map canvas has no size");
+  await page.mouse.click(canvas.x + chat.rendered.x, canvas.y + chat.rendered.y);
+  await expect(editor.getByRole("heading", { level: 2 })).toHaveText("Edit service");
+  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Chat");
+  expect(watch.errors).toEqual([]);
+});
+
+test("shows a hint instead of an empty map for a new dataset", async ({ page }) => {
+  const watch = await load(page);
+  await expect(page.getByTestId("map-empty")).toHaveText("Add a network to start the map.");
+  await expect(page.getByTestId("map-summary")).toHaveText(
+    "0 networks, 0 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.",
+  );
+  expect(watch.errors).toEqual([]);
+});
