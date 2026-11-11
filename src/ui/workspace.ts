@@ -1,4 +1,5 @@
 import type { Repository } from "../domain/repository";
+import { downloadBlob, suggestedImageName } from "../file/dataset-file";
 import { createMapView } from "../map/map-view";
 import { el } from "./dom";
 import { createEditor } from "./editor-panel";
@@ -32,6 +33,9 @@ export function createWorkspace(initial: Repository): Workspace {
     snapshot: () => repo.snapshot(),
     savePositions: (positions) => {
       repo.setPositions(positions);
+    },
+    saveImage: (image) => {
+      downloadBlob(image, suggestedImageName(repo.datasetName()));
     },
     open: (type, id) => {
       editor.open(type, id);
