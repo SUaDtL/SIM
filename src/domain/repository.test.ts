@@ -209,6 +209,51 @@ describe("validation", () => {
     expect(repo.listDependencies()).toEqual([]);
   });
 
+  describe("keeps existing CDS routes valid", () => {
+    function routed() {
+      const s = seed();
+      // Mail (NIPR) depends on Patching (SIPR) through the NIPR-SIPR guard.
+      repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.cds.id });
+      return s;
+    }
+
+    it("refuses a CDS edit that drops a network one of its routes uses", async () => {
+      const s = routed();
+      expect(
+        await codeOf(() => repo.updateCds(s.cds.id, { name: "NIPR-SIPR guard", networkIds: [s.nipr.id, s.saas.id] })),
+      ).toBe("CDS_ROUTE:networks");
+      expect(repo.getCds(s.cds.id)?.networkIds).toEqual([s.nipr.id, s.sipr.id]);
+    });
+
+    it("refuses moving a service so its CDS route no longer crosses two joined networks", async () => {
+      const s = routed();
+      const move = (networkId: number) => () =>
+        repo.updateService(s.patch.id, { name: "Patching 2", networkId, marking: "SECRET" });
+      expect(await codeOf(move(s.nipr.id))).toBe("CDS_ROUTE:network"); // same network as Mail
+      expect(await codeOf(move(s.saas.id))).toBe("CDS_ROUTE:network"); // the CDS does not join External
+      expect(repo.getService(s.patch.id)?.networkId).toBe(s.sipr.id);
+    });
+
+    it("refuses deleting a network that a CDS joins", async () => {
+      const s = seed();
+      const lab = repo.createNetwork({ name: "Lab", kind: "internal", marking: "UNCLASSIFIED" });
+      repo.updateCds(s.cds.id, { name: "NIPR-SIPR guard", networkIds: [s.nipr.id, s.sipr.id, lab.id] });
+      expect(
+        await codeOf(() => {
+          repo.deleteNetwork(lab.id);
+        }),
+      ).toBe("IN_USE:network");
+      expect(repo.getCds(s.cds.id)?.networkIds).toEqual([s.nipr.id, s.sipr.id, lab.id]);
+    });
+
+    it("still allows edits that keep routes valid", () => {
+      const s = routed();
+      repo.updateCds(s.cds.id, { name: "Guard", networkIds: [s.nipr.id, s.sipr.id, s.saas.id] });
+      repo.updateService(s.patch.id, { name: "Patching 2", networkId: s.sipr.id, marking: "SECRET" });
+      expect(repo.listDependencies()).toHaveLength(1);
+    });
+  });
+
   it("allows a cross-network dependency without a CDS (shown as a direct crossing on the map)", () => {
     const s = seed();
     repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.m365.id });
