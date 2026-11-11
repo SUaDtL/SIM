@@ -11,3 +11,5 @@ All notable changes to SIM are documented here. The format follows
 - Project skeleton: single-file offline build to `dist/sim.html` with SQLite (sql.js) inlined,
   strict TypeScript, lint/format, unit tests, offline `file://` end-to-end tests in Edge and
   Chrome, and one `npm run check` gate.
+- Content Security Policy in `sim.html` that blocks all network access, and lint rules that
+  reject unsafe code constructs (eval, raw HTML injection, network and browser-storage APIs).
