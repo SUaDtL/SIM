@@ -1,1 +1,2 @@
 [2026-11-10T22:31:56Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-003 project skeleton and single-file build | BASIS: adds dependencies, build/test/lint config and command surface; exceeds 2 files
+[2026-11-11T00:29:53Z] | BY: SUaDtL@users.noreply.github.com | LANE: small | SCOPE: WORK-019 CSP meta tag and ESLint rules for prohibited primitives | BASIS: 2 implementation files (sim.html, eslint.config.js) plus tests and docs; no new dependency or command; 3 testable criteria; SMARTS: no material solution choice

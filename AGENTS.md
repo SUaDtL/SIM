@@ -49,7 +49,13 @@ e2e/                Playwright tests that open dist/sim.html from file://
 ## Rules
 
 - **No network, ever.** No CDN, telemetry, update check or remote font. Everything is
-  inlined at build time. The e2e suite fails on any non-`file:` request.
+  inlined at build time. `sim.html` carries a Content Security Policy (`connect-src 'none'`,
+  security-controls CON-006) and the e2e suite fails on any non-`file:` request or CSP violation.
+- **Prohibited primitives are lint errors in `src/`** (security-controls FACT-002): `eval`,
+  `new Function`, string timers, network APIs, browser storage, `document.cookie`/`write`,
+  `innerHTML`/`outerHTML`/`insertAdjacentHTML`, and `Math.random` (use `crypto.getRandomValues`).
+  Build DOM with `textContent`/`createElement`. Any exception needs a justified
+  `eslint-disable` comment and an override entry.
 - **Never store IP addresses or FQDNs.** The data model has no fields for them; this keeps
   classified data out of SIM.
 - **Fictional test data only.** Fixtures, demos and tests use synthetic UNCLASSIFIED data.
