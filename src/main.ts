@@ -1,6 +1,7 @@
 import type { Database } from "sql.js";
 import { createDataset, DatasetError, datasetName, exportDataset, openDataset } from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
+import { ValidationError } from "./domain/errors";
 import { Repository } from "./domain/repository";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
@@ -15,6 +16,7 @@ import {
   writeToHandle,
 } from "./file/dataset-file";
 import "./ui/app.css";
+import { createBanner } from "./ui/banner";
 import { createWorkspace, type Workspace } from "./ui/workspace";
 
 interface State {
@@ -34,10 +36,12 @@ status.dataset["testid"] = "dataset-status";
 const message = document.createElement("p");
 message.dataset["testid"] = "dataset-message";
 message.setAttribute("role", "status");
+const banner = createBanner();
 
 function render(): void {
   const where = state.fileName ?? "not saved yet";
   status.textContent = `${state.name} | ${where} | ${state.saved ? "Saved" : "Unsaved"}`;
+  banner.update(state.repo.datasetMarking(), state.repo.datasetCaveat());
 }
 
 function show(text: string): void {
@@ -73,6 +77,23 @@ async function onNew(): Promise<void> {
   } catch (error) {
     show(error instanceof DatasetError ? error.message : "Could not create the dataset.");
   }
+}
+
+/** Edit the banner caveat (decomposition Q-029); refusals show as a message and change nothing. */
+function onCaveat(): Promise<void> {
+  const value = window.prompt(
+    "Caveat after the marking on the banner, e.g. REL TO USA, FVEY (leave empty for none)",
+    state.repo.datasetCaveat() ?? "",
+  );
+  if (value === null) return Promise.resolve();
+  try {
+    state.repo.setCaveat(value);
+    show("");
+  } catch (error) {
+    if (!(error instanceof ValidationError)) throw error;
+    show(error.message);
+  }
+  return Promise.resolve();
 }
 
 async function onOpen(): Promise<void> {
@@ -138,11 +159,12 @@ async function boot(): Promise<void> {
     button("Open", onOpen),
     button("Save", () => onSave(false)),
     button("Save As", () => onSave(true)),
+    button("Banner caveat", onCaveat),
   );
   const header = document.createElement("header");
   header.className = "app-header";
   header.append(title, toolbar, status, version, message);
-  app.replaceChildren(header, workspace.element);
+  app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
   render();
 }
 

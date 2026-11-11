@@ -429,3 +429,28 @@ describe("map positions", () => {
     expect(repo.snapshot().positions).toEqual([]);
   });
 });
+
+describe("banner caveat", () => {
+  it("sets, normalizes, lists in the snapshot and clears the caveat, notifying each time", () => {
+    let calls = 0;
+    repo.subscribe(() => {
+      calls++;
+    });
+    expect(repo.snapshot().caveat).toBeNull();
+    repo.setCaveat("//rel to usa, fvey");
+    expect(repo.snapshot().caveat).toBe("REL TO USA, FVEY");
+    repo.setCaveat("  ");
+    expect(repo.datasetCaveat()).toBeNull();
+    expect(calls).toBe(2);
+  });
+
+  it("refuses a caveat outside the banner characters without changing anything", async () => {
+    repo.setCaveat("NOFORN");
+    expect(
+      await codeOf(() => {
+        repo.setCaveat("relay.example.mil");
+      }),
+    ).toBe("INVALID_VALUE:caveat");
+    expect(repo.datasetCaveat()).toBe("NOFORN");
+  });
+});

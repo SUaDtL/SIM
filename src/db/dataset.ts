@@ -1,4 +1,5 @@
 import type { Database } from "sql.js";
+import { isValidCaveat, normalizeCaveat } from "./markings";
 import { LATEST_VERSION, migrate, SIM_APPLICATION_ID, userVersion } from "./migrate";
 import { MIGRATIONS } from "./migrations";
 import { openDatabase } from "./sqlite";
@@ -65,6 +66,14 @@ export async function openDataset(bytes: Uint8Array, options: OpenOptions = {}):
     // The file's own table definitions carry SIM's constraints, so they must be exactly ours:
     // no altered tables, extra columns, triggers, views or indexes (migration review, HIGH).
     if (!(await schemaMatches(db, options.wasm))) throw new DatasetError("SCHEMA_MISMATCH");
+    // The meta table has no constraints, so hold a stored caveat to the rule SIM writes it under.
+    const caveat = scalar(db, "SELECT value FROM meta WHERE key = 'caveat'");
+    if (
+      caveat !== undefined &&
+      (typeof caveat !== "string" || normalizeCaveat(caveat) !== caveat || !isValidCaveat(caveat))
+    ) {
+      throw new DatasetError("CORRUPT");
+    }
     migrate(db);
     return db;
   } catch (error) {

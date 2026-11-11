@@ -398,3 +398,35 @@ fieldset.field {
 .relations .field {
   margin-bottom: 6px;
 }
+
+/* ---- classification banner ---- */
+
+/* Colors follow the SF-70x label convention as published by the Astro design system; TOP SECRET
+   uses the SF-706 orange with dark text for contrast. */
+.classification-banner {
+  flex: none;
+  padding: 2px 8px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #ffffff;
+  background: #007a33;
+}
+
+.classification-banner[data-marking="CUI"] {
+  background: #502b85;
+}
+
+.classification-banner[data-marking="CONFIDENTIAL"] {
+  background: #0033a0;
+}
+
+.classification-banner[data-marking="SECRET"] {
+  background: #c8102e;
+}
+
+.classification-banner[data-marking="TOP SECRET"] {
+  color: #000000;
+  background: #ff671f;
+}
