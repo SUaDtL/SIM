@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 date: 2026-11-11
 title: Forward-only schema migrations
 decided-by: SUaDtL@users.noreply.github.com
@@ -10,7 +10,7 @@ governs: src/db/migrations/*, src/db/migrate.ts
 # ADR-0002 — Forward-only schema migrations
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 SIM datasets are local `.sqlite` files that consultants carry between sites and
