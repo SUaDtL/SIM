@@ -17,3 +17,7 @@ All notable changes to SIM are documented here. The format follows
   Chrome (download/upload elsewhere); refuses files that are not valid SIM datasets with a
   clear message. Schema v1 covers networks, services, applications, categories,
   organizations, Tier 1-3 support, CDS and provides/consumes links.
+- Data rules: names, markings and links are validated with plain-language errors; a CDS
+  route must join the two networks it connects; text that looks like an IP address or host
+  name is flagged and saved only after confirmation; a CDS takes the highest marking of the
+  networks it joins.
