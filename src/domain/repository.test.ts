@@ -364,3 +364,68 @@ describe("change events", () => {
     expect(calls).toBe(1);
   });
 });
+
+describe("map positions", () => {
+  it("saves positions in one write, rounded, and lists them in the snapshot", () => {
+    const s = seed();
+    let calls = 0;
+    repo.subscribe(() => {
+      calls++;
+    });
+    repo.setPositions([
+      { entity: "network", id: s.nipr.id, x: 10.04, y: -20 },
+      { entity: "service", id: s.mail.id, x: 1.26, y: 2 },
+      { entity: "cds", id: s.cds.id, x: 0, y: 0 },
+    ]);
+    expect(calls).toBe(1);
+    expect(repo.snapshot().positions).toEqual([
+      { entity: "network", id: s.nipr.id, x: 10, y: -20 },
+      { entity: "service", id: s.mail.id, x: 1.3, y: 2 },
+      { entity: "cds", id: s.cds.id, x: 0, y: 0 },
+    ]);
+  });
+
+  it("writes nothing and notifies nobody when no position changed", () => {
+    const s = seed();
+    repo.setPositions([{ entity: "service", id: s.mail.id, x: 5, y: 5 }]);
+    let calls = 0;
+    repo.subscribe(() => {
+      calls++;
+    });
+    repo.setPositions([{ entity: "service", id: s.mail.id, x: 5.01, y: 4.99 }]);
+    repo.setPositions([]);
+    expect(calls).toBe(0);
+  });
+
+  it("refuses non-finite or out-of-range positions without changing anything", async () => {
+    const s = seed();
+    for (const x of [Number.NaN, Number.POSITIVE_INFINITY, 1e9]) {
+      expect(
+        await codeOf(() => {
+          repo.setPositions([
+            { entity: "service", id: s.idam.id, x: 1, y: 1 },
+            { entity: "service", id: s.mail.id, x, y: 0 },
+          ]);
+        }),
+      ).toBe("INVALID_VALUE:position");
+    }
+    expect(repo.snapshot().positions).toEqual([]);
+  });
+
+  it("refuses a position for something that no longer exists", async () => {
+    expect(
+      await codeOf(() => {
+        repo.setPositions([{ entity: "service", id: 999, x: 0, y: 0 }]);
+      }),
+    ).toBe("NOT_FOUND:service");
+  });
+
+  it("keeps positions when an entity is edited and drops them when it is deleted", () => {
+    const s = seed();
+    repo.setPositions([{ entity: "service", id: s.mail.id, x: 5, y: 5 }]);
+    repo.updateService(s.mail.id, { name: "Mail", networkId: s.nipr.id, marking: "CUI" });
+    expect(repo.snapshot().positions).toHaveLength(1);
+    repo.deleteService(s.mail.id);
+    expect(repo.snapshot().positions).toEqual([]);
+  });
+});

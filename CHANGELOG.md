@@ -35,3 +35,7 @@ All notable changes to SIM are documented here. The format follows
 - Links to foundational services (such as identity and DNS) are hidden on the map by default,
   so cross-domain paths stand out; "Show foundational links" brings them back without moving
   anything. A new service named Identity or DNS starts out marked foundational.
+- The map keeps its arrangement: node positions are saved in the dataset (schema v2), drag
+  networks and services to arrange the view, new nodes are placed without moving anything
+  else, and "Re-layout" (after a confirmation) arranges everything afresh. Datasets from
+  schema v1 open and are laid out once, which leaves them unsaved until you save.

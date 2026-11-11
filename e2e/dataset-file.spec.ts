@@ -8,8 +8,10 @@ const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.me
 
 async function fixture(): Promise<Uint8Array> {
   const db = await createDataset("Fixture enterprise", wasm);
-  db.run("INSERT INTO network (name, kind, marking) VALUES (?, ?, ?)", ["NIPR", "internal", "CUI"]);
-  db.run("INSERT INTO network (name, kind, marking) VALUES (?, ?, ?)", ["SIPR", "internal", "SECRET"]);
+  // Arranged on the map already, so opening it leaves nothing unsaved.
+  const insert = "INSERT INTO network (name, kind, marking, map_x, map_y) VALUES (?, ?, ?, ?, ?)";
+  db.run(insert, ["NIPR", "internal", "CUI", 0, 0]);
+  db.run(insert, ["SIPR", "internal", "SECRET", 300, 0]);
   return db.export();
 }
 

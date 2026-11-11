@@ -29,7 +29,10 @@ export function createWorkspace(initial: Repository): Workspace {
     },
   });
   const map = createMapView({
-    repo: () => repo,
+    snapshot: () => repo.snapshot(),
+    savePositions: (positions) => {
+      repo.setPositions(positions);
+    },
     open: (type, id) => {
       editor.open(type, id);
     },

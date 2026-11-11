@@ -14,6 +14,7 @@ import type {
   Network,
   NetworkInput,
   NetworkKind,
+  NodePosition,
   Organization,
   OrganizationInput,
   Service,
@@ -27,6 +28,10 @@ import { checkSensitive, cleanName, cleanText } from "./validate";
 
 type Row = Record<string, SqlValue>;
 type Listener = () => void;
+
+const POSITIONED = ["network", "service", "cds"] as const;
+/** Matches the CHECK in migration 0002. */
+const MAX_COORDINATE = 1e7;
 
 const NAME_FIELD: Record<string, string> = {
   network: "network name",
@@ -477,6 +482,49 @@ export class Repository {
     }, "dependency");
   }
 
+  // ---- map positions ----
+
+  listPositions(): NodePosition[] {
+    return POSITIONED.flatMap((entity) =>
+      this.rows(`SELECT id, map_x, map_y FROM ${entity} WHERE map_x IS NOT NULL ORDER BY id`).map((r) => ({
+        entity,
+        id: Number(r["id"]),
+        x: Number(r["map_x"]),
+        y: Number(r["map_y"]),
+      })),
+    );
+  }
+
+  /**
+   * Save where nodes sit on the map, in one write. Positions are rounded to a tenth of a unit, and
+   * when none of them changed nothing is written and nobody is notified, so reopening an arranged
+   * dataset does not mark it unsaved.
+   */
+  setPositions(positions: readonly NodePosition[]): void {
+    const rounded = positions.map((p) => {
+      if (
+        !Number.isFinite(p.x) ||
+        !Number.isFinite(p.y) ||
+        Math.abs(p.x) > MAX_COORDINATE ||
+        Math.abs(p.y) > MAX_COORDINATE
+      ) {
+        throw new ValidationError("INVALID_VALUE", "position", "A map position is out of range.");
+      }
+      return { ...p, x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10 };
+    });
+    const saved = new Map(this.listPositions().map((p) => [`${p.entity}-${String(p.id)}`, p]));
+    const changed = rounded.filter((p) => {
+      const old = saved.get(`${p.entity}-${String(p.id)}`);
+      return old?.x !== p.x || old.y !== p.y;
+    });
+    if (changed.length === 0) return;
+    this.write(() => {
+      for (const p of changed) {
+        this.update(`UPDATE ${p.entity} SET map_x = ?, map_y = ? WHERE id = ?`, [p.x, p.y, p.id], p.entity);
+      }
+    }, "position");
+  }
+
   // ---- derived views ----
 
   /** The banner marking: the highest marking on any network or service (CON-002). */
@@ -506,6 +554,7 @@ export class Repository {
       support: this.listSupport(),
       consumption: this.listConsumption(),
       dependencies: this.listDependencies(),
+      positions: this.listPositions(),
     };
   }
 

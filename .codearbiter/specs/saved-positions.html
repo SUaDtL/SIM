@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Saved map positions · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-SAVED-POSITIONS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/saved-positions.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Saved map positions</h1><p class="deck">Node positions are stored in the dataset (schema v2); users drag to arrange; new nodes are placed without moving the rest; Re-layout is an explicit, confirmed action.</p><div class="meta"><span>SPEC-SAVED-POSITIONS</span><span>Revision 1 · schema 0.3.2</span><span>30 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INT-1 -->
+<article class="record" id="INT-1" data-ca-symbol="INT-1" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INT-1">INT-1</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>feature</div><div class="field"><span class="label">Outcome</span>A dataset reopens exactly as it was arranged, edits never rearrange existing nodes, and the user decides when to re-layout.</div><div class="field"><span class="label">Problem</span>The map is laid out randomly each time a dataset opens, so a briefing view cannot be arranged or kept.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div></article>
+<!-- CA:END:INT-1 -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-1 -->
+<article class="record" id="SCOPE-1" data-ca-symbol="SCOPE-1" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-1">SCOPE-1</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Migration 0002: map_x/map_y on network, service, cds; both or neither; |value| &lt;= 1e7; v1 datasets open and migrate.</div></article>
+<!-- CA:END:SCOPE-1 -->
+
+<!-- CA:BEGIN:SCOPE-2 -->
+<article class="record" id="SCOPE-2" data-ca-symbol="SCOPE-2" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-2">SCOPE-2</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Repository.setPositions and Snapshot.positions; validation, rounding to 0.1, no write when unchanged; positions survive edits and go with deletes.</div></article>
+<!-- CA:END:SCOPE-2 -->
+
+<!-- CA:BEGIN:SCOPE-3 -->
+<article class="record" id="SCOPE-3" data-ca-symbol="SCOPE-3" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-3">SCOPE-3</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Map: saved positions on open, first layout only when nothing is placed, incremental placement with pinned leaves, drag saves, confirmed Re-layout.</div></article>
+<!-- CA:END:SCOPE-3 -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:NG-1 -->
+<article class="record" id="NG-1" data-ca-symbol="NG-1" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-1">NG-1</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No undo for drags or Re-layout (WORK-015); the confirm stands in for it.</div></article>
+<!-- CA:END:NG-1 -->
+
+<!-- CA:BEGIN:NG-2 -->
+<article class="record" id="NG-2" data-ca-symbol="NG-2" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-2">NG-2</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>The viewport (pan and zoom) is not saved; the map fits on open.</div></article>
+<!-- CA:END:NG-2 -->
+
+<!-- CA:BEGIN:NG-3 -->
+<article class="record" id="NG-3" data-ca-symbol="NG-3" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#NG-3">NG-3</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>Label collision and layout metrics stay in WORK-018.</div></article>
+<!-- CA:END:NG-3 -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APP-1 -->
+<article class="record" id="APP-1" data-ca-symbol="APP-1" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APP-1">APP-1</a><h3>Approach</h3></div><div class="field"><span class="label">Binding decision refs</span><ul class="items"><li><a href="#DEC-1">DEC-1</a></li><li><a href="#DEC-2">DEC-2</a></li></ul></div><div class="field"><span class="label">Choice</span>Migration 0002 adds nullable map_x/map_y (with CHECKs) to network, service and cds. Repository.setPositions writes changed, rounded positions in one transaction and notifies nothing when none changed; the snapshot lists positions. The map applies saved positions to leaf nodes, lays out from scratch only when nothing is placed, places new or re-parented nodes with fcose fixed-node constraints on every other leaf (then undoes fcose&#39;s whole-graph shift), saves after drags and placement through a savePositions callback, and offers a confirmed Re-layout.</div><div class="field"><span class="label">Tradeoff</span>Columns on each entity delete positions with their entity; opening a dataset without positions lays it out once and leaves it unsaved, which is honest about the change.</div></article>
+<!-- CA:END:APP-1 -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2>
+<!-- CA:BEGIN:CON-WRITE -->
+<article class="record" id="CON-WRITE" data-ca-symbol="CON-WRITE" data-ca-kind="constraints"><div class="record-head"><a class="id" href="#CON-WRITE">CON-WRITE</a><h3>Constraints</h3></div><div class="field"><span class="label">Applies to</span><ul class="items"><li>AC-2</li><li>AC-3</li><li>AC-4</li><li>AC-5</li></ul></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-STD">SRC-STD</a></li></ul></div><div class="field"><span class="label">Statement</span>The map&#39;s only write is positions, through a savePositions callback that the workspace turns into one repository call (CONV-002 as amended 2026-11-11).</div></article>
+<!-- CA:END:CON-WRITE -->
+
+<!-- CA:BEGIN:CON-MIGRATION -->
+<article class="record" id="CON-MIGRATION" data-ca-symbol="CON-MIGRATION" data-ca-kind="constraints"><div class="record-head"><a class="id" href="#CON-MIGRATION">CON-MIGRATION</a><h3>Constraints</h3></div><div class="field"><span class="label">Applies to</span><ul class="items"><li>AC-1</li></ul></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-STD">SRC-STD</a></li></ul></div><div class="field"><span class="label">Statement</span>Migrations are forward-only and never edited once merged; opened files are verified against the schema at their own version before migrating.</div></article>
+<!-- CA:END:CON-MIGRATION -->
+</section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2>
+<!-- CA:BEGIN:DEC-1 -->
+<article class="record" id="DEC-1" data-ca-symbol="DEC-1" data-ca-kind="decisions"><div class="record-head"><a class="id" href="#DEC-1">DEC-1</a><h3>Persisted layout</h3></div><div class="field"><span class="label">Authority</span>inherited</div><div class="field"><span class="label">Choice</span>fcose runs once, positions are saved in the dataset, users drag to arrange, new nodes are placed incrementally without moving the rest, Re-layout is explicit.</div><div class="field"><span class="label">Rationale</span>Q-022 approved.</div><div class="field"><span class="label">Source ref</span><a href="#SRC-DECOMP">SRC-DECOMP</a></div></article>
+<!-- CA:END:DEC-1 -->
+
+<!-- CA:BEGIN:DEC-2 -->
+<article class="record" id="DEC-2" data-ca-symbol="DEC-2" data-ca-kind="decisions"><div class="record-head"><a class="id" href="#DEC-2">DEC-2</a><h3>Map write path</h3></div><div class="field"><span class="label">Authority</span>inherited</div><div class="field"><span class="label">Choice</span>The map writes positions only through a savePositions callback; src/map never imports repository write methods.</div><div class="field"><span class="label">Rationale</span>User decision 2026-11-11 resolving CONV-002 against Q-022.</div><div class="field"><span class="label">Source ref</span><a href="#SRC-STD">SRC-STD</a></div></article>
+<!-- CA:END:DEC-2 -->
+</section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:AC-1 -->
+<article class="record" id="AC-1" data-ca-symbol="AC-1" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-1">AC-1</a><h3>Schema v2</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the map in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-MIGRATION">CON-MIGRATION</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>pair constraint</li><li>range constraint</li><li>v1 upgrade</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-1">SCOPE-1</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-1-S1 -->
+<article class="record" id="AC-1-S1" data-ca-symbol="AC-1-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-1-S1">AC-1-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>a v1 dataset and a fresh v2 dataset</div><div class="field"><span class="label">Then</span>constraints hold and the v1 file reaches the latest version</div><div class="field"><span class="label">When</span>positions are written or the v1 file is opened</div></article>
+<!-- CA:END:AC-1-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>Migration 0002 adds optional map positions to networks, services and CDS, refuses half or out-of-range positions, and a schema v1 dataset opens and migrates with no positions.</div><div class="field"><span class="label">Trigger</span>positions are written or the v1 file is opened</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-1-V -->
+<article class="record" id="AC-1-V" data-ca-symbol="AC-1-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-1-V">AC-1-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Dropping the CHECKs fails the refusal tests</div><div class="field"><span class="label">Oracle</span>SQL constraint errors and migrated rows</div><div class="field"><span class="label">Planned target</span>src/db/schema.test.ts and src/db/open.test.ts</div></article>
+<!-- CA:END:AC-1-V -->
+</div></article>
+<!-- CA:END:AC-1 -->
+
+<!-- CA:BEGIN:AC-2 -->
+<article class="record" id="AC-2" data-ca-symbol="AC-2" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-2">AC-2</a><h3>Repository positions</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the map in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-WRITE">CON-WRITE</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>one event</li><li>no event when unchanged</li><li>refusal changes nothing</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-2">SCOPE-2</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-2-S1 -->
+<article class="record" id="AC-2-S1" data-ca-symbol="AC-2-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-2-S1">AC-2-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>a seeded repository</div><div class="field"><span class="label">Then</span>stored positions and change events follow the rule</div><div class="field"><span class="label">When</span>positions are set</div></article>
+<!-- CA:END:AC-2-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>setPositions validates finite in-range values, rounds to a tenth, writes changed positions in one transaction with one change event, writes and notifies nothing when unchanged, and the snapshot lists positions; deleting an entity removes its position.</div><div class="field"><span class="label">Trigger</span>positions are set</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-2-V -->
+<article class="record" id="AC-2-V" data-ca-symbol="AC-2-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-2-V">AC-2-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Removing the unchanged check fails the no-event test</div><div class="field"><span class="label">Oracle</span>snapshot positions and listener counts</div><div class="field"><span class="label">Planned target</span>src/domain/repository.test.ts</div></article>
+<!-- CA:END:AC-2-V -->
+</div></article>
+<!-- CA:END:AC-2 -->
+
+<!-- CA:BEGIN:AC-3 -->
+<article class="record" id="AC-3" data-ca-symbol="AC-3" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-3">AC-3</a><h3>Reopen as arranged</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the map in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-WRITE">CON-WRITE</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>first layout saved</li><li>exact reopen</li><li>no write on reopen</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-3">SCOPE-3</a></li></ul></div><div class="field"><span class="label">Kind</span>interface</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-3-S1 -->
+<article class="record" id="AC-3-S1" data-ca-symbol="AC-3-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-3-S1">AC-3-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>the map fixture</div><div class="field"><span class="label">Then</span>positions match within rounding and the status stays Saved</div><div class="field"><span class="label">When</span>it is opened, saved and reopened</div></article>
+<!-- CA:END:AC-3-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>A dataset without positions is laid out once and its positions saved (leaving it unsaved); a saved dataset reopens with every node where it was, fitted, and stays saved.</div><div class="field"><span class="label">Trigger</span>it is opened, saved and reopened</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-3-V -->
+<article class="record" id="AC-3-V" data-ca-symbol="AC-3-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-3-V">AC-3-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Ignoring saved positions on open fails the reopen test</div><div class="field"><span class="label">Oracle</span>Cytoscape registry positions and stored rows</div><div class="field"><span class="label">Planned target</span>e2e/map.spec.ts</div></article>
+<!-- CA:END:AC-3-V -->
+</div></article>
+<!-- CA:END:AC-3 -->
+
+<!-- CA:BEGIN:AC-4 -->
+<article class="record" id="AC-4" data-ca-symbol="AC-4" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-4">AC-4</a><h3>Drag and placement</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the map in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-WRITE">CON-WRITE</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>drag persists</li><li>network drag moves services</li><li>no movement on add</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-3">SCOPE-3</a></li></ul></div><div class="field"><span class="label">Kind</span>interface</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-4-S1 -->
+<article class="record" id="AC-4-S1" data-ca-symbol="AC-4-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-4-S1">AC-4-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>an arranged dataset</div><div class="field"><span class="label">Then</span>positions persist and existing nodes do not move</div><div class="field"><span class="label">When</span>nodes are dragged or added</div></article>
+<!-- CA:END:AC-4-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>Dragging a service or a network saves the new positions (a network moves with its services); adding a service or network places it without moving any existing node, inside its network and clear of its neighbours.</div><div class="field"><span class="label">Trigger</span>nodes are dragged or added</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-4-V -->
+<article class="record" id="AC-4-V" data-ca-symbol="AC-4-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-4-V">AC-4-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Removing the dragfree save fails the drag test; removing the shift correction fails the placement test</div><div class="field"><span class="label">Oracle</span>Cytoscape registry positions</div><div class="field"><span class="label">Planned target</span>e2e/map.spec.ts</div></article>
+<!-- CA:END:AC-4-V -->
+</div></article>
+<!-- CA:END:AC-4 -->
+
+<!-- CA:BEGIN:AC-5 -->
+<article class="record" id="AC-5" data-ca-symbol="AC-5" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#AC-5">AC-5</a><h3>Confirmed Re-layout</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Applies to the map in every supported browser.</div></div></div><div class="field"><span class="label">Constraint refs</span><ul class="items"><li><a href="#CON-WRITE">CON-WRITE</a></li></ul></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>cancel is a no-op</li><li>accept re-lays out</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-3">SCOPE-3</a></li></ul></div><div class="field"><span class="label">Kind</span>interface</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:AC-5-S1 -->
+<article class="record" id="AC-5-S1" data-ca-symbol="AC-5-S1" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#AC-5-S1">AC-5-S1</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>an arranged dataset</div><div class="field"><span class="label">Then</span>nothing moves on cancel and everything is re-laid out on accept</div><div class="field"><span class="label">When</span>Re-layout is clicked</div></article>
+<!-- CA:END:AC-5-S1 -->
+</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-DECOMP">SRC-DECOMP</a></li></ul></div><div class="field"><span class="label">Statement</span>Re-layout asks first; cancelling changes nothing; accepting re-arranges every node and leaves the dataset unsaved.</div><div class="field"><span class="label">Trigger</span>Re-layout is clicked</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:AC-5-V -->
+<article class="record" id="AC-5-V" data-ca-symbol="AC-5-V" data-ca-kind="verification"><div class="record-head"><a class="id" href="#AC-5-V">AC-5-V</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated</div><div class="field"><span class="label">Negative control</span>Skipping the confirm fails the cancel assertion</div><div class="field"><span class="label">Oracle</span>dialog handling and positions</div><div class="field"><span class="label">Planned target</span>e2e/map.spec.ts</div></article>
+<!-- CA:END:AC-5-V -->
+</div></article>
+<!-- CA:END:AC-5 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2>
+<!-- CA:BEGIN:SEC-SMARTS -->
+<article class="record" id="SEC-SMARTS" data-ca-symbol="SEC-SMARTS" data-ca-kind="sections"><div class="record-head"><a class="id" href="#SEC-SMARTS">SEC-SMARTS</a><h3>SMARTS design rationale</h3></div><div class="field"><span class="label">Blocks</span><div class="block"><p>Storage: columns on each entity versus a separate keyed table. Columns win on integrity (positions are deleted with their entity by the existing cascade rules, with no orphan rows that foreign_key_check cannot see) and simplicity; the table would only help if many node kinds were added. Placement: fcose fixed-node constraints (spike recommendation) were kept; a whole-graph shift that fcose applies is undone so pinned nodes stay exactly in place.</p><div class="refs">References: <a href="#DEC-1">DEC-1</a> </div></div></div></article>
+<!-- CA:END:SEC-SMARTS -->
+</section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-DECOMP -->
+<article class="record" id="SRC-DECOMP" data-ca-symbol="SRC-DECOMP" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-DECOMP">SRC-DECOMP</a><h3>Decomposition</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/decomposition/project.html</div><div class="field"><span class="label">Note</span>WORK-017, Q-022, CAP-013; spike .codearbiter/spikes/map-layout.md.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-DECOMP -->
+
+<!-- CA:BEGIN:SRC-STD -->
+<article class="record" id="SRC-STD" data-ca-symbol="SRC-STD" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-STD">SRC-STD</a><h3>Coding standards</h3></div><div class="field"><span class="label">Locator</span>.codearbiter/context/coding-standards.html</div><div class="field"><span class="label">Note</span>CONV-002 single write path (amended 2026-11-11).</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-STD -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-11</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/db/migrations/**</li><li>src/domain/repository.ts</li><li>src/domain/types.ts</li><li>src/map/**</li><li>src/ui/workspace.ts</li><li>e2e/map.spec.ts</li><li>e2e/dataset-file.spec.ts</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 25c31c801772712490a197c4680a81d75ff007cc916334ae367be67acc430001<br>Model SHA-256: 74997c783cb2c70a61ea67ee3ab1629ad520df91490675442e54ac0eb56bc63a</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-SAVED-POSITIONS",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "74997c783cb2c70a61ea67ee3ab1629ad520df91490675442e54ac0eb56bc63a",
+    "normative_sha256": "25c31c801772712490a197c4680a81d75ff007cc916334ae367be67acc430001",
+    "symbol_count": 30
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "binding_decision_refs": [
+        "DEC-1",
+        "DEC-2"
+      ],
+      "choice": "Migration 0002 adds nullable map_x/map_y (with CHECKs) to network, service and cds. Repository.setPositions writes changed, rounded positions in one transaction and notifies nothing when none changed; the snapshot lists positions. The map applies saved positions to leaf nodes, lays out from scratch only when nothing is placed, places new or re-parented nodes with fcose fixed-node constraints on every other leaf (then undoes fcose's whole-graph shift), saves after drags and placement through a savePositions callback, and offers a confirmed Re-layout.",
+      "id": "APP-1",
+      "tradeoff": "Columns on each entity delete positions with their entity; opening a dataset without positions lays it out once and leaves it unsaved, which is honest about the change."
+    },
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-11",
+      "repository": null
+    },
+    "constraints": [
+      {
+        "applies_to": [
+          "AC-2",
+          "AC-3",
+          "AC-4",
+          "AC-5"
+        ],
+        "id": "CON-WRITE",
+        "source_refs": [
+          "SRC-STD"
+        ],
+        "statement": "The map's only write is positions, through a savePositions callback that the workspace turns into one repository call (CONV-002 as amended 2026-11-11)."
+      },
+      {
+        "applies_to": [
+          "AC-1"
+        ],
+        "id": "CON-MIGRATION",
+        "source_refs": [
+          "SRC-STD"
+        ],
+        "statement": "Migrations are forward-only and never edited once merged; opened files are verified against the schema at their own version before migrating."
+      }
+    ],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the map in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-MIGRATION"
+        ],
+        "guarantees": [
+          "pair constraint",
+          "range constraint",
+          "v1 upgrade"
+        ],
+        "id": "AC-1",
+        "intent_refs": [
+          "SCOPE-1"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "a v1 dataset and a fresh v2 dataset",
+            "id": "AC-1-S1",
+            "then": "constraints hold and the v1 file reaches the latest version",
+            "when": "positions are written or the v1 file is opened"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "Migration 0002 adds optional map positions to networks, services and CDS, refuses half or out-of-range positions, and a schema v1 dataset opens and migrates with no positions.",
+        "title": "Schema v2",
+        "trigger": "positions are written or the v1 file is opened",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-1-V",
+          "method": "automated",
+          "negative_control": "Dropping the CHECKs fails the refusal tests",
+          "oracle": "SQL constraint errors and migrated rows",
+          "planned_target": "src/db/schema.test.ts and src/db/open.test.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the map in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-WRITE"
+        ],
+        "guarantees": [
+          "one event",
+          "no event when unchanged",
+          "refusal changes nothing"
+        ],
+        "id": "AC-2",
+        "intent_refs": [
+          "SCOPE-2"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "a seeded repository",
+            "id": "AC-2-S1",
+            "then": "stored positions and change events follow the rule",
+            "when": "positions are set"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "setPositions validates finite in-range values, rounds to a tenth, writes changed positions in one transaction with one change event, writes and notifies nothing when unchanged, and the snapshot lists positions; deleting an entity removes its position.",
+        "title": "Repository positions",
+        "trigger": "positions are set",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-2-V",
+          "method": "automated",
+          "negative_control": "Removing the unchanged check fails the no-event test",
+          "oracle": "snapshot positions and listener counts",
+          "planned_target": "src/domain/repository.test.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the map in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-WRITE"
+        ],
+        "guarantees": [
+          "first layout saved",
+          "exact reopen",
+          "no write on reopen"
+        ],
+        "id": "AC-3",
+        "intent_refs": [
+          "SCOPE-3"
+        ],
+        "kind": "interface",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "the map fixture",
+            "id": "AC-3-S1",
+            "then": "positions match within rounding and the status stays Saved",
+            "when": "it is opened, saved and reopened"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "A dataset without positions is laid out once and its positions saved (leaving it unsaved); a saved dataset reopens with every node where it was, fitted, and stays saved.",
+        "title": "Reopen as arranged",
+        "trigger": "it is opened, saved and reopened",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-3-V",
+          "method": "automated",
+          "negative_control": "Ignoring saved positions on open fails the reopen test",
+          "oracle": "Cytoscape registry positions and stored rows",
+          "planned_target": "e2e/map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the map in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-WRITE"
+        ],
+        "guarantees": [
+          "drag persists",
+          "network drag moves services",
+          "no movement on add"
+        ],
+        "id": "AC-4",
+        "intent_refs": [
+          "SCOPE-3"
+        ],
+        "kind": "interface",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "an arranged dataset",
+            "id": "AC-4-S1",
+            "then": "positions persist and existing nodes do not move",
+            "when": "nodes are dragged or added"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "Dragging a service or a network saves the new positions (a network moves with its services); adding a service or network places it without moving any existing node, inside its network and clear of its neighbours.",
+        "title": "Drag and placement",
+        "trigger": "nodes are dragged or added",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-4-V",
+          "method": "automated",
+          "negative_control": "Removing the dragfree save fails the drag test; removing the shift correction fails the placement test",
+          "oracle": "Cytoscape registry positions",
+          "planned_target": "e2e/map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Applies to the map in every supported browser."
+        },
+        "constraint_refs": [
+          "CON-WRITE"
+        ],
+        "guarantees": [
+          "cancel is a no-op",
+          "accept re-lays out"
+        ],
+        "id": "AC-5",
+        "intent_refs": [
+          "SCOPE-3"
+        ],
+        "kind": "interface",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "an arranged dataset",
+            "id": "AC-5-S1",
+            "then": "nothing moves on cancel and everything is re-laid out on accept",
+            "when": "Re-layout is clicked"
+          }
+        ],
+        "source_refs": [
+          "SRC-DECOMP"
+        ],
+        "statement": "Re-layout asks first; cancelling changes nothing; accepting re-arranges every node and leaves the dataset unsaved.",
+        "title": "Confirmed Re-layout",
+        "trigger": "Re-layout is clicked",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "AC-5-V",
+          "method": "automated",
+          "negative_control": "Skipping the confirm fails the cancel assertion",
+          "oracle": "dialog handling and positions",
+          "planned_target": "e2e/map.spec.ts"
+        }
+      }
+    ],
+    "decisions": [
+      {
+        "authority": "inherited",
+        "choice": "fcose runs once, positions are saved in the dataset, users drag to arrange, new nodes are placed incrementally without moving the rest, Re-layout is explicit.",
+        "id": "DEC-1",
+        "rationale": "Q-022 approved.",
+        "source_ref": "SRC-DECOMP",
+        "topic": "Persisted layout"
+      },
+      {
+        "authority": "inherited",
+        "choice": "The map writes positions only through a savePositions callback; src/map never imports repository write methods.",
+        "id": "DEC-2",
+        "rationale": "User decision 2026-11-11 resolving CONV-002 against Q-022.",
+        "source_ref": "SRC-STD",
+        "topic": "Map write path"
+      }
+    ],
+    "governs": [
+      "src/db/migrations/**",
+      "src/domain/repository.ts",
+      "src/domain/types.ts",
+      "src/map/**",
+      "src/ui/workspace.ts",
+      "e2e/map.spec.ts",
+      "e2e/dataset-file.spec.ts"
+    ],
+    "intent": {
+      "caller": "feature",
+      "id": "INT-1",
+      "outcome": "A dataset reopens exactly as it was arranged, edits never rearrange existing nodes, and the user decides when to re-layout.",
+      "problem": "The map is laid out randomly each time a dataset opens, so a briefing view cannot be arranged or kept.",
+      "source_refs": [
+        "SRC-DECOMP"
+      ]
+    },
+    "non_goals": [
+      {
+        "id": "NG-1",
+        "statement": "No undo for drags or Re-layout (WORK-015); the confirm stands in for it."
+      },
+      {
+        "id": "NG-2",
+        "statement": "The viewport (pan and zoom) is not saved; the map fits on open."
+      },
+      {
+        "id": "NG-3",
+        "statement": "Label collision and layout metrics stay in WORK-018."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-1",
+        "statement": "Migration 0002: map_x/map_y on network, service, cds; both or neither; |value| \u003c= 1e7; v1 datasets open and migrate."
+      },
+      {
+        "id": "SCOPE-2",
+        "statement": "Repository.setPositions and Snapshot.positions; validation, rounding to 0.1, no write when unchanged; positions survive edits and go with deletes."
+      },
+      {
+        "id": "SCOPE-3",
+        "statement": "Map: saved positions on open, first layout only when nothing is placed, incremental placement with pinned leaves, drag saves, confirmed Re-layout."
+      }
+    ],
+    "sections": [
+      {
+        "blocks": [
+          {
+            "refs": [
+              "DEC-1"
+            ],
+            "text": "Storage: columns on each entity versus a separate keyed table. Columns win on integrity (positions are deleted with their entity by the existing cascade rules, with no orphan rows that foreign_key_check cannot see) and simplicity; the table would only help if many node kinds were added. Placement: fcose fixed-node constraints (spike recommendation) were kept; a whole-graph shift that fcose applies is undone so pinned nodes stay exactly in place.",
+            "type": "paragraph"
+          }
+        ],
+        "id": "SEC-SMARTS",
+        "title": "SMARTS design rationale"
+      }
+    ],
+    "sources": [
+      {
+        "id": "SRC-DECOMP",
+        "locator": ".codearbiter/decomposition/project.html",
+        "note": "WORK-017, Q-022, CAP-013; spike .codearbiter/spikes/map-layout.md.",
+        "title": "Decomposition",
+        "type": "local_document",
+        "url": null
+      },
+      {
+        "id": "SRC-STD",
+        "locator": ".codearbiter/context/coding-standards.html",
+        "note": "CONV-002 single write path (amended 2026-11-11).",
+        "title": "Coding standards",
+        "type": "local_document",
+        "url": null
+      }
+    ],
+    "summary": "Node positions are stored in the dataset (schema v2); users drag to arrange; new nodes are placed without moving the rest; Re-layout is an explicit, confirmed action.",
+    "title": "Saved map positions"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/saved-positions.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 1,
+  "schema_version": "0.3.2",
+  "slug": "saved-positions"
+}
+</script>
+</body></html>

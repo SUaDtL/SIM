@@ -1,6 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { createDataset } from "../src/db/dataset";
+import { readFileSync } from "node:fs";
+import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
@@ -56,13 +57,24 @@ async function fixture(): Promise<Uint8Array> {
   return db.export();
 }
 
-async function openFixture(page: Page): Promise<void> {
+/** Open a dataset file; one with no saved positions is laid out once, which leaves it unsaved. */
+async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved"): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Open" }).click();
-  await (
-    await chooser
-  ).setFiles({ name: "map.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(await fixture()) });
-  await expect(page.getByTestId("dataset-status")).toHaveText("Map fixture | map.sqlite | Saved");
+  await (await chooser).setFiles({ name: "map.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
+  await expect(page.getByTestId("map-summary")).toContainText("networks");
+  await expect(page.getByTestId("dataset-status")).toHaveText(`Map fixture | map.sqlite | ${saved}`);
+}
+
+async function openFixture(page: Page): Promise<void> {
+  await openFile(page, await fixture(), "Unsaved");
+}
+
+/** Save through the download fallback and return the file's bytes. */
+async function save(page: Page): Promise<Uint8Array> {
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  return new Uint8Array(readFileSync(await (await download).path()));
 }
 
 interface Box {
@@ -88,6 +100,7 @@ interface MapView {
   zoom: number;
   width: number;
   extent: Box;
+  pan: { x: number; y: number };
 }
 
 /** Read the drawn map through Cytoscape's own registry on its container (no test-only global in SIM). */
@@ -114,6 +127,7 @@ function readMap(page: Page): Promise<MapView> {
       zoom(): number;
       width(): number;
       extent(): Box;
+      pan(): { x: number; y: number };
     }
     const cy = (container as unknown as { _cyreg: { cy: Cy } })._cyreg.cy;
     return {
@@ -135,6 +149,7 @@ function readMap(page: Page): Promise<MapView> {
       zoom: cy.zoom(),
       width: cy.width(),
       extent: cy.extent(),
+      pan: cy.pan(),
     };
   });
 }
@@ -293,5 +308,147 @@ test("hides links to foundational services until asked, without moving anything"
   await openFixture(page);
   await expect(toggle).not.toBeChecked();
   expect(shown(await readMap(page))).toHaveLength(3);
+  expect(watch.errors).toEqual([]);
+});
+
+type Points = Record<string, { x: number; y: number }>;
+
+/** Leaf positions (services, CDS, networks without services): compound boxes follow their contents. */
+const placed = (map: MapView): Points =>
+  Object.fromEntries(
+    map.nodes.filter((n) => !map.nodes.some((c) => c.parent === n.id)).map((n) => [n.label, n.position]),
+  );
+const near = (a: Points, b: Points, tolerance: number) =>
+  Object.keys(a).length === Object.keys(b).length &&
+  Object.entries(a).every(([k, p]) => {
+    const q = b[k];
+    return q !== undefined && Math.abs(p.x - q.x) <= tolerance && Math.abs(p.y - q.y) <= tolerance;
+  });
+
+/** Drag from a model position by a screen offset. */
+async function drag(page: Page, map: MapView, from: { x: number; y: number }, by: { x: number; y: number }) {
+  const canvas = await page.getByTestId("map-canvas").boundingBox();
+  if (!canvas) throw new Error("map canvas has no size");
+  const at = { x: canvas.x + from.x * map.zoom + map.pan.x, y: canvas.y + from.y * map.zoom + map.pan.y };
+  await page.mouse.move(at.x, at.y);
+  await page.mouse.down();
+  await page.mouse.move(at.x + by.x / 2, at.y + by.y / 2, { steps: 5 });
+  await page.mouse.move(at.x + by.x, at.y + by.y, { steps: 5 });
+  await page.mouse.up();
+}
+
+/** The fixture, laid out once and saved, so it opens arranged. */
+async function arranged(page: Page): Promise<void> {
+  await openFixture(page);
+  await openFile(page, await save(page), "Saved");
+}
+
+test("lays out an unarranged dataset once and reopens a saved one exactly as it was", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  const laidOut = placed(await readMap(page));
+  const bytes = await save(page);
+
+  const stored = new Repository(await openDataset(bytes, { wasm })).snapshot().positions;
+  const counts = { network: 0, service: 0, cds: 0 };
+  for (const p of stored) counts[p.entity]++;
+  expect(counts).toEqual({ network: 3, service: 6, cds: 1 });
+
+  await openFile(page, bytes, "Saved");
+  const reopened = await readMap(page);
+  expect(near(placed(reopened), laidOut, 0.06)).toBe(true);
+  for (const n of reopened.nodes) expect(inside(n.box, reopened.extent), `${n.label} in view`).toBe(true);
+  await expect(page.getByTestId("dataset-status")).toHaveText("Map fixture | map.sqlite | Saved");
+  expect(watch.errors).toEqual([]);
+});
+
+test("saves where services and networks are dragged", async ({ page }) => {
+  const watch = await load(page);
+  await arranged(page);
+  let map = await readMap(page);
+  const before = placed(map);
+
+  await drag(page, map, byLabel(map, "Chat").position, { x: 60, y: 40 });
+  await expect(page.getByTestId("dataset-status")).toContainText("| Unsaved");
+  map = await readMap(page);
+  expect(byLabel(map, "Chat").position.x).toBeGreaterThan((before["Chat"]?.x ?? 0) + 20);
+
+  // Grab NIPR by its padding: the whole network moves with its services. A link may cross one
+  // corner of the padding (pressing a link pans instead), so try each corner until NIPR moves.
+  const nipr = byLabel(map, "NIPR").box;
+  const corners = [
+    { x: nipr.x1 + 6, y: nipr.y2 - 6 },
+    { x: nipr.x2 - 6, y: nipr.y2 - 6 },
+    { x: nipr.x1 + 6, y: nipr.y1 + 6 },
+    { x: nipr.x2 - 6, y: nipr.y1 + 6 },
+  ];
+  for (const corner of corners) {
+    await drag(page, map, corner, { x: -50, y: 50 });
+    map = await readMap(page);
+    if (byLabel(map, "Email").position.x !== before["Email"]?.x) break;
+  }
+  const dx = byLabel(map, "Email").position.x - (before["Email"]?.x ?? 0);
+  expect(dx).toBeLessThan(-20);
+  expect(byLabel(map, "Identity").position.x - (before["Identity"]?.x ?? 0)).toBeCloseTo(dx, 1);
+
+  const moved = placed(map);
+  await openFile(page, await save(page), "Saved");
+  expect(near(placed(await readMap(page)), moved, 0.06)).toBe(true);
+  expect(watch.errors).toEqual([]);
+});
+
+test("places new services and networks without moving anything already placed", async ({ page }) => {
+  const watch = await load(page);
+  await openFixture(page);
+  const before = placed(await readMap(page));
+
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
+  await page.getByRole("button", { name: "Add service" }).click();
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Name", { exact: true }).fill("Calendar");
+  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  await editor.getByRole("button", { name: "Save service" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("7 services");
+
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
+  await page.getByRole("button", { name: "Add network" }).click();
+  await editor.getByLabel("Name", { exact: true }).fill("MPE");
+  await editor.getByRole("button", { name: "Save network" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("4 networks");
+
+  const map = await readMap(page);
+  const added = new Set(["Calendar", byLabel(map, "MPE").label]);
+  const after = Object.entries(placed(map));
+  expect(after.filter(([label]) => added.has(label))).toHaveLength(2);
+  expect(near(Object.fromEntries(after.filter(([label]) => !added.has(label))), before, 1e-6)).toBe(true);
+  const calendar = byLabel(map, "Calendar");
+  expect(inside(calendar.box, byLabel(map, "SIPR").box)).toBe(true);
+  for (const s of ["Chat", "Patching", "Wiki"]) expect(overlaps(calendar.box, byLabel(map, s).box), s).toBe(false);
+  const mpe = byLabel(map, "MPE");
+  for (const n of ["NIPR", "SIPR", "External", "NIPR-SIPR guard"]) {
+    expect(overlaps(mpe.box, byLabel(map, n).box), n).toBe(false);
+  }
+  expect(watch.errors).toEqual([]);
+});
+
+test("re-lays out the whole map only after confirming", async ({ page }) => {
+  const watch = await load(page);
+  await arranged(page);
+  const before = placed(await readMap(page));
+
+  page.once("dialog", (d) => void d.dismiss());
+  await page.getByRole("button", { name: "Re-layout" }).click();
+  expect(near(placed(await readMap(page)), before, 1e-6)).toBe(true);
+  await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
+
+  let message = "";
+  page.once("dialog", (d) => {
+    message = d.message();
+    void d.accept();
+  });
+  await page.getByRole("button", { name: "Re-layout" }).click();
+  await expect(page.getByTestId("dataset-status")).toContainText("| Unsaved");
+  expect(message).toContain("moves every node");
+  expect(near(placed(await readMap(page)), before, 1)).toBe(false);
   expect(watch.errors).toEqual([]);
 });
