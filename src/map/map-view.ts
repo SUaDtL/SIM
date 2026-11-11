@@ -42,6 +42,13 @@ export interface MapView {
   reset(): void;
 }
 
+// Readable on-screen label sizes, in pixels (WORK-018). Service labels smaller than this are
+// unreadable smudges when the whole map is fitted, so they are hidden until hovered, highlighted or
+// zoomed into; network and CDS labels grow as the map zooms out so the structure stays readable.
+const MIN_SERVICE_LABEL_PX = 8;
+const MIN_NETWORK_LABEL_PX = 13;
+const MIN_CDS_LABEL_PX = 11;
+
 // Margin around the fitted map; fit() adds the toolbar's height so nothing sits under it.
 const FIT_MARGIN = 24;
 
@@ -145,7 +152,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   const relayout = button("Re-layout", () => {
     // There is no undo yet (WORK-015), so ask first.
     if (!window.confirm("Re-layout moves every node and replaces your arrangement. Continue?")) return;
-    layoutAll(cy);
+    withAllLabels(() => {
+      layoutAll(cy);
+    });
     fitMap();
     persist("own");
   });
@@ -287,6 +296,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         e.toggleClass("filtered", filtered.has(id));
       });
     });
+    applyZoom();
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
@@ -309,11 +319,38 @@ export function createMapView(ctx: MapViewContext): MapView {
     const { marking, caveat } = snapshot;
     exportPng.disabled = true;
     try {
-      const map = await cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 });
+      // The export renders at twice the size, so it shows every service label; restore the screen after.
+      applyZoom(true);
+      const rendered = cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 });
+      applyZoom();
+      const map = await rendered;
       ctx.saveImage(await frameWithBanner(map, marking, caveat));
     } finally {
       exportPng.disabled = cy.nodes().empty();
     }
+  }
+
+  /**
+   * Fit labels to the zoom: hide service labels too small to read ("quiet") and enlarge network and
+   * CDS labels so they stay readable when zoomed out. `exporting` keeps every label, since an export
+   * renders at twice the size.
+   */
+  function applyZoom(exporting = false): void {
+    // An export renders at twice the size, so its labels need half the growth.
+    const zoom = cy.zoom() * (exporting ? 2 : 1);
+    const grow = (base: number, min: number) => Math.min(base * 2, Math.max(base, min / zoom));
+    cy.batch(() => {
+      cy.nodes(".service").toggleClass("quiet", !exporting && 16 * zoom < MIN_SERVICE_LABEL_PX);
+      cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX));
+      cy.nodes(".cds").style("font-size", grow(16, MIN_CDS_LABEL_PX));
+    });
+  }
+
+  /** Lay out with every label in place, so spacing leaves room for labels hidden while zoomed out. */
+  function withAllLabels(run: () => void): void {
+    applyZoom(true);
+    run();
+    applyZoom();
   }
 
   function fitMap(): void {
@@ -325,6 +362,22 @@ export function createMapView(ctx: MapViewContext): MapView {
     needsFit = false;
     fitMap();
   }
+  let zoomQueued = false;
+  cy.on("zoom", () => {
+    if (zoomQueued) return;
+    zoomQueued = true;
+    requestAnimationFrame(() => {
+      zoomQueued = false;
+      applyZoom();
+    });
+  });
+  // Hovering a node shows its label even when it is too small to keep on screen.
+  cy.on("mouseover", "node", (event) => {
+    (event.target as NodeSingular).addClass("hover");
+  });
+  cy.on("mouseout", "node", (event) => {
+    (event.target as NodeSingular).removeClass("hover");
+  });
   new ResizeObserver(() => {
     cy.resize();
     fitWhenSized();
@@ -455,7 +508,9 @@ export function createMapView(ctx: MapViewContext): MapView {
     const fresh = sync();
     if (fresh.empty()) return;
     startBeside(fresh);
-    place(cy, fresh);
+    withAllLabels(() => {
+      place(cy, fresh);
+    });
     persist("merge");
   }
 
@@ -467,11 +522,13 @@ export function createMapView(ctx: MapViewContext): MapView {
     cy.elements().remove();
     const fresh = sync();
     if (fresh.nonempty()) {
-      if (fresh.length === cy.nodes().filter((n) => !n.isParent()).length) layoutAll(cy);
-      else {
-        startBeside(fresh);
-        place(cy, fresh);
-      }
+      withAllLabels(() => {
+        if (fresh.length === cy.nodes().filter((n) => !n.isParent()).length) layoutAll(cy);
+        else {
+          startBeside(fresh);
+          place(cy, fresh);
+        }
+      });
       // Laying out an opened dataset is not an edit the user can undo.
       persist("none");
     }
