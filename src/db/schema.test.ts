@@ -1,7 +1,7 @@
 import type { Database } from "sql.js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { pragma, rawDatabase, tables } from "../../tests/helpers/sqlite";
-import { highestMarking, MARKINGS } from "./markings";
+import { bannerText, highestMarking, isValidCaveat, MARKINGS, normalizeCaveat } from "./markings";
 import { V1_MARKINGS } from "./migrations/0001-initial";
 import { LATEST_VERSION, migrate, SIM_APPLICATION_ID } from "./migrate";
 
@@ -155,6 +155,23 @@ describe("schema v2: map positions", () => {
       expect(() => {
         run(`UPDATE ${table} SET ${set} WHERE id = 1`);
       }).toThrow(/constraint failed/i);
+    }
+  });
+});
+
+describe("banner text", () => {
+  it("shows the marking alone or followed by a caveat", () => {
+    expect(bannerText("SECRET", null)).toBe("SECRET");
+    expect(bannerText("SECRET", "REL TO USA, FVEY")).toBe("SECRET//REL TO USA, FVEY");
+  });
+
+  it("normalizes caveats and accepts only banner characters", () => {
+    expect(normalizeCaveat("  //rel to usa, fvey ")).toBe("REL TO USA, FVEY");
+    expect(normalizeCaveat("   ")).toBeNull();
+    expect(isValidCaveat("REL TO USA, FVEY")).toBe(true);
+    expect(isValidCaveat("NOFORN/ORCON")).toBe(true);
+    for (const bad of ["10.1.2.3", "MAIL.EXAMPLE.MIL", "FE80::1", "A\nB", "<B>", "X".repeat(81)]) {
+      expect(isValidCaveat(bad), bad).toBe(false);
     }
   });
 });

@@ -1,5 +1,5 @@
 import type { Database, SqlValue } from "sql.js";
-import { highestMarking, isMarking, type Marking } from "../db/markings";
+import { highestMarking, isMarking, isValidCaveat, type Marking, normalizeCaveat } from "../db/markings";
 import { SensitiveInputWarning, ValidationError } from "./errors";
 import type {
   Application,
@@ -527,6 +527,28 @@ export class Repository {
 
   // ---- derived views ----
 
+  /** The dataset's banner caveat, e.g. "REL TO USA, FVEY" (Q-029), or null. */
+  datasetCaveat(): string | null {
+    const value = this.row("SELECT value FROM meta WHERE key = 'caveat'", [])?.["value"];
+    return typeof value === "string" ? value : null;
+  }
+
+  /** Set or (with null or blank text) clear the banner caveat. */
+  setCaveat(value: string | null): void {
+    const caveat = normalizeCaveat(value);
+    if (caveat !== null && !isValidCaveat(caveat)) {
+      throw new ValidationError(
+        "INVALID_VALUE",
+        "caveat",
+        "A caveat may use up to 80 letters, digits, spaces, commas, hyphens and slashes.",
+      );
+    }
+    this.write(() => {
+      if (caveat === null) this.db.run("DELETE FROM meta WHERE key = 'caveat'");
+      else this.db.run("INSERT OR REPLACE INTO meta (key, value) VALUES ('caveat', ?)", [caveat]);
+    }, "caveat");
+  }
+
   /** The banner marking: the highest marking on any network or service (CON-002). */
   datasetMarking(): Marking {
     return highestMarking(
@@ -541,6 +563,7 @@ export class Repository {
     const markingOf = new Map(networks.map((n) => [n.id, n.marking]));
     return {
       marking: this.datasetMarking(),
+      caveat: this.datasetCaveat(),
       networks,
       services: this.listServices(),
       // A CDS is classified by the networks it joins (Q-030).

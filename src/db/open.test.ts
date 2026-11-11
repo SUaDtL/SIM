@@ -178,3 +178,24 @@ describe("openDataset upgrades older datasets", () => {
     expect(db.exec("SELECT name, map_x, map_y FROM network")[0]?.values).toEqual([["NIPR", null, null]]);
   });
 });
+
+describe("openDataset checks the banner caveat", () => {
+  it("opens a dataset with a valid caveat", async () => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO meta (key, value) VALUES ('caveat', 'REL TO USA, FVEY')");
+    });
+    expect(await codeOf(bytes)).toBe("opened");
+  });
+
+  it.each([
+    ["a host name", "MAIL.EXAMPLE.MIL"],
+    ["a line break", "REL TO USA\nTOP SECRET"],
+    ["lower case written outside SIM", "rel to usa"],
+    ["more than 80 characters", "X".repeat(81)],
+  ])("refuses a caveat with %s as damaged", async (_name, value) => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO meta (key, value) VALUES ('caveat', ?)", [value]);
+    });
+    expect(await codeOf(bytes)).toBe("CORRUPT");
+  });
+});

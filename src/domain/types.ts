@@ -130,6 +130,8 @@ export interface NodePosition {
 /** Read-only view of the whole dataset for the map; never written back. */
 export interface Snapshot {
   readonly marking: Marking;
+  /** Banner caveat appended after the marking, or null. */
+  readonly caveat: string | null;
   readonly networks: readonly Network[];
   readonly services: readonly Service[];
   readonly cds: readonly (Cds & { readonly marking: Marking })[];

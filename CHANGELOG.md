@@ -43,3 +43,7 @@ All notable changes to SIM are documented here. The format follows
   on, what depends on it, and the CDS on those routes, including foundational links. The rest
   of the map fades; click the background to clear. Filter the map by network, category or
   organization (one that provides, supports or consumes a service) without moving anything.
+- Classification banner at the top and bottom of the app showing the highest marking in the
+  dataset, colored by level (green, purple, blue, red, orange), with an optional caveat such as
+  "SECRET//REL TO USA, FVEY" set from "Banner caveat". A caveat may use only letters, digits,
+  spaces, commas, hyphens and slashes; a file whose stored caveat breaks that rule is refused.
