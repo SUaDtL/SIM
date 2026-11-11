@@ -40,7 +40,8 @@ src/file/           File System Access API with download/upload fallback
 src/ui/             Workspace UI: list panel, editor, form model (forms.ts), DOM helpers, CSS
 src/map/            Map view: graph model (graph.ts, pure), Cytoscape + fcose view, map style
 src/demo/           Fictional UNCLASSIFIED demo enterprise, built through the repository
-tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection)
+src/import/         CSV import: parser (csv.ts), templates, and the engine that writes through the repository
+tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection, dataset to CSV rows)
 tests/unit/         Unit tests that are not colocated (e.g. build-output checks)
 e2e/                Playwright tests that open dist/sim.html from file://
 .codearbiter/       Project governance: context, decisions, specs, plans, work items
@@ -49,7 +50,8 @@ e2e/                Playwright tests that open dist/sim.html from file://
 ## Module boundaries
 
 - `src/domain/repository.ts` is the only write path to a dataset. UI and the CSV importer
-  write through it. The map reads `repository.snapshot()`; its only write is node positions,
+  write through it. The importer runs inside `repository.group()`, so an import is one undo step
+  and one change event; its preview runs the same engine on a throwaway copy of the dataset. The map reads `repository.snapshot()`; its only write is node positions,
   which it hands to a `savePositions` callback that the workspace turns into one `setPositions`
   call. Writes are validated, run in a transaction, and fire `subscribe()` listeners only on
   success; `setPositions` writes and notifies nothing when no position changed.

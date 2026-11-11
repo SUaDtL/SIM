@@ -12,3 +12,4 @@
 [2026-11-11T23:06:31Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-015 undo/redo, unsaved-edits guard, Find on map | BASIS: more than 2 implementation files, repository write path
 [2026-11-11T23:17:27Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-018 map readability and layout regression check | BASIS: more than 2 files, new e2e harness
 [2026-11-11T23:28:42Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-014 fictional demo dataset, Open demo, CDS kept off network boxes | BASIS: new module plus more than 2 files
+[2026-11-11T23:47:30Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-011 CSV import: parser, templates, engine, preview dialog, bulk layout | BASIS: new module, more than 2 files, repository change

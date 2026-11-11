@@ -67,6 +67,10 @@ export class Repository {
   private readonly redoSteps: Step[] = [];
   /** Whether the latest undo step is the write that just finished, so a merge may extend it. */
   private mergeable = false;
+  /** Inside group(): nesting depth, whether the group's step has started, and whether it wrote. */
+  private grouping = 0;
+  private groupStepStarted = false;
+  private groupWrote = false;
 
   constructor(private readonly db: Database) {
     this.installUndo();
@@ -616,6 +620,26 @@ export class Repository {
 
   // ---- plumbing ----
 
+  /**
+   * Run many writes as one: a single undo step (the first write that changes anything starts it,
+   * never merging into an earlier edit) and a single change notification at the end, if anything
+   * was written. Used by CSV import.
+   */
+  group<T>(action: () => T): T {
+    const outer = this.grouping === 0;
+    if (outer) {
+      this.groupStepStarted = false;
+      this.groupWrote = false;
+    }
+    this.grouping++;
+    try {
+      return action();
+    } finally {
+      this.grouping--;
+      if (outer && this.groupWrote) for (const listener of this.listeners) listener();
+    }
+  }
+
   private write<T>(action: () => T, entity: string, history: History = "own"): T {
     const start = this.lastLogged();
     this.db.run("BEGIN");
@@ -630,6 +654,12 @@ export class Repository {
         // Already rolled back by SQLite; report the original error.
       }
       throw translate(error, entity);
+    }
+    if (this.grouping > 0) {
+      const recorded = this.record(start, this.groupStepStarted ? "merge" : "own");
+      if (recorded) this.groupStepStarted = true;
+      this.groupWrote = true;
+      return result;
     }
     this.record(start, history);
     for (const listener of this.listeners) listener();
@@ -701,14 +731,14 @@ export class Repository {
   }
 
   /** File the rows a successful write logged after `start` under the history rule. */
-  private record(start: number, history: History): void {
+  private record(start: number, history: History): boolean {
     const end = this.lastLogged();
-    if (end === start) return;
+    if (end === start) return false;
     const step = { from: start + 1, to: end };
     if (history === "none") {
       this.forget([step]);
       this.mergeable = false;
-      return;
+      return false;
     }
     const last = this.undoSteps.at(-1);
     if (history === "merge" && this.mergeable && last) {
@@ -719,6 +749,7 @@ export class Repository {
       if (this.undoSteps.length > MAX_UNDO_STEPS) this.forget(this.undoSteps.splice(0, 1));
     }
     this.mergeable = true;
+    return true;
   }
 
   /** Run one step's reversing SQL newest first; what it logs becomes the opposite step. */

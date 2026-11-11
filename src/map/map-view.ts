@@ -536,11 +536,22 @@ export function createMapView(ctx: MapViewContext): MapView {
   function refresh(): void {
     const fresh = sync();
     if (fresh.empty()) return;
-    startBeside(fresh);
+    // A bulk addition (a CSV import into a small map) lays out everything: placing many nodes
+    // around a few pinned ones crowds them. The new positions join the edit that added the nodes.
+    const leaves = cy.nodes().filter((n) => !n.isParent()).length;
+    const bulk = fresh.filter((n) => !n.isParent()).length * 2 > leaves;
     withAllLabels(() => {
-      place(cy, fresh);
+      if (bulk) layoutAll(cy);
+      else {
+        startBeside(fresh);
+        place(cy, fresh);
+      }
     });
     persist("merge");
+    if (bulk) {
+      needsFit = true;
+      fitWhenSized();
+    }
   }
 
   function reset(): void {

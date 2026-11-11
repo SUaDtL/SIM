@@ -3,11 +3,13 @@ import { createDataset, DatasetError, datasetName, exportDataset, openDataset } 
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
 import { DEMO_NAME, populateDemo } from "./demo/demo";
 import { ValidationError } from "./domain/errors";
+import { describeAdded, runImport } from "./import/engine";
 import { Repository } from "./domain/repository";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
 import {
+  downloadBlob,
   downloadDataset,
   type FileHandle,
   pickDatasetFile,
@@ -18,6 +20,7 @@ import {
 } from "./file/dataset-file";
 import "./ui/app.css";
 import { createBanner } from "./ui/banner";
+import { openImportDialog } from "./ui/import-dialog";
 import { createWorkspace, type Workspace } from "./ui/workspace";
 
 interface State {
@@ -130,6 +133,33 @@ async function onDemo(): Promise<void> {
   replace(db, null, null, false);
 }
 
+/**
+ * Import CSV files (WORK-011). The preview runs the import on a throwaway copy of the dataset, so it
+ * shows exactly what Import will do; Import is then one undo step on the dataset itself.
+ */
+function onImport(): Promise<void> {
+  openImportDialog({
+    async preview(files, options) {
+      const copy = await openDataset(exportDataset(state.db));
+      try {
+        return runImport(new Repository(copy), files, options);
+      } finally {
+        copy.close();
+      }
+    },
+    commit: (files, options) => runImport(state.repo, files, options),
+    done(report, options) {
+      const left = report.rejected.length + (options.includeFlagged ? 0 : report.flagged.length);
+      show(
+        `Imported ${describeAdded(report.added)}.` +
+          (left > 0 ? ` ${String(left)} ${left === 1 ? "row was" : "rows were"} not imported.` : ""),
+      );
+    },
+    download: downloadBlob,
+  });
+  return Promise.resolve();
+}
+
 async function onOpen(): Promise<void> {
   if (!discardOk()) return;
   try {
@@ -193,6 +223,7 @@ async function boot(): Promise<void> {
     button("New", onNew),
     button("Open", onOpen),
     button("Open demo", onDemo),
+    button("Import CSV", onImport),
     button("Save", () => onSave(false)),
     button("Save As", () => onSave(true)),
     button("Banner caveat", onCaveat),
@@ -207,6 +238,8 @@ async function boot(): Promise<void> {
   // where the browser's own text undo applies.
   document.addEventListener("keydown", (event) => {
     if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+    // A modal dialog (Import CSV) owns the keyboard; undoing behind it would change what it previews.
+    if (document.querySelector("dialog[open]")) return;
     const target = event.target as HTMLElement | null;
     if (target?.closest("input, textarea, select, [contenteditable]")) return;
     const key = event.key.toLowerCase();
