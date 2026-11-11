@@ -1,8 +1,20 @@
 import cytoscape, { type Core, type NodeCollection, type NodeSingular } from "cytoscape";
 import fcose from "cytoscape-fcose";
 import type { NodePosition, Snapshot } from "../domain/types";
-import { button, el } from "../ui/dom";
-import { buildGraph, type Graph, type GraphEdge, type GraphNode, type MapEntity, nodeId, summarize } from "./graph";
+import { button, el, option } from "../ui/dom";
+import {
+  buildGraph,
+  type Chain,
+  filterGraph,
+  type Graph,
+  type GraphEdge,
+  type GraphNode,
+  type MapEntity,
+  type MapFilter,
+  nodeId,
+  summarize,
+  traceChain,
+} from "./graph";
 import { mapStyle } from "./style";
 
 cytoscape.use(fcose);
@@ -23,8 +35,8 @@ export interface MapView {
   reset(): void;
 }
 
-// Leaves room for the toolbar over the top edge of the map.
-const FIT_PADDING = 56;
+// Margin around the fitted map; fit() adds the toolbar's height so nothing sits under it.
+const FIT_MARGIN = 24;
 
 const LAYOUT = {
   name: "fcose",
@@ -94,30 +106,57 @@ export function createMapView(ctx: MapViewContext): MapView {
   const foundationalLabel = el("span", {});
   foundationalBox.addEventListener("change", () => {
     showFoundational = foundationalBox.checked;
-    applyFoundational();
+    applyView();
   });
+  const filterNetwork = el("select", { id: "map-filter-network" });
+  const filterCategory = el("select", { id: "map-filter-category" });
+  const filterOrg = el("select", {
+    id: "map-filter-org",
+    title: "Services this organization provides, supports or consumes",
+  });
+  for (const select of [filterNetwork, filterCategory, filterOrg]) {
+    select.addEventListener("change", () => {
+      filter = readFilter();
+      applyView();
+    });
+  }
+  // The label sits beside its list, not around it, so the list's name is just the label.
+  const filterLabel = (text: string, select: HTMLSelectElement) =>
+    el("span", { class: "map-filter" }, el("label", { for: select.id }, text), select);
   const fit = button("Fit map", () => {
-    cy.fit(undefined, FIT_PADDING);
+    fitMap();
   });
   const relayout = button("Re-layout", () => {
     // There is no undo yet (WORK-015), so ask first.
     if (!window.confirm("Re-layout moves every node and replaces your arrangement. Continue?")) return;
     layoutAll(cy);
-    cy.fit(undefined, FIT_PADDING);
+    fitMap();
     persist();
   });
+  const toolbar = el(
+    "div",
+    { class: "map-toolbar" },
+    el(
+      "div",
+      { class: "map-tools", role: "group", "aria-label": "Filter the map" },
+      filterLabel("Network", filterNetwork),
+      filterLabel("Category", filterCategory),
+      filterLabel("Organization", filterOrg),
+    ),
+    el(
+      "div",
+      { class: "map-tools" },
+      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
+      relayout,
+      fit,
+    ),
+  );
   const element = el(
     "section",
     { class: "map-area", "data-testid": "map-area", "aria-label": "Map" },
     el("h2", { class: "sr-only" }, "Map"),
     canvas,
-    el(
-      "div",
-      { class: "map-toolbar" },
-      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
-      relayout,
-      fit,
-    ),
+    toolbar,
     empty,
     summary,
   );
@@ -126,8 +165,12 @@ export function createMapView(ctx: MapViewContext): MapView {
   const cy = cytoscape({ container: canvas, style: mapStyle, layout: { name: "preset" }, minZoom: 0.1, maxZoom: 4 });
   let needsFit = false;
   let showFoundational = false;
+  let snapshot: Snapshot | null = null;
   let graph: Graph = { nodes: [], edges: [] };
   let positions: readonly NodePosition[] = [];
+  /** The node whose chain is highlighted (decomposition CAP-005), if any. */
+  let chainRoot: string | null = null;
+  let filter: MapFilter = {};
   let persistQueued = false;
 
   /**
@@ -149,21 +192,71 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
   }
 
-  /** Show or hide links to foundational services (Q-021) without laying out again. */
-  function applyFoundational(): void {
-    cy.edges(".to-foundational").toggleClass("hidden", !showFoundational);
+  /** The id selected in a filter list, or undefined for "All". */
+  const chosen = (select: HTMLSelectElement): number | undefined =>
+    select.value === "" ? undefined : Number(select.value);
+
+  function readFilter(): MapFilter {
+    const networkId = chosen(filterNetwork);
+    const categoryId = chosen(filterCategory);
+    const orgId = chosen(filterOrg);
+    return {
+      ...(networkId === undefined ? {} : { networkId }),
+      ...(categoryId === undefined ? {} : { categoryId }),
+      ...(orgId === undefined ? {} : { orgId }),
+    };
+  }
+
+  /** Rebuild a filter list, keeping its choice unless that item is gone (then it falls back to All). */
+  function fillFilter(select: HTMLSelectElement, all: string, items: readonly { id: number; name: string }[]): void {
+    const keep = items.some((i) => String(i.id) === select.value) ? select.value : "";
+    select.replaceChildren(
+      option("", all, keep === ""),
+      ...items.map((i) => option(String(i.id), i.name, String(i.id) === keep)),
+    );
+    select.value = keep;
+  }
+
+  /**
+   * Re-apply everything the view adds on top of the data: hidden foundational links (Q-021), the
+   * highlighted chain (always showing its foundational links) and filters. Never moves or writes.
+   */
+  function applyView(): void {
+    if (chainRoot !== null && cy.getElementById(chainRoot).empty()) chainRoot = null;
+    const chain: Chain | null = chainRoot === null ? null : traceChain(graph, chainRoot);
+    const filtered = snapshot === null ? new Set<string>() : filterGraph(snapshot, graph, filter);
+    cy.batch(() => {
+      cy.elements().forEach((e) => {
+        const id = e.id();
+        const inChain = chain !== null && (chain.nodes.has(id) || chain.edges.has(id));
+        e.toggleClass("hidden", e.hasClass("to-foundational") && !showFoundational);
+        e.toggleClass("chain", inChain);
+        e.toggleClass("chain-root", id === chainRoot);
+        e.toggleClass("dimmed", chain !== null && !inChain);
+        e.toggleClass("filtered", filtered.has(id));
+      });
+    });
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
     const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
     foundationalLabel.textContent = `Show foundational links (${String(links)})`;
-    summary.textContent = summarize(graph, { foundationalHidden: !showFoundational });
+    const root = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
+    summary.textContent = summarize(graph, {
+      foundationalHidden: !showFoundational,
+      ...(chain && root ? { chain: { label: root.data.label.split("\n")[0] ?? "", ...chain } } : {}),
+      ...(filtered.size > 0 ? { filtered } : {}),
+    });
+  }
+
+  function fitMap(): void {
+    cy.fit(undefined, FIT_MARGIN + toolbar.offsetHeight);
   }
 
   function fitWhenSized(): void {
     if (!needsFit || canvas.clientWidth === 0 || canvas.clientHeight === 0) return;
     needsFit = false;
-    cy.fit(undefined, FIT_PADDING);
+    fitMap();
   }
   new ResizeObserver(() => {
     cy.resize();
@@ -173,8 +266,15 @@ export function createMapView(ctx: MapViewContext): MapView {
   // A core-level listener sees each tap once, on the innermost node (compound events bubble).
   cy.on("tap", (event) => {
     const target = event.target as Core | NodeSingular;
-    if (target === cy || !(target as NodeSingular).isNode()) return;
+    if (target === cy) {
+      chainRoot = null;
+      applyView();
+      return;
+    }
+    if (!(target as NodeSingular).isNode()) return;
     const node = target as NodeSingular;
+    chainRoot = node.id();
+    applyView();
     ctx.open(node.data("entity") as MapEntity, node.data("entityId") as number);
   });
   // Dragging a network drags its services; either way, save the new arrangement.
@@ -182,9 +282,14 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   /** Sync elements with the repository; returns the nodes that were added or changed network. */
   function sync(): NodeCollection {
-    const snapshot = ctx.snapshot();
-    graph = buildGraph(snapshot);
-    positions = snapshot.positions;
+    const current = ctx.snapshot();
+    snapshot = current;
+    graph = buildGraph(current);
+    positions = current.positions;
+    fillFilter(filterNetwork, "All networks", current.networks);
+    fillFilter(filterCategory, "All categories", current.categories);
+    fillFilter(filterOrg, "All organizations", current.organizations);
+    filter = readFilter();
     const wanted = new Map<string, GraphNode | GraphEdge>([...graph.nodes, ...graph.edges].map((e) => [e.data.id, e]));
     let fresh = cy.collection();
 
@@ -229,7 +334,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
-    applyFoundational();
+    applyView();
     return fresh.nodes();
   }
 
@@ -256,6 +361,8 @@ export function createMapView(ctx: MapViewContext): MapView {
   function reset(): void {
     showFoundational = false;
     foundationalBox.checked = false;
+    chainRoot = null;
+    for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
     cy.elements().remove();
     sync();
     // Compound networks follow their services, so only leaves take a saved position.

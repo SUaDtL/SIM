@@ -39,3 +39,7 @@ All notable changes to SIM are documented here. The format follows
   networks and services to arrange the view, new nodes are placed without moving anything
   else, and "Re-layout" (after a confirmation) arranges everything afresh. Datasets from
   schema v1 open and are laid out once, which leaves them unsaved until you save.
+- Click a service, network or CDS to highlight everything that chains to it: what it depends
+  on, what depends on it, and the CDS on those routes, including foundational links. The rest
+  of the map fades; click the background to clear. Filter the map by network, category or
+  organization (one that provides, supports or consumes a service) without moving anything.

@@ -6,3 +6,4 @@
 [2026-11-11T17:11:42Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-007 map view (cytoscape + fcose): network containment, external zone, CDS nodes, cross-domain edge classes, pan/zoom, tap-to-edit | BASIS: new dependencies (reviewed PASS), >2 implementation files
 [2026-11-11T17:27:48Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-016 foundational links toggle on the map and Identity/DNS default in the service editor | BASIS: more than 2 implementation files (graph, map view, style, forms, editor)
 [2026-11-11T21:53:16Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-017 saved map positions (migration 0002, repository setPositions, map placement/drag/Re-layout) | BASIS: schema migration and >2 implementation files
+[2026-11-11T22:07:08Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-008 chain highlight and map filters | BASIS: more than 2 implementation files plus new UI surface

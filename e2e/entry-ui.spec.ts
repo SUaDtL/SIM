@@ -134,9 +134,9 @@ test("creates every entity type, edits one field and keeps the rest", async ({ p
     await show(page, plural);
     expect(await values(list(page).locator(".item-name"))).toEqual(names);
   }
-  await page.getByLabel("Filter").fill("ema");
+  await page.getByLabel("Filter", { exact: true }).fill("ema");
   expect(await values(list(page).locator(".item-name"))).toEqual(["Email"]);
-  await page.getByLabel("Filter").fill("");
+  await page.getByLabel("Filter", { exact: true }).fill("");
 
   await select(page, "Services", "Email");
   await fill(page, { Name: "Mail" });

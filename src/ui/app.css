@@ -237,12 +237,34 @@ textarea {
   inset: 0;
 }
 
+/* Spans the top of the map; gaps between the controls still reach the canvas. */
 .map-toolbar {
   position: absolute;
   top: 8px;
   right: 8px;
+  left: 8px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 6px;
+  pointer-events: none;
+}
+
+.map-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.map-filter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.map-filter label {
+  color: var(--muted);
 }
 
 .map-toggle {
