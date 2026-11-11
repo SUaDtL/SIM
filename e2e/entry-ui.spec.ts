@@ -291,7 +291,7 @@ test("saves entered data, opens another file without errors and reopens the save
   await expect(list(page).locator(".item-name")).toHaveCount(0);
 
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "entered.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(status(page)).toContainText("entered.sqlite | Saved");
   expect(await values(list(page).locator(".item-name"))).toEqual(["Email", "Chat"]);

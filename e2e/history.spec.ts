@@ -61,7 +61,7 @@ async function arrangedFile(): Promise<Buffer> {
 
 async function open(page: Page, bytes: Buffer): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "history.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(status(page)).toHaveText(/^History fixture \| history\.sqlite \| /);
 }
@@ -203,7 +203,7 @@ test("asks before New, Open or closing would discard edits, and not for an untou
   await expect(status(page)).toContainText("History fixture");
 
   page.once("dialog", (d) => void d.dismiss());
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect(status(page)).toContainText("History fixture");
   expect(asked).toBe("confirm");
 

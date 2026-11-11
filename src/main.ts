@@ -1,6 +1,7 @@
 import type { Database } from "sql.js";
 import { createDataset, DatasetError, datasetName, exportDataset, openDataset } from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
+import { DEMO_NAME, populateDemo } from "./demo/demo";
 import { ValidationError } from "./domain/errors";
 import { Repository } from "./domain/repository";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
@@ -120,6 +121,15 @@ function onCaveat(): Promise<void> {
   return Promise.resolve();
 }
 
+/** Open the fictional demo enterprise as a new, unsaved dataset (WORK-014). */
+async function onDemo(): Promise<void> {
+  if (!discardOk()) return;
+  const db = await createDataset(DEMO_NAME);
+  populateDemo(new Repository(db));
+  // Opening it gives a fresh repository, so building the demo is not in the undo history.
+  replace(db, null, null, false);
+}
+
 async function onOpen(): Promise<void> {
   if (!discardOk()) return;
   try {
@@ -182,6 +192,7 @@ async function boot(): Promise<void> {
   toolbar.append(
     button("New", onNew),
     button("Open", onOpen),
+    button("Open demo", onDemo),
     button("Save", () => onSave(false)),
     button("Save As", () => onSave(true)),
     button("Banner caveat", onCaveat),

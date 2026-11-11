@@ -576,6 +576,16 @@ describe("undo and redo", () => {
     expect(repo.listNetworks()).toHaveLength(0);
   });
 
+  it("starts a fresh history when another repository opens the same database", () => {
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    const db = (repo as unknown as { db: ConstructorParameters<typeof Repository>[0] }).db;
+    const again = new Repository(db);
+    expect(again.canUndo()).toBe(false);
+    again.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
+    expect(again.undo()).toBe(true);
+    expect(again.listNetworks().map((n) => n.name)).toEqual(["NIPR"]);
+  });
+
   it("caps the history", () => {
     const n = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
     for (let i = 0; i < MAX_UNDO_STEPS + 5; i++) repo.setPositions([{ entity: "network", id: n.id, x: i + 1, y: 0 }]);

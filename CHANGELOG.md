@@ -58,3 +58,7 @@ All notable changes to SIM are documented here. The format follows
   structure stays readable; labels have a white halo over lines. Exports show every label. An
   end-to-end check now measures edge crossings, label overlaps and network overlaps on a
   ~100-service map, so later changes cannot quietly make the layout worse.
+- "Open demo" opens a fictional demo enterprise: six networks and a cloud SaaS zone, about a
+  hundred services, three CDS and several providing organizations, all marked UNCLASSIFIED with
+  the banner caveat "DEMO - FICTIONAL DATA". The layout check uses the same dataset.
+- A CDS is never drawn on top of a network's box; a layout that lands one there moves it out.

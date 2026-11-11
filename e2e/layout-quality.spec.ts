@@ -1,99 +1,19 @@
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
+import { DEMO_NAME, populateDemo } from "../src/demo/demo";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
-// Layout regression check (WORK-018): the layout spike's metrics on a map of its size, so a style or
+// Layout regression check (WORK-018): the layout spike's metrics on the demo enterprise, a map of its size, so a style or
 // layout change cannot quietly make the map harder to read. Thresholds sit above the worst observed
 // run; tighten them as the layout improves.
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
-const SERVICES = [
-  "Identity",
-  "DNS",
-  "Email",
-  "Chat",
-  "File Share",
-  "Patching",
-  "Wiki",
-  "Tickets",
-  "Backup",
-  "Logging",
-  "Monitoring",
-  "Print",
-  "Calendar",
-  "Video",
-  "Maps",
-  "Training",
-];
-
-/** Fictional UNCLASSIFIED enterprise at the spike's scale: 6 networks and SaaS, ~100 services, 3 CDS. */
+/** The demo enterprise (WORK-014): six networks and SaaS, ~100 services, 3 CDS. */
 async function enterprise(): Promise<Buffer> {
-  const db = await createDataset("Layout fixture", wasm);
-  const repo = new Repository(db);
-  const markings = ["CUI", "SECRET", "SECRET", "TOP SECRET", "SECRET", "CUI"] as const;
-  const nets = ["NIPR", "SIPR", "MPE", "JWICS", "Coalition", "DEV"].map((name, i) =>
-    repo.createNetwork({ name, kind: "internal", marking: markings[i] ?? "CUI" }),
-  );
-  const saas = repo.createNetwork({ name: "External SaaS", kind: "external", marking: "UNCLASSIFIED" });
-  const svc = nets.map((n, i) => {
-    const ids: Record<string, number> = {};
-    for (const name of SERVICES.slice(0, SERVICES.length - (i % 3))) {
-      ids[name] = repo.createService({
-        name,
-        networkId: n.id,
-        marking: n.marking,
-        foundational: name === "Identity" || name === "DNS",
-      }).id;
-    }
-    return ids;
-  });
-  const cloud = ["Office 365", "Salesforce", "ServiceNow", "Zoom"].map(
-    (name) => repo.createService({ name, networkId: saas.id, marking: "UNCLASSIFIED" }).id,
-  );
-  const [nipr, sipr, mpe, jwics, coalition, dev] = svc as [
-    Record<string, number>,
-    Record<string, number>,
-    Record<string, number>,
-    Record<string, number>,
-    Record<string, number>,
-    Record<string, number>,
-  ];
-  const id = (net: Record<string, number>, name: string) => net[name] ?? 0;
-  const guard = repo.createCds({ name: "NIPR-SIPR guard", networkIds: [nets[0]?.id ?? 0, nets[1]?.id ?? 0] });
-  const high = repo.createCds({ name: "SIPR-JWICS guard", networkIds: [nets[1]?.id ?? 0, nets[3]?.id ?? 0] });
-  const gateway = repo.createCds({
-    name: "Coalition gateway",
-    networkIds: [nets[1]?.id ?? 0, nets[2]?.id ?? 0, nets[4]?.id ?? 0],
-  });
-  // A network may lack the last services in the list (id 0): skip links to them.
-  const dep = (consumer: number, provider: number, viaCdsId?: number) => {
-    if (consumer === 0 || provider === 0) return;
-    repo.addDependency({ consumerServiceId: consumer, providerServiceId: provider, viaCdsId: viaCdsId ?? null });
-  };
-  for (const net of svc) {
-    for (const name of ["Email", "Chat", "File Share", "Wiki", "Tickets", "Calendar", "Video", "Maps"]) {
-      if (net[name] === undefined) continue;
-      dep(id(net, name), id(net, "Identity"));
-      dep(id(net, name), id(net, "DNS"));
-    }
-    dep(id(net, "Monitoring"), id(net, "Logging"));
-    dep(id(net, "Backup"), id(net, "File Share"));
-    dep(id(net, "Calendar"), id(net, "Email"));
-  }
-  dep(id(sipr, "Patching"), id(nipr, "Patching"), guard.id);
-  dep(id(sipr, "Email"), id(nipr, "Email"), guard.id);
-  dep(id(jwics, "Email"), id(sipr, "Email"), high.id);
-  dep(id(jwics, "Patching"), id(sipr, "Patching"), high.id);
-  dep(id(coalition, "Chat"), id(sipr, "Chat"), gateway.id);
-  dep(id(mpe, "File Share"), id(sipr, "File Share"), gateway.id);
-  dep(id(mpe, "Wiki"), id(coalition, "Wiki"), gateway.id);
-  dep(id(nipr, "Email"), cloud[0] ?? 0);
-  dep(id(nipr, "Tickets"), cloud[2] ?? 0);
-  dep(id(dev, "Video"), cloud[3] ?? 0);
-  dep(id(dev, "Backup"), id(nipr, "Backup"));
-  dep(id(mpe, "Logging"), id(sipr, "Logging"));
+  const db = await createDataset(DEMO_NAME, wasm);
+  populateDemo(new Repository(db));
   return Buffer.from(db.export());
 }
 
@@ -222,7 +142,7 @@ test("keeps a spike-sized map readable: few crossings and label overlaps, no ove
   for (let run = 0; run < 3; run++) {
     if (run > 0) page.once("dialog", (d) => void d.accept());
     const chooser = page.waitForEvent("filechooser");
-    await page.getByRole("button", { name: "Open" }).click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
     await expect(page.getByTestId("map-summary")).toContainText("services");
     runs.push(await measure(page));
@@ -249,7 +169,7 @@ test("hides unreadably small service labels until hovered or zoomed into", async
   });
   await page.goto(simUrl);
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: await enterprise() });

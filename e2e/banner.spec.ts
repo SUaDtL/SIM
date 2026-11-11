@@ -109,7 +109,7 @@ test("adds a caveat after the marking, keeps it through save and reopen, and cle
   await expectBanner(page, "UNCLASSIFIED", "UNCLASSIFIED");
 
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "caveat.sqlite", mimeType: "application/x-sqlite3", buffer: readFileSync(path) });
@@ -126,12 +126,28 @@ test("shows TOP SECRET with dark text on orange", async ({ page }) => {
   const db = await createDataset("Banner fixture", wasm);
   new Repository(db).createNetwork({ name: "JWICS", kind: "internal", marking: "TOP SECRET" });
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "ts.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
   await expectBanner(page, "TOP SECRET", "TOP SECRET");
   const colors = await top(page).evaluate((e) => [getComputedStyle(e).color, getComputedStyle(e).backgroundColor]);
   expect(colors).toEqual(["rgb(0, 0, 0)", "rgb(255, 103, 31)"]);
+  expect(problems).toEqual([]);
+});
+
+test("opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a demo", async ({ page }) => {
+  const problems = await load(page);
+  await page.getByRole("button", { name: "Open demo" }).click();
+  await expect(status(page)).toHaveText("Demo enterprise (fictional) | not saved yet | Unsaved");
+  await expectBanner(page, "UNCLASSIFIED//DEMO - FICTIONAL DATA", "UNCLASSIFIED");
+  await expect(page.getByTestId("map-summary")).toContainText("7 networks");
+  await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
+
+  // With an edit made, opening the demo again asks first.
+  await addNetwork(page, "Extra", "UNCLASSIFIED");
+  page.once("dialog", (d) => void d.dismiss());
+  await page.getByRole("button", { name: "Open demo" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("8 networks");
   expect(problems).toEqual([]);
 });
