@@ -1,17 +1,126 @@
-import { openDatabase, sqliteVersion } from "./db/sqlite";
+import type { Database } from "sql.js";
+import { createDataset, DatasetError, datasetName, exportDataset, openDataset } from "./db/dataset";
+import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
+// `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
+// The single-file plugin still inlines it as a data: URL, so no fetch occurs.
+import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
+import {
+  downloadDataset,
+  type FileHandle,
+  pickDatasetFile,
+  pickSaveTarget,
+  suggestedFileName,
+  supportsSaveInPlace,
+  writeToHandle,
+} from "./file/dataset-file";
+
+interface State {
+  db: Database;
+  name: string;
+  fileName: string | null;
+  handle: FileHandle | null;
+  saved: boolean;
+}
+
+let state: State;
+const status = document.createElement("p");
+status.dataset["testid"] = "dataset-status";
+const message = document.createElement("p");
+message.dataset["testid"] = "dataset-message";
+message.setAttribute("role", "status");
+
+function render(): void {
+  const where = state.fileName ?? "not saved yet";
+  status.textContent = `${state.name} | ${where} | ${state.saved ? "Saved" : "Unsaved"}`;
+}
+
+function show(text: string): void {
+  message.textContent = text;
+}
+
+function replace(db: Database, fileName: string | null, handle: FileHandle | null, saved: boolean): void {
+  // Closing the previous dataset is safe: a refused file never reaches this point.
+  state.db.close();
+  state = { db, name: datasetName(db), fileName, handle, saved };
+  show("");
+  render();
+}
+
+async function onNew(): Promise<void> {
+  const name = window.prompt("Name for the new dataset", "Untitled dataset");
+  if (name === null) return;
+  try {
+    replace(await createDataset(name), null, null, false);
+  } catch (error) {
+    show(error instanceof DatasetError ? error.message : "Could not create the dataset.");
+  }
+}
+
+async function onOpen(): Promise<void> {
+  try {
+    const picked = await pickDatasetFile();
+    if (!picked) return;
+    replace(await openDataset(picked.bytes), picked.fileName, picked.handle, true);
+  } catch (error) {
+    show(error instanceof DatasetError ? error.message : "Could not open the file.");
+  }
+}
+
+async function onSave(saveAs: boolean): Promise<void> {
+  try {
+    const bytes = exportDataset(state.db);
+    if (supportsSaveInPlace()) {
+      const handle = (saveAs ? null : state.handle) ?? (await pickSaveTarget(suggestedFileName(state.name)));
+      if (!handle) return; // picker cancelled
+      await writeToHandle(handle, bytes);
+      state.handle = handle;
+      state.fileName = handle.name;
+    } else {
+      const fileName = (saveAs ? null : state.fileName) ?? suggestedFileName(state.name);
+      downloadDataset(bytes, fileName);
+      state.fileName = fileName;
+    }
+    state.saved = true;
+    show("");
+    render();
+  } catch {
+    show("Could not save the dataset.");
+  }
+}
+
+function button(label: string, action: () => Promise<void>): HTMLButtonElement {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = label;
+  b.addEventListener("click", () => {
+    void action();
+  });
+  return b;
+}
 
 async function boot(): Promise<void> {
   const app = document.getElementById("app");
   if (!app) throw new Error("missing #app root");
-  const db = await openDatabase();
-  const header = document.createElement("header");
+  configureSqliteWasm(dataUrlToBytes(wasmUrl));
+  const db = await createDataset("Untitled dataset");
+  state = { db, name: datasetName(db), fileName: null, handle: null, saved: false };
+
   const title = document.createElement("h1");
   title.textContent = "SIM - Service Integration Map";
   const version = document.createElement("p");
   version.dataset["testid"] = "sqlite-version";
   version.textContent = `SQLite ${sqliteVersion(db)}`;
-  header.append(title, version);
+  const toolbar = document.createElement("nav");
+  toolbar.append(
+    button("New", onNew),
+    button("Open", onOpen),
+    button("Save", () => onSave(false)),
+    button("Save As", () => onSave(true)),
+  );
+  const header = document.createElement("header");
+  header.append(title, toolbar, status, message, version);
   app.replaceChildren(header);
+  render();
 }
 
 void boot();
