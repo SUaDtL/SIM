@@ -83,6 +83,18 @@ export class Repository {
   }
 
   deleteNetwork(id: number): void {
+    // cds_network cascades on delete, which would silently shrink a CDS; refuse instead.
+    const joined = this.row(
+      "SELECT c.name FROM cds_network cn JOIN cds c ON c.id = cn.cds_id WHERE cn.network_id = ? ORDER BY c.name",
+      [id],
+    );
+    if (joined) {
+      throw new ValidationError(
+        "IN_USE",
+        "network",
+        `That network is still in use: the CDS ${String(joined["name"])} joins it; remove it from the CDS first.`,
+      );
+    }
     this.write(() => {
       this.update("DELETE FROM network WHERE id = ?", [id], "network");
     }, "network");
@@ -264,6 +276,7 @@ export class Repository {
         [...v, id],
         "service",
       );
+      this.requireValidRoutes("network");
       return this.mustGet(this.getService(id));
     }, "service");
   }
@@ -320,6 +333,7 @@ export class Repository {
     return this.write(() => {
       this.update("UPDATE cds SET name = ?, description = ? WHERE id = ?", [name, description, id], "CDS");
       this.setCdsNetworks(id, networkIds);
+      this.requireValidRoutes("networks");
       return this.mustGet(this.getCds(id));
     }, "cds");
   }
@@ -540,6 +554,33 @@ export class Repository {
 
   private row(sql: string, params: SqlValue[]): Row | undefined {
     return this.rows(sql, params)[0];
+  }
+
+  /**
+   * Run inside a write after changing a CDS or a service: every route through a CDS must still connect
+   * two different networks that the CDS joins (the rule addDependency enforces). Throwing rolls back.
+   */
+  private requireValidRoutes(field: string): void {
+    const broken = this.row(
+      `SELECT c.name AS consumer, p.name AS provider, x.name AS cds
+       FROM service_dependency d
+       JOIN service c ON c.id = d.consumer_service_id
+       JOIN service p ON p.id = d.provider_service_id
+       JOIN cds x ON x.id = d.via_cds_id
+       WHERE c.network_id = p.network_id
+          OR NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = c.network_id)
+          OR NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = p.network_id)
+       LIMIT 1`,
+      [],
+    );
+    if (broken) {
+      const [consumer, provider, cds] = [broken["consumer"], broken["provider"], broken["cds"]].map(String);
+      throw new ValidationError(
+        "CDS_ROUTE",
+        field,
+        `This would break the route from ${consumer ?? ""} to ${provider ?? ""} through ${cds ?? ""}; change or remove that dependency first.`,
+      );
+    }
   }
 
   private requireExists(table: string, id: number, field: string): void {
