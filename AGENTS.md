@@ -35,6 +35,7 @@ sim.html            Vite entry page (output: dist/sim.html)
 src/main.ts         App bootstrap and shell (New/Open/Save/Save As, status line)
 src/db/             SQLite (sql.js) engine, dataset create/open validation, markings
 src/db/migrations/  Forward-only schema migrations (PRAGMA user_version)
+src/domain/         Repository (the only write path), entity types, validation, IP/FQDN detection
 src/file/           File System Access API with download/upload fallback
 tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection)
 tests/unit/         Unit tests that are not colocated (e.g. build-output checks)
@@ -44,8 +45,12 @@ e2e/                Playwright tests that open dist/sim.html from file://
 
 ## Module boundaries
 
-- `src/db/` owns the only write path to the dataset. UI and the CSV importer write through
-  the domain repository; the map view reads and never writes.
+- `src/domain/repository.ts` is the only write path to a dataset. UI and the CSV importer
+  write through it; the map reads `repository.snapshot()` and never writes. Writes are
+  validated, run in a transaction, and fire `subscribe()` listeners only on success.
+- Refusals are `ValidationError` (`code`, `field`, readable message). Text that looks like an
+  IP address or host name raises `SensitiveInputWarning`; repeat the call with
+  `{ confirmSensitive: true }` only after the user confirms (decision Q-032).
 - **Migrations are forward-only.** Never edit a migration that has been merged; add a new one
   to `src/db/migrations/index.ts`. Each runs in a transaction with its `user_version` bump.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
