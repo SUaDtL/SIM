@@ -79,6 +79,34 @@ function layoutAll(cy: Core): void {
   if (cy.nodes().empty()) return;
   const options = { ...LAYOUT, quality: "default", randomize: true } satisfies fcose.FcoseLayoutOptions;
   laidOut(cy).layout(options).run();
+  clearOfNetworks(cy.nodes(".cds"));
+}
+
+/**
+ * A CDS sits between networks, never on top of one. fcose occasionally lands a CDS that joins three
+ * networks inside a network's box; move each such CDS the shortest way out of every box it overlaps.
+ */
+function clearOfNetworks(cds: NodeCollection): void {
+  const margin = 16;
+  cds.forEach((c) => {
+    for (let pass = 0; pass < 6; pass++) {
+      const at = c.boundingBox({ includeLabels: false });
+      const box = c
+        .cy()
+        .nodes(".network")
+        .map((n) => n.boundingBox({ includeLabels: false }))
+        .find((b) => at.x1 < b.x2 + margin && b.x1 - margin < at.x2 && at.y1 < b.y2 + margin && b.y1 - margin < at.y2);
+      if (!box) return;
+      const moves = [
+        { x: box.x1 - margin - at.x2, y: 0 },
+        { x: box.x2 + margin - at.x1, y: 0 },
+        { x: 0, y: box.y1 - margin - at.y2 },
+        { x: 0, y: box.y2 + margin - at.y1 },
+      ].sort((a, b) => Math.abs(a.x) + Math.abs(a.y) - (Math.abs(b.x) + Math.abs(b.y)));
+      const move = moves[0];
+      if (move) c.shift(move);
+    }
+  });
 }
 
 /**
@@ -110,6 +138,7 @@ function place(cy: Core, fresh: NodeCollection): void {
     if (!n.isParent()) n.shift(shift);
   });
   for (const f of fixed) cy.getElementById(f.nodeId).position(f.position);
+  clearOfNetworks(fresh.filter(".cds"));
 }
 
 export function createMapView(ctx: MapViewContext): MapView {

@@ -35,7 +35,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
 
   test("opens an uploaded dataset and saves it as a download that reopens identically", async ({ page }, info) => {
     const chooser = page.waitForEvent("filechooser");
-    await page.getByRole("button", { name: "Open" }).click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
     await (
       await chooser
     ).setFiles({ name: "fixture.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(await fixture()) });
@@ -56,7 +56,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
   test("shows a readable error for a file that is not a dataset and keeps the current one", async ({ page }) => {
     await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Unsaved");
     const chooser = page.waitForEvent("filechooser");
-    await page.getByRole("button", { name: "Open" }).click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "notes.sqlite", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByTestId("dataset-message")).toHaveText(/not a SIM dataset/);
     await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Unsaved");
@@ -106,7 +106,7 @@ test.describe("with the File System Access API (save in place)", () => {
     page.evaluate((n) => (window as unknown as { __written: Record<string, number[]> }).__written[n] ?? null, name);
 
   test("Save writes back to the opened file and Save As writes to a new file", async ({ page }) => {
-    await page.getByRole("button", { name: "Open" }).click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
     await expect(status(page)).toHaveText("Fixture enterprise | fixture.sqlite | Saved");
 
     await page.getByRole("button", { name: "Save", exact: true }).click();
@@ -121,7 +121,7 @@ test.describe("with the File System Access API (save in place)", () => {
   });
 
   test("does not touch browser storage", async ({ page }) => {
-    await page.getByRole("button", { name: "Open" }).click();
+    await page.getByRole("button", { name: "Open", exact: true }).click();
     await page.getByRole("button", { name: "Save", exact: true }).click();
     const storage = await page.evaluate(async () => ({
       local: localStorage.length,

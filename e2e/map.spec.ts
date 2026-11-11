@@ -62,7 +62,7 @@ async function fixture(): Promise<Uint8Array> {
 /** Open a dataset file; one with no saved positions is laid out once, which leaves it unsaved. */
 async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved"): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("button", { name: "Open" }).click();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "map.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
   await expect(page.getByTestId("map-summary")).toContainText("networks");
   await expect(page.getByTestId("dataset-status")).toHaveText(`Map fixture | map.sqlite | ${saved}`);

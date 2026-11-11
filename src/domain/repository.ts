@@ -656,7 +656,14 @@ export class Repository {
     return this.replay(this.redoSteps, this.undoSteps);
   }
 
+  /** Fresh history for this repository, replacing any from an earlier repository on the same database. */
   private installUndo(): void {
+    for (const r of this.rows(
+      "SELECT name FROM temp.sqlite_master WHERE type = 'trigger' AND name LIKE 'undo!_%' ESCAPE '!'",
+    )) {
+      this.db.run(`DROP TRIGGER temp.${String(r["name"])}`);
+    }
+    this.db.run("DROP TABLE IF EXISTS temp.undo_log");
     this.db.run("CREATE TEMP TABLE undo_log (seq INTEGER PRIMARY KEY AUTOINCREMENT, sql TEXT NOT NULL)");
     const tables = this.rows("SELECT name FROM main.sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'");
     for (const { name } of tables) {
