@@ -114,4 +114,6 @@ const safeName = (datasetName: string): string => datasetName.replace(/[^\w\- ]+
 
 export const suggestedFileName = (datasetName: string): string => `${safeName(datasetName)}.sqlite`;
 
-export const suggestedImageName = (datasetName: string): string => `${safeName(datasetName)} map.png`;
+/** File name for a map image, e.g. "Demo map.png" or "Demo map.svg". */
+export const suggestedImageName = (datasetName: string, extension: "png" | "svg"): string =>
+  `${safeName(datasetName)} map.${extension}`;

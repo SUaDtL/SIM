@@ -38,7 +38,7 @@ src/db/migrations/  Forward-only schema migrations (PRAGMA user_version)
 src/domain/         Repository (the only write path), entity types, validation, IP/FQDN detection
 src/file/           File System Access API with download/upload fallback
 src/ui/             Workspace UI: list panel, editor, form model (forms.ts), DOM helpers, CSS
-src/map/            Map view: graph model (graph.ts, pure), Cytoscape + fcose view, map style
+src/map/            Map view: graph model (graph.ts, pure), Cytoscape + fcose view, map style, PNG/SVG export
 src/demo/           Fictional UNCLASSIFIED demo enterprise, built through the repository
 src/import/         CSV import: parser (csv.ts), templates, and the engine that writes through the repository
 tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection, dataset to CSV rows)

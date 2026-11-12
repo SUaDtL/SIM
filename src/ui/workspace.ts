@@ -36,8 +36,8 @@ export function createWorkspace(initial: Repository): Workspace {
     savePositions: (positions, history) => {
       repo.setPositions(positions, history);
     },
-    saveImage: (image) => {
-      downloadBlob(image, suggestedImageName(repo.datasetName()));
+    saveImage: (image, extension) => {
+      downloadBlob(image, suggestedImageName(repo.datasetName(), extension));
     },
     open: (type, id) => {
       editor.open(type, id);
