@@ -624,3 +624,74 @@ test("exports the current view as a PNG framed by the classification banner, wit
   expect(watch.errors).toEqual([]);
   expect(watch.requests).toEqual([]);
 });
+
+test("exports the current view as SVG with the banner, every label and the highlight, without writing", async ({
+  page,
+}) => {
+  const watch = await load(page);
+  await expect(page.getByRole("button", { name: "Export SVG" })).toBeDisabled();
+  await arranged(page);
+  await page.getByRole("button", { name: "Fit map" }).click();
+  let map = await readMap(page);
+  await tap(page, map, byLabel(map, "Email").position);
+  await expect(page.getByTestId("map-summary")).toContainText("Highlighted: the chain of Email");
+  map = await readMap(page);
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export SVG" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toBe("Map fixture map.svg");
+  const svg = readFileSync(await file.path(), "utf8");
+  expect(svg).not.toMatch(/<script|<foreignObject|href=/i);
+
+  const bannerText = await page.getByTestId("banner-top").textContent();
+  const read = await page.evaluate((source) => {
+    const doc = new DOMParser().parseFromString(source, "image/svg+xml");
+    const root = doc.documentElement;
+    const width = Number(root.getAttribute("width"));
+    const bands = [...root.children].filter((e) => e.tagName === "rect" && e.getAttribute("fill") !== "#ffffff");
+    return {
+      error: doc.querySelector("parsererror")?.textContent ?? null,
+      bands: bands.map((b) => b.getAttribute("fill")),
+      bannerTexts: [...root.children].filter((e) => e.tagName === "text").map((t) => t.textContent),
+      labels: [...doc.querySelectorAll("svg svg text")].map((t) =>
+        [...t.querySelectorAll("tspan")].map((s) => s.textContent).join(" "),
+      ),
+      dimmed: doc.querySelectorAll('svg svg g[opacity="0.25"]').length,
+      rootBorder: doc.querySelectorAll('svg svg [stroke="rgb(36,87,166)"][stroke-width="4"]').length,
+      width,
+    };
+  }, svg);
+  expect(read.error).toBeNull();
+  expect(read.bands).toEqual(["#c8102e", "#c8102e"]);
+  expect(read.bannerTexts).toEqual([bannerText, bannerText]);
+  expect(read.width).toBe(Math.round(map.width * 2));
+  const shown = map.nodes.filter((n) => n.visible && n.entity !== "network");
+  for (const n of shown) expect(read.labels, n.label).toContain(n.label);
+  const dimmed =
+    shown.filter((n) => n.classes.includes("dimmed")).length +
+    map.edges.filter((e) => e.visible && e.classes.includes("dimmed")).length;
+  expect(dimmed).toBeGreaterThan(0);
+  expect(read.dimmed).toBe(dimmed);
+  expect(read.rootBorder).toBe(1);
+
+  // Zoomed far out, service labels are hidden on screen ("quiet"), but the export still has them all.
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: { zoom(level: number): void; center(): void } } })._cyreg.cy;
+    cy.zoom(0.2);
+    cy.center();
+  });
+  // Labels go quiet on the next animation frame after a zoom.
+  await expect.poll(async () => (await readMap(page)).nodes.some((n) => n.classes.includes("quiet"))).toBe(true);
+  map = await readMap(page);
+  const again = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export SVG" }).click();
+  const zoomedOut = readFileSync(await (await again).path(), "utf8");
+  for (const n of map.nodes.filter((x) => x.visible && x.entity === "service")) {
+    expect(zoomedOut, n.label).toContain(`>${n.label}</tspan>`);
+  }
+
+  await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
+  expect(watch.errors).toEqual([]);
+  expect(watch.requests).toEqual([]);
+});

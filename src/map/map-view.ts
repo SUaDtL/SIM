@@ -17,6 +17,8 @@ import {
 } from "./graph";
 import { frameWithBanner } from "./export";
 import { mapStyle } from "./style";
+import { svgDocument, type SvgScene } from "./svg";
+import { sceneFromMap } from "./svg-scene";
 
 cytoscape.use(fcose);
 
@@ -31,7 +33,7 @@ export interface MapViewContext {
    */
   savePositions(positions: readonly NodePosition[], history: History): void;
   /** Hand an exported PNG to the caller to save. */
-  saveImage(image: Blob): void;
+  saveImage(image: Blob, extension: "png" | "svg"): void;
 }
 
 export interface MapView {
@@ -178,6 +180,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   const exportPng = button("Export PNG", () => {
     void exportView();
   });
+  const exportSvg = button("Export SVG", () => {
+    exportVector();
+  });
   const relayout = button("Re-layout", () => {
     // There is no undo yet (WORK-015), so ask first.
     if (!window.confirm("Re-layout moves every node and replaces your arrangement. Continue?")) return;
@@ -205,6 +210,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       relayout,
       fit,
       exportPng,
+      exportSvg,
     ),
   );
   const element = el(
@@ -353,7 +359,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       const rendered = cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 });
       applyZoom();
       const map = await rendered;
-      ctx.saveImage(await frameWithBanner(map, marking, caveat));
+      ctx.saveImage(await frameWithBanner(map, marking, caveat), "png");
     } finally {
       exportPng.disabled = cy.nodes().empty();
     }
@@ -364,6 +370,29 @@ export function createMapView(ctx: MapViewContext): MapView {
    * CDS labels so they stay readable when zoomed out. `exporting` keeps every label, since an export
    * renders at twice the size.
    */
+  /**
+   * Export the current view as SVG (WORK-012), drawn at the PNG's size with every label, so the two
+   * exports match. Reading the map writes nothing.
+   */
+  function exportVector(): void {
+    if (snapshot === null || cy.nodes().empty()) return;
+    const { marking, caveat } = snapshot;
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) return;
+    const measure = (text: string, font: string) => {
+      context.font = font;
+      return context.measureText(text).width;
+    };
+    applyZoom(true);
+    let scene: SvgScene;
+    try {
+      scene = sceneFromMap(cy, 2, measure);
+    } finally {
+      applyZoom();
+    }
+    ctx.saveImage(new Blob([svgDocument(scene, marking, caveat)], { type: "image/svg+xml" }), "svg");
+  }
+
   function applyZoom(exporting = false): void {
     // An export renders at twice the size, so its labels need half the growth.
     const zoom = cy.zoom() * (exporting ? 2 : 1);
@@ -495,6 +524,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
     exportPng.disabled = cy.nodes().empty();
+    exportSvg.disabled = exportPng.disabled;
     const unplaced = applySaved(fresh.nodes());
     applyView();
     return unplaced;

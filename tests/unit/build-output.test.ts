@@ -21,8 +21,9 @@ describe.skipIf(!built)("single-file build output", () => {
     expect(html).toContain("data:application/wasm;base64,");
   });
 
-  it("contains no http(s) URLs except known library comment links", () => {
-    const allowed = [/^https:\/\/github\.com\/sql-js\/sql\.js\//];
+  it("contains no http(s) URLs except known library comment links and the SVG namespace", () => {
+    // The SVG namespace is a name in exported files (WORK-012), never fetched.
+    const allowed = [/^https:\/\/github\.com\/sql-js\/sql\.js\//, /^http:\/\/www\.w3\.org\/2000\/svg$/];
     const urls = html.match(/https?:\/\/[^\s"'`)<>]+/g) ?? [];
     expect(urls.filter((u) => !allowed.some((a) => a.test(u)))).toEqual([]);
   });
