@@ -1,6 +1,11 @@
 import type { Snapshot } from "../domain/types";
+import { serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 
 export type MapEntity = "network" | "service" | "cds";
+
+export type GraphOrigin =
+  | { readonly kind: "baseline"; readonly entity: MapEntity; readonly entityId: number }
+  | { readonly kind: "planned"; readonly entity: "service"; readonly scenarioId: number; readonly changeId: number };
 
 export interface GraphNode {
   readonly group: "nodes";
@@ -9,6 +14,7 @@ export interface GraphNode {
     readonly label: string;
     readonly entity: MapEntity;
     readonly entityId: number;
+    readonly origin: GraphOrigin;
     readonly parent?: string;
   };
   readonly classes: string;
@@ -42,7 +48,7 @@ export const nodeId = (entity: MapEntity, id: number): string => `${entity}-${St
  * How a dependency travels: within one network, through a CDS, across a boundary with no CDS (the
  * risk the map must make visible), or out to an external network.
  */
-export type EdgeKind = "local" | "via-cds" | "cross-domain" | "external";
+export type EdgeKind = "local" | "via-cds" | "cross-domain" | "external" | "unresolved";
 
 /**
  * Turn a snapshot into Cytoscape element definitions. Networks are compound containers, services sit
@@ -56,16 +62,28 @@ export function buildGraph(snapshot: Snapshot): Graph {
   const networkOf = new Map<number, number>();
   const foundational = new Set(snapshot.services.filter((s) => s.foundational).map((s) => s.id));
   const external = new Set(snapshot.networks.filter((n) => n.kind === "external").map((n) => n.id));
+  const provenance = "projection" in snapshot ? (snapshot as ProjectedSnapshot).projection.dependencyProvenance : null;
 
   for (const n of snapshot.networks) {
     nodes.push({
       group: "nodes",
-      data: { id: nodeId("network", n.id), label: `${n.name}\n${n.marking}`, entity: "network", entityId: n.id },
+      data: {
+        id: nodeId("network", n.id),
+        label: `${n.name}\n${n.marking}`,
+        entity: "network",
+        entityId: n.id,
+        origin: { kind: "baseline", entity: "network", entityId: n.id },
+      },
       classes: n.kind === "external" ? "network external" : "network",
     });
   }
   for (const s of snapshot.services) {
     networkOf.set(s.id, s.networkId);
+    const service = serviceOrigin(snapshot, s.id);
+    const origin: GraphOrigin =
+      service.kind === "planned"
+        ? { kind: "planned", entity: "service", scenarioId: service.scenarioId, changeId: service.changeId }
+        : { kind: "baseline", entity: "service", entityId: service.serviceId };
     nodes.push({
       group: "nodes",
       data: {
@@ -73,6 +91,7 @@ export function buildGraph(snapshot: Snapshot): Graph {
         label: s.name,
         entity: "service",
         entityId: s.id,
+        origin,
         parent: nodeId("network", s.networkId),
       },
       classes: s.foundational ? "service foundational" : "service",
@@ -81,7 +100,13 @@ export function buildGraph(snapshot: Snapshot): Graph {
   for (const c of snapshot.cds) {
     nodes.push({
       group: "nodes",
-      data: { id: nodeId("cds", c.id), label: c.name, entity: "cds", entityId: c.id },
+      data: {
+        id: nodeId("cds", c.id),
+        label: c.name,
+        entity: "cds",
+        entityId: c.id,
+        origin: { kind: "baseline", entity: "cds", entityId: c.id },
+      },
       classes: "cds",
     });
   }
@@ -116,11 +141,13 @@ export function buildGraph(snapshot: Snapshot): Graph {
     const from = networkOf.get(d.consumerServiceId);
     const to = networkOf.get(d.providerServiceId);
     const kind: EdgeKind =
-      from === to
-        ? "local"
-        : (from !== undefined && external.has(from)) || (to !== undefined && external.has(to))
-          ? "external"
-          : "cross-domain";
+      provenance?.get(dependency)?.status === "unresolved"
+        ? "unresolved"
+        : from === to
+          ? "local"
+          : (from !== undefined && external.has(from)) || (to !== undefined && external.has(to))
+            ? "external"
+            : "cross-domain";
     edges.push(edge(`dep-${dependency}`, source, target, kind));
   }
   return { nodes, edges };
@@ -144,11 +171,13 @@ export function summarize(
   for (const e of graph.edges) byDependency.set(e.data.dependency, e.data);
   const deps = [...byDependency.values()];
   const of = (kind: EdgeKind) => String(deps.filter((d) => d.kind === kind).length);
+  const unresolved = deps.filter((d) => d.kind === "unresolved").length;
   const hidden = view.foundationalHidden ? deps.filter((d) => d.foundational).length : 0;
   return (
     `${count(entities("network"), "network")}, ${count(entities("service"), "service")}, ` +
     `${String(entities("cds"))} CDS. ${count(deps.length, "dependency", "dependencies")}: ${of("local")} local, ` +
     `${of("via-cds")} via a CDS, ${of("cross-domain")} cross-domain without a CDS, ${of("external")} to an external network.` +
+    (unresolved === 0 ? "" : ` ${count(unresolved, "unresolved former-CDS route")}.`) +
     (hidden === 0
       ? ""
       : hidden === 1

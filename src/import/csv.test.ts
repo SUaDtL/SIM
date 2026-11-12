@@ -28,6 +28,31 @@ describe("parseCsv", () => {
     expect(() => parseCsv('a,b\n1,"open\n2,3\n')).toThrow(new CsvError("A quoted value is never closed.", 2));
   });
 
+  it("preserves supported quotes and post-quote whitespace but rejects quoted suffix text", () => {
+    expect(fields('name,value\na"b,"quoted" \t,tail\n')).toEqual([
+      ["name", "value"],
+      ['a"b', "quoted \t", "tail"],
+    ]);
+    expect(fields('name,value\rfirst,"quoted" \t\r')).toEqual([
+      ["name", "value"],
+      ["first", "quoted \t"],
+    ]);
+    expect(fields('name,value\rfirst,"quoted" \t')).toEqual([
+      ["name", "value"],
+      ["first", "quoted \t"],
+    ]);
+    expect(() => parseCsv('name,value\nfirst,"quoted"junk\n')).toThrow(
+      new CsvError("Unexpected text after a quoted value.", 2),
+    );
+    expect(() => parseCsv('name,value\nfirst,"quoted" \t junk\n')).toThrow(
+      new CsvError("Unexpected text after a quoted value.", 2),
+    );
+  });
+
+  it("counts a lone carriage return inside quotes as one spreadsheet line", () => {
+    expect(parseCsv('name,value\rfirst,"line one\rline two"\rsecond,ok').map((r) => r.row)).toEqual([1, 2, 4]);
+  });
+
   it("refuses over-long values", () => {
     expect(() => parseCsv(`a\n${"x".repeat(MAX_FIELD_LENGTH + 1)}\n`)).toThrow(/longer than/);
   });

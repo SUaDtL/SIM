@@ -1,10 +1,18 @@
 import type { Database } from "sql.js";
-import { createDataset, DatasetError, datasetName, exportDataset, openDataset } from "./db/dataset";
+import {
+  createDataset,
+  DatasetError,
+  datasetName,
+  exportDataset,
+  inspectDatasetSemantics,
+  openDataset,
+} from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
 import { DEMO_NAME, populateDemo } from "./demo/demo";
 import { ValidationError } from "./domain/errors";
-import { describeAdded, runImport } from "./import/engine";
+import { commitPreparedImport, describeAdded, prepareImport } from "./import/engine";
 import { Repository } from "./domain/repository";
+import { DatasetSession, type SaveResult } from "./session/dataset-session";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
@@ -26,17 +34,24 @@ import { createWorkspace, type Workspace } from "./ui/workspace";
 interface State {
   db: Database;
   repo: Repository;
+  session: DatasetSession;
   name: string;
   fileName: string | null;
   handle: FileHandle | null;
-  saved: boolean;
 }
 
 let state: State;
 let workspace: Workspace;
+let workspaceReady = false;
 let unsubscribe = (): void => undefined;
+let unsubscribeProjectionFailures = (): void => undefined;
+let viewRefreshFailed = false;
+let replacementRequest = 0;
+let saveIntent = false;
 const status = document.createElement("p");
 status.dataset["testid"] = "dataset-status";
+const draftStatus = document.createElement("p");
+draftStatus.dataset["testid"] = "draft-status";
 const message = document.createElement("p");
 message.dataset["testid"] = "dataset-message";
 message.setAttribute("role", "status");
@@ -45,8 +60,10 @@ const undoButton = button("Undo", () => travel("undo"));
 const redoButton = button("Redo", () => travel("redo"));
 
 function render(): void {
-  const where = state.fileName ?? "not saved yet";
-  status.textContent = `${state.name} | ${where} | ${state.saved ? "Saved" : "Unsaved"}`;
+  if (!workspaceReady) return;
+  const where = state.session.fileName() ?? "not saved yet";
+  status.textContent = `${state.name} | ${where} | ${state.session.fileStatus()}`;
+  draftStatus.textContent = workspace.hasPendingDraft() ? workspace.pendingDraftLabel() : "";
   banner.update(state.repo.datasetMarking(), state.repo.datasetCaveat());
   undoButton.disabled = !state.repo.canUndo();
   redoButton.disabled = !state.repo.canRedo();
@@ -57,51 +74,151 @@ function render(): void {
  * it was opened, created or saved. Laying out an opened dataset is not an edit, so it does not count.
  */
 function hasUnsavedEdits(): boolean {
-  return !state.saved && (state.repo.canUndo() || state.repo.canRedo());
+  return state.session.hasDiscardWorthyWork() || workspace.hasPendingDraft();
 }
 
-/** Ask before replacing a dataset with unsaved edits. */
-function discardOk(): boolean {
-  return !hasUnsavedEdits() || window.confirm(`Discard unsaved changes to ${state.name}?`);
-}
-
-function travel(direction: "undo" | "redo"): Promise<void> {
+async function travel(direction: "undo" | "redo"): Promise<void> {
+  if (!(await workspace.resolveActiveDraft("history"))) return;
   const done = direction === "undo" ? state.repo.undo() : state.repo.redo();
   if (done) workspace.historyChanged();
-  return Promise.resolve();
+  render();
 }
 
 function show(text: string): void {
-  message.textContent = text;
+  message.textContent =
+    text +
+    (viewRefreshFailed
+      ? `${text ? " " : ""}The change succeeded, but part of the view did not refresh. Try selecting another item or reopening the file.`
+      : "");
 }
 
 /** Every successful write through the repository leaves the dataset with unsaved changes. */
 function track(repo: Repository): void {
   unsubscribe();
+  unsubscribeProjectionFailures();
+  viewRefreshFailed = false;
   unsubscribe = repo.subscribe(() => {
-    state.saved = false;
+    viewRefreshFailed = false;
     render();
+  });
+  unsubscribeProjectionFailures = repo.subscribeProjectionFailures(() => {
+    viewRefreshFailed = true;
+    show("");
   });
 }
 
-function replace(db: Database, fileName: string | null, handle: FileHandle | null, saved: boolean): void {
-  // Closing the previous dataset is safe: a refused file never reaches this point.
-  unsubscribe();
-  state.db.close();
+function replace(db: Database, fileName: string | null, handle: FileHandle | null, opened: boolean): void {
   const repo = new Repository(db);
-  state = { db, repo, name: datasetName(db), fileName, handle, saved };
-  track(repo);
-  workspace.setRepository(repo);
+  const session = new DatasetSession(db, repo, { fileName, opened });
+  const old = state;
+  try {
+    state = { db, repo, session, name: datasetName(db), fileName, handle };
+    track(repo);
+    workspace.setRepository(repo);
+  } catch (error) {
+    state = old;
+    track(old.repo);
+    workspace.setRepository(old.repo);
+    session.dispose();
+    throw error;
+  }
+  old.session.dispose();
+  old.db.close();
   show("");
   render();
 }
 
+type ReplacementChoice = "save" | "discard" | "stay";
+
+function chooseReplacement(): Promise<ReplacementChoice> {
+  return new Promise((resolve) => {
+    const dialog = document.createElement("dialog");
+    dialog.setAttribute("aria-label", "Unsaved changes");
+    const heading = document.createElement("p");
+    heading.textContent = `Save changes to ${state.name} before continuing?`;
+    dialog.append(heading);
+    const choices: readonly [string, ReplacementChoice][] = [
+      ["Save and continue", "save"],
+      ["Discard all and continue", "discard"],
+      ["Stay", "stay"],
+    ];
+    const settle = (choice: ReplacementChoice): void => {
+      dialog.close();
+      dialog.remove();
+      resolve(choice);
+    };
+    for (const [label, choice] of choices) {
+      const control = document.createElement("button");
+      control.type = "button";
+      control.textContent = label;
+      control.addEventListener("click", () => {
+        settle(choice);
+      });
+      dialog.append(control);
+    }
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      settle("stay");
+    });
+    document.body.append(dialog);
+    dialog.showModal();
+  });
+}
+
+async function resolveReplacement(owner: State): Promise<boolean> {
+  while (state === owner && hasUnsavedEdits()) {
+    const contentBefore = owner.session.currentContent();
+    const draftBefore = workspace.activeDraftToken();
+    const choice = await chooseReplacement();
+    if (state !== owner || choice === "stay") return false;
+    if (choice === "discard") {
+      // Another edit during the decision requires a fresh choice.
+      if (owner.session.currentContent() !== contentBefore || workspace.activeDraftToken() !== draftBefore) continue;
+      return true;
+    }
+    const result = await onSave(false);
+    if (result === "saved") continue;
+    if (result === "download-requested") {
+      const dispatchedContent = owner.session.currentContent();
+      if (!window.confirm("Did you retain the downloaded dataset file?")) return false;
+      if (owner.session.currentContent() === dispatchedContent && !workspace.hasPendingDraft()) return true;
+    }
+    return false;
+  }
+  return state === owner;
+}
+
+async function installCandidate(
+  db: Database,
+  request: number,
+  fileName: string | null,
+  handle: FileHandle | null,
+  opened: boolean,
+): Promise<void> {
+  const owner = state;
+  try {
+    if (
+      request !== replacementRequest ||
+      !(await resolveReplacement(owner)) ||
+      request !== replacementRequest ||
+      state !== owner
+    ) {
+      db.close();
+      return;
+    }
+    replace(db, fileName, handle, opened);
+  } catch (error) {
+    db.close();
+    show(error instanceof DatasetError ? error.message : "Could not switch datasets.");
+  }
+}
+
 async function onNew(): Promise<void> {
-  if (!discardOk()) return;
+  const request = ++replacementRequest;
   const name = window.prompt("Name for the new dataset", "Untitled dataset");
   if (name === null) return;
   try {
-    replace(await createDataset(name), null, null, false);
+    await installCandidate(await createDataset(name), request, null, null, false);
   } catch (error) {
     show(error instanceof DatasetError ? error.message : "Could not create the dataset.");
   }
@@ -126,28 +243,43 @@ function onCaveat(): Promise<void> {
 
 /** Open the fictional demo enterprise as a new, unsaved dataset (WORK-014). */
 async function onDemo(): Promise<void> {
-  if (!discardOk()) return;
-  const db = await createDataset(DEMO_NAME);
-  populateDemo(new Repository(db));
-  // Opening it gives a fresh repository, so building the demo is not in the undo history.
-  replace(db, null, null, false);
+  const request = ++replacementRequest;
+  try {
+    const db = await createDataset(DEMO_NAME);
+    try {
+      populateDemo(new Repository(db));
+    } catch (error) {
+      db.close();
+      throw error;
+    }
+    // Opening it gives a fresh repository, so building the demo is not in the undo history.
+    await installCandidate(db, request, null, null, false);
+  } catch {
+    show("Could not prepare the demo dataset.");
+  }
 }
 
 /**
  * Import CSV files (WORK-011). The preview runs the import on a throwaway copy of the dataset, so it
  * shows exactly what Import will do; Import is then one undo step on the dataset itself.
  */
-function onImport(): Promise<void> {
+async function onImport(): Promise<void> {
+  if (!(await workspace.resolveActiveDraft("import"))) return;
+  const owner = state;
   openImportDialog({
     async preview(files, options) {
-      const copy = await openDataset(exportDataset(state.db));
+      const copy = await openDataset(exportDataset(owner.db));
       try {
-        return runImport(new Repository(copy), files, options);
+        return prepareImport(new Repository(copy), files, options);
       } finally {
         copy.close();
       }
     },
-    commit: (files, options) => runImport(state.repo, files, options),
+    commit: (prepared) => {
+      if (state.session !== owner.session) throw new Error("The dataset changed; choose the CSV files again.");
+      return commitPreparedImport(owner.repo, prepared);
+    },
+    isCurrentSession: () => state.session === owner.session,
     done(report, options) {
       const left = report.rejected.length + (options.includeFlagged ? 0 : report.flagged.length);
       show(
@@ -157,43 +289,128 @@ function onImport(): Promise<void> {
     },
     download: downloadBlob,
   });
-  return Promise.resolve();
 }
 
 async function onOpen(): Promise<void> {
-  if (!discardOk()) return;
+  const request = ++replacementRequest;
   try {
     const picked = await pickDatasetFile();
     if (!picked) return;
-    replace(await openDataset(picked.bytes), picked.fileName, picked.handle, true);
+    const candidate = await openDataset(picked.bytes);
+    const issues = inspectDatasetSemantics(candidate).filter((issue) => issue.severity === "legacy");
+    await installCandidate(candidate, request, picked.fileName, picked.handle, true);
+    if (state.db === candidate && issues.length > 0) {
+      const labels: Record<string, string> = {
+        ORG_CYCLE: "organization cycle",
+        CDS_ARITY: "CDS network count",
+        CDS_ROUTE: "CDS route",
+        SCENARIO_TARGET: "scenario target",
+        SCENARIO_CHAIN: "scenario chain",
+      };
+      const preview = issues.slice(0, 3).map((issue) => `${labels[issue.code] ?? issue.code}: ${issue.witness}`);
+      show(
+        `Opened with ${String(issues.length)} existing data issue${issues.length === 1 ? "" : "s"}. ${preview.join("; ")}${issues.length > 3 ? "; more issues remain" : ""}. Review and repair affected records; the file was not rewritten.`,
+      );
+    }
   } catch (error) {
     show(error instanceof DatasetError ? error.message : "Could not open the file.");
   }
 }
 
-async function onSave(saveAs: boolean): Promise<void> {
+async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refused"> {
+  if (saveIntent || state.session.isSaving()) return "busy";
+  saveIntent = true;
+  const owner = state;
+  const revision = owner.repo.currentRevision();
+  const draftToken = workspace.activeDraftToken();
+  let draftApplied = false;
+  const failureMessage = (): string =>
+    draftApplied
+      ? "Changes applied. Could not save the file; try Save file again."
+      : "Could not save the dataset; try Save file again.";
   try {
-    const bytes = exportDataset(state.db);
+    let handle: FileHandle | null = null;
     if (supportsSaveInPlace()) {
-      const handle = (saveAs ? null : state.handle) ?? (await pickSaveTarget(suggestedFileName(state.name)));
-      if (!handle) return; // picker cancelled
-      await writeToHandle(handle, bytes);
-      state.handle = handle;
-      state.fileName = handle.name;
+      handle = (saveAs ? null : owner.handle) ?? (await pickSaveTarget(suggestedFileName(owner.name)));
+      if (!handle) {
+        if (state === owner) show("File save cancelled.");
+        return "cancelled";
+      }
+      if (state !== owner || owner.repo.currentRevision() !== revision || workspace.activeDraftToken() !== draftToken) {
+        if (state === owner) show("The dataset changed while choosing a file. Try Save file again.");
+        return "refused";
+      }
+      const hadDraft = workspace.hasPendingDraft();
+      if (!workspace.applyActiveDraft()) return "refused";
+      draftApplied = hadDraft;
+      if (!(await settleSavePlacement(owner))) return "refused";
+      const selectedHandle = handle;
+      const pending = owner.session.saveNative(selectedHandle, (bytes) => writeToHandle(selectedHandle, bytes));
+      render();
+      const result = await pending;
+      if (state !== owner) return "superseded";
+      if (result === "saved") owner.handle = handle;
+      show(
+        result === "cancelled-after-write"
+          ? draftApplied
+            ? "Changes applied. File save cancelled; changes remain unsaved and undoable."
+            : "File save cancelled; changes remain unsaved."
+          : result === "failed"
+            ? failureMessage()
+            : "",
+      );
+      render();
+      return result;
     } else {
-      const fileName = (saveAs ? null : state.fileName) ?? suggestedFileName(state.name);
-      downloadDataset(bytes, fileName);
-      state.fileName = fileName;
+      const hadDraft = workspace.hasPendingDraft();
+      if (!workspace.applyActiveDraft()) return "refused";
+      draftApplied = hadDraft;
+      if (!(await settleSavePlacement(owner))) return "refused";
+      const fileName = (saveAs ? null : owner.session.fileName()) ?? suggestedFileName(owner.name);
+      const result = owner.session.saveDownload(fileName, downloadDataset);
+      show(
+        result === "download-requested"
+          ? "Download requested. Confirm that you retained the file before discarding this dataset."
+          : "Could not request the download.",
+      );
+      render();
+      return result;
     }
-    state.saved = true;
-    show("");
-    render();
   } catch {
-    show("Could not save the dataset.");
+    if (state === owner) {
+      owner.session.failSave();
+      show(failureMessage());
+      render();
+    }
+    return "failed";
+  } finally {
+    saveIntent = false;
   }
 }
 
-function button(label: string, action: () => Promise<void>): HTMLButtonElement {
+/** Wait for this Apply's queued placement, refusing a later user edit during the wait. */
+async function settleSavePlacement(owner: State): Promise<boolean> {
+  const draftToken = workspace.activeDraftToken();
+  const observed = { laterEdit: false };
+  const unsubscribeChanges = owner.repo.subscribe((change) => {
+    if (change.entity !== "position" || (change.history !== "merge" && change.history !== "none")) {
+      observed.laterEdit = true;
+    }
+  });
+  try {
+    await workspace.settlePendingPlacement();
+  } finally {
+    unsubscribeChanges();
+  }
+  if (state !== owner) return false;
+  if (observed.laterEdit || workspace.activeDraftToken() !== draftToken) {
+    show("The dataset changed while preparing the file. Try Save file again.");
+    return false;
+  }
+  return true;
+}
+
+function button(label: string, action: () => Promise<unknown>): HTMLButtonElement {
   const b = document.createElement("button");
   b.type = "button";
   b.textContent = label;
@@ -209,9 +426,23 @@ async function boot(): Promise<void> {
   configureSqliteWasm(dataUrlToBytes(wasmUrl));
   const db = await createDataset("Untitled dataset");
   const repo = new Repository(db);
-  state = { db, repo, name: datasetName(db), fileName: null, handle: null, saved: false };
+  state = {
+    db,
+    repo,
+    session: new DatasetSession(db, repo, { fileName: null, opened: false }),
+    name: datasetName(db),
+    fileName: null,
+    handle: null,
+  };
   track(repo);
-  workspace = createWorkspace(repo);
+  workspace = createWorkspace(
+    repo,
+    () => {
+      if (workspaceReady) render();
+    },
+    () => state.session.fileStatus(false) !== "Saved",
+  );
+  workspaceReady = true;
 
   const title = document.createElement("h1");
   title.textContent = "SIM - Service Integration Map";
@@ -224,7 +455,7 @@ async function boot(): Promise<void> {
     button("Open", onOpen),
     button("Open demo", onDemo),
     button("Import CSV", onImport),
-    button("Save", () => onSave(false)),
+    button("Save file", () => onSave(false)),
     button("Save As", () => onSave(true)),
     button("Banner caveat", onCaveat),
     undoButton,
@@ -232,7 +463,7 @@ async function boot(): Promise<void> {
   );
   const header = document.createElement("header");
   header.className = "app-header";
-  header.append(title, toolbar, status, version, message);
+  header.append(title, toolbar, status, draftStatus, version, message);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
   // Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) undo and redo dataset edits, except while typing in a field,
   // where the browser's own text undo applies.

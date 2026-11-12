@@ -1,6 +1,7 @@
 import type { Database, SqlValue } from "sql.js";
 import { datasetName } from "../db/dataset";
 import { highestMarking, isMarking, isValidCaveat, type Marking, normalizeCaveat } from "../db/markings";
+import { applyScenario, serviceOrigin } from "../scenario/scenario";
 import { SensitiveInputWarning, ValidationError } from "./errors";
 import type {
   Application,
@@ -33,7 +34,12 @@ import type {
 import { checkSensitive, cleanName, cleanText } from "./validate";
 
 type Row = Record<string, SqlValue>;
-type Listener = () => void;
+export interface RepositoryChange {
+  readonly revision: number;
+  readonly entity: string;
+  readonly history?: History;
+}
+type Listener = (change: RepositoryChange) => void;
 
 const POSITIONED = ["network", "service", "cds"] as const;
 /** Matches the CHECK in migration 0002. */
@@ -58,6 +64,39 @@ interface Step {
   readonly to: number;
 }
 
+export interface ServiceEditBase {
+  readonly service: Service;
+  readonly support: readonly SupportAssignment[];
+  readonly consumerOrgIds: readonly number[];
+  readonly dependencies: readonly Dependency[];
+}
+
+export interface ServiceDraftInput {
+  readonly fields: ServiceInput;
+  readonly support: readonly { readonly tier: Tier; readonly orgId: number; readonly notes?: string | null }[];
+  readonly consumerOrgIds: readonly number[];
+  readonly dependencies: readonly { readonly providerServiceId: number; readonly viaCdsId?: number | null }[];
+}
+
+export type ServiceDraftResult =
+  | { readonly status: "committed" | "unchanged"; readonly service: Service; readonly revision: number }
+  | { readonly status: "conflict"; readonly message: string; readonly revision: number }
+  | { readonly status: "refused"; readonly error: ValidationError; readonly revision: number }
+  | { readonly status: "needs-confirmation"; readonly warning: SensitiveInputWarning; readonly revision: number };
+
+export type DeleteEntityType = "network" | "service" | "organization" | "application" | "category" | "cds" | "scenario";
+export interface DeletePlan {
+  readonly details: readonly string[];
+  readonly blocked: string | null;
+  readonly signature: string;
+}
+export interface ScenarioNameCollision {
+  readonly key: string;
+  readonly message: string;
+  readonly networkId: number;
+  readonly serviceIds: readonly [number, number];
+}
+
 /**
  * The only write path to a SIM dataset (coding standard CONV-002). Every write is validated,
  * runs in a transaction, and notifies subscribers only when it succeeds.
@@ -68,6 +107,10 @@ interface Step {
  */
 export class Repository {
   private readonly listeners = new Set<Listener>();
+  private readonly projectionFailureListeners = new Set<(errors: readonly unknown[]) => void>();
+  private readonly notificationQueue: RepositoryChange[] = [];
+  private notifying = false;
+  private revision = 0;
   private readonly undoSteps: Step[] = [];
   private readonly redoSteps: Step[] = [];
   /** Whether the latest undo step is the write that just finished, so a merge may extend it. */
@@ -76,6 +119,8 @@ export class Repository {
   private grouping = 0;
   private groupStepStarted = false;
   private groupWrote = false;
+  private atomicRunning = false;
+  private savepointSerial = 0;
 
   constructor(private readonly db: Database) {
     this.installUndo();
@@ -84,6 +129,200 @@ export class Repository {
   subscribe(listener: Listener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
+  }
+
+  /** Show the concrete reference effects of deleting the selected record. Map positions are irrelevant. */
+  planDelete(type: DeleteEntityType, id: number): DeletePlan {
+    const view = this.snapshot();
+    const details: string[] = [];
+    const effects: unknown[] = [type, id];
+    let blocked: string | null = null;
+    const add = (label: string, rows: readonly unknown[]): void => {
+      if (rows.length === 0) return;
+      details.push(`${String(rows.length)} ${label}`);
+      effects.push([label, rows]);
+    };
+    const selected = {
+      network: view.networks,
+      service: view.services,
+      organization: view.organizations,
+      application: view.applications,
+      category: view.categories,
+      cds: view.cds,
+      scenario: view.scenarios,
+    }[type].find((item) => item.id === id);
+    if (!selected) throw new ValidationError("NOT_FOUND", "delete", "The selected record no longer exists.");
+    effects.push(selected.name);
+    switch (type) {
+      case "network": {
+        const services = view.services.filter((item) => item.networkId === id).map((item) => [item.id, item.name]);
+        const joins = view.cds.filter((item) => item.networkIds.includes(id)).map((item) => [item.id, item.name]);
+        add("services using this network block deletion", services);
+        add("CDS joins using this network block deletion", joins);
+        add(
+          "scenario changes removed with this network",
+          view.scenarioChanges.filter((item) => "networkId" in item && item.networkId === id).map((item) => item.id),
+        );
+        if (services.length > 0 || joins.length > 0)
+          blocked = "This network is still in use. Remove its services and CDS joins first.";
+        break;
+      }
+      case "service":
+        add(
+          "support assignments removed",
+          view.support.filter((item) => item.serviceId === id).map((item) => [item.tier, item.orgId, item.notes]),
+        );
+        add(
+          "consumer links removed",
+          view.consumption.filter((item) => item.serviceId === id).map((item) => item.orgId),
+        );
+        add(
+          "dependency links removed",
+          view.dependencies
+            .filter((item) => item.consumerServiceId === id || item.providerServiceId === id)
+            .map((item) => [item.consumerServiceId, item.providerServiceId, item.viaCdsId]),
+        );
+        add(
+          "scenario changes removed",
+          view.scenarioChanges
+            .filter(
+              (item) =>
+                ("serviceId" in item && item.serviceId === id) ||
+                ("intoServiceId" in item && item.intoServiceId === id),
+            )
+            .map((item) => item.id),
+        );
+        break;
+      case "organization":
+        add(
+          "child organizations detached",
+          view.organizations.filter((item) => item.parentId === id).map((item) => item.id),
+        );
+        add(
+          "service providers cleared",
+          view.services.filter((item) => item.providerOrgId === id).map((item) => item.id),
+        );
+        add(
+          "support assignments removed",
+          view.support.filter((item) => item.orgId === id).map((item) => [item.serviceId, item.tier]),
+        );
+        add(
+          "consumer links removed",
+          view.consumption.filter((item) => item.orgId === id).map((item) => item.serviceId),
+        );
+        add(
+          "scenario provider references cleared",
+          view.scenarioChanges
+            .filter((item) => "providerOrgId" in item && item.providerOrgId === id)
+            .map((item) => item.id),
+        );
+        break;
+      case "application":
+        add(
+          "service application references cleared",
+          view.services.filter((item) => item.applicationId === id).map((item) => item.id),
+        );
+        break;
+      case "category":
+        add(
+          "service category references cleared",
+          view.services.filter((item) => item.categoryId === id).map((item) => item.id),
+        );
+        break;
+      case "cds":
+        add("network joins removed", view.cds.find((item) => item.id === id)?.networkIds ?? []);
+        add(
+          "dependency CDS references cleared; connectivity becomes unverified",
+          view.dependencies
+            .filter((item) => item.viaCdsId === id)
+            .map((item) => [item.consumerServiceId, item.providerServiceId]),
+        );
+        break;
+      case "scenario":
+        add(
+          "scenario changes removed",
+          view.scenarioChanges.filter((item) => item.scenarioId === id).map((item) => item.id),
+        );
+        break;
+    }
+    if (details.length === 0) details.push("No related records will change.");
+    return { details, blocked, signature: JSON.stringify(effects) };
+  }
+
+  /** Recheck the consequence plan immediately before a confirmed delete. */
+  deleteWithPlan(type: DeleteEntityType, id: number, signature: string): void {
+    const current = this.planDelete(type, id);
+    if (current.signature !== signature) {
+      throw new ValidationError(
+        "STALE",
+        "delete",
+        "The deletion consequences changed. Review them again before confirming.",
+      );
+    }
+    if (current.blocked) throw new ValidationError("IN_USE", "delete", current.blocked);
+    switch (type) {
+      case "network":
+        this.deleteNetwork(id);
+        break;
+      case "service":
+        this.deleteService(id);
+        break;
+      case "organization":
+        this.deleteOrganization(id);
+        break;
+      case "application":
+        this.deleteApplication(id);
+        break;
+      case "category":
+        this.deleteCategory(id);
+        break;
+      case "cds":
+        this.deleteCds(id);
+        break;
+      case "scenario":
+        this.deleteScenario(id);
+        break;
+    }
+  }
+
+  /** Report presentation failures after a committed write without changing its outcome. */
+  subscribeProjectionFailures(listener: (errors: readonly unknown[]) => void): () => void {
+    this.projectionFailureListeners.add(listener);
+    return () => this.projectionFailureListeners.delete(listener);
+  }
+
+  currentRevision(): number {
+    return this.revision;
+  }
+
+  private notify(entity: string, history: History = "own"): void {
+    this.notificationQueue.push({ revision: ++this.revision, entity, history });
+    if (this.notifying) return;
+    this.notifying = true;
+    try {
+      for (const change of this.notificationQueue) {
+        const errors: unknown[] = [];
+        for (const listener of this.listeners) {
+          try {
+            listener(change);
+          } catch (error) {
+            errors.push(error);
+          }
+        }
+        if (errors.length > 0) {
+          for (const listener of this.projectionFailureListeners) {
+            try {
+              listener(errors);
+            } catch {
+              // Reporting failures cannot change the committed data outcome.
+            }
+          }
+        }
+      }
+    } finally {
+      this.notificationQueue.length = 0;
+      this.notifying = false;
+    }
   }
 
   // ---- networks ----
@@ -106,7 +345,7 @@ export class Repository {
   }
 
   updateNetwork(id: number, input: NetworkInput, options: WriteOptions = {}): Network {
-    const v = this.network(input, options);
+    const v = this.network(input, options, this.getNetwork(id));
     return this.write(() => {
       this.update(
         "UPDATE network SET name = ?, kind = ?, marking = ?, description = ? WHERE id = ?",
@@ -135,12 +374,18 @@ export class Repository {
     }, "network");
   }
 
-  private network(input: NetworkInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["network"] ?? "name");
+  private network(input: NetworkInput, options: WriteOptions, current?: Network): SqlValue[] {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["network"] ?? "name");
     const kind = requireKind(input.kind);
     const marking = requireMarking(input.marking);
-    const description = cleanText(input.description);
-    checkSensitive({ "network name": name, description }, options.confirmSensitive === true);
+    const description = unchangedText(input.description, current?.description);
+    checkSensitive(
+      {
+        "network name": name === current?.name ? null : name,
+        description: description === current?.description ? null : description,
+      },
+      options.confirmSensitive === true,
+    );
     return [name, kind, marking, description];
   }
 
@@ -178,16 +423,26 @@ export class Repository {
   }
 
   private organization(id: number | null, input: OrganizationInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["organization"] ?? "name");
+    const current = id === null ? undefined : this.getOrganization(id);
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["organization"] ?? "name");
     const parentId = input.parentId ?? null;
-    if (parentId !== null) {
+    if (parentId !== null && parentId !== current?.parentId) {
       this.requireExists("organization", parentId, "parent");
       // Walk up from the proposed parent; reaching this organization would close a loop.
+      const visited = new Set<number>();
       for (let at: number | null = parentId; at !== null; at = this.getOrganization(at)?.parentId ?? null) {
         if (at === id) throw new ValidationError("CYCLE", "parent", "An organization cannot be nested under itself.");
+        if (visited.has(at)) {
+          throw new ValidationError(
+            "CYCLE",
+            "parent",
+            "The selected parent already belongs to a cycle; repair it first.",
+          );
+        }
+        visited.add(at);
       }
     }
-    checkSensitive({ "organization name": name }, options.confirmSensitive === true);
+    checkSensitive({ "organization name": name === current?.name ? null : name }, options.confirmSensitive === true);
     return [name, parentId];
   }
 
@@ -211,7 +466,7 @@ export class Repository {
   }
 
   updateCategory(id: number, input: CategoryInput, options: WriteOptions = {}): Category {
-    const v = this.category(input, options);
+    const v = this.category(input, options, this.getCategory(id));
     return this.write(() => {
       this.update("UPDATE category SET name = ?, color = ? WHERE id = ?", [...v, id], "category");
       return this.mustGet(this.getCategory(id));
@@ -224,13 +479,13 @@ export class Repository {
     }, "category");
   }
 
-  private category(input: CategoryInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["category"] ?? "name");
-    const color = cleanText(input.color);
-    if (color !== null && !/^#[0-9a-f]{6}$/i.test(color)) {
+  private category(input: CategoryInput, options: WriteOptions, current?: Category): SqlValue[] {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["category"] ?? "name");
+    const color = unchangedText(input.color, current?.color);
+    if (color !== current?.color && color !== null && !/^#[0-9a-f]{6}$/i.test(color)) {
       throw new ValidationError("INVALID_VALUE", "color", "A color must look like #1a2b3c.");
     }
-    checkSensitive({ "category name": name }, options.confirmSensitive === true);
+    checkSensitive({ "category name": name === current?.name ? null : name }, options.confirmSensitive === true);
     return [name, color];
   }
 
@@ -254,7 +509,7 @@ export class Repository {
   }
 
   updateApplication(id: number, input: ApplicationInput, options: WriteOptions = {}): Application {
-    const v = this.application(input, options);
+    const v = this.application(input, options, this.getApplication(id));
     return this.write(() => {
       this.update(
         "UPDATE application SET name = ?, vendor = ?, description = ? WHERE id = ?",
@@ -271,11 +526,18 @@ export class Repository {
     }, "application");
   }
 
-  private application(input: ApplicationInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["application"] ?? "name");
-    const vendor = cleanText(input.vendor);
-    const description = cleanText(input.description);
-    checkSensitive({ "application name": name, vendor, description }, options.confirmSensitive === true);
+  private application(input: ApplicationInput, options: WriteOptions, current?: Application): SqlValue[] {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["application"] ?? "name");
+    const vendor = unchangedText(input.vendor, current?.vendor);
+    const description = unchangedText(input.description, current?.description);
+    checkSensitive(
+      {
+        "application name": name === current?.name ? null : name,
+        vendor: vendor === current?.vendor ? null : vendor,
+        description: description === current?.description ? null : description,
+      },
+      options.confirmSensitive === true,
+    );
     return [name, vendor, description];
   }
 
@@ -288,6 +550,149 @@ export class Repository {
   getService(id: number): Service | undefined {
     const row = this.row("SELECT * FROM service WHERE id = ?", [id]);
     return row && toService(row);
+  }
+
+  /** The relevant edit base excludes map position and unrelated records. */
+  readServiceEditBase(id: number): ServiceEditBase {
+    const service = this.getService(id);
+    if (!service) throw new ValidationError("NOT_FOUND", "service", "The selected service no longer exists.");
+    return {
+      service,
+      support: this.listSupport(id),
+      consumerOrgIds: this.listConsumption()
+        .filter((row) => row.serviceId === id)
+        .map((row) => row.orgId)
+        .sort((a, b) => a - b),
+      dependencies: this.listDependencies().filter((row) => row.consumerServiceId === id),
+    };
+  }
+
+  /** Commit an existing service's visible fields and owned relationships as one command. */
+  applyServiceDraft(
+    id: number,
+    expected: ServiceEditBase,
+    draft: ServiceDraftInput,
+    options: WriteOptions = {},
+  ): ServiceDraftResult {
+    const revision = this.currentRevision();
+    const current = this.readServiceEditBase(id);
+    if (JSON.stringify(current) !== JSON.stringify(expected)) {
+      return {
+        status: "conflict",
+        message: "This service or one of its relationships changed. Review the current record before applying.",
+        revision,
+      };
+    }
+    try {
+      const merged: ServiceInput = {
+        name: draft.fields.name,
+        networkId: draft.fields.networkId,
+        marking: draft.fields.marking,
+        applicationId:
+          draft.fields.applicationId === undefined ? current.service.applicationId : draft.fields.applicationId,
+        categoryId: draft.fields.categoryId === undefined ? current.service.categoryId : draft.fields.categoryId,
+        providerOrgId:
+          draft.fields.providerOrgId === undefined ? current.service.providerOrgId : draft.fields.providerOrgId,
+        foundational:
+          draft.fields.foundational === undefined ? current.service.foundational : draft.fields.foundational,
+        description: draft.fields.description === undefined ? current.service.description : draft.fields.description,
+      };
+      // A readable legacy record may contain text that current create rules reject.
+      // The shared update validator preserves exact unchanged legacy values.
+      const values = this.service(merged, { confirmSensitive: true }, current.service);
+      checkSensitive(
+        {
+          "service name": values[0] === current.service.name ? null : String(values[0]),
+          description: values[7] === current.service.description ? null : values[7] === null ? null : String(values[7]),
+        },
+        options.confirmSensitive === true,
+      );
+      const support = draft.support.map((row) => {
+        requireTier(row.tier);
+        this.requireExists("organization", row.orgId, "organization");
+        const prior = current.support.find((old) => old.tier === row.tier);
+        const notes =
+          prior?.orgId === row.orgId && (row.notes === undefined || row.notes === prior.notes)
+            ? prior.notes
+            : cleanText(row.notes);
+        checkSensitive(
+          { notes: prior?.orgId === row.orgId && notes === prior.notes ? null : notes },
+          options.confirmSensitive === true,
+        );
+        return { serviceId: id, tier: row.tier, orgId: row.orgId, notes };
+      });
+      if (new Set(support.map((row) => row.tier)).size !== support.length) {
+        throw new ValidationError("DUPLICATE", "support", "Each support tier can be assigned once.");
+      }
+      support.sort((a, b) => a.tier - b.tier);
+      const consumerOrgIds = [...new Set(draft.consumerOrgIds)].sort((a, b) => a - b);
+      for (const orgId of consumerOrgIds) this.requireExists("organization", orgId, "consumer");
+      const dependencies = draft.dependencies.map((row) => {
+        if (row.providerServiceId === id)
+          throw new ValidationError("SELF_LINK", "dependency", "A service cannot depend on itself.");
+        this.requireExists("service", row.providerServiceId, "provider");
+        const viaCdsId = row.viaCdsId ?? null;
+        if (viaCdsId !== null) this.requireExists("cds", viaCdsId, "via");
+        return { consumerServiceId: id, providerServiceId: row.providerServiceId, viaCdsId };
+      });
+      if (new Set(dependencies.map((row) => row.providerServiceId)).size !== dependencies.length) {
+        throw new ValidationError("DUPLICATE", "dependency", "A service can depend on each provider only once.");
+      }
+      dependencies.sort((a, b) => a.providerServiceId - b.providerServiceId);
+      const nextService: Service = {
+        id,
+        name: String(values[0]),
+        networkId: Number(values[1]),
+        applicationId: values[2] === null ? null : Number(values[2]),
+        categoryId: values[3] === null ? null : Number(values[3]),
+        providerOrgId: values[4] === null ? null : Number(values[4]),
+        marking: merged.marking,
+        foundational: values[6] === 1,
+        description: values[7] === null ? null : String(values[7]),
+      };
+      const next = { service: nextService, support, consumerOrgIds, dependencies };
+      if (JSON.stringify(next) === JSON.stringify(current))
+        return { status: "unchanged", service: current.service, revision };
+
+      const brokenBefore = this.brokenRoutes();
+      const service = this.atomic(() => {
+        this.update(
+          `UPDATE service SET name = ?, network_id = ?, application_id = ?, category_id = ?, provider_org_id = ?,
+           marking = ?, foundational = ?, description = ?,
+           map_x = CASE WHEN network_id = ? THEN map_x END, map_y = CASE WHEN network_id = ? THEN map_y END
+           WHERE id = ?`,
+          [...values, merged.networkId, merged.networkId, id],
+          "service",
+        );
+        this.db.run("DELETE FROM support_assignment WHERE service_id = ?", [id]);
+        for (const row of support) {
+          this.db.run("INSERT INTO support_assignment (service_id, tier, org_id, notes) VALUES (?, ?, ?, ?)", [
+            id,
+            row.tier,
+            row.orgId,
+            row.notes,
+          ]);
+        }
+        this.db.run("DELETE FROM org_consumes WHERE service_id = ?", [id]);
+        for (const orgId of consumerOrgIds)
+          this.db.run("INSERT INTO org_consumes (org_id, service_id) VALUES (?, ?)", [orgId, id]);
+        this.db.run("DELETE FROM service_dependency WHERE consumer_service_id = ?", [id]);
+        for (const row of dependencies) {
+          this.db.run(
+            "INSERT INTO service_dependency (consumer_service_id, provider_service_id, via_cds_id) VALUES (?, ?, ?)",
+            [id, row.providerServiceId, row.viaCdsId],
+          );
+        }
+        this.requireNoNewInvalidRoutes(brokenBefore, "network");
+        return this.mustGet(this.getService(id));
+      });
+      return { status: "committed", service, revision: this.currentRevision() };
+    } catch (error) {
+      if (error instanceof SensitiveInputWarning) return { status: "needs-confirmation", warning: error, revision };
+      const translated = translate(error, "service");
+      if (translated instanceof ValidationError) return { status: "refused", error: translated, revision };
+      throw translated;
+    }
   }
 
   createService(input: ServiceInput, options: WriteOptions = {}): Service {
@@ -303,7 +708,8 @@ export class Repository {
   }
 
   updateService(id: number, input: ServiceInput, options: WriteOptions = {}): Service {
-    const v = this.service(input, options);
+    const v = this.service(input, options, this.getService(id));
+    const brokenBefore = this.brokenRoutes();
     return this.write(() => {
       this.update(
         `UPDATE service SET name = ?, network_id = ?, application_id = ?, category_id = ?, provider_org_id = ?,
@@ -314,7 +720,7 @@ export class Repository {
         [...v, input.networkId, input.networkId, id],
         "service",
       );
-      this.requireValidRoutes("network");
+      this.requireNoNewInvalidRoutes(brokenBefore, "network");
       return this.mustGet(this.getService(id));
     }, "service");
   }
@@ -325,15 +731,21 @@ export class Repository {
     }, "service");
   }
 
-  private service(input: ServiceInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["service"] ?? "name");
+  private service(input: ServiceInput, options: WriteOptions, current?: Service): SqlValue[] {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["service"] ?? "name");
     this.requireExists("network", input.networkId, "network");
     const applicationId = this.optionalRef("application", input.applicationId, "application");
     const categoryId = this.optionalRef("category", input.categoryId, "category");
     const providerOrgId = this.optionalRef("organization", input.providerOrgId, "provider");
     const marking = requireMarking(input.marking);
-    const description = cleanText(input.description);
-    checkSensitive({ "service name": name, description }, options.confirmSensitive === true);
+    const description = unchangedText(input.description, current?.description);
+    checkSensitive(
+      {
+        "service name": name === current?.name ? null : name,
+        description: description === current?.description ? null : description,
+      },
+      options.confirmSensitive === true,
+    );
     return [
       name,
       input.networkId,
@@ -367,11 +779,13 @@ export class Repository {
   }
 
   updateCds(id: number, input: CdsInput, options: WriteOptions = {}): Cds {
-    const { name, description, networkIds } = this.cds(input, options);
+    const current = this.getCds(id);
+    const { name, description, networkIds } = this.cds(input, options, current);
+    const brokenBefore = this.brokenRoutes();
     return this.write(() => {
       this.update("UPDATE cds SET name = ?, description = ? WHERE id = ?", [name, description, id], "CDS");
-      this.setCdsNetworks(id, networkIds);
-      this.requireValidRoutes("networks");
+      if (!current || !sameIds(networkIds, current.networkIds)) this.setCdsNetworks(id, networkIds);
+      this.requireNoNewInvalidRoutes(brokenBefore, "networks");
       return this.mustGet(this.getCds(id));
     }, "cds");
   }
@@ -382,15 +796,21 @@ export class Repository {
     }, "cds");
   }
 
-  private cds(input: CdsInput, options: WriteOptions) {
-    const name = cleanName(input.name, NAME_FIELD["cds"] ?? "name");
+  private cds(input: CdsInput, options: WriteOptions, current?: Cds) {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["cds"] ?? "name");
     const networkIds = [...new Set(input.networkIds)].sort((a, b) => a - b);
-    if (networkIds.length < 2) {
+    if (networkIds.length < 2 && (!current || !sameIds(networkIds, current.networkIds))) {
       throw new ValidationError("CDS_NETWORKS", "networks", "A CDS must join at least two networks.");
     }
     for (const n of networkIds) this.requireExists("network", n, "networks");
-    const description = cleanText(input.description);
-    checkSensitive({ "CDS name": name, description }, options.confirmSensitive === true);
+    const description = unchangedText(input.description, current?.description);
+    checkSensitive(
+      {
+        "CDS name": name === current?.name ? null : name,
+        description: description === current?.description ? null : description,
+      },
+      options.confirmSensitive === true,
+    );
     return { name, description, networkIds };
   }
 
@@ -535,7 +955,7 @@ export class Repository {
   }
 
   updateScenario(id: number, input: ScenarioInput, options: WriteOptions = {}): Scenario {
-    const v = this.scenario(input, options);
+    const v = this.scenario(input, options, this.getScenario(id));
     return this.write(() => {
       this.update("UPDATE scenario SET name = ?, description = ? WHERE id = ?", [...v, id], "scenario");
       return this.mustGet(this.getScenario(id));
@@ -548,10 +968,16 @@ export class Repository {
     }, "scenario");
   }
 
-  private scenario(input: ScenarioInput, options: WriteOptions): SqlValue[] {
-    const name = cleanName(input.name, NAME_FIELD["scenario"] ?? "name");
-    const description = cleanText(input.description);
-    checkSensitive({ "scenario name": name, description }, options.confirmSensitive === true);
+  private scenario(input: ScenarioInput, options: WriteOptions, current?: Scenario): SqlValue[] {
+    const name = unchangedName(input.name, current?.name, NAME_FIELD["scenario"] ?? "name");
+    const description = unchangedText(input.description, current?.description);
+    checkSensitive(
+      {
+        "scenario name": name === current?.name ? null : name,
+        description: description === current?.description ? null : description,
+      },
+      options.confirmSensitive === true,
+    );
     return [name, description];
   }
 
@@ -561,6 +987,40 @@ export class Repository {
     return this.rows(`SELECT * FROM scenario_change ${where} ORDER BY scenario_id, id`, params).map(toScenarioChange);
   }
 
+  /** Final projected duplicate names, including pre-existing issues caused by later As-Is edits. */
+  scenarioNameCollisions(scenarioId: number): ScenarioNameCollision[] {
+    const projection = applyScenario(this.snapshot(), scenarioId);
+    const buckets = new Map<string, Service[]>();
+    for (const service of projection.services) {
+      // SQLite NOCASE folds ASCII A-Z only; Unicode case distinctions remain intact.
+      const folded = service.name.replace(/[A-Z]/g, (letter) => letter.toLowerCase());
+      const key = JSON.stringify([service.networkId, folded]);
+      const bucket = buckets.get(key) ?? [];
+      bucket.push(service);
+      buckets.set(key, bucket);
+    }
+    const collisions: ScenarioNameCollision[] = [];
+    for (const bucket of buckets.values()) {
+      for (let left = 0; left < bucket.length; left++) {
+        for (let right = left + 1; right < bucket.length; right++) {
+          const a = bucket[left];
+          const b = bucket[right];
+          if (!a || !b) continue;
+          const origins = [serviceOrigin(projection, a.id), serviceOrigin(projection, b.id)]
+            .map((origin) => JSON.stringify(origin))
+            .sort();
+          collisions.push({
+            key: JSON.stringify([scenarioId, a.networkId, origins]),
+            message: `${a.name} conflicts with ${b.name} on the same projected network.`,
+            networkId: a.networkId,
+            serviceIds: [a.id, b.id],
+          });
+        }
+      }
+    }
+    return collisions;
+  }
+
   /**
    * Add one change to a scenario. The As-Is records are never touched: a change only says what the
    * scenario does to them, so later As-Is edits carry into every scenario.
@@ -568,14 +1028,23 @@ export class Repository {
   addScenarioChange(scenarioId: number, input: ScenarioChangeInput, options: WriteOptions = {}): ScenarioChange {
     this.requireExists("scenario", scenarioId, "scenario");
     const values = this.scenarioChange(input, this.listScenarioChanges(scenarioId), options);
-    return this.write(() => {
+    const before = new Set(this.scenarioNameCollisions(scenarioId).map((issue) => issue.key));
+    return this.atomic(() => {
       const id = this.insert(
         `INSERT INTO scenario_change (scenario_id, kind, service_id, into_service_id, into_change_id, network_id,
          provider_org_id, name, marking, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [scenarioId, input.kind, ...values],
       );
+      const newIssue = this.scenarioNameCollisions(scenarioId).find((issue) => !before.has(issue.key));
+      if (newIssue) {
+        throw new ValidationError(
+          "DUPLICATE",
+          input.kind === "add" ? "service name" : "network",
+          input.kind === "add" ? "That service already exists on that network." : newIssue.message,
+        );
+      }
       return this.mustGet(this.listScenarioChanges(scenarioId).find((c) => c.id === id));
-    }, "scenario change");
+    });
   }
 
   /** Remove a change; merges into a service the change added go with it. */
@@ -591,19 +1060,12 @@ export class Repository {
     changes: readonly ScenarioChange[],
     options: WriteOptions,
   ): SqlValue[] {
-    const nameTaken = (networkId: number, name: string) =>
-      this.row("SELECT 1 FROM service WHERE network_id = ? AND name = ? COLLATE NOCASE", [networkId, name]) !==
-        undefined ||
-      changes.some((c) => c.kind === "add" && c.networkId === networkId && c.name.toLowerCase() === name.toLowerCase());
     if (input.kind === "add") {
       const name = cleanName(input.name, "service name");
       this.requireExists("network", input.networkId, "network");
       const providerOrgId = this.optionalRef("organization", input.providerOrgId, "provider");
       const marking = requireMarking(input.marking);
       const description = cleanText(input.description);
-      if (nameTaken(input.networkId, name)) {
-        throw new ValidationError("DUPLICATE", "service name", "That service already exists on that network.");
-      }
       checkSensitive({ "service name": name, description }, options.confirmSensitive === true);
       return [null, null, null, input.networkId, providerOrgId, name, marking, description];
     }
@@ -653,9 +1115,6 @@ export class Repository {
     const moves = input.networkId !== service.networkId;
     if (!moves && (providerOrgId === null || providerOrgId === service.providerOrgId)) {
       throw new ValidationError("INVALID_VALUE", "network", "Choose another network or another provider.");
-    }
-    if (moves && nameTaken(input.networkId, service.name)) {
-      throw new ValidationError("DUPLICATE", "network", `That network already has a service named ${service.name}.`);
     }
     return [service.id, null, null, input.networkId, providerOrgId, null, null, null];
   }
@@ -730,9 +1189,14 @@ export class Repository {
         "A caveat may use up to 80 letters, digits, spaces, commas, hyphens and slashes.",
       );
     }
+    if (this.datasetCaveat() === caveat) return;
     this.write(() => {
       if (caveat === null) this.db.run("DELETE FROM meta WHERE key = 'caveat'");
-      else this.db.run("INSERT OR REPLACE INTO meta (key, value) VALUES ('caveat', ?)", [caveat]);
+      else
+        this.db.run(
+          "INSERT INTO meta (key, value) VALUES ('caveat', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+          [caveat],
+        );
     }, "caveat");
   }
 
@@ -790,16 +1254,114 @@ export class Repository {
       return action();
     } finally {
       this.grouping--;
-      if (outer && this.groupWrote) for (const listener of this.listeners) listener();
+      if (outer && this.groupWrote) this.notify("group");
+    }
+  }
+
+  /** One synchronous, rollback-safe command over existing repository writes. */
+  atomic<T>(action: () => T): T {
+    if (this.atomicRunning) return this.withSavepoint(action);
+
+    const start = this.lastLogged();
+    const undoBefore = [...this.undoSteps];
+    const redoBefore = [...this.redoSteps];
+    const mergeableBefore = this.mergeable;
+    const groupStepBefore = this.groupStepStarted;
+    const groupWroteBefore = this.groupWrote;
+    this.db.run("BEGIN");
+    this.atomicRunning = true;
+    let result: T;
+    let changed: boolean;
+    try {
+      result = action();
+      this.requireSynchronous(result);
+      changed = this.lastLogged() > start;
+      if (changed) {
+        const recorded = this.record(start, this.grouping > 0 && this.groupStepStarted ? "merge" : "own");
+        if (this.grouping > 0) {
+          if (recorded) this.groupStepStarted = true;
+          this.groupWrote = true;
+        }
+      }
+      this.db.run("COMMIT");
+    } catch (error) {
+      try {
+        this.db.run("ROLLBACK");
+      } catch {
+        // SQLite may already have rolled back; retain the original error.
+      }
+      this.undoSteps.splice(0, this.undoSteps.length, ...undoBefore);
+      this.redoSteps.splice(0, this.redoSteps.length, ...redoBefore);
+      this.mergeable = mergeableBefore;
+      this.groupStepStarted = groupStepBefore;
+      this.groupWrote = groupWroteBefore;
+      throw error;
+    } finally {
+      this.atomicRunning = false;
+    }
+    if (changed && this.grouping === 0) this.notify("command");
+    return result;
+  }
+
+  private withSavepoint<T>(action: () => T): T {
+    const name = `sim_command_${String(++this.savepointSerial)}`;
+    this.db.run(`SAVEPOINT ${name}`);
+    try {
+      const result = action();
+      this.requireSynchronous(result);
+      this.db.run(`RELEASE ${name}`);
+      return result;
+    } catch (error) {
+      try {
+        this.db.run(`ROLLBACK TO ${name}`);
+        this.db.run(`RELEASE ${name}`);
+      } catch {
+        // Keep the cause; the outer command will roll back if necessary.
+      }
+      throw error;
+    }
+  }
+
+  private requireSynchronous(value: unknown): void {
+    if (
+      value !== null &&
+      (typeof value === "object" || typeof value === "function") &&
+      typeof (value as { then?: unknown }).then === "function"
+    ) {
+      throw new Error("An atomic command must be synchronous.");
     }
   }
 
   private write<T>(action: () => T, entity: string, history: History = "own"): T {
+    if (this.atomicRunning) {
+      try {
+        return this.withSavepoint(action);
+      } catch (error) {
+        throw translate(error, entity);
+      }
+    }
     const start = this.lastLogged();
+    const undoBefore = [...this.undoSteps];
+    const redoBefore = [...this.redoSteps];
+    const mergeableBefore = this.mergeable;
+    const groupStepBefore = this.groupStepStarted;
+    const groupWroteBefore = this.groupWrote;
     this.db.run("BEGIN");
     let result: T;
+    let changed: boolean;
     try {
       result = action();
+      this.requireSynchronous(result);
+      changed = this.lastLogged() > start;
+      if (changed) {
+        if (this.grouping > 0) {
+          const recorded = this.record(start, this.groupStepStarted ? "merge" : "own");
+          if (recorded) this.groupStepStarted = true;
+          this.groupWrote = true;
+        } else {
+          this.record(start, history);
+        }
+      }
       this.db.run("COMMIT");
     } catch (error) {
       try {
@@ -807,16 +1369,14 @@ export class Repository {
       } catch {
         // Already rolled back by SQLite; report the original error.
       }
+      this.undoSteps.splice(0, this.undoSteps.length, ...undoBefore);
+      this.redoSteps.splice(0, this.redoSteps.length, ...redoBefore);
+      this.mergeable = mergeableBefore;
+      this.groupStepStarted = groupStepBefore;
+      this.groupWrote = groupWroteBefore;
       throw translate(error, entity);
     }
-    if (this.grouping > 0) {
-      const recorded = this.record(start, this.groupStepStarted ? "merge" : "own");
-      if (recorded) this.groupStepStarted = true;
-      this.groupWrote = true;
-      return result;
-    }
-    this.record(start, history);
-    for (const listener of this.listeners) listener();
+    if (changed && this.grouping === 0) this.notify(entity, history);
     return result;
   }
 
@@ -908,7 +1468,7 @@ export class Repository {
 
   /** Run one step's reversing SQL newest first; what it logs becomes the opposite step. */
   private replay(from: Step[], to: Step[]): boolean {
-    const step = from.pop();
+    const step = from.at(-1);
     if (!step) return false;
     const statements = this.rows("SELECT sql FROM undo_log WHERE seq BETWEEN ? AND ? ORDER BY seq DESC", [
       step.from,
@@ -916,11 +1476,13 @@ export class Repository {
     ]).map((r) => String(r["sql"]));
     const start = this.lastLogged();
     this.db.run("BEGIN");
+    let end: number;
     try {
       // Rows come back in reverse order, so a child may return before its parent within the step.
       this.db.run("PRAGMA defer_foreign_keys = ON");
       this.db.run("DELETE FROM undo_log WHERE seq BETWEEN ? AND ?", [step.from, step.to]);
       for (const sql of statements) this.db.run(sql);
+      end = this.lastLogged();
       this.db.run("COMMIT");
     } catch (error) {
       try {
@@ -928,19 +1490,31 @@ export class Repository {
       } catch {
         // Already rolled back.
       }
-      from.push(step);
       throw error;
     }
-    const end = this.lastLogged();
+    from.pop();
     if (end > start) to.push({ from: start + 1, to: end });
     this.mergeable = false;
-    for (const listener of this.listeners) listener();
+    this.notify("history");
     return true;
   }
 
   private insert(sql: string, params: SqlValue[]): number {
     this.db.run(sql, params);
-    return Number(this.db.exec("SELECT last_insert_rowid()")[0]?.values[0]?.[0]);
+    const exact = this.db.exec("SELECT CAST(last_insert_rowid() AS TEXT)")[0]?.values[0]?.[0];
+    if (typeof exact !== "string" || !/^-?[0-9]+$/.test(exact)) {
+      throw new Error("SQLite did not return an exact generated ID.");
+    }
+    const id = BigInt(exact);
+    const limit = BigInt(Number.MAX_SAFE_INTEGER);
+    if (id < -limit || id > limit) {
+      throw new ValidationError(
+        "UNSAFE_ID",
+        "id",
+        "This dataset has no safe generated IDs remaining for a new record.",
+      );
+    }
+    return Number(id);
   }
 
   private update(sql: string, params: SqlValue[], entity: string): void {
@@ -992,6 +1566,50 @@ export class Repository {
     }
   }
 
+  /** Keep existing readable legacy route issues repairable while refusing new or worsened issues. */
+  private brokenRoutes(): Map<string, string> {
+    const rows = this.rows(
+      `SELECT d.consumer_service_id AS consumer_id, d.provider_service_id AS provider_id, d.via_cds_id AS cds_id,
+              c.network_id AS consumer_network, p.network_id AS provider_network,
+              c.name AS consumer, p.name AS provider, x.name AS cds,
+              c.network_id = p.network_id AS same_network,
+              NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = c.network_id) AS missing_consumer,
+              NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = p.network_id) AS missing_provider
+       FROM service_dependency d
+       JOIN service c ON c.id = d.consumer_service_id
+       JOIN service p ON p.id = d.provider_service_id
+       JOIN cds x ON x.id = d.via_cds_id
+       WHERE c.network_id = p.network_id
+          OR NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = c.network_id)
+          OR NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = p.network_id)`,
+      [],
+    );
+    const broken = new Map<string, string>();
+    for (const row of rows) {
+      const signature = JSON.stringify([
+        row["consumer_id"],
+        row["provider_id"],
+        row["cds_id"],
+        row["consumer_network"],
+        row["provider_network"],
+        row["same_network"],
+        row["missing_consumer"],
+        row["missing_provider"],
+      ]);
+      broken.set(
+        signature,
+        `This would break the route from ${String(row["consumer"])} to ${String(row["provider"])} through ${String(row["cds"])}; change or remove that dependency first.`,
+      );
+    }
+    return broken;
+  }
+
+  private requireNoNewInvalidRoutes(before: Map<string, string>, field: string): void {
+    for (const [signature, message] of this.brokenRoutes()) {
+      if (!before.has(signature)) throw new ValidationError("CDS_ROUTE", field, message);
+    }
+  }
+
   private requireExists(table: string, id: number, field: string): void {
     if (!this.row(`SELECT 1 FROM ${table} WHERE id = ?`, [id])) {
       throw new ValidationError("NOT_FOUND", field, `The selected ${field} does not exist.`);
@@ -1008,6 +1626,19 @@ export class Repository {
     if (value === undefined) throw new Error("row vanished inside its own transaction");
     return value;
   }
+}
+
+/** Keep the exact bytes of a readable legacy field until it is actually edited. */
+function unchangedName(value: string, stored: string | undefined, field: string): string {
+  return stored !== undefined && value === stored ? stored : cleanName(value, field);
+}
+
+function unchangedText(value: string | null | undefined, stored: string | null | undefined): string | null {
+  return stored !== undefined && value === stored ? stored : cleanText(value);
+}
+
+function sameIds(left: readonly number[], right: readonly number[]): boolean {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
 }
 
 function translate(error: unknown, entity: string): unknown {

@@ -2,12 +2,15 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { wasm } from "../../tests/helpers/sqlite";
 import { createDataset } from "../db/dataset";
 import { Repository } from "../domain/repository";
+import { applyScenario } from "../scenario/scenario";
 import { buildGraph, filterGraph, type Graph, type GraphEdge, nodeId, summarize, traceChain } from "./graph";
 
 let repo: Repository;
+let db: Awaited<ReturnType<typeof createDataset>>;
 
 beforeEach(async () => {
-  repo = new Repository(await createDataset("Test", wasm));
+  db = await createDataset("Test", wasm);
+  repo = new Repository(db);
 });
 
 function seed() {
@@ -27,6 +30,20 @@ const edgesFrom = (graph: Graph, dependency: string): GraphEdge[] =>
   graph.edges.filter((e) => e.data.dependency === dependency);
 
 describe("buildGraph", () => {
+  it("marks a projected former-CDS route unresolved instead of presenting it as a direct crossing", () => {
+    const s = seed();
+    const ops = repo.createNetwork({ name: "Ops", kind: "internal", marking: "SECRET" });
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });
+    const scenario = repo.createScenario({ name: "Move" });
+    repo.addScenarioChange(scenario.id, { kind: "rehome", serviceId: s.patch.id, networkId: ops.id });
+    const graph = buildGraph(applyScenario(repo.snapshot(), scenario.id));
+    const edges = edgesFrom(graph, `${String(s.mail.id)}-${String(s.patch.id)}`);
+    expect(edges).toHaveLength(1);
+    expect(edges[0]?.data.kind).toBe("unresolved");
+    expect(edges[0]?.classes).toContain("unresolved");
+    expect(summarize(graph)).toContain("1 unresolved former-CDS route");
+  });
+
   it("draws each network as a container holding its services, with the external zone marked", () => {
     const s = seed();
     const graph = buildGraph(repo.snapshot());
@@ -52,7 +69,13 @@ describe("buildGraph", () => {
     expect(cds).toEqual([
       {
         group: "nodes",
-        data: { id: nodeId("cds", s.guard.id), label: "NIPR-SIPR guard", entity: "cds", entityId: s.guard.id },
+        data: {
+          id: nodeId("cds", s.guard.id),
+          label: "NIPR-SIPR guard",
+          entity: "cds",
+          entityId: s.guard.id,
+          origin: { kind: "baseline", entity: "cds", entityId: s.guard.id },
+        },
         classes: "cds",
       },
     ]);
@@ -93,6 +116,35 @@ describe("buildGraph", () => {
     const ids = [...graph.nodes, ...graph.edges].map((e) => e.data.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(graph.edges).toHaveLength(6);
+  });
+
+  it("keeps planned and signed baseline service nodes distinct with typed origins", () => {
+    const network = repo.createNetwork({ name: "Legacy", kind: "internal", marking: "CUI" });
+    repo.createService({ name: "Existing", networkId: network.id, marking: "CUI" });
+    db.run("INSERT INTO service (id, name, network_id, marking) VALUES (-1, 'Signed baseline', ?, 'CUI')", [
+      network.id,
+    ]);
+    const scenario = repo.createScenario({ name: "Plan" });
+    const added = repo.addScenarioChange(scenario.id, {
+      kind: "add",
+      name: "Planned",
+      networkId: network.id,
+      marking: "CUI",
+    });
+    const graph = buildGraph(applyScenario(repo.snapshot(), scenario.id));
+    const services = graph.nodes.filter((node) => node.data.entity === "service");
+    expect(new Set(services.map((node) => node.data.id)).size).toBe(services.length);
+    expect(services.find((node) => node.data.label === "Signed baseline")?.data.origin).toEqual({
+      kind: "baseline",
+      entity: "service",
+      entityId: -1,
+    });
+    expect(services.find((node) => node.data.label === "Planned")?.data.origin).toEqual({
+      kind: "planned",
+      entity: "service",
+      scenarioId: scenario.id,
+      changeId: added.id,
+    });
   });
 
   it("marks every edge whose provider is foundational, including both hops through a CDS", () => {

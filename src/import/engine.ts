@@ -1,7 +1,7 @@
 import { isMarking, type Marking, MARKINGS } from "../db/markings";
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
-import type { Tier, WriteOptions } from "../domain/types";
+import type { Snapshot, Tier, WriteOptions } from "../domain/types";
 import { suggestsFoundational } from "../ui/forms";
 import { IMPORT_ORDER, type TemplateFile, type TemplateRow, type TemplateType } from "./templates";
 
@@ -31,7 +31,100 @@ export interface ImportReport {
   readonly flagged: readonly RowNote[];
 }
 
-const key = (name: string) => name.trim().toLowerCase();
+interface EffectChange<T> {
+  readonly key: string;
+  readonly before: T | null;
+  readonly after: T | null;
+}
+
+type ImportRows = Exclude<keyof Snapshot, "marking" | "caveat">;
+
+/** Exact row and reference changes caused by this import, separate from unrelated dataset content. */
+export type ImportEffect = {
+  readonly [K in ImportRows]: readonly EffectChange<Snapshot[K][number]>[];
+};
+
+export interface ImportPreview {
+  readonly report: ImportReport;
+  readonly effect: ImportEffect;
+}
+
+export interface PreparedImport extends ImportPreview {
+  readonly files: readonly TemplateFile[];
+  readonly options: ImportOptions;
+}
+
+export class ImportConflictError extends Error {
+  constructor() {
+    super("The dataset changed in a way that affects this import. Review the updated preview before importing.");
+    this.name = "ImportConflictError";
+  }
+}
+
+function changedRows<T>(before: readonly T[], after: readonly T[], key: (row: T) => string): EffectChange<T>[] {
+  const old = new Map(before.map((row) => [key(row), row]));
+  const next = new Map(after.map((row) => [key(row), row]));
+  return [...new Set([...old.keys(), ...next.keys()])].sort().flatMap((id) => {
+    const previous = old.get(id) ?? null;
+    const current = next.get(id) ?? null;
+    return JSON.stringify(previous) === JSON.stringify(current) ? [] : [{ key: id, before: previous, after: current }];
+  });
+}
+
+/** Snapshot contains every table that the append-only CSV engine may write. */
+export function importEffect(before: Snapshot, after: Snapshot): ImportEffect {
+  const id = (row: { readonly id: number }) => String(row.id);
+  return {
+    networks: changedRows(before.networks, after.networks, id),
+    services: changedRows(before.services, after.services, id),
+    cds: changedRows(before.cds, after.cds, id),
+    organizations: changedRows(before.organizations, after.organizations, id),
+    applications: changedRows(before.applications, after.applications, id),
+    categories: changedRows(before.categories, after.categories, id),
+    support: changedRows(before.support, after.support, (row) => `${String(row.serviceId)}|${String(row.tier)}`),
+    consumption: changedRows(
+      before.consumption,
+      after.consumption,
+      (row) => `${String(row.orgId)}|${String(row.serviceId)}`,
+    ),
+    dependencies: changedRows(
+      before.dependencies,
+      after.dependencies,
+      (row) => `${String(row.consumerServiceId)}|${String(row.providerServiceId)}`,
+    ),
+    positions: changedRows(before.positions, after.positions, (row) => `${row.entity}|${String(row.id)}`),
+    scenarios: changedRows(before.scenarios, after.scenarios, id),
+    scenarioChanges: changedRows(before.scenarioChanges, after.scenarioChanges, id),
+  };
+}
+
+/** Run against a throwaway repository to capture the exact reviewed result. */
+export function prepareImport(repo: Repository, files: readonly TemplateFile[], options: ImportOptions): ImportPreview {
+  const before = repo.snapshot();
+  const report = runImport(repo, files, options);
+  return { report, effect: importEffect(before, repo.snapshot()) };
+}
+
+/** Replay and compare inside one transaction, so a changed meaning rolls back before COMMIT. */
+export function commitPreparedImport(repo: Repository, prepared: PreparedImport): ImportReport {
+  return repo.atomic(() => {
+    const before = repo.snapshot();
+    const report = runImport(repo, prepared.files, prepared.options);
+    const effect = importEffect(before, repo.snapshot());
+    if (
+      JSON.stringify(report) !== JSON.stringify(prepared.report) ||
+      JSON.stringify(effect) !== JSON.stringify(prepared.effect)
+    ) {
+      throw new ImportConflictError();
+    }
+    return report;
+  });
+}
+
+// SQLite NOCASE folds ASCII A-Z only. JavaScript's Unicode lowercasing merges
+// distinct stored names such as Ä and ä, and can misdirect imported links.
+const asciiNoCase = (value: string): string => value.replace(/[A-Z]/g, (letter) => letter.toLowerCase());
+const key = (name: string): string => asciiNoCase(name);
 
 class Rejected extends Error {}
 
@@ -55,7 +148,9 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
   const rejected: RowNote[] = [];
   const flagged: RowNote[] = [];
 
-  // Lookups by trimmed, case-insensitive name (names are NOCASE in the schema), kept current as rows land.
+  // Stored names use exact bytes with SQLite's ASCII-only NOCASE collation.
+  // A reference first tries its exact spelling, then the canonical spelling
+  // that current authoring would produce from incidental surrounding spaces.
   const snap = repo.snapshot();
   const networks = new Map(snap.networks.map((n) => [key(n.name), n.id]));
   const orgs = new Map(snap.organizations.map((o) => [key(o.name), o.id]));
@@ -71,16 +166,21 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
   /** Where a record was first seen in this import, to report repeats as such. */
   const seenAt = new Map<string, string>();
 
+  const lookup = (map: Map<string, number>, name: string): number | undefined =>
+    map.get(key(name)) ?? map.get(key(name.trim()));
+  const existingNew = (map: Map<string, number>, name: string): boolean => map.has(key(name.trim()));
+  const serviceId = (networkId: number, name: string): number | undefined =>
+    services.get(`${String(networkId)}|${key(name)}`) ?? services.get(`${String(networkId)}|${key(name.trim())}`);
   const ref = (map: Map<string, number>, name: string, what: string): number => {
-    const id = map.get(key(name));
+    const id = lookup(map, name);
     if (id === undefined) throw new Rejected(`No ${what} named "${name}".`);
     return id;
   };
   const optionalRef = (map: Map<string, number>, name: string, what: string): number | null =>
-    name === "" ? null : ref(map, name, what);
+    name.trim() === "" ? null : ref(map, name, what);
   const service = (name: string, network: string): number => {
     const networkId = ref(networks, network, "network");
-    const id = services.get(`${String(networkId)}|${key(name)}`);
+    const id = serviceId(networkId, name);
     if (id === undefined) throw new Rejected(`No service named "${name}" on ${network}.`);
     return id;
   };
@@ -103,7 +203,7 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
       if (row.overflow) throw new Rejected("The row has more values than the header has columns.");
       const existing = exists();
       if (existing !== null) {
-        const earlier = seenAt.get(`${file.template.type}|${existing.toLowerCase()}`);
+        const earlier = seenAt.get(`${file.template.type}|${asciiNoCase(existing)}`);
         present.push({ ...at, message: earlier ? `Same as ${earlier}.` : `${existing} is already in the dataset.` });
         return;
       }
@@ -125,15 +225,15 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
   };
   /** Remember the row that first added a record, for "same as row N" messages. */
   const mark = (file: TemplateFile, row: TemplateRow, label: string) => {
-    seenAt.set(`${file.template.type}|${label.toLowerCase()}`, `row ${String(row.row)} of ${file.name}`);
+    seenAt.set(`${file.template.type}|${asciiNoCase(label)}`, `row ${String(row.row)} of ${file.name}`);
   };
 
   const ordered = [...files].sort(
     (a, b) => IMPORT_ORDER.indexOf(a.template.type) - IMPORT_ORDER.indexOf(b.template.type),
   );
-  repo.group(() => {
+  repo.atomic(() => {
+    const parents: { file: string; row: TemplateRow; id: number; parent: string; name: string }[] = [];
     for (const file of ordered) {
-      const parents: { row: TemplateRow; id: number; parent: string; name: string }[] = [];
       for (const row of file.rows) {
         const v = row.values;
         const name = v["name"] ?? "";
@@ -142,9 +242,9 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
             apply(
               file,
               row,
-              () => (networks.has(key(name)) ? `Network "${name}"` : null),
+              () => (existingNew(networks, name) ? `Network "${name}"` : null),
               (o) => {
-                const kind = key(v["kind"] ?? "");
+                const kind = key((v["kind"] ?? "").trim());
                 if (kind !== "internal" && kind !== "external") {
                   throw new Rejected(`Kind must be internal or external, not "${v["kind"] ?? ""}".`);
                 }
@@ -162,13 +262,13 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
             apply(
               file,
               row,
-              () => (orgs.has(key(name)) ? `Organization "${name}"` : null),
+              () => (existingNew(orgs, name) ? `Organization "${name}"` : null),
               (o) => {
                 const org = repo.createOrganization({ name }, o);
                 orgs.set(key(org.name), org.id);
                 mark(file, row, `Organization "${name}"`);
-                if ((v["parent"] ?? "") !== "")
-                  parents.push({ row, id: org.id, parent: v["parent"] ?? "", name: org.name });
+                if ((v["parent"] ?? "").trim() !== "")
+                  parents.push({ file: file.name, row, id: org.id, parent: v["parent"] ?? "", name: org.name });
               },
             );
             break;
@@ -176,7 +276,7 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
             apply(
               file,
               row,
-              () => (categories.has(key(name)) ? `Category "${name}"` : null),
+              () => (existingNew(categories, name) ? `Category "${name}"` : null),
               (o) => {
                 const c = repo.createCategory({ name, color: v["color"] ?? null }, o);
                 categories.set(key(c.name), c.id);
@@ -188,7 +288,7 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
             apply(
               file,
               row,
-              () => (applications.has(key(name)) ? `Application "${name}"` : null),
+              () => (existingNew(applications, name) ? `Application "${name}"` : null),
               (o) => {
                 const a = repo.createApplication(
                   { name, vendor: v["vendor"] ?? null, description: v["description"] ?? null },
@@ -206,8 +306,10 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
               file,
               row,
               () => {
-                const networkId = networks.get(key(network));
-                return networkId !== undefined && services.has(`${String(networkId)}|${key(name)}`) ? label : null;
+                const networkId = lookup(networks, network);
+                return networkId !== undefined && services.has(`${String(networkId)}|${key(name.trim())}`)
+                  ? label
+                  : null;
               },
               (o) => {
                 const networkId = ref(networks, network, "network");
@@ -220,7 +322,7 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
                     categoryId: optionalRef(categories, v["category"] ?? "", "category"),
                     providerOrgId: optionalRef(orgs, v["provider"] ?? "", "organization"),
                     // Left blank, Identity and DNS are foundational, as in the editor (Q-021).
-                    foundational: yesNo(v["foundational"] ?? "", "Foundational") ?? suggestsFoundational(name),
+                    foundational: yesNo(v["foundational"] ?? "", "Foundational") ?? suggestsFoundational(name.trim()),
                     description: v["description"] ?? null,
                   },
                   o,
@@ -235,12 +337,11 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
             apply(
               file,
               row,
-              () => (cds.has(key(name)) ? `CDS "${name}"` : null),
+              () => (existingNew(cds, name) ? `CDS "${name}"` : null),
               (o) => {
                 const networkIds = (v["networks"] ?? "")
                   .split(";")
-                  .map((n) => n.trim())
-                  .filter(Boolean)
+                  .filter((n) => n.trim() !== "")
                   .map((n) => ref(networks, n, "network"));
                 const c = repo.createCds({ name, networkIds, description: v["description"] ?? null }, o);
                 cds.set(key(c.name), c.id);
@@ -326,17 +427,17 @@ export function runImport(repo: Repository, files: readonly TemplateFile[], opti
           }
         }
       }
-      for (const p of parents) {
-        try {
-          repo.updateOrganization(p.id, { name: p.name, parentId: ref(orgs, p.parent, "organization") });
-        } catch (error) {
-          if (!(error instanceof Rejected || error instanceof ValidationError)) throw error;
-          rejected.push({
-            file: file.name,
-            row: p.row.row,
-            message: `${error.message} The organization was added without a parent.`,
-          });
-        }
+    }
+    for (const p of parents) {
+      try {
+        repo.updateOrganization(p.id, { name: p.name, parentId: ref(orgs, p.parent, "organization") });
+      } catch (error) {
+        if (!(error instanceof Rejected || error instanceof ValidationError)) throw error;
+        rejected.push({
+          file: p.file,
+          row: p.row.row,
+          message: `${error.message} The organization was added without a parent.`,
+        });
       }
     }
   });

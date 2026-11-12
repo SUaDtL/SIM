@@ -1,12 +1,12 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { snapshotRows } from "../../tests/helpers/csv-export";
 import { wasm } from "../../tests/helpers/sqlite";
-import { createDataset } from "../db/dataset";
+import { createDataset, exportDataset, openDataset } from "../db/dataset";
 import { populateDemo } from "../demo/demo";
 import { Repository } from "../domain/repository";
 import type { Snapshot } from "../domain/types";
 import { parseCsv, toCsv } from "./csv";
-import { describeAdded, runImport } from "./engine";
+import { commitPreparedImport, describeAdded, ImportConflictError, prepareImport, runImport } from "./engine";
 import { readTemplate, TEMPLATES, type TemplateFile, type TemplateType } from "./templates";
 
 let repo: Repository;
@@ -174,6 +174,80 @@ describe("runImport", () => {
     ]);
   });
 
+  it("assigns a confirmed child to a parent supplied in a later organization file", () => {
+    const report = runImport(
+      repo,
+      [
+        file("organizations", [["desk.example.test", "Operations"]], "children.csv"),
+        file("organizations", [["Operations", ""]], "parents.csv"),
+      ],
+      { includeFlagged: true },
+    );
+    const orgs = repo.listOrganizations();
+    expect(report.added).toEqual({ organizations: 2 });
+    expect(report.flagged).toEqual([
+      { file: "children.csv", row: 2, message: expect.stringContaining("desk.example.test") as string },
+    ]);
+    expect(report.rejected).toEqual([]);
+    expect(orgs.find((org) => org.name === "desk.example.test")?.parentId).toBe(
+      orgs.find((org) => org.name === "Operations")?.id,
+    );
+  });
+
+  it("resolves distinct Unicode names according to SQLite NOCASE", () => {
+    const report = runImport(
+      repo,
+      [
+        file("networks", [
+          ["Ä", "internal", "CUI", ""],
+          ["ä", "internal", "CUI", ""],
+        ]),
+        file("services", [
+          ["Mail", "Ä", "CUI", "", "", "", "", ""],
+          ["Mail", "ä", "CUI", "", "", "", "", ""],
+        ]),
+      ],
+      { includeFlagged: false },
+    );
+    expect(report.added).toEqual({ networks: 2, services: 2 });
+    expect(report.present).toEqual([]);
+    expect(report.rejected).toEqual([]);
+    const networks = repo.listNetworks();
+    const services = repo.listServices();
+    expect(
+      services.find((service) => service.networkId === networks.find((network) => network.name === "Ä")?.id)?.name,
+    ).toBe("Mail");
+    expect(
+      services.find((service) => service.networkId === networks.find((network) => network.name === "ä")?.id)?.name,
+    ).toBe("Mail");
+  });
+
+  it("keeps padded legacy names distinct from canonical names when importing links", async () => {
+    const db = await createDataset("Legacy names", wasm);
+    db.run("INSERT INTO network (name, kind, marking) VALUES (?, 'internal', 'CUI')", ["A"]);
+    db.run("INSERT INTO network (name, kind, marking) VALUES (?, 'internal', 'CUI')", [" A "]);
+    const target = new Repository(db);
+    const report = runImport(
+      target,
+      [
+        file("services", [
+          ["Canonical", "A", "CUI", "", "", "", "", ""],
+          ["Padded", " A ", "CUI", "", "", "", "", ""],
+        ]),
+      ],
+      { includeFlagged: false },
+    );
+    expect(report.rejected).toEqual([]);
+    expect(report.added).toEqual({ services: 2 });
+    const networks = target.listNetworks();
+    expect(target.listServices().find((service) => service.name === "Canonical")?.networkId).toBe(
+      networks.find((network) => network.name === "A")?.id,
+    );
+    expect(target.listServices().find((service) => service.name === "Padded")?.networkId).toBe(
+      networks.find((network) => network.name === " A ")?.id,
+    );
+  });
+
   it("is one undo step that never merges into the edit before it, and notifies once", () => {
     repo.createNetwork({ name: "Before", kind: "internal", marking: "CUI" });
     let calls = 0;
@@ -206,6 +280,76 @@ describe("runImport", () => {
     runImport(repo, [file("networks", [["Bad", "inside", "CUI", ""]])], { includeFlagged: false });
     expect(calls).toBe(0);
     expect(repo.canUndo()).toBe(false);
+  });
+
+  it("rolls back accepted rows and history after an unexpected import failure", () => {
+    const createNetwork = repo.createNetwork.bind(repo);
+    let created = 0;
+    vi.spyOn(repo, "createNetwork").mockImplementation((input, options) => {
+      const network = createNetwork(input, options);
+      if (++created === 2) throw new Error("synthetic import failure");
+      return network;
+    });
+    let notifications = 0;
+    repo.subscribe(() => {
+      notifications++;
+    });
+
+    expect(() =>
+      runImport(
+        repo,
+        [
+          file("networks", [
+            ["A", "internal", "CUI", ""],
+            ["B", "internal", "CUI", ""],
+          ]),
+        ],
+        {
+          includeFlagged: false,
+        },
+      ),
+    ).toThrow("synthetic import failure");
+    expect(repo.listNetworks()).toEqual([]);
+    expect(repo.canUndo()).toBe(false);
+    expect(notifications).toBe(0);
+  });
+});
+
+describe("prepared import", () => {
+  it("accepts an identical reviewed effect after an unrelated record changes", async () => {
+    const db = await createDataset("Review", wasm);
+    const current = new Repository(db);
+    const bytes = exportDataset(db);
+    const copy = new Repository(await openDataset(bytes, { wasm }));
+    const files = [file("networks", [["Alpha", "internal", "CUI", ""]])];
+    const options = { includeFlagged: false };
+    const preview = prepareImport(copy, files, options);
+
+    current.createCategory({ name: "Unrelated" });
+    const report = commitPreparedImport(current, { ...preview, files, options });
+    expect(report).toEqual(preview.report);
+    expect(current.listNetworks().map((network) => network.name)).toEqual(["Alpha"]);
+    expect(current.listCategories().map((category) => category.name)).toEqual(["Unrelated"]);
+  });
+
+  it("rolls back a same-count import when a reference resolves to another ID", async () => {
+    const db = await createDataset("Review", wasm);
+    const current = new Repository(db);
+    const network = current.createNetwork({ name: "Alpha", kind: "internal", marking: "CUI" });
+    const original = current.createOrganization({ name: "Owner" });
+    const copy = new Repository(await openDataset(exportDataset(db), { wasm }));
+    const files = [file("services", [["Mail", "Alpha", "CUI", "", "", "Owner", "", ""]])];
+    const options = { includeFlagged: false };
+    const preview = prepareImport(copy, files, options);
+
+    current.deleteOrganization(original.id);
+    current.createOrganization({ name: "Another owner" });
+    const replacement = current.createOrganization({ name: "Owner" });
+    expect(replacement.id).not.toBe(original.id);
+    expect(() => commitPreparedImport(current, { ...preview, files, options })).toThrow(ImportConflictError);
+    expect(current.listServices()).toEqual([]);
+    expect(current.getNetwork(network.id)?.name).toBe("Alpha");
+    expect(current.getOrganization(replacement.id)?.name).toBe("Owner");
   });
 });
 

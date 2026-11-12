@@ -127,7 +127,9 @@ export function readTemplate(name: string, rows: readonly CsvRow[]): TemplateFil
     template,
     rows: body.map((r) => ({
       row: r.row,
-      values: Object.fromEntries(columns.map((c, i) => [c, (r.fields[i] ?? "").trim()])),
+      // Keep cell bytes for references to readable legacy names with surrounding spaces.
+      // Each authoring validator still normalizes newly created values.
+      values: Object.fromEntries(columns.map((c, i) => [c, r.fields[i] ?? ""])),
       overflow: r.fields.slice(columns.length).some((f) => f.trim() !== ""),
     })),
   };

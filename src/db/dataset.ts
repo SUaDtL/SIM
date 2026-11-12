@@ -3,12 +3,15 @@ import { isValidCaveat, normalizeCaveat } from "./markings";
 import { LATEST_VERSION, migrate, SIM_APPLICATION_ID, userVersion } from "./migrate";
 import { MIGRATIONS } from "./migrations";
 import { openDatabase } from "./sqlite";
+import { inspectDatasetSemantics } from "./semantics";
+
+export { inspectDatasetSemantics, type DatasetIssue, type DatasetIssueCode } from "./semantics";
 
 /** Opened files are untrusted (security-controls CON-007); refuse anything unexpected. */
 export const MAX_DATASET_BYTES = 100 * 1024 * 1024;
 
 export type DatasetErrorCode =
-  "NOT_SQLITE" | "NOT_SIM" | "TOO_NEW" | "CORRUPT" | "SCHEMA_MISMATCH" | "TOO_LARGE" | "INVALID_NAME";
+  "NOT_SQLITE" | "NOT_SIM" | "TOO_NEW" | "CORRUPT" | "SCHEMA_MISMATCH" | "TOO_LARGE" | "INVALID_NAME" | "UNSAFE_ID";
 
 const MESSAGES: Record<DatasetErrorCode, string> = {
   NOT_SQLITE: "This file is not a SIM dataset (it is not a SQLite database).",
@@ -18,14 +21,16 @@ const MESSAGES: Record<DatasetErrorCode, string> = {
   SCHEMA_MISMATCH: "This dataset's structure has been altered outside SIM, so it cannot be opened safely.",
   TOO_LARGE: "This file is larger than SIM's 100 MB limit.",
   INVALID_NAME: "A dataset needs a name.",
+  UNSAFE_ID: "This dataset contains an identity outside SIM's exact supported number range.",
 };
 
 export class DatasetError extends Error {
   constructor(
     readonly code: DatasetErrorCode,
     options?: ErrorOptions,
+    readonly detail?: string,
   ) {
-    super(MESSAGES[code], options);
+    super(detail ? `${MESSAGES[code]} ${detail}` : MESSAGES[code], options);
     this.name = "DatasetError";
   }
 }
@@ -66,6 +71,8 @@ export async function openDataset(bytes: Uint8Array, options: OpenOptions = {}):
     // The file's own table definitions carry SIM's constraints, so they must be exactly ours:
     // no altered tables, extra columns, triggers, views or indexes (migration review, HIGH).
     if (!(await schemaMatches(db, options.wasm))) throw new DatasetError("SCHEMA_MISMATCH");
+    const unsafe = inspectDatasetSemantics(db).find((issue) => issue.severity === "unsafe");
+    if (unsafe) throw new DatasetError("UNSAFE_ID", undefined, unsafe.witness);
     // The meta table has no constraints, so hold a stored caveat to the rule SIM writes it under.
     const caveat = scalar(db, "SELECT value FROM meta WHERE key = 'caveat'");
     if (

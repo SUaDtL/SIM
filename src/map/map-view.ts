@@ -9,13 +9,14 @@ import {
   type Graph,
   type GraphEdge,
   type GraphNode,
+  type GraphOrigin,
   type MapEntity,
   type MapFilter,
   nodeId,
   summarize,
   traceChain,
 } from "./graph";
-import { frameWithBanner } from "./export";
+import { frameWithBanner, layoutFrame, type FrameContent } from "./export";
 import { mapStyle } from "./style";
 import { svgDocument, type SvgScene } from "./svg";
 import { sceneFromMap } from "./svg-scene";
@@ -34,11 +35,26 @@ export interface MapViewContext {
    * `history` says how it enters undo: a drag or Re-layout is its own step, placing a new node merges
    * into the edit that added it, and the first layout of an opened dataset is not undoable.
    */
-  savePositions(positions: readonly NodePosition[], history: History): void;
+  savePositions(
+    positions: readonly NodePosition[],
+    history: History,
+    origin: { readonly sessionId: number; readonly revision: number },
+  ): void;
   /** Open a scenario in the editor (a tapped service the scenario adds). */
   openScenario(id: number): void;
-  /** Hand an exported PNG to the caller to save. */
-  saveImage(image: Blob, extension: "png" | "svg"): void;
+  /** Inspect one projected map node without opening the baseline editor. */
+  inspectNode(
+    node: GraphNode,
+    view: { readonly kind: "to-be" | "compare"; readonly scenarioId: number },
+    projected: Snapshot,
+    comparison: Comparison | null,
+  ): void;
+  /** Resolve a pending editor draft before freezing the capture. */
+  resolveCapture(): Promise<"capture" | "cancel">;
+  /** Identity and save checkpoint of the source about to be captured. */
+  captureSource(): { sessionId: number; name: string; revision: number; unsaved: boolean };
+  /** Hand a completed capture to the caller using the name frozen with its source. */
+  saveImage(image: Blob, extension: "png" | "svg", capturedName: string): void;
 }
 
 export interface MapView {
@@ -47,6 +63,12 @@ export interface MapView {
   refresh(): void;
   /** Draw a (new or reopened) dataset at its saved positions, laying out only what has none. */
   reset(): void;
+  /** Wait for the layout write queued by the current command, if any. */
+  settlePendingPlacement(): Promise<void>;
+  /** Return to As-Is while retaining the current viewport and compatible filters. */
+  showAsIs(): void;
+  /** Re-identify a selected node against the current projection after a committed edit. */
+  inspectOrigin(origin: GraphOrigin): boolean;
 }
 
 // Readable on-screen label sizes, in pixels (WORK-018). Service labels smaller than this are
@@ -56,7 +78,7 @@ const MIN_SERVICE_LABEL_PX = 8;
 const MIN_NETWORK_LABEL_PX = 13;
 const MIN_CDS_LABEL_PX = 11;
 
-// Margin around the fitted map; fit() adds the toolbar's height so nothing sits under it.
+// Margin around the drawable map area; controls occupy their own row.
 const FIT_MARGIN = 24;
 
 const LAYOUT = {
@@ -152,6 +174,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
   const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
+  const exportStatus = el("p", { class: "sr-only", "data-testid": "map-export-status", role: "status" });
   // As-Is, a To-Be scenario, or one map comparing a scenario with As-Is (WORK-013).
   const viewSelect = el("select", { id: "map-view" });
   viewSelect.addEventListener("change", () => {
@@ -195,7 +218,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     void exportView();
   });
   const exportSvg = button("Export SVG", () => {
-    exportVector();
+    void exportVector();
   });
   const relayout = button("Re-layout", () => {
     // There is no undo yet (WORK-015), so ask first.
@@ -237,10 +260,11 @@ export function createMapView(ctx: MapViewContext): MapView {
     "section",
     { class: "map-area", "data-testid": "map-area", "aria-label": "Map" },
     el("h2", { class: "sr-only" }, "Map"),
-    canvas,
     toolbar,
+    canvas,
     empty,
     summary,
+    exportStatus,
   );
 
   // "preset" keeps Cytoscape from running its default grid layout while the container is still detached.
@@ -255,7 +279,14 @@ export function createMapView(ctx: MapViewContext): MapView {
   let filter: MapFilter = {};
   let view: View = { kind: "as-is" };
   let comparison: Comparison | null = null;
-  let pending: History | null = null;
+  type PlacementJob = {
+    history: History;
+    readonly origin: { readonly sessionId: number; readonly revision: number };
+    positions: readonly NodePosition[];
+    readonly waiters: { resolve(): void; reject(reason: unknown): void }[];
+  };
+  const pendingJobs: PlacementJob[] = [];
+  let exporting = false;
   const strength: Record<History, number> = { none: 0, merge: 1, own: 2 };
 
   /**
@@ -265,20 +296,43 @@ export function createMapView(ctx: MapViewContext): MapView {
   function persist(history: History): void {
     // Scenario views arrange nodes for this session only: their positions are never saved.
     if (view.kind !== "as-is") return;
-    const queued = pending !== null;
-    if (pending === null || strength[history] > strength[pending]) pending = history;
-    if (queued) return;
+    const source = ctx.captureSource();
+    const origin = { sessionId: source.sessionId, revision: source.revision };
+    const positions = cy.nodes().map((n) => ({
+      entity: n.data("entity") as MapEntity,
+      id: n.data("entityId") as number,
+      ...n.position(),
+    }));
+    const last = pendingJobs.at(-1);
+    if (last && last.origin.sessionId === origin.sessionId && last.origin.revision === origin.revision) {
+      if (strength[history] > strength[last.history]) last.history = history;
+      last.positions = positions;
+      return;
+    }
+    const job: PlacementJob = { history, origin, positions, waiters: [] };
+    pendingJobs.push(job);
     queueMicrotask(() => {
-      const kind = pending ?? "own";
-      pending = null;
-      ctx.savePositions(
-        cy.nodes().map((n) => ({
-          entity: n.data("entity") as MapEntity,
-          id: n.data("entityId") as number,
-          ...n.position(),
-        })),
-        kind,
-      );
+      pendingJobs.splice(pendingJobs.indexOf(job), 1);
+      const waiters = job.waiters.splice(0);
+      try {
+        ctx.savePositions(job.positions, job.history, job.origin);
+        waiters.forEach((waiter) => {
+          waiter.resolve();
+        });
+      } catch (error) {
+        waiters.forEach((waiter) => {
+          waiter.reject(error);
+        });
+        if (waiters.length === 0) throw error;
+      }
+    });
+  }
+
+  function settlePendingPlacement(): Promise<void> {
+    const job = pendingJobs.at(-1);
+    if (!job) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      job.waiters.push({ resolve, reject });
     });
   }
 
@@ -288,6 +342,17 @@ export function createMapView(ctx: MapViewContext): MapView {
     if (node.data.entity !== "service" || node.data.parent === undefined) return label;
     const network = graph.nodes.find((n) => n.data.id === node.data.parent);
     return `${label} (${network?.data.label.split("\n")[0] ?? ""})`;
+  }
+
+  /** Open the source object described by the graph, regardless of its numeric adapter ID. */
+  function openNode(node: GraphNode): void {
+    if (view.kind !== "as-is" && snapshot !== null) {
+      ctx.inspectNode(node, view, snapshot, comparison);
+      return;
+    }
+    const origin = node.data.origin;
+    if (origin.kind === "planned") ctx.openScenario(origin.scenarioId);
+    else ctx.open(origin.entity, origin.entityId);
   }
 
   /**
@@ -307,7 +372,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     applyView();
     if (cy.zoom() < 0.8) cy.zoom(0.8);
     cy.center(target);
-    ctx.open(node.data.entity, node.data.entityId);
+    openNode(node);
     return true;
   }
 
@@ -380,53 +445,133 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
   }
 
-  /**
-   * Export what the map shows now (zoom, highlight, filters) at twice screen resolution for slides,
-   * framed by the classification banner of the open dataset.
-   */
+  function updateExportButtons(): void {
+    const disabled = exporting || cy.nodes().empty();
+    exportPng.disabled = disabled;
+    exportSvg.disabled = disabled;
+  }
+
+  function captureContent(name: string, unsaved: boolean): FrameContent {
+    const viewName = viewSelect.selectedOptions[0]?.textContent ?? "As-Is";
+    const activeFilters: [string, HTMLSelectElement][] = [
+      ["Network", filterNetwork],
+      ["Category", filterCategory],
+      ["Organization", filterOrg],
+    ];
+    const details = [
+      ...activeFilters.flatMap(([label, select]) =>
+        select.value ? [`${label}: ${select.selectedOptions[0]?.textContent ?? select.value}`] : [],
+      ),
+      ...(chainRoot === null
+        ? []
+        : [
+            `Selected chain: ${graph.nodes.find((node) => node.data.id === chainRoot)?.data.label.split("\n")[0] ?? ""}`,
+          ]),
+      ...(unsaved ? ["Committed document has unsaved changes"] : []),
+    ];
+    const extent = cy.extent();
+    const visible = cy.elements().filter((element) => {
+      if (!element.visible()) return false;
+      const box = element.boundingBox({});
+      return box.x1 < extent.x2 && box.x2 > extent.x1 && box.y1 < extent.y2 && box.y2 > extent.y1;
+    });
+    const edges = visible.edges();
+    const nodes = visible.nodes();
+    const legend = [
+      ...(edges.nonempty() ? ["Depends on: consumer → provider"] : []),
+      ...(edges.filter(".via-cds").nonempty() ? ["Dependency routed via CDS"] : []),
+      ...(edges.filter(".cross-domain").nonempty() ? ["Cross-network dependency, no CDS recorded"] : []),
+      ...(edges.filter(".unresolved").nonempty() ? ["Unresolved former-CDS route; review scenario change"] : []),
+      ...(edges.filter(".external").nonempty() ? ["Dependency on external network"] : []),
+      ...(nodes.filter(".foundational").nonempty() ? ["Foundational service"] : []),
+      ...(nodes.filter(".added").nonempty() ? ["Added service"] : []),
+      ...(nodes.filter(".merge-target").nonempty() ? ["Merge target"] : []),
+      ...(nodes.filter(".rehomed").nonempty() ? ["Re-homed service"] : []),
+      ...(nodes.filter(".retired, .merged").nonempty() ? ["Retired or merged away"] : []),
+      ...(edges.filter(".removed").nonempty() ? ["Removed dependency"] : []),
+    ];
+    return { title: `${name} — ${viewName}`, details, legend };
+  }
+
+  /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
   async function exportView(): Promise<void> {
-    if (snapshot === null || cy.nodes().empty()) return;
-    const { marking, caveat } = snapshot;
-    exportPng.disabled = true;
+    if (exporting || snapshot === null || cy.nodes().empty()) return;
+    exporting = true;
+    exportStatus.textContent = "";
+    updateExportButtons();
     try {
-      // The export renders at twice the size, so it shows every service label; restore the screen after.
-      applyZoom(true);
-      const rendered = cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 });
-      applyZoom();
+      if ((await ctx.resolveCapture()) === "cancel") return;
+      if (cy.nodes().empty()) return;
+      const source = ctx.captureSource();
+      const capturedName =
+        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
+      const { marking, caveat } = ctx.snapshot();
+      const context = document.createElement("canvas").getContext("2d");
+      if (!context) throw new Error("no 2D canvas");
+      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) => {
+        context.font = `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`;
+        return context.measureText(text).width;
+      });
+      let rendered: Promise<Blob>;
+      try {
+        applyZoom(true);
+        rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 }));
+      } finally {
+        applyZoom();
+      }
       const map = await rendered;
-      ctx.saveImage(await frameWithBanner(map, marking, caveat), "png");
+      const image = await frameWithBanner(map, marking, caveat, frame);
+      ctx.saveImage(image, "png", capturedName);
+      exportStatus.textContent = "PNG download started.";
+    } catch {
+      exportStatus.textContent = "Could not export PNG. Try again.";
     } finally {
-      exportPng.disabled = cy.nodes().empty();
+      exporting = false;
+      updateExportButtons();
     }
   }
 
-  /**
-   * Fit labels to the zoom: hide service labels too small to read ("quiet") and enlarge network and
-   * CDS labels so they stay readable when zoomed out. `exporting` keeps every label, since an export
-   * renders at twice the size.
-   */
-  /**
-   * Export the current view as SVG (WORK-012), drawn at the PNG's size with every label, so the two
-   * exports match. Reading the map writes nothing.
-   */
-  function exportVector(): void {
-    if (snapshot === null || cy.nodes().empty()) return;
-    const { marking, caveat } = snapshot;
-    const context = document.createElement("canvas").getContext("2d");
-    if (!context) return;
-    const measure = (text: string, font: string) => {
-      context.font = font;
-      return context.measureText(text).width;
-    };
-    applyZoom(true);
-    let scene: SvgScene;
+  /** Freeze SVG scene and frame from the same current viewport without changing saved positions. */
+  async function exportVector(): Promise<void> {
+    if (exporting || snapshot === null || cy.nodes().empty()) return;
+    exporting = true;
+    exportStatus.textContent = "";
+    updateExportButtons();
     try {
-      scene = sceneFromMap(cy, 2, measure);
+      if ((await ctx.resolveCapture()) === "cancel") return;
+      if (cy.nodes().empty()) return;
+      const source = ctx.captureSource();
+      const capturedName =
+        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
+      const { marking, caveat } = ctx.snapshot();
+      const context = document.createElement("canvas").getContext("2d");
+      if (!context) throw new Error("no 2D canvas");
+      const measure = (text: string, font: string) => {
+        context.font = font;
+        return context.measureText(text).width;
+      };
+      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) =>
+        measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
+      );
+      let scene: SvgScene;
+      try {
+        applyZoom(true);
+        scene = sceneFromMap(cy, 2, measure);
+      } finally {
+        applyZoom();
+      }
+      const image = new Blob([svgDocument(scene, marking, caveat, frame)], { type: "image/svg+xml" });
+      ctx.saveImage(image, "svg", capturedName);
+      exportStatus.textContent = "SVG download started.";
+    } catch {
+      exportStatus.textContent = "Could not export SVG. Try again.";
     } finally {
-      applyZoom();
+      exporting = false;
+      updateExportButtons();
     }
-    ctx.saveImage(new Blob([svgDocument(scene, marking, caveat)], { type: "image/svg+xml" }), "svg");
   }
+
+  /** Fit labels to the zoom. Exporting keeps each service label readable at twice screen size. */
 
   function applyZoom(exporting = false): void {
     // An export renders at twice the size, so its labels need half the growth.
@@ -447,7 +592,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function fitMap(): void {
-    cy.fit(undefined, FIT_MARGIN + toolbar.offsetHeight);
+    cy.fit(undefined, FIT_MARGIN);
   }
 
   function fitWhenSized(): void {
@@ -488,10 +633,8 @@ export function createMapView(ctx: MapViewContext): MapView {
     const node = target as NodeSingular;
     chainRoot = node.id();
     applyView();
-    const entityId = node.data("entityId") as number;
-    // A service a scenario adds exists only in that scenario: open the scenario.
-    if (entityId < 0 && view.kind !== "as-is") ctx.openScenario(view.scenarioId);
-    else ctx.open(node.data("entity") as MapEntity, entityId);
+    const selected = graph.nodes.find((item) => item.data.id === node.id());
+    if (selected) openNode(selected);
   });
   // Dragging a network drags its services; either way, save the new arrangement.
   cy.on("dragfree", "node", () => {
@@ -535,6 +678,9 @@ export function createMapView(ctx: MapViewContext): MapView {
           continue;
         }
         existing.data("label", def.data.label);
+        existing.data("origin", def.data.origin);
+        existing.data("entity", def.data.entity);
+        existing.data("entityId", def.data.entityId);
         existing.classes(def.classes);
         const current = existing.parent().first();
         if ((current.nonempty() ? current.id() : null) !== parent) {
@@ -561,8 +707,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     });
 
     empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
-    exportPng.disabled = cy.nodes().empty();
-    exportSvg.disabled = exportPng.disabled;
+    updateExportButtons();
     const unplaced = applySaved(fresh.nodes());
     applyView();
     return unplaced;
@@ -604,19 +749,22 @@ export function createMapView(ctx: MapViewContext): MapView {
   function refresh(): void {
     const fresh = sync();
     if (fresh.empty()) return;
-    // A bulk addition (a CSV import into a small map) lays out everything: placing many nodes
-    // around a few pinned ones crowds them. The new positions join the edit that added the nodes.
-    const leaves = cy.nodes().filter((n) => !n.isParent()).length;
-    const bulk = fresh.filter((n) => !n.isParent()).length * 2 > leaves;
+    // Even a majority-fresh import must keep every previously arranged leaf pinned.
+    // A full layout is appropriate only when there is no prior leaf to preserve.
+    const hasExistingLeaf = cy
+      .nodes()
+      .not(fresh)
+      .nodes()
+      .filter((n) => !n.isParent())
+      .nonempty();
     withAllLabels(() => {
-      if (bulk) layoutAll(cy);
-      else {
+      if (hasExistingLeaf) {
         startBeside(fresh);
         place(cy, fresh);
-      }
+      } else layoutAll(cy);
     });
     persist("merge");
-    if (bulk) {
+    if (!hasExistingLeaf) {
       needsFit = true;
       fitWhenSized();
     }
@@ -678,6 +826,25 @@ export function createMapView(ctx: MapViewContext): MapView {
     }
   }
 
+  function showAsIs(): void {
+    if (view.kind === "as-is") return;
+    view = { kind: "as-is" };
+    switchView();
+  }
+
+  function inspectOrigin(origin: GraphOrigin): boolean {
+    if (view.kind === "as-is" || snapshot === null) return false;
+    const node = graph.nodes.find((candidate) => {
+      const current = candidate.data.origin;
+      return origin.kind === "planned"
+        ? current.kind === "planned" && current.scenarioId === origin.scenarioId && current.changeId === origin.changeId
+        : current.kind === "baseline" && current.entity === origin.entity && current.entityId === origin.entityId;
+    });
+    if (!node) return false;
+    ctx.inspectNode(node, view, snapshot, comparison);
+    return true;
+  }
+
   function reset(): void {
     view = { kind: "as-is" };
     showFoundational = false;
@@ -701,5 +868,5 @@ export function createMapView(ctx: MapViewContext): MapView {
     fitWhenSized();
   }
 
-  return { element, refresh, reset };
+  return { element, refresh, reset, settlePendingPlacement, showAsIs, inspectOrigin };
 }

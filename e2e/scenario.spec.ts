@@ -75,12 +75,14 @@ async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved
   await (
     await chooser
   ).setFiles({ name: "demo.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
-  await expect(page.getByTestId("dataset-status")).toHaveText(`${DEMO_NAME} | demo.sqlite | ${saved}`);
+  await expect(page.getByTestId("dataset-status")).toHaveText(
+    `${DEMO_NAME} | demo.sqlite | ${saved === "Unsaved" ? "Changes not saved to file" : "Saved"}`,
+  );
 }
 
 async function save(page: Page): Promise<Uint8Array> {
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
   return new Uint8Array(readFileSync(await (await download).path()));
 }
 
@@ -160,6 +162,110 @@ test("switches between As-Is, To-Be and Compare without writing, with the reduct
   expect(problems).toEqual([]);
 });
 
+test("signed baseline and planned services open a read-only projection, then Edit As-Is restores baseline editing", async ({
+  page,
+}) => {
+  const problems = await load(page);
+  const db = await createDataset("Signed identity fixture", wasm);
+  const repo = new Repository(db);
+  const network = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+  db.run("INSERT INTO service (id, name, network_id, marking) VALUES (-1, 'Signed baseline', ?, 'CUI')", [network.id]);
+  const scenario = repo.createScenario({ name: "Plan" });
+  repo.addScenarioChange(scenario.id, { kind: "add", name: "Planned", networkId: network.id, marking: "CUI" });
+
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (
+    await chooser
+  ).setFiles({ name: "signed.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
+  await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Plan" });
+  await page.getByRole("button", { name: "Fit map" }).click();
+  const canvas = page.getByTestId("map-canvas");
+  const point = await canvas.evaluate((container) => {
+    interface Node {
+      data(key: string): unknown;
+      renderedPosition(): { x: number; y: number };
+    }
+    interface Cy {
+      nodes(): { filter(predicate: (node: Node) => boolean): { first(): Node } };
+    }
+    const cy = (container as unknown as { _cyreg: { cy: Cy } })._cyreg.cy;
+    return cy
+      .nodes()
+      .filter((node) => node.data("label") === "Signed baseline")
+      .first()
+      .renderedPosition();
+  });
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("map canvas has no size");
+  await page.mouse.click(box.x + point.x, box.y + point.y);
+  const editor = page.getByTestId("editor");
+  await expect(editor.getByRole("heading", { name: "Signed baseline" })).toBeVisible();
+  await expect(editor).toContainText("To-Be projection: Plan");
+  await expect(editor).toContainText("Existing As-Is record in this projection.");
+  await expect(editor.getByLabel("Name", { exact: true })).toHaveCount(0);
+
+  const find = page.getByLabel("Find on map");
+  await find.fill("Planned (NIPR)");
+  await find.press("Tab");
+  await expect(editor.getByRole("heading", { name: "Planned" })).toBeVisible();
+  await expect(editor).toContainText("Planned service added by this scenario.");
+  await expect(editor.getByRole("button", { name: "Edit As-Is" })).toHaveCount(0);
+
+  await find.fill("Signed baseline (NIPR)");
+  await find.press("Tab");
+  await editor.getByRole("button", { name: "Edit As-Is" }).click();
+  await expect(page.getByLabel("View", { exact: true })).toHaveValue("as-is");
+  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Signed baseline");
+  expect(problems).toEqual([]);
+});
+
+test("an invalidated CDS route stays visibly unresolved in the map, summary and SVG capture", async ({ page }) => {
+  const problems = await load(page);
+  const db = await createDataset("Route fixture", wasm);
+  const repo = new Repository(db);
+  const a = repo.createNetwork({ name: "A", kind: "internal", marking: "CUI" });
+  const b = repo.createNetwork({ name: "B", kind: "internal", marking: "SECRET" });
+  const c = repo.createNetwork({ name: "C", kind: "internal", marking: "SECRET" });
+  const consumer = repo.createService({ name: "Consumer", networkId: a.id, marking: "CUI" });
+  const provider = repo.createService({ name: "Provider", networkId: b.id, marking: "SECRET" });
+  const guard = repo.createCds({ name: "Guard", networkIds: [a.id, b.id] });
+  repo.addDependency({ consumerServiceId: consumer.id, providerServiceId: provider.id, viaCdsId: guard.id });
+  const scenario = repo.createScenario({ name: "Move provider" });
+  repo.addScenarioChange(scenario.id, { kind: "rehome", serviceId: provider.id, networkId: c.id });
+
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (
+    await chooser
+  ).setFiles({ name: "route.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
+  await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Move provider" });
+  await expect(page.getByTestId("map-summary")).toContainText("1 unresolved former-CDS route");
+  const find = page.getByLabel("Find on map");
+  await find.fill("consumer (a)");
+  await find.press("Enter");
+  await expect(page.getByTestId("editor")).toContainText("Unresolved route previously via Guard");
+  await expect(page.getByTestId("editor")).toContainText("Connectivity is unverified");
+  const edges = await page.getByTestId("map-canvas").evaluate((container) => {
+    interface Edge {
+      data(key: string): unknown;
+      classes(): string[];
+    }
+    const cy = (container as unknown as { _cyreg: { cy: { edges(): Edge[] } } })._cyreg.cy;
+    return cy.edges().map((edge) => ({ kind: edge.data("kind"), classes: edge.classes() }));
+  });
+  expect(edges).toHaveLength(1);
+  expect(edges[0]).toMatchObject({ kind: "unresolved", classes: expect.arrayContaining(["unresolved"]) });
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export SVG" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toContain("To-Be");
+  const svg = readFileSync(await file.path(), "utf8");
+  expect(svg).toContain("Unresolved former-CDS route; review scenario change");
+  expect(svg).toContain("Route fixture — To-Be: Move provider");
+  expect(problems).toEqual([]);
+});
+
 test("authors scenario changes in the editor, one undo step each, with the banner following", async ({ page }) => {
   const problems = await load(page);
   await page.getByRole("button", { name: "Open demo" }).click();
@@ -167,7 +273,7 @@ test("authors scenario changes in the editor, one undo step each, with the banne
   await page.getByRole("button", { name: "Add scenario" }).click();
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Plan");
-  await editor.getByRole("button", { name: "Save scenario" }).click();
+  await editor.getByRole("button", { name: "Add scenario" }).click();
   await expect(editor.getByText("No changes yet: this scenario matches As-Is.")).toBeVisible();
 
   await editor.getByLabel("Change", { exact: true }).selectOption({ label: "Add a service" });
@@ -192,6 +298,10 @@ test("authors scenario changes in the editor, one undo step each, with the banne
   ).toHaveCount(0);
 
   await page.getByRole("button", { name: "Undo" }).click();
+  await page
+    .getByRole("dialog", { name: "Unapplied changes" })
+    .getByRole("button", { name: "Discard draft and continue" })
+    .click();
   await expect(rows.getByRole("listitem")).toHaveCount(1);
   await page.getByRole("button", { name: "Undo" }).click();
   await expect(rows.getByRole("listitem")).toHaveCount(0);

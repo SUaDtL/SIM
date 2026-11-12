@@ -89,6 +89,10 @@ export const mapStyle: StylesheetJson = [
     style: { width: 3.5, "line-color": "#c62828", "target-arrow-color": "#c62828", "line-style": "dashed" },
   },
   {
+    selector: "edge.unresolved",
+    style: { width: 4, "line-color": "#6f42c1", "target-arrow-color": "#6f42c1", "line-style": "dashed" },
+  },
+  {
     selector: "edge.external",
     style: { width: 3, "line-color": "#b08850", "target-arrow-color": "#b08850", "line-style": "dotted" },
   },

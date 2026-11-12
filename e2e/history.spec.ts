@@ -37,7 +37,7 @@ async function addNetwork(page: Page, name: string): Promise<void> {
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page.getByRole("button", { name: "Add network" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill(name);
-  await editor(page).getByRole("button", { name: "Save network" }).click();
+  await editor(page).getByRole("button", { name: "Add network" }).click();
   await expect(editor(page).getByRole("heading", { name: "Edit network" })).toBeVisible();
 }
 
@@ -117,7 +117,7 @@ test("undoes and redoes edits with buttons and keys, and rebuilds the open form"
   await expect(undo(page)).toBeDisabled();
   await addNetwork(page, "NIPR");
   await editor(page).getByLabel("Name", { exact: true }).fill("NIPR-1");
-  await editor(page).getByRole("button", { name: "Save network" }).click();
+  await editor(page).getByRole("button", { name: "Apply changes" }).click();
   await expect(list(page).locator(".item-name")).toHaveText(["NIPR-1"]);
 
   await undo(page).click();
@@ -173,7 +173,7 @@ test("undoes a drag, a Re-layout and an added service by putting the map back", 
   await page.getByRole("button", { name: "Add service" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill("Wiki");
   await editor(page).getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
-  await editor(page).getByRole("button", { name: "Save service" }).click();
+  await editor(page).getByRole("button", { name: "Add service" }).click();
   await expect.poll(async () => Object.keys(await positions(page))).toContain("Wiki");
   await undo(page).click();
   await expect.poll(async () => Object.keys(await positions(page))).not.toContain("Wiki");
@@ -196,16 +196,19 @@ test("asks before New, Open or closing would discard edits, and not for an untou
 
   await addNetwork(page, "MPE");
   page.once("dialog", (d) => {
-    expect(d.message()).toBe("Discard unsaved changes to History fixture?");
-    void d.dismiss();
+    expect(d.message()).toBe("Name for the new dataset");
+    void d.accept("Other");
   });
   await page.getByRole("button", { name: "New" }).click();
+  await page.getByRole("dialog", { name: "Unsaved changes" }).getByRole("button", { name: "Stay" }).click();
   await expect(status(page)).toContainText("History fixture");
 
-  page.once("dialog", (d) => void d.dismiss());
+  const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (await chooser).setFiles({ name: "history.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
+  await page.getByRole("dialog", { name: "Unsaved changes" }).getByRole("button", { name: "Stay" }).click();
   await expect(status(page)).toContainText("History fixture");
-  expect(asked).toBe("confirm");
+  expect(asked).toBe("");
 
   asked = "";
   await page.close({ runBeforeUnload: true });

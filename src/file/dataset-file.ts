@@ -5,6 +5,7 @@
 interface Writable {
   write(data: Uint8Array<ArrayBuffer>): Promise<void>;
   close(): Promise<void>;
+  abort?(): Promise<void>;
 }
 
 export interface FileHandle {
@@ -90,8 +91,17 @@ export async function pickSaveTarget(suggestedName: string): Promise<FileHandle 
 
 export async function writeToHandle(handle: FileHandle, bytes: Uint8Array): Promise<void> {
   const writable = await handle.createWritable();
-  await writable.write(new Uint8Array(bytes));
-  await writable.close();
+  try {
+    await writable.write(new Uint8Array(bytes));
+    await writable.close();
+  } catch (error) {
+    try {
+      await writable.abort?.();
+    } catch {
+      // Preserve the original write/close failure for the caller's retry message.
+    }
+    throw error;
+  }
 }
 
 export function downloadDataset(bytes: Uint8Array, fileName: string): void {

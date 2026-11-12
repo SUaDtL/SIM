@@ -1,5 +1,5 @@
 import { bannerText, type Marking } from "../db/markings";
-import { BANNER_COLORS, bandHeight } from "./export";
+import { BANNER_COLORS, bandHeight, type FrameLayout } from "./export";
 
 /**
  * SVG export (WORK-012): a drawn map as plain SVG shapes and text, framed by the classification
@@ -205,10 +205,12 @@ function edge(e: SvgEdge): string {
 }
 
 /** The scene as a standalone SVG document, with the banner above and below the map. */
-export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | null): string {
+export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | null, frame?: FrameLayout): string {
   const width = scene.pixelWidth;
   const band = bandHeight(width);
-  const height = scene.pixelHeight + 2 * band;
+  const top = frame?.topHeight ?? 0;
+  const bottom = frame?.bottomHeight ?? 0;
+  const height = scene.pixelHeight + top + bottom + 2 * band;
   const colors = BANNER_COLORS[marking];
   const text = bannerText(marking, caveat);
   const banner = (y: number) =>
@@ -231,13 +233,30 @@ export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | 
     "svg",
     {
       x: 0,
-      y: band,
+      y: band + top,
       width,
       height: scene.pixelHeight,
       viewBox: `${num(v.x)} ${num(v.y)} ${num(v.width)} ${num(v.height)}`,
     },
     [...scene.containers.map(node), ...scene.edges.map(edge), ...scene.nodes.map(node)].join(""),
   );
+  const frameLines = (lines: FrameLayout["topLines"], offset: number) =>
+    lines
+      .map((line) =>
+        tag(
+          "text",
+          {
+            x: Math.max(16, Math.round(width * 0.025)),
+            y: offset + line.y,
+            "font-family": FONT,
+            "font-size": line.size,
+            "font-weight": line.bold ? "bold" : null,
+            fill: "#1f2933",
+          },
+          escapeXml(line.text),
+        ),
+      )
+      .join("");
   return (
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     tag(
@@ -246,8 +265,11 @@ export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | 
       tag("title", {}, escapeXml(`SIM map - ${text}`)) +
         tag("rect", { x: 0, y: 0, width, height, fill: "#ffffff" }) +
         map +
+        (frame
+          ? frameLines(frame.topLines, band) + frameLines(frame.bottomLines, band + top + scene.pixelHeight)
+          : "") +
         banner(0) +
-        banner(band + scene.pixelHeight),
+        banner(band + top + scene.pixelHeight + bottom),
     ) +
     "\n"
   );

@@ -146,12 +146,90 @@ test("Cancel writes nothing, and the preview follows the host-data choice", asyn
   expect(problems).toEqual([]);
 });
 
+test("selecting a new file immediately invalidates the previous import preview", async ({ page }) => {
+  await load(page);
+  const first = csv("A.csv", [
+    ["name", "kind", "marking", "description"],
+    ["Alpha", "internal", "CUI", ""],
+  ]);
+  const second = csv("B.csv", [
+    ["name", "kind", "marking", "description"],
+    ["Bravo", "internal", "CUI", ""],
+  ]);
+  await choose(page, [first]);
+  const d = dialog(page);
+  const input = d.getByLabel("CSV files");
+  const importAction = d.getByRole("button", { name: "Import", exact: true });
+  await expect(importAction).toBeEnabled();
+  await page.evaluate(() => {
+    File.prototype.arrayBuffer = function () {
+      return new Promise<ArrayBuffer>(() => undefined);
+    };
+  });
+
+  await input.setInputFiles([second]);
+  await expect(importAction).toBeDisabled();
+  await expect(d.getByText("Reading the files...")).toBeVisible();
+  await d.getByRole("button", { name: "Cancel" }).click();
+});
+
+test("late file reads cannot replace a newer preview or reopen a closed import", async ({ page }) => {
+  await load(page);
+  await choose(page, [
+    csv("A.csv", [
+      ["name", "kind", "marking", "description"],
+      ["Alpha", "internal", "CUI", ""],
+    ]),
+  ]);
+  const d = dialog(page);
+  await expect(d.getByTestId("import-summary")).toHaveText("Import will add 1 network.");
+  await page.evaluate(() => {
+    const current = window as typeof window & { releaseImportRead?: () => void };
+    File.prototype.arrayBuffer = function () {
+      if (this.name !== "B.csv") return Blob.prototype.arrayBuffer.call(this);
+      return new Promise<ArrayBuffer>((resolve) => {
+        current.releaseImportRead = () => {
+          void Blob.prototype.arrayBuffer.call(this).then(resolve);
+        };
+      });
+    };
+  });
+  const input = d.getByLabel("CSV files");
+  await input.setInputFiles([
+    csv("B.csv", [
+      ["name", "kind", "marking", "description"],
+      ["Bravo", "internal", "CUI", ""],
+    ]),
+  ]);
+  await input.setInputFiles([
+    csv("C.csv", [
+      ["name", "kind", "marking", "description"],
+      ["Charlie", "internal", "CUI", ""],
+    ]),
+  ]);
+  await expect(d.getByText("C.csv: Networks, 1 row")).toBeVisible();
+  await page.evaluate(() => (window as typeof window & { releaseImportRead?: () => void }).releaseImportRead?.());
+  await expect(d.getByText("C.csv: Networks, 1 row")).toBeVisible();
+  await expect(d.getByText("B.csv: Networks, 1 row")).toHaveCount(0);
+  await input.setInputFiles([
+    csv("B.csv", [
+      ["name", "kind", "marking", "description"],
+      ["Bravo", "internal", "CUI", ""],
+    ]),
+  ]);
+  await expect(d.getByText("Reading the files...")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(d).toBeHidden();
+  await page.evaluate(() => (window as typeof window & { releaseImportRead?: () => void }).releaseImportRead?.());
+  await expect(d).toHaveCount(0);
+});
+
 test("undo inside the dialog does nothing, and one undo after an import removes only the import", async ({ page }) => {
   const problems = await load(page);
   await showList(page, "Networks");
   await page.getByRole("button", { name: "Add network" }).click();
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Before");
-  await page.getByTestId("editor").getByRole("button", { name: "Save network" }).click();
+  await page.getByTestId("editor").getByRole("button", { name: "Add network" }).click();
   const list = page.getByTestId("entity-list");
   await expect(list.getByRole("button", { name: "Before" })).toBeVisible();
 

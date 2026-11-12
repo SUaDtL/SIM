@@ -223,9 +223,10 @@ textarea {
   white-space: nowrap;
 }
 
-/* The map canvas fills its grid cell; Cytoscape needs a container with a real size. */
+/* Controls and the drawable viewport have separate rows, so captures never include controls. */
 .map-area {
-  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -233,28 +234,25 @@ textarea {
 }
 
 .map-canvas {
-  position: absolute;
-  inset: 0;
+  grid-row: 2;
+  min-width: 0;
+  min-height: 0;
 }
 
-/* Spans the top of the map; gaps between the controls still reach the canvas. */
+/* The toolbar takes its own row above the map viewport. */
 .map-toolbar {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  left: 8px;
+  grid-row: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 6px;
-  pointer-events: none;
+  padding: 8px;
 }
 
 .map-tools {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  pointer-events: auto;
 }
 
 .map-filter {
@@ -279,12 +277,13 @@ textarea {
 }
 
 .map-empty {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  grid-row: 2;
+  grid-column: 1;
+  align-self: center;
+  justify-self: center;
   margin: 0;
   color: var(--muted);
-  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 /* ---- editor ---- */
