@@ -9,11 +9,9 @@ context-format: html
 
 <!-- This .codearbiter/ directory is the root-level project-state store. It lives
 outside .claude/ so it survives even if the codeArbiter plugin is uninstalled.
-The `arbiter: enabled` frontmatter above is the activation flag.
+The frontmatter above owns activation and selects the HTML context format.
+Keep this initialized marker and the project history intact. -->
 
-This CONTEXT.md is a stub: it carries no initialization sentinel yet, so the
-orchestrator routes you to /ca:create-context (if source already exists) or
-/ca:decompose (greenfield) to populate the real project context. That flow writes
-the sentinel and normal operation begins. -->
-
-_Not yet initialized. Run /ca:create-context or /ca:decompose to populate._
+Project context is recorded in `.codearbiter/context/` and the decomposition is
+recorded in `.codearbiter/decomposition/project.html`. Use the installed
+codeArbiter knowledge workflow to read or refresh those records.

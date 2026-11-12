@@ -11,10 +11,13 @@ describe("project documents", () => {
     expect(missing.filter((name) => name !== "test" || !agents.includes("`npm test`"))).toEqual([]);
   });
 
-  it("states the no-network, no-IP/FQDN and fictional-data rules", () => {
+  it("states the offline, host-like confirmation and fictional-data rules", () => {
     const agents = read("AGENTS.md");
     expect(agents).toMatch(/No network/);
-    expect(agents).toMatch(/IP addresses or FQDNs/);
+    expect(agents).toMatch(/No dedicated IP-address or FQDN fields/);
+    expect(agents).toMatch(/SensitiveInputWarning/);
+    expect(agents).toMatch(/explicit confirmation of the listed/);
+    expect(agents).toMatch(/Q-032/);
     expect(agents).toMatch(/Fictional test data only/);
   });
 

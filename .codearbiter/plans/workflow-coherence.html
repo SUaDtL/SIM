@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM workflow coherence delivery · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-WORKFLOW-COHERENCE</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/workflow-coherence.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM workflow coherence delivery</h1><p class="deck">Twelve dependency-ordered work packages from the verified handoff, one branch and PR.</p><div class="meta"><span>PLAN-WORKFLOW-COHERENCE</span><span>Revision 45 · schema 0.3.2</span><span>18 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-WORKFLOW-COHERENCE</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:TASK-WP00 -->
+<article class="record" id="TASK-WP00" data-ca-symbol="TASK-WP00" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP00">TASK-WP00</a><h3>Verify the receiving base and establish the behavior contract</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-INTAKE</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP00">SPEC-WORKFLOW-COHERENCE#CRIT-WP00</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Receiving-base record, finding dispositions, chosen branch, behavior decisions and baseline evidence.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-INTAKE</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>AGENTS.md</code></td></tr><tr><td>inspect</td><td><code>CLAUDE.md</code></td></tr><tr><td>inspect</td><td><code>package.json</code></td></tr><tr><td>inspect</td><td><code>playwright.config.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>No source changes required; preserve intake record.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Read current instructions, repository identity, target base, working tree and relevant governance. Keep unrelated work intact.</li><li>Compare audit pin and all assigned source paths with current HEAD. Disposition all findings with current evidence. Inspect current PR #21 status only if its workflows matter.</li><li>Create or reuse the dedicated branch/worktree. Record initial state and environment; do not replace current source with the archive.</li><li>Adopt the product contract; record any evidence-required adjustment before dependent work. Assign one integrator for shared repository/session interfaces.</li><li>Run current baseline checks as supported. Keep lint/format and browser stages individually honest; old 241-pass evidence is historical.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;tests/unit/docs.test.ts&#34;,&#34;tests/unit/lint-policy.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Receiving-base record, finding dispositions, chosen branch, behavior decisions and baseline evidence.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC001</li><li>AC002</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP00 intake implemented: packet verified, base and drift recorded, baseline current gate passed; candidate acceptance remains pending. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>agent_report</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T15:50:11Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6a863e4593e3918f0db51a4954d68d856b26e0512423a42baeff905a09699ebf</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>intake agent tool result 2026-11-12 10:43 America/New_York</div><div class="field"><span class="label">Summary</span>Receiving HEAD 6c489bf passed typecheck, lint, format, build, 241 unit tests and 94 Edge/Chrome file:// E2E; native picker path remains stubbed.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP00 -->
+
+<!-- CA:BEGIN:TASK-WP01 -->
+<article class="record" id="TASK-WP01" data-ca-symbol="TASK-WP01" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP01">TASK-WP01</a><h3>Repair history correctness and truthful write outcomes</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP01">SPEC-WORKFLOW-COHERENCE#CRIT-WP01</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP00">TASK-WP00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Focused history/subscriber regressions with accurate committed-versus-effect outcome.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this bounded implementation only; no schema or stored-file change.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Reproduce caveat replacement Undo and a throwing subscriber before modifying their boundaries.</li><li>Replace caveat REPLACE behavior with update/upsert semantics whose inverse restores prior content; verify set/replace/clear/same-value.</li><li>Separate committed data outcome from subscriber/presentation failures; notify remaining subscribers and provide a recoverable projection error.</li><li>Keep current public callers working through narrow adapters. Do not install a new event framework.</li><li>Retain FK/cascade restoration, temporary inverse logs and existing history limit; make no-op semantics explicit.</li><li>Isolate list/editor/map work inside the workspace listener as well as separate repository subscribers; a failing diagnostic sink or reentrant observer must not change the committed outcome.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/domain/repository.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Focused history/subscriber regressions with accurate committed-versus-effect outcome.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC003</li><li>AC004</li><li>AC005</li><li>AC074</li><li>AC077</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:32Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>7bd1bf70d9f3dd13012515a09b533ad376b5b47b20fdf97379a6b7c32c3e67e6</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP01 -->
+
+<!-- CA:BEGIN:TASK-WP02 -->
+<article class="record" id="TASK-WP02" data-ca-symbol="TASK-WP02" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP02">TASK-WP02</a><h3>Bound semantic admission and preserve identity compatibility</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP02">SPEC-WORKFLOW-COHERENCE#CRIT-WP02</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP00">TASK-WP00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Bounded semantic validator, explicit identity adapter, compatibility cases and readable refusal diagnostics.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/db/dataset.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/types.ts</code></td></tr><tr><td>modify</td><td><code>src/scenario/scenario.ts</code></td></tr><tr><td>modify</td><td><code>src/map/graph.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>No writes to opened files or schema; preserve compatible reader and original data.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Keep structural validation; add bounded semantic inspection and independently bound ancestry/merge traversal before publishing candidate data.</li><li>Refuse structural or unrepresentable input, preserving old session/file. Keep safely representable legacy semantic issues readable with scoped diagnostics; permit unrelated work/repairs and reject new or worsened relevant invariants.</li><li>Represent baseline/planned origin explicitly. Preserve safe signed persisted IDs and allocate collision-free numeric adapter IDs only where needed.</li><li>Cover legacy supported versions, exact-DDL matching and unsafe-ID diagnostics; do not rewrite merged migrations or silently remap records.</li><li>Expose diagnostics that identify the offending object/invariant without requiring a repair subsystem.</li><li>Check generated row IDs exactly before Number conversion and COMMIT; use bounded safe allocation or typed atomic capacity refusal. Admission-only checks do not prevent unsafe auto-allocation.</li><li>Preserve exact unchanged legacy fields during unrelated edits; validate changed values and new/worsened affected violations without turning readable legacy data into an uneditable record.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/db/open.test.ts&#34;,&#34;src/db/migrate.test.ts&#34;,&#34;src/db/schema.test.ts&#34;,&#34;src/domain/repository.test.ts&#34;,&#34;src/scenario/scenario.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Bounded semantic validator, explicit identity adapter, compatibility cases and readable refusal diagnostics.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC006</li><li>AC007</li><li>AC008</li><li>AC009</li><li>AC010</li><li>AC079</li><li>AC084</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:32Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>f5df51f1dd3c0539295cfb4791e1ba15c37eee348fad7a82068186303c071796</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP02 -->
+
+<!-- CA:BEGIN:TASK-WP03 -->
+<article class="record" id="TASK-WP03" data-ca-symbol="TASK-WP03" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP03">TASK-WP03</a><h3>Add the small atomic command and causal history boundary</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP03">SPEC-WORKFLOW-COHERENCE#CRIT-WP03</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP01">TASK-WP01</a></li><li><a href="#TASK-WP02">TASK-WP02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Atomic service/accepted-import primitive, typed outcome, scoped read set, causal history and checkpoint reader.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-FOUNDATIONS</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/types.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/errors.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Keep existing method adapters; revert coherent coordinator+callers together if needed. No schema mutation.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Add outer transaction ownership with nested joining/savepoints only for required compound operations; keep group as history batching for unmigrated callers.</li><li>Prepare JS history stacks/coalescing and inverse-log cleanup within the recoverable boundary; publish after SQL commit.</li><li>Implement applyServiceDraft for scalar values, support/notes, consumers and outgoing dependencies; validate final affected incoming/outgoing routes.</li><li>Expose monotonic revision, affected identities/origins and causal command ID; use mergeIntoCommandId for follow-up layout rather than a global latest-step boolean.</li><li>Expose a complete typed persistent-content reader for session checkpoint equality. Do not use the rendering Snapshot as persistence identity.</li><li>Support synchronous accepted-import transaction ownership; parse/file I/O and UI callbacks stay outside the transaction.</li><li>On relevant stale aggregate return scoped conflict retaining draft. Auto-revalidate unrelated/position-only changes.</li><li>Independently caught/rejected inner operations require savepoints. Test group/atomic nesting, pre-BEGIN replay failure, thenable misuse and legacy-repair Undo with exact diagnostics restoration.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/domain/repository.test.ts&#34;,&#34;src/db/schema.test.ts&#34;,&#34;src/import/engine.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Atomic service/accepted-import primitive, typed outcome, scoped read set, causal history and checkpoint reader.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC011</li><li>AC012</li><li>AC013</li><li>AC014</li><li>AC015</li><li>AC016</li><li>AC017</li><li>AC075</li><li>AC076</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:33Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>87e908f21ce9f6b365cb8ceb3774b1ae0049b5c61d6fad1a92e57edb0881ad97</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP03 -->
+
+<!-- CA:BEGIN:TASK-WP04 -->
+<article class="record" id="TASK-WP04" data-ca-symbol="TASK-WP04" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP04">TASK-WP04</a><h3>Own sessions and make Save and replacement truthful</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-SAVE-EDIT</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP04">SPEC-WORKFLOW-COHERENCE#CRIT-WP04</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP01">TASK-WP01</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Session-owned saves/opens, truthful statuses and demonstrated logical saved checkpoints.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-SAVE-EDIT</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/file/dataset-file.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert controller and adapters together; existing .sqlite files and schema remain unchanged.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Extract bounded session/file operation state and injected file adapters for deterministic sequence tests.</li><li>Capture session/operation/target/checkpoint/bytes; serialize writes to equivalent targets; apply binding only to its correct owning operation/session.</li><li>Stage and validate New/Open/Demo candidates before resolving current work; install atomically and dispose superseded candidates.</li><li>Implement complete logical checkpoint equality and meaningful-work policy from architecture contract. Recognize Undo to saved content; keep fresh/demo/auto-layout behavior explicit.</li><li>Use accurate statuses for native persistence, download dispatch, cancellation and post-write presentation failure.</li><li>Expose resolveActiveDraft continuation for WP05; global file action must not serialize before valid draft application.</li><li>Treat native failure/cancellation and download-retention uncertainty correctly before destructive continuation; no new crash-recovery store.</li><li>Preserve trusted activation for real native picker/permission entry, acquiring target early when necessary. Settle required causal placement before capturing bytes/checkpoint; separately verify real-native behavior beyond stubbed E2E.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/db/open.test.ts&#34;,&#34;src/domain/repository.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Session-owned saves/opens, truthful statuses and demonstrated logical saved checkpoints.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC018</li><li>AC019</li><li>AC020</li><li>AC021</li><li>AC022</li><li>AC023</li><li>AC024</li><li>AC025</li><li>AC026</li><li>AC027</li><li>AC028</li><li>AC081</li><li>AC083</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP04-WP05 implementation is complete with local unit and browser proof. Real native picker acceptance AC083 remains pending and is recorded separately. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:34Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>9ecb89bcec8e6b79c51fc09de625b804850e518576402d17b51c0b23d3ab9463</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP04 -->
+
+<!-- CA:BEGIN:TASK-WP05 -->
+<article class="record" id="TASK-WP05" data-ca-symbol="TASK-WP05" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP05">TASK-WP05</a><h3>Deliver coherent add change remove and draft resolution</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-SAVE-EDIT</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP05">SPEC-WORKFLOW-COHERENCE#CRIT-WP05</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP03">TASK-WP03</a></li><li><a href="#TASK-WP04">TASK-WP04</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>A complete coherent record editing/deletion flow and shared pending-work/confirmation policy.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-SAVE-EDIT</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/forms.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/list-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/scenario-changes.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/validate.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert aggregate UI and command integration together; do not leave some relations staged and others immediate.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Own one explicit draft with base/scalars/relationships/validation/acknowledgement. Preserve it on unrelated refresh.</li><li>Replace entity Save with Apply changes; stage existing-service relationship controls; Discard restores the whole draft; global Save file applies automatically.</li><li>Implement the single action-resolution table for navigation, replacement, history, deletion, import and capture. Clean paths remain direct.</li><li>Preserve minimal creation; add context-aware Add service and sensible empty-state action through the same form. Latch deliberate default overrides without extra toggles.</li><li>Produce a current delete-consequence plan including cascades, detached references and blockers; revalidate before deletion; preserve draft on refusal/cancel.</li><li>Bind acknowledgements to exact relevant payload; include dataset naming under the documented warn/confirm policy without reprompting stored data.</li><li>Keep optional fields optional, explicit direct dependencies allowed, and field-specific errors actionable; no mandatory metadata or setup workflow.</li><li>Track meaningfully dirty unadded scenario-builder input with the active editor. Keep Add change direct; Save resolves pending metadata+builder atomically, while untouched builder defaults never create a change.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/ui/forms.test.ts&#34;,&#34;src/domain/validate.test.ts&#34;,&#34;src/domain/repository.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>A complete coherent record editing/deletion flow and shared pending-work/confirmation policy.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC029</li><li>AC030</li><li>AC031</li><li>AC032</li><li>AC033</li><li>AC034</li><li>AC035</li><li>AC036</li><li>AC037</li><li>AC038</li><li>AC039</li><li>AC082</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP04-WP05 implementation is complete with local unit and browser proof. Real native picker acceptance AC083 remains pending and is recorded separately. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:34Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>cd3e61a0c17c16feaef2e73dc14382c510f906cd20cabf1c96c3f62ce4c51e33</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP05 -->
+
+<!-- CA:BEGIN:TASK-WP06 -->
+<article class="record" id="TASK-WP06" data-ca-symbol="TASK-WP06" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP06">TASK-WP06</a><h3>Make the existing CSV workflow deterministic and atomic</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP06">SPEC-WORKFLOW-COHERENCE#CRIT-WP06</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP02">TASK-WP02</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li><li><a href="#TASK-WP04">TASK-WP04</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Generation-bound import preparation and one atomic accepted result, with compatible append-only reporting.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/import-dialog.ts</code></td></tr><tr><td>modify</td><td><code>src/import/engine.ts</code></td></tr><tr><td>modify</td><td><code>src/import/csv.ts</code></td></tr><tr><td>modify</td><td><code>src/import/templates.ts</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain append-only templates and stored schema; revert preparation+commit adapter together.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Invalidate readiness immediately on file selection; capture batch generation; ignore stale reads/previews and all completions after close including Escape.</li><li>Keep append-only behavior. Build immutable parsed files/options/base/report preparation with the same engine; no new import action language is required.</li><li>At commit, require the reviewed relevant base and acknowledgement. Rerun the deterministic engine inside the atomic command, verify reviewed outcome/effect identity before COMMIT, and roll back mismatch or unexpected failure.</li><li>Preserve intentional rejected/present/flagged rows and accepted parentless organizations. Resolve organization parent requests after all organization files; retain exact confirmation on the parent pass.</li><li>Use parameterized SQLite collation-consistent lookups and resolved IDs. Do not Unicode-fold names into a different identity system.</li><li>Add explicit CSV after-quote validation while preserving current valid dialect and limits.</li><li>Report preview/commit failures with recoverable state; do not close as successful or silently fall back to old selected files.</li><li>Compare complete typed mutation effects and reference witnesses on the relevant base; preserve unrelated updates. A changed generated-ID allocation requires re-preview. Preserve existing literal-quote and post-quote-whitespace CSV behavior while rejecting suffix junk.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/import/engine.test.ts&#34;,&#34;src/import/csv.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Generation-bound import preparation and one atomic accepted result, with compatible append-only reporting.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC040</li><li>AC041</li><li>AC042</li><li>AC043</li><li>AC044</li><li>AC045</li><li>AC046</li><li>AC047</li><li>AC048</li><li>AC078</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:35Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>99ec1df62af62cfa3556ea7e7d1075e7b83e5a91d000c5c598f5a352c9795624</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP06 -->
+
+<!-- CA:BEGIN:TASK-WP07 -->
+<article class="record" id="TASK-WP07" data-ca-symbol="TASK-WP07" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP07">TASK-WP07</a><h3>Unify selection and preserve the current map</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP07">SPEC-WORKFLOW-COHERENCE#CRIT-WP07</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP02">TASK-WP02</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Consistent typed inspection, stable arrangement, causal positions and a shared visible graph.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>src/map/graph.ts</code></td></tr><tr><td>modify</td><td><code>src/map/style.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Keep renderer and serialization stack; revert selection/view adapter atomically if necessary.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Use explicit entity origin for Find/tap/list/keyboard paths and draft resolution.</li><li>Open read-only projected details in To-Be/Compare. Edit As-Is switches map and inspector together and reveals the baseline selection; Open scenario is intentional. Ghost/planned origins remain explicit.</li><li>Use stable typed suggestions to disambiguate repeated labels; preserve input and show a concise no-result state.</li><li>Remove count-based full layout on ordinary bulk additions. Preserve existing leaves and place only new/reparented ones; retain explicit undoable Re-layout.</li><li>Capture originating session/causal command for queued positions. Never merge into an unrelated command or write through a replacement repository.</li><li>Compute final visibility once for canvas, accessible summary, dependency counts and capture. Count routed dependency identity once.</li><li>Keep pan/zoom/filter/list collapse nonblocking for active drafts; Fit changes viewport only and respects unobscured visible graph bounds.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/map/graph.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Consistent typed inspection, stable arrangement, causal positions and a shared visible graph.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC049</li><li>AC050</li><li>AC051</li><li>AC052</li><li>AC053</li><li>AC054</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:36Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>7c102b2dcabe4dfbb9a1f2a1a76129fd652b4092aef3e2ec39f6cbab9c30f799</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP07 -->
+
+<!-- CA:BEGIN:TASK-WP08 -->
+<article class="record" id="TASK-WP08" data-ca-symbol="TASK-WP08" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP08">TASK-WP08</a><h3>Make current-view PNG and SVG capture dependable</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP08">SPEC-WORKFLOW-COHERENCE#CRIT-WP08</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP04">TASK-WP04</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li><li><a href="#TASK-WP07">TASK-WP07</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Faithful current-view captures with frozen identity, derived context and complete error cleanup.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>src/map/export.ts</code></td></tr><tr><td>modify</td><td><code>src/map/svg-scene.ts</code></td></tr><tr><td>modify</td><td><code>src/map/svg.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>No schema or file-data change; revert framing/export adapter together if necessary.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Own capture preparation first; after explicit Apply and causal placement, freeze the intended matching session/view/revision/geometry. Cancel superseded preparation; then render from immutable context without later repository lookups.</li><li>Keep one-click current viewport PNG/SVG as default. Reuse the dirty-draft capture resolution only when needed.</li><li>Own job busy/success/failure/cancel state independently of graph emptiness; prevent duplicate same-job delivery.</li><li>Restore temporary labels/resources on synchronous and asynchronous exceptions; retain a readable retry action.</li><li>Preserve existing 2x viewport sizing and supported styles; add concise derived context/title/legend with no required fields. Keep bands/labels/framing unclipped and renderer/encoding resource failures recoverable.</li><li>Keep export read-only for inventory, positions, history, file state and draft. Do not persist ViewSpec or add scenario layouts.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/map/export.test.ts&#34;,&#34;src/map/svg.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Faithful current-view captures with frozen identity, derived context and complete error cleanup.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC055</li><li>AC056</li><li>AC057</li><li>AC058</li><li>AC059</li><li>AC060</li><li>AC061</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:36Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6dc8e893a415efe86e8f04cf7585e4325f259e84ea0089541b7ca81334bd1de7</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP08 -->
+
+<!-- CA:BEGIN:TASK-WP09 -->
+<article class="record" id="TASK-WP09" data-ca-symbol="TASK-WP09" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP09">TASK-WP09</a><h3>Make existing scenarios honest and repairable</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP09">SPEC-WORKFLOW-COHERENCE#CRIT-WP09</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP02">TASK-WP02</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li><li><a href="#TASK-WP07">TASK-WP07</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Existing scenarios show valid combinations, scoped conflicts and faithful route/transfer diagnostics.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-INTEGRATION</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/scenario/scenario.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/scenario-changes.ts</code></td></tr><tr><td>modify</td><td><code>src/map/graph.ts</code></td></tr><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Add diagnostics without storage migration; keep legacy projections until any semantic upgrade is separately versioned.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Atomically refuse newly authored/worsened final collisions under existing SQLite comparison semantics; keep legacy/baseline-induced issues diagnosed and incrementally repairable. Operation storage remains unchanged.</li><li>Recompute affected diagnostics when baseline changes. Limit conflict scope to the affected plan; unrelated inventory work continues.</li><li>Allow removal/refinement of invalid changes. Do not lock a previously invalid scenario behind a requirement that every issue vanish in one edit.</li><li>Preserve old projection/storage interpretation while attaching explicit unresolved-route provenance, route-only before/after differences and support/link consequences.</li><li>Render unresolved routes honestly in inspector/map/summary/capture; do not label a cleared CDS reference as established direct connectivity.</li><li>Use exact-payload scenario acknowledgement and shared projected inspector. No new topology operations or continuity scoring.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/scenario/scenario.test.ts&#34;,&#34;src/domain/repository.test.ts&#34;,&#34;src/map/graph.test.ts&#34;,&#34;src/map/svg.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Existing scenarios show valid combinations, scoped conflicts and faithful route/transfer diagnostics.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC062</li><li>AC063</li><li>AC064</li><li>AC065</li><li>AC066</li><li>AC080</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:12:37Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>5b321cec9b5646869692bb744780d185cf148da756ef255b5513db91f106559c</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC</div><div class="field"><span class="label">Summary</span>Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP09 -->
+
+<!-- CA:BEGIN:TASK-WP10 -->
+<article class="record" id="TASK-WP10" data-ca-symbol="TASK-WP10" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP10">TASK-WP10</a><h3>Finish the ordinary user loop and reconcile guidance</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-ACCEPTANCE</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP10">SPEC-WORKFLOW-COHERENCE#CRIT-WP10</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP05">TASK-WP05</a></li><li><a href="#TASK-WP06">TASK-WP06</a></li><li><a href="#TASK-WP07">TASK-WP07</a></li><li><a href="#TASK-WP08">TASK-WP08</a></li><li><a href="#TASK-WP09">TASK-WP09</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Walkthrough evidence, coherent labels/help and current documentation proposals/updates.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-ACCEPTANCE</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/list-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/app.css</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>AGENTS.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only bounded UI/help changes; preserve completed command correctness and evidence.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Walk through empty and demo datasets using the complete add/change/remove/Undo/arrange/capture/Save/reopen loop.</li><li>Compare clean-path action counts and prompts with baseline; remove redundant steps and any newly mandatory field.</li><li>Check keyboard focus, retained input, readable errors/status, modal Escape/cancel behavior and accessible summary parity.</li><li>Add concise in-context help/empty-state wording where users need it. Do not add a help portal or mandatory tour.</li><li>Reconcile current AGENTS/spec/ADR proposals through actual tooling; artifact model/integrity and lifecycle must remain consistent.</li><li>Keep recovery and larger feature backlog visibly deferred; do not present prevention as crash recovery.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;tests/unit/docs.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Walkthrough evidence, coherent labels/help and current documentation proposals/updates.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC067</li><li>AC068</li><li>AC069</li><li>AC070</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>The evidence and single-PR handoff are prepared. Implementation work is complete; AC083 native picker remains not-run and AC039 deletion sequence remains partial in the acceptance record. Plan DONE does not assert those cases passed. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:18:42Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>eea66ec9329f818d4da4522eebd8e90af1b40ae9c4ef9fe2bbab339276ff6667</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on 2026-11-12; AC083 real native picker remains not-run; AC039 deletion sequence is partial.</div><div class="field"><span class="label">Summary</span>Current source and documentation candidate passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP10 -->
+
+<!-- CA:BEGIN:TASK-WP11 -->
+<article class="record" id="TASK-WP11" data-ca-symbol="TASK-WP11" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP11">TASK-WP11</a><h3>Run candidate gates and produce an honest completion handoff</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CHECK-ACCEPTANCE</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/workflow-coherence.html#CRIT-WP11">SPEC-WORKFLOW-COHERENCE#CRIT-WP11</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP00">TASK-WP00</a></li><li><a href="#TASK-WP01">TASK-WP01</a></li><li><a href="#TASK-WP02">TASK-WP02</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li><li><a href="#TASK-WP04">TASK-WP04</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li><li><a href="#TASK-WP06">TASK-WP06</a></li><li><a href="#TASK-WP07">TASK-WP07</a></li><li><a href="#TASK-WP08">TASK-WP08</a></li><li><a href="#TASK-WP09">TASK-WP09</a></li><li><a href="#TASK-WP10">TASK-WP10</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Reviewed coherent candidate or precise blocked handoff, with all evidence and deferred work explicit.</li></ul></div><div class="field"><span class="label">Execution scope</span>CHECK-ACCEPTANCE</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>package.json</code></td></tr><tr><td>inspect</td><td><code>playwright.config.ts</code></td></tr><tr><td>inspect</td><td><code>AGENTS.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>No deployment required; retain worktree and evidence if a gate blocks readiness.</div><div class="field"><span class="label">Shared inputs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PACKET">SRC-PACKET</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Review the final diff for scope creep, mandatory fields, dependency additions, merged migration edits, weakened CSP/tests and accidentally persisted temporary state.</li><li>Run the exact current project gate on the reviewed candidate. Record every stage, actual browsers and offline file mode. Do not treat partial execution as full PASS.</li><li>Obtain applicable independent/candidate-bound review using current governance. Never self-manufacture a PASS or reuse approval after changed code.</li><li>Close or honestly disposition every mandatory acceptance item and every audit finding. F26 remains deferred with rationale.</li><li>Preserve status, evidence, candidate identity, pending decisions and the next concrete action. Prepare reviewable PR/release notes if part of the receiving session; no merge/tag/publication is implied.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Reviewed coherent candidate or precise blocked handoff, with all evidence and deferred work explicit.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>The evidence and single-PR handoff are prepared. Implementation work is complete; AC083 native picker remains not-run and AC039 deletion sequence remains partial in the acceptance record. Plan DONE does not assert those cases passed. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-12T17:18:42Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>477be5381d81647fa7386909b37020006d5b30b46057d969d3a73594ba1942f7</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Observed local gate on 2026-11-12; AC083 real native picker remains not-run; AC039 deletion sequence is partial.</div><div class="field"><span class="label">Summary</span>Current source and documentation candidate passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP11 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CHECK-INTAKE -->
+<article class="record" id="CHECK-INTAKE" data-ca-symbol="CHECK-INTAKE" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CHECK-INTAKE">CHECK-INTAKE</a><h3>Intake</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP00">TASK-WP00</a></li></ul></div></article>
+<!-- CA:END:CHECK-INTAKE -->
+
+<!-- CA:BEGIN:CHECK-FOUNDATIONS -->
+<article class="record" id="CHECK-FOUNDATIONS" data-ca-symbol="CHECK-FOUNDATIONS" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CHECK-FOUNDATIONS">CHECK-FOUNDATIONS</a><h3>Foundations</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CHECK-INTAKE">CHECK-INTAKE</a></li></ul></div><div class="field"><span class="label">Exit</span>Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP01">TASK-WP01</a></li><li><a href="#TASK-WP02">TASK-WP02</a></li><li><a href="#TASK-WP03">TASK-WP03</a></li></ul></div></article>
+<!-- CA:END:CHECK-FOUNDATIONS -->
+
+<!-- CA:BEGIN:CHECK-SAVE-EDIT -->
+<article class="record" id="CHECK-SAVE-EDIT" data-ca-symbol="CHECK-SAVE-EDIT" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CHECK-SAVE-EDIT">CHECK-SAVE-EDIT</a><h3>Save and edit</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CHECK-FOUNDATIONS">CHECK-FOUNDATIONS</a></li></ul></div><div class="field"><span class="label">Exit</span>Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP04">TASK-WP04</a></li><li><a href="#TASK-WP05">TASK-WP05</a></li></ul></div></article>
+<!-- CA:END:CHECK-SAVE-EDIT -->
+
+<!-- CA:BEGIN:CHECK-INTEGRATION -->
+<article class="record" id="CHECK-INTEGRATION" data-ca-symbol="CHECK-INTEGRATION" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CHECK-INTEGRATION">CHECK-INTEGRATION</a><h3>Map and capture</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CHECK-SAVE-EDIT">CHECK-SAVE-EDIT</a></li></ul></div><div class="field"><span class="label">Exit</span>Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP06">TASK-WP06</a></li><li><a href="#TASK-WP07">TASK-WP07</a></li><li><a href="#TASK-WP08">TASK-WP08</a></li><li><a href="#TASK-WP09">TASK-WP09</a></li></ul></div></article>
+<!-- CA:END:CHECK-INTEGRATION -->
+
+<!-- CA:BEGIN:CHECK-ACCEPTANCE -->
+<article class="record" id="CHECK-ACCEPTANCE" data-ca-symbol="CHECK-ACCEPTANCE" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CHECK-ACCEPTANCE">CHECK-ACCEPTANCE</a><h3>Acceptance</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CHECK-INTEGRATION">CHECK-INTEGRATION</a></li></ul></div><div class="field"><span class="label">Exit</span>Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP10">TASK-WP10</a></li><li><a href="#TASK-WP11">TASK-WP11</a></li></ul></div></article>
+<!-- CA:END:CHECK-ACCEPTANCE -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-PACKET -->
+<article class="record" id="SRC-PACKET" data-ca-symbol="SRC-PACKET" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-PACKET">SRC-PACKET</a><h3>SIM workflow coherence handoff</h3></div><div class="field"><span class="label">Locator</span>SIM-Workflow-Coherence-CLI-Handoff.zip!/SIM-Workflow-Coherence-Handoff/02-IMPLEMENTATION-PLAN.md</div><div class="field"><span class="label">Note</span>User supplied verified packet; work-items.json contains the 12-package graph.</div><div class="field"><span class="label">Type</span>user_request</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-PACKET -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-12</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: fb48571f0dfc685565bb13e4e2eb168a6c9b95c74fc664d4d16617f134cc3a98<br>Model SHA-256: 4c2c3979da5be284b2a040f45009a45ae33dde4e1ec42375d3a3a2f587d134f8</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-WORKFLOW-COHERENCE",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "TASK-WP00": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "696c31acbb3d43fe81a627152ebdc2af2aae1ba3c9d86af0c01825e54ca0dc1c",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "agent_report",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T15:50:11Z",
+          "recording_operation_id": "simworkflow_wp00_baseline_check_20261112",
+          "scoped_inputs_sha256": "6a863e4593e3918f0db51a4954d68d856b26e0512423a42baeff905a09699ebf",
+          "source": "intake agent tool result 2026-11-12 10:43 America/New_York",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Receiving HEAD 6c489bf passed typecheck, lint, format, build, 241 unit tests and 94 Edge/Chrome file:// E2E; native picker path remains stubbed.",
+          "task_subject_sha256": "e40e8164375443bf2b696392d3bcbaa7ee68ea8911f566c96e776b01cbabd960"
+        }
+      ],
+      "TASK-WP01": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "fac0269e130ae4fd38f69509618c564e02bdfcbe99f300ba6355a27bbbd81f42",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:32Z",
+          "recording_operation_id": "8f09128cbdf54cbebf10ba0f7937c4d8",
+          "scoped_inputs_sha256": "7bd1bf70d9f3dd13012515a09b533ad376b5b47b20fdf97379a6b7c32c3e67e6",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "c41e0dbd624edc2ba942d9027e07380792ece6930824b12bbd047f4882de5837"
+        }
+      ],
+      "TASK-WP02": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "21d4a5c217f75cadd1e84af2a4cf329c695ca725258e6178138c4f0a9daf55ff",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:32Z",
+          "recording_operation_id": "2099a7634a754d51ba47cfccf301d223",
+          "scoped_inputs_sha256": "f5df51f1dd3c0539295cfb4791e1ba15c37eee348fad7a82068186303c071796",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "6151dbe09acbd53a817576744b3df1e27e2e6a91265504e4b12b24f47c1edbae"
+        }
+      ],
+      "TASK-WP03": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "b28cb82f09f89fcc5e1dbd7b382ffe3e0739ea926d78963aaa798dd8928ed960",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:33Z",
+          "recording_operation_id": "15c48c37b6234159af3acff3a988fa13",
+          "scoped_inputs_sha256": "87e908f21ce9f6b365cb8ceb3774b1ae0049b5c61d6fad1a92e57edb0881ad97",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "d1b37a79208d2a9293e3df5a5b520bb47be76c4dc0a4e1f579cfae0c3b05c0e3"
+        }
+      ],
+      "TASK-WP04": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "c51257bce2aace5a9fff9efe23f76cc690f0f688c874dc4bd82b209a3e1bf0ce",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:34Z",
+          "recording_operation_id": "e7ab5b580e3e4a9f8d63913c76c4e691",
+          "scoped_inputs_sha256": "9ecb89bcec8e6b79c51fc09de625b804850e518576402d17b51c0b23d3ab9463",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "1744c2b751df0a8d9ae4c0ab72bc0402721bd69e1a534e15f213f7095992c9e7"
+        }
+      ],
+      "TASK-WP05": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "8b99656eba66b7de8e475f283cf7babb7dc97eb11cf03b9854b5d17cd91dca1b",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:34Z",
+          "recording_operation_id": "2211846fc86d4bdc939ebf3ab62690a1",
+          "scoped_inputs_sha256": "cd3e61a0c17c16feaef2e73dc14382c510f906cd20cabf1c96c3f62ce4c51e33",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "874ee398d5e40e778dc10a1a77e39b2cb9b14be66f0131a06e0152e7099e2632"
+        }
+      ],
+      "TASK-WP06": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "b898a43c5e47e5b2680b93da6547d0c575ab51e5a8bba1fe373a0c2b6613392e",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:35Z",
+          "recording_operation_id": "17b4a455381643dc84c44b5b2d96be5a",
+          "scoped_inputs_sha256": "99ec1df62af62cfa3556ea7e7d1075e7b83e5a91d000c5c598f5a352c9795624",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "137cd79344b85005379e419c8793ac30088bc67c1615e55e1c97c01f1c28e19a"
+        }
+      ],
+      "TASK-WP07": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "775a8ce71a1909ccbb3d082a39cd8d24959b67bceba50c2daf77701d6113d0b1",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:36Z",
+          "recording_operation_id": "1dd5cd44baf6401488d602294767a2d5",
+          "scoped_inputs_sha256": "7c102b2dcabe4dfbb9a1f2a1a76129fd652b4092aef3e2ec39f6cbab9c30f799",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "437023010a6472004d1f88432a14c670333428590f751e6e723cd078ce194e3e"
+        }
+      ],
+      "TASK-WP08": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "c1ff31531d00926c1ecaaf3577c588a73e042cc205588ef0857cd7461042f85d",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:36Z",
+          "recording_operation_id": "f4991e5d12324a328921c64bb1b32e91",
+          "scoped_inputs_sha256": "6dc8e893a415efe86e8f04cf7585e4325f259e84ea0089541b7ca81334bd1de7",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "a9957f4c79c7bd7c4b65cef0e90de09dee83e6bf42d45affe260dcd373ff8943"
+        }
+      ],
+      "TASK-WP09": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "0b0c6710dca9fd462f4c47108b0185c570c0a3502f97223af265e6fac6ac2128",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:12:37Z",
+          "recording_operation_id": "9a082c123a9a403fa38a4b5691a04eb4",
+          "scoped_inputs_sha256": "5b321cec9b5646869692bb744780d185cf148da756ef255b5513db91f106559c",
+          "source": "Observed local gate on source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68, 2026-11-12 UTC",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "db3f892d217a9820526ed5dcfce6053800970bf154e862cdfdd24c6c1dafffbd"
+        }
+      ],
+      "TASK-WP10": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "d62b52049091ba5b4a9c63678194aca2eef9695cdadf0ae378a0827233198e83",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:18:42Z",
+          "recording_operation_id": "387d746e226d46f6a3aee5f190051d1b",
+          "scoped_inputs_sha256": "eea66ec9329f818d4da4522eebd8e90af1b40ae9c4ef9fe2bbab339276ff6667",
+          "source": "Observed local gate on 2026-11-12; AC083 real native picker remains not-run; AC039 deletion sequence is partial.",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source and documentation candidate passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "057e40fb31bfe1cb98b834152321304d6703a8f36d1e89a4d55715d24d3aff6d"
+        }
+      ],
+      "TASK-WP11": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "f903e2e7c3b66fcaea1c051512ff12807986e8cf5eb6faf52064ed07ff274100",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-12T17:18:42Z",
+          "recording_operation_id": "2b652dbfb4f4458ab3b41dd2a29affc1",
+          "scoped_inputs_sha256": "477be5381d81647fa7386909b37020006d5b30b46057d969d3a73594ba1942f7",
+          "source": "Observed local gate on 2026-11-12; AC083 real native picker remains not-run; AC039 deletion sequence is partial.",
+          "source_normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363",
+          "summary": "Current source and documentation candidate passed typecheck, lint, format, build, 308 unit and 184 Edge/Chrome file:// tests.",
+          "task_subject_sha256": "299853c8a9ea59d7bb654ecbd08a16270a4f1b192b0c86461c387a631f29de2f"
+        }
+      ]
+    },
+    "tasks": {
+      "TASK-WP00": {
+        "evidence_refs": [],
+        "reason": "WP00 intake implemented: packet verified, base and drift recorded, baseline current gate passed; candidate acceptance remains pending. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP01": {
+        "evidence_refs": [],
+        "reason": "WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP02": {
+        "evidence_refs": [],
+        "reason": "WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP03": {
+        "evidence_refs": [],
+        "reason": "WP01-WP03 implementation is complete; exact source passed the full local gate and independent review. Acceptance evidence remains separate from plan state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP04": {
+        "evidence_refs": [],
+        "reason": "WP04-WP05 implementation is complete with local unit and browser proof. Real native picker acceptance AC083 remains pending and is recorded separately. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP05": {
+        "evidence_refs": [],
+        "reason": "WP04-WP05 implementation is complete with local unit and browser proof. Real native picker acceptance AC083 remains pending and is recorded separately. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP06": {
+        "evidence_refs": [],
+        "reason": "WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP07": {
+        "evidence_refs": [],
+        "reason": "WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP08": {
+        "evidence_refs": [],
+        "reason": "WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP09": {
+        "evidence_refs": [],
+        "reason": "WP06-WP09 implementation is complete; current source passed the local gate and bounded capture inspection. Plan DONE is not independent acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP10": {
+        "evidence_refs": [],
+        "reason": "The evidence and single-PR handoff are prepared. Implementation work is complete; AC083 native picker remains not-run and AC039 deletion sequence remains partial in the acceptance record. Plan DONE does not assert those cases passed. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP11": {
+        "evidence_refs": [],
+        "reason": "The evidence and single-PR handoff are prepared. Implementation work is complete; AC083 native picker remains not-run and AC039 deletion sequence remains partial in the acceptance record. Plan DONE does not assert those cases passed. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "4c2c3979da5be284b2a040f45009a45ae33dde4e1ec42375d3a3a2f587d134f8",
+    "normative_sha256": "fb48571f0dfc685565bb13e4e2eb168a6c9b95c74fc664d4d16617f134cc3a98",
+    "symbol_count": 18
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-12",
+      "repository": null
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.",
+        "id": "CHECK-INTAKE",
+        "tasks": [
+          "TASK-WP00"
+        ],
+        "title": "Intake"
+      },
+      {
+        "depends_on": [
+          "CHECK-INTAKE"
+        ],
+        "exit": "Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.",
+        "id": "CHECK-FOUNDATIONS",
+        "tasks": [
+          "TASK-WP01",
+          "TASK-WP02",
+          "TASK-WP03"
+        ],
+        "title": "Foundations"
+      },
+      {
+        "depends_on": [
+          "CHECK-FOUNDATIONS"
+        ],
+        "exit": "Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.",
+        "id": "CHECK-SAVE-EDIT",
+        "tasks": [
+          "TASK-WP04",
+          "TASK-WP05"
+        ],
+        "title": "Save and edit"
+      },
+      {
+        "depends_on": [
+          "CHECK-SAVE-EDIT"
+        ],
+        "exit": "Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.",
+        "id": "CHECK-INTEGRATION",
+        "tasks": [
+          "TASK-WP06",
+          "TASK-WP07",
+          "TASK-WP08",
+          "TASK-WP09"
+        ],
+        "title": "Map and capture"
+      },
+      {
+        "depends_on": [
+          "CHECK-INTEGRATION"
+        ],
+        "exit": "Relevant interfaces and local checks pass; remaining native/browser acceptance is recorded separately.",
+        "id": "CHECK-ACCEPTANCE",
+        "tasks": [
+          "TASK-WP10",
+          "TASK-WP11"
+        ],
+        "title": "Acceptance"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [
+      {
+        "id": "SRC-PACKET",
+        "locator": "SIM-Workflow-Coherence-CLI-Handoff.zip!/SIM-Workflow-Coherence-Handoff/02-IMPLEMENTATION-PLAN.md",
+        "note": "User supplied verified packet; work-items.json contains the 12-package graph.",
+        "title": "SIM workflow coherence handoff",
+        "type": "user_request",
+        "url": null
+      }
+    ],
+    "spec_ref": {
+      "artifact_id": "SPEC-WORKFLOW-COHERENCE",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "8d12cf479f463f14b6480eefdd7de2afdd69d2953647c0f103becd64c6aee363"
+    },
+    "summary": "Twelve dependency-ordered work packages from the verified handoff, one branch and PR.",
+    "tasks": [
+      {
+        "checkpoint": "CHECK-INTAKE",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP00"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Receiving-base record, finding dispositions, chosen branch, behavior decisions and baseline evidence."
+        ],
+        "execution_scope": "CHECK-INTAKE",
+        "id": "TASK-WP00",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "AGENTS.md"
+          },
+          {
+            "action": "inspect",
+            "path": "CLAUDE.md"
+          },
+          {
+            "action": "inspect",
+            "path": "package.json"
+          },
+          {
+            "action": "inspect",
+            "path": "playwright.config.ts"
+          }
+        ],
+        "rollback": "No source changes required; preserve intake record.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Read current instructions, repository identity, target base, working tree and relevant governance. Keep unrelated work intact.",
+          "Compare audit pin and all assigned source paths with current HEAD. Disposition all findings with current evidence. Inspect current PR #21 status only if its workflows matter.",
+          "Create or reuse the dedicated branch/worktree. Record initial state and environment; do not replace current source with the archive.",
+          "Adopt the product contract; record any evidence-required adjustment before dependent work. Assign one integrator for shared repository/session interfaces.",
+          "Run current baseline checks as supported. Keep lint/format and browser stages individually honest; old 241-pass evidence is historical."
+        ],
+        "title": "Verify the receiving base and establish the behavior contract",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "tests/unit/docs.test.ts",
+              "tests/unit/lint-policy.test.ts"
+            ],
+            "assertion": "Receiving-base record, finding dispositions, chosen branch, behavior decisions and baseline evidence.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC001",
+              "AC002"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-FOUNDATIONS",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP01"
+        ],
+        "depends_on": [
+          "TASK-WP00"
+        ],
+        "done_when": [
+          "Focused history/subscriber regressions with accurate committed-versus-effect outcome."
+        ],
+        "execution_scope": "CHECK-FOUNDATIONS",
+        "id": "TASK-WP01",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Revert this bounded implementation only; no schema or stored-file change.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Reproduce caveat replacement Undo and a throwing subscriber before modifying their boundaries.",
+          "Replace caveat REPLACE behavior with update/upsert semantics whose inverse restores prior content; verify set/replace/clear/same-value.",
+          "Separate committed data outcome from subscriber/presentation failures; notify remaining subscribers and provide a recoverable projection error.",
+          "Keep current public callers working through narrow adapters. Do not install a new event framework.",
+          "Retain FK/cascade restoration, temporary inverse logs and existing history limit; make no-op semantics explicit.",
+          "Isolate list/editor/map work inside the workspace listener as well as separate repository subscribers; a failing diagnostic sink or reentrant observer must not change the committed outcome."
+        ],
+        "title": "Repair history correctness and truthful write outcomes",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/domain/repository.test.ts"
+            ],
+            "assertion": "Focused history/subscriber regressions with accurate committed-versus-effect outcome.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC003",
+              "AC004",
+              "AC005",
+              "AC074",
+              "AC077"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-FOUNDATIONS",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP02"
+        ],
+        "depends_on": [
+          "TASK-WP00"
+        ],
+        "done_when": [
+          "Bounded semantic validator, explicit identity adapter, compatibility cases and readable refusal diagnostics."
+        ],
+        "execution_scope": "CHECK-FOUNDATIONS",
+        "id": "TASK-WP02",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/db/dataset.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/types.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/scenario/scenario.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/graph.ts"
+          }
+        ],
+        "rollback": "No writes to opened files or schema; preserve compatible reader and original data.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Keep structural validation; add bounded semantic inspection and independently bound ancestry/merge traversal before publishing candidate data.",
+          "Refuse structural or unrepresentable input, preserving old session/file. Keep safely representable legacy semantic issues readable with scoped diagnostics; permit unrelated work/repairs and reject new or worsened relevant invariants.",
+          "Represent baseline/planned origin explicitly. Preserve safe signed persisted IDs and allocate collision-free numeric adapter IDs only where needed.",
+          "Cover legacy supported versions, exact-DDL matching and unsafe-ID diagnostics; do not rewrite merged migrations or silently remap records.",
+          "Expose diagnostics that identify the offending object/invariant without requiring a repair subsystem.",
+          "Check generated row IDs exactly before Number conversion and COMMIT; use bounded safe allocation or typed atomic capacity refusal. Admission-only checks do not prevent unsafe auto-allocation.",
+          "Preserve exact unchanged legacy fields during unrelated edits; validate changed values and new/worsened affected violations without turning readable legacy data into an uneditable record."
+        ],
+        "title": "Bound semantic admission and preserve identity compatibility",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/db/open.test.ts",
+              "src/db/migrate.test.ts",
+              "src/db/schema.test.ts",
+              "src/domain/repository.test.ts",
+              "src/scenario/scenario.test.ts"
+            ],
+            "assertion": "Bounded semantic validator, explicit identity adapter, compatibility cases and readable refusal diagnostics.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC006",
+              "AC007",
+              "AC008",
+              "AC009",
+              "AC010",
+              "AC079",
+              "AC084"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-FOUNDATIONS",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP03"
+        ],
+        "depends_on": [
+          "TASK-WP01",
+          "TASK-WP02"
+        ],
+        "done_when": [
+          "Atomic service/accepted-import primitive, typed outcome, scoped read set, causal history and checkpoint reader."
+        ],
+        "execution_scope": "CHECK-FOUNDATIONS",
+        "id": "TASK-WP03",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/types.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/errors.ts"
+          }
+        ],
+        "rollback": "Keep existing method adapters; revert coherent coordinator+callers together if needed. No schema mutation.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Add outer transaction ownership with nested joining/savepoints only for required compound operations; keep group as history batching for unmigrated callers.",
+          "Prepare JS history stacks/coalescing and inverse-log cleanup within the recoverable boundary; publish after SQL commit.",
+          "Implement applyServiceDraft for scalar values, support/notes, consumers and outgoing dependencies; validate final affected incoming/outgoing routes.",
+          "Expose monotonic revision, affected identities/origins and causal command ID; use mergeIntoCommandId for follow-up layout rather than a global latest-step boolean.",
+          "Expose a complete typed persistent-content reader for session checkpoint equality. Do not use the rendering Snapshot as persistence identity.",
+          "Support synchronous accepted-import transaction ownership; parse/file I/O and UI callbacks stay outside the transaction.",
+          "On relevant stale aggregate return scoped conflict retaining draft. Auto-revalidate unrelated/position-only changes.",
+          "Independently caught/rejected inner operations require savepoints. Test group/atomic nesting, pre-BEGIN replay failure, thenable misuse and legacy-repair Undo with exact diagnostics restoration."
+        ],
+        "title": "Add the small atomic command and causal history boundary",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/domain/repository.test.ts",
+              "src/db/schema.test.ts",
+              "src/import/engine.test.ts"
+            ],
+            "assertion": "Atomic service/accepted-import primitive, typed outcome, scoped read set, causal history and checkpoint reader.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC011",
+              "AC012",
+              "AC013",
+              "AC014",
+              "AC015",
+              "AC016",
+              "AC017",
+              "AC075",
+              "AC076"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-SAVE-EDIT",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP04"
+        ],
+        "depends_on": [
+          "TASK-WP01",
+          "TASK-WP03"
+        ],
+        "done_when": [
+          "Session-owned saves/opens, truthful statuses and demonstrated logical saved checkpoints."
+        ],
+        "execution_scope": "CHECK-SAVE-EDIT",
+        "id": "TASK-WP04",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/file/dataset-file.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          }
+        ],
+        "rollback": "Revert controller and adapters together; existing .sqlite files and schema remain unchanged.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Extract bounded session/file operation state and injected file adapters for deterministic sequence tests.",
+          "Capture session/operation/target/checkpoint/bytes; serialize writes to equivalent targets; apply binding only to its correct owning operation/session.",
+          "Stage and validate New/Open/Demo candidates before resolving current work; install atomically and dispose superseded candidates.",
+          "Implement complete logical checkpoint equality and meaningful-work policy from architecture contract. Recognize Undo to saved content; keep fresh/demo/auto-layout behavior explicit.",
+          "Use accurate statuses for native persistence, download dispatch, cancellation and post-write presentation failure.",
+          "Expose resolveActiveDraft continuation for WP05; global file action must not serialize before valid draft application.",
+          "Treat native failure/cancellation and download-retention uncertainty correctly before destructive continuation; no new crash-recovery store.",
+          "Preserve trusted activation for real native picker/permission entry, acquiring target early when necessary. Settle required causal placement before capturing bytes/checkpoint; separately verify real-native behavior beyond stubbed E2E."
+        ],
+        "title": "Own sessions and make Save and replacement truthful",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/db/open.test.ts",
+              "src/domain/repository.test.ts"
+            ],
+            "assertion": "Session-owned saves/opens, truthful statuses and demonstrated logical saved checkpoints.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC018",
+              "AC019",
+              "AC020",
+              "AC021",
+              "AC022",
+              "AC023",
+              "AC024",
+              "AC025",
+              "AC026",
+              "AC027",
+              "AC028",
+              "AC081",
+              "AC083"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-SAVE-EDIT",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP05"
+        ],
+        "depends_on": [
+          "TASK-WP03",
+          "TASK-WP04"
+        ],
+        "done_when": [
+          "A complete coherent record editing/deletion flow and shared pending-work/confirmation policy."
+        ],
+        "execution_scope": "CHECK-SAVE-EDIT",
+        "id": "TASK-WP05",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/forms.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/list-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/scenario-changes.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/validate.ts"
+          }
+        ],
+        "rollback": "Revert aggregate UI and command integration together; do not leave some relations staged and others immediate.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Own one explicit draft with base/scalars/relationships/validation/acknowledgement. Preserve it on unrelated refresh.",
+          "Replace entity Save with Apply changes; stage existing-service relationship controls; Discard restores the whole draft; global Save file applies automatically.",
+          "Implement the single action-resolution table for navigation, replacement, history, deletion, import and capture. Clean paths remain direct.",
+          "Preserve minimal creation; add context-aware Add service and sensible empty-state action through the same form. Latch deliberate default overrides without extra toggles.",
+          "Produce a current delete-consequence plan including cascades, detached references and blockers; revalidate before deletion; preserve draft on refusal/cancel.",
+          "Bind acknowledgements to exact relevant payload; include dataset naming under the documented warn/confirm policy without reprompting stored data.",
+          "Keep optional fields optional, explicit direct dependencies allowed, and field-specific errors actionable; no mandatory metadata or setup workflow.",
+          "Track meaningfully dirty unadded scenario-builder input with the active editor. Keep Add change direct; Save resolves pending metadata+builder atomically, while untouched builder defaults never create a change."
+        ],
+        "title": "Deliver coherent add change remove and draft resolution",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/ui/forms.test.ts",
+              "src/domain/validate.test.ts",
+              "src/domain/repository.test.ts"
+            ],
+            "assertion": "A complete coherent record editing/deletion flow and shared pending-work/confirmation policy.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC029",
+              "AC030",
+              "AC031",
+              "AC032",
+              "AC033",
+              "AC034",
+              "AC035",
+              "AC036",
+              "AC037",
+              "AC038",
+              "AC039",
+              "AC082"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-INTEGRATION",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP06"
+        ],
+        "depends_on": [
+          "TASK-WP02",
+          "TASK-WP03",
+          "TASK-WP04",
+          "TASK-WP05"
+        ],
+        "done_when": [
+          "Generation-bound import preparation and one atomic accepted result, with compatible append-only reporting."
+        ],
+        "execution_scope": "CHECK-INTEGRATION",
+        "id": "TASK-WP06",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/import-dialog.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/import/engine.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/import/csv.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/import/templates.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          }
+        ],
+        "rollback": "Retain append-only templates and stored schema; revert preparation+commit adapter together.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Invalidate readiness immediately on file selection; capture batch generation; ignore stale reads/previews and all completions after close including Escape.",
+          "Keep append-only behavior. Build immutable parsed files/options/base/report preparation with the same engine; no new import action language is required.",
+          "At commit, require the reviewed relevant base and acknowledgement. Rerun the deterministic engine inside the atomic command, verify reviewed outcome/effect identity before COMMIT, and roll back mismatch or unexpected failure.",
+          "Preserve intentional rejected/present/flagged rows and accepted parentless organizations. Resolve organization parent requests after all organization files; retain exact confirmation on the parent pass.",
+          "Use parameterized SQLite collation-consistent lookups and resolved IDs. Do not Unicode-fold names into a different identity system.",
+          "Add explicit CSV after-quote validation while preserving current valid dialect and limits.",
+          "Report preview/commit failures with recoverable state; do not close as successful or silently fall back to old selected files.",
+          "Compare complete typed mutation effects and reference witnesses on the relevant base; preserve unrelated updates. A changed generated-ID allocation requires re-preview. Preserve existing literal-quote and post-quote-whitespace CSV behavior while rejecting suffix junk."
+        ],
+        "title": "Make the existing CSV workflow deterministic and atomic",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/import/engine.test.ts",
+              "src/import/csv.test.ts"
+            ],
+            "assertion": "Generation-bound import preparation and one atomic accepted result, with compatible append-only reporting.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC040",
+              "AC041",
+              "AC042",
+              "AC043",
+              "AC044",
+              "AC045",
+              "AC046",
+              "AC047",
+              "AC048",
+              "AC078"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-INTEGRATION",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP07"
+        ],
+        "depends_on": [
+          "TASK-WP02",
+          "TASK-WP03",
+          "TASK-WP05"
+        ],
+        "done_when": [
+          "Consistent typed inspection, stable arrangement, causal positions and a shared visible graph."
+        ],
+        "execution_scope": "CHECK-INTEGRATION",
+        "id": "TASK-WP07",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/graph.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/style.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          }
+        ],
+        "rollback": "Keep renderer and serialization stack; revert selection/view adapter atomically if necessary.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Use explicit entity origin for Find/tap/list/keyboard paths and draft resolution.",
+          "Open read-only projected details in To-Be/Compare. Edit As-Is switches map and inspector together and reveals the baseline selection; Open scenario is intentional. Ghost/planned origins remain explicit.",
+          "Use stable typed suggestions to disambiguate repeated labels; preserve input and show a concise no-result state.",
+          "Remove count-based full layout on ordinary bulk additions. Preserve existing leaves and place only new/reparented ones; retain explicit undoable Re-layout.",
+          "Capture originating session/causal command for queued positions. Never merge into an unrelated command or write through a replacement repository.",
+          "Compute final visibility once for canvas, accessible summary, dependency counts and capture. Count routed dependency identity once.",
+          "Keep pan/zoom/filter/list collapse nonblocking for active drafts; Fit changes viewport only and respects unobscured visible graph bounds."
+        ],
+        "title": "Unify selection and preserve the current map",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/map/graph.test.ts"
+            ],
+            "assertion": "Consistent typed inspection, stable arrangement, causal positions and a shared visible graph.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC049",
+              "AC050",
+              "AC051",
+              "AC052",
+              "AC053",
+              "AC054"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-INTEGRATION",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP08"
+        ],
+        "depends_on": [
+          "TASK-WP04",
+          "TASK-WP05",
+          "TASK-WP07"
+        ],
+        "done_when": [
+          "Faithful current-view captures with frozen identity, derived context and complete error cleanup."
+        ],
+        "execution_scope": "CHECK-INTEGRATION",
+        "id": "TASK-WP08",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/export.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/svg-scene.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/svg.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "No schema or file-data change; revert framing/export adapter together if necessary.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Own capture preparation first; after explicit Apply and causal placement, freeze the intended matching session/view/revision/geometry. Cancel superseded preparation; then render from immutable context without later repository lookups.",
+          "Keep one-click current viewport PNG/SVG as default. Reuse the dirty-draft capture resolution only when needed.",
+          "Own job busy/success/failure/cancel state independently of graph emptiness; prevent duplicate same-job delivery.",
+          "Restore temporary labels/resources on synchronous and asynchronous exceptions; retain a readable retry action.",
+          "Preserve existing 2x viewport sizing and supported styles; add concise derived context/title/legend with no required fields. Keep bands/labels/framing unclipped and renderer/encoding resource failures recoverable.",
+          "Keep export read-only for inventory, positions, history, file state and draft. Do not persist ViewSpec or add scenario layouts."
+        ],
+        "title": "Make current-view PNG and SVG capture dependable",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/map/export.test.ts",
+              "src/map/svg.test.ts"
+            ],
+            "assertion": "Faithful current-view captures with frozen identity, derived context and complete error cleanup.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC055",
+              "AC056",
+              "AC057",
+              "AC058",
+              "AC059",
+              "AC060",
+              "AC061"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-INTEGRATION",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP09"
+        ],
+        "depends_on": [
+          "TASK-WP02",
+          "TASK-WP03",
+          "TASK-WP05",
+          "TASK-WP07"
+        ],
+        "done_when": [
+          "Existing scenarios show valid combinations, scoped conflicts and faithful route/transfer diagnostics."
+        ],
+        "execution_scope": "CHECK-INTEGRATION",
+        "id": "TASK-WP09",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/scenario/scenario.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/scenario-changes.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/graph.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          }
+        ],
+        "rollback": "Add diagnostics without storage migration; keep legacy projections until any semantic upgrade is separately versioned.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Atomically refuse newly authored/worsened final collisions under existing SQLite comparison semantics; keep legacy/baseline-induced issues diagnosed and incrementally repairable. Operation storage remains unchanged.",
+          "Recompute affected diagnostics when baseline changes. Limit conflict scope to the affected plan; unrelated inventory work continues.",
+          "Allow removal/refinement of invalid changes. Do not lock a previously invalid scenario behind a requirement that every issue vanish in one edit.",
+          "Preserve old projection/storage interpretation while attaching explicit unresolved-route provenance, route-only before/after differences and support/link consequences.",
+          "Render unresolved routes honestly in inspector/map/summary/capture; do not label a cleared CDS reference as established direct connectivity.",
+          "Use exact-payload scenario acknowledgement and shared projected inspector. No new topology operations or continuity scoring."
+        ],
+        "title": "Make existing scenarios honest and repairable",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "src/scenario/scenario.test.ts",
+              "src/domain/repository.test.ts",
+              "src/map/graph.test.ts",
+              "src/map/svg.test.ts"
+            ],
+            "assertion": "Existing scenarios show valid combinations, scoped conflicts and faithful route/transfer diagnostics.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC062",
+              "AC063",
+              "AC064",
+              "AC065",
+              "AC066",
+              "AC080"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-ACCEPTANCE",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP10"
+        ],
+        "depends_on": [
+          "TASK-WP05",
+          "TASK-WP06",
+          "TASK-WP07",
+          "TASK-WP08",
+          "TASK-WP09"
+        ],
+        "done_when": [
+          "Walkthrough evidence, coherent labels/help and current documentation proposals/updates."
+        ],
+        "execution_scope": "CHECK-ACCEPTANCE",
+        "id": "TASK-WP10",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/list-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/app.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "AGENTS.md"
+          }
+        ],
+        "rollback": "Revert only bounded UI/help changes; preserve completed command correctness and evidence.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Walk through empty and demo datasets using the complete add/change/remove/Undo/arrange/capture/Save/reopen loop.",
+          "Compare clean-path action counts and prompts with baseline; remove redundant steps and any newly mandatory field.",
+          "Check keyboard focus, retained input, readable errors/status, modal Escape/cancel behavior and accessible summary parity.",
+          "Add concise in-context help/empty-state wording where users need it. Do not add a help portal or mandatory tour.",
+          "Reconcile current AGENTS/spec/ADR proposals through actual tooling; artifact model/integrity and lifecycle must remain consistent.",
+          "Keep recovery and larger feature backlog visibly deferred; do not present prevention as crash recovery."
+        ],
+        "title": "Finish the ordinary user loop and reconcile guidance",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test",
+              "--",
+              "tests/unit/docs.test.ts"
+            ],
+            "assertion": "Walkthrough evidence, coherent labels/help and current documentation proposals/updates.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC067",
+              "AC068",
+              "AC069",
+              "AC070"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CHECK-ACCEPTANCE",
+        "criterion_refs": [
+          "SPEC-WORKFLOW-COHERENCE#CRIT-WP11"
+        ],
+        "depends_on": [
+          "TASK-WP00",
+          "TASK-WP01",
+          "TASK-WP02",
+          "TASK-WP03",
+          "TASK-WP04",
+          "TASK-WP05",
+          "TASK-WP06",
+          "TASK-WP07",
+          "TASK-WP08",
+          "TASK-WP09",
+          "TASK-WP10"
+        ],
+        "done_when": [
+          "Reviewed coherent candidate or precise blocked handoff, with all evidence and deferred work explicit."
+        ],
+        "execution_scope": "CHECK-ACCEPTANCE",
+        "id": "TASK-WP11",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "package.json"
+          },
+          {
+            "action": "inspect",
+            "path": "playwright.config.ts"
+          },
+          {
+            "action": "inspect",
+            "path": "AGENTS.md"
+          }
+        ],
+        "rollback": "No deployment required; retain worktree and evidence if a gate blocks readiness.",
+        "shared_inputs": [],
+        "source_refs": [
+          "SRC-PACKET"
+        ],
+        "steps": [
+          "Review the final diff for scope creep, mandatory fields, dependency additions, merged migration edits, weakened CSP/tests and accidentally persisted temporary state.",
+          "Run the exact current project gate on the reviewed candidate. Record every stage, actual browsers and offline file mode. Do not treat partial execution as full PASS.",
+          "Obtain applicable independent/candidate-bound review using current governance. Never self-manufacture a PASS or reuse approval after changed code.",
+          "Close or honestly disposition every mandatory acceptance item and every audit finding. F26 remains deferred with rationale.",
+          "Preserve status, evidence, candidate identity, pending decisions and the next concrete action. Prepare reviewable PR/release notes if part of the receiving session; no merge/tag/publication is implied."
+        ],
+        "title": "Run candidate gates and produce an honest completion handoff",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Reviewed coherent candidate or precise blocked handoff, with all evidence and deferred work explicit.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "SIM workflow coherence delivery"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/workflow-coherence.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 45,
+  "schema_version": "0.3.2",
+  "slug": "workflow-coherence"
+}
+</script>
+</body></html>
