@@ -5,8 +5,8 @@
   "verified_base": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
   "branch": "codex/sim-workflow-coherence",
   "worktree": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
-  "current_candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
-  "status": "implementation-complete; PR-preparation-in-progress; native-picker-evidence-pending",
+  "current_candidate_identity": "262aa0fc3c83775155b44e672430c3efc51f1e0e",
+  "status": "implementation-complete; PR-23-open; new-hosted-checks-pending; native-picker-evidence-pending",
   "environment": {
     "node": "v24.18.0",
     "npm": "11.16.0",
@@ -73,22 +73,20 @@
         "Relevant case and finding dispositions are recorded below for WP04."
       ],
       "blockers": [
-        "AC083 real native file picker exercise has not been observed."
+        "AC083 blocked-environment: native picker write/readback/reopen awaits the user's interactive test."
       ]
     },
     {
       "id": "WP05",
       "status": "implemented",
       "implementation_readiness": "ready",
-      "acceptance_status": "partial",
-      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "acceptance_status": "passed",
+      "candidate_identity": "262aa0fc3c83775155b44e672430c3efc51f1e0e",
       "evidence": [
         "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
         "Relevant case and finding dispositions are recorded below for WP05."
       ],
-      "blockers": [
-        "AC039 same-session external deletion has source review but no direct browser sequence."
-      ]
+      "blockers": []
     },
     {
       "id": "WP06",
@@ -152,7 +150,7 @@
     },
     {
       "id": "WP11",
-      "status": "handoff-in-progress",
+      "status": "handoff-complete",
       "implementation_readiness": "ready",
       "acceptance_status": "partial",
       "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
@@ -161,7 +159,7 @@
         "Relevant case and finding dispositions are recorded below for WP11."
       ],
       "blockers": [
-        "AC083 real native file picker exercise has not been observed."
+        "AC083 native picker acceptance remains pending with the user."
       ]
     }
   ],
@@ -852,7 +850,7 @@
     },
     {
       "id": "AC039",
-      "status": "partial",
+      "status": "passed",
       "method": "DOM/command sequence",
       "command_argv": [
         "npm",
@@ -861,13 +859,14 @@
       ],
       "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
       "exit_code": 0,
-      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "candidate_identity": "262aa0fc3c83775155b44e672430c3efc51f1e0e",
       "evidence": [
         "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
         "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts",
-        "AC039 changed-relationship conflict E2E in acceptance-journeys.spec.ts passed in Edge and Chrome; explicit Reload current record action retains draft until chosen."
+        "AC039 changed-relationship conflict E2E in acceptance-journeys.spec.ts passed in Edge and Chrome; explicit Reload current record action retains draft until chosen.",
+        "The full-app changed-relationship sequence passed in Edge and Chrome; a browser component test bundled the production editor, injected a synthetic repository deletion notification, and proved pending draft preservation, stale-Apply refusal, targeted Close, and unrelated record editing in both browsers. Final local gate: 308 unit and 186 Edge/Chrome tests; exit 0."
       ],
-      "limitation": "External deletion with a pending draft is covered by source review of refresh/reload; direct browser injection of that same-session deletion was not available."
+      "limitation": "The deletion branch is a browser component DOM/command sequence with a synthetic repository event, not a full-app UI path; the app exposes no second deletion command against the selected editor record."
     },
     {
       "id": "AC040",
@@ -1640,16 +1639,18 @@
     },
     {
       "id": "AC083",
-      "status": "not-run",
+      "status": "blocked-environment",
       "method": "real native browser/manual evidence",
       "command_argv": null,
-      "cwd": null,
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
       "exit_code": null,
       "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
       "evidence": [
-        "The File System Access E2E suite uses picker/writable stubs; it is adapter evidence only."
+        "The File System Access E2E suite uses picker/writable stubs; it is adapter evidence only.",
+        "In real Chrome on file://, the OS Save picker opened for a synthetic network; Escape cancelled it and SIM kept the dataset unsaved. Filename entry through the available Windows UI controller could not be targeted reliably, so no actual write/readback/reopen or permission-denial result was observed.",
+        "In real Chrome on file://, the OS Save picker opened for a synthetic network; Escape cancelled it and SIM kept the dataset unsaved. Filename entry through the available Windows UI controller could not be targeted reliably, so no actual write/readback/reopen or permission-denial result was observed."
       ],
-      "limitation": "Interactive OS picker and temporary-file Save/Save As/cancel/denial/readback/reopen still need a real Edge or Chrome exercise."
+      "limitation": "User will exercise a real temporary-file Save, Save As, cancel, optional permission denial, readback and reopen in Edge or Chrome. Stubbed Playwright File System Access cases do not count as this proof."
     },
     {
       "id": "AC084",
@@ -1965,17 +1966,30 @@
       "status": "passed",
       "evidence": [
         "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
-        "Staged application source passed gitleaks; independent security and coverage reviews cleared HIGH findings after repair."
+        "Staged application source passed gitleaks; independent security and coverage reviews cleared HIGH findings after repair.",
+        "PR #23 exact-head Windows check passed in 4m41s and gitleaks passed; head 336896e78c2d4427d245062817b0051f8c6cb8d9.",
+        "PR #23 Windows check passed in 4m41s and gitleaks passed at 336896e; new test commit 262aa0f passed the local 308-unit/186-E2E gate and awaits hosted checks."
       ]
     },
     {
       "id": "G5",
       "status": "passed",
       "evidence": [
-        "Every F01-F26 and AC001-AC084 has an explicit disposition/status. AC083 remains not-run; F26 remains deferred. Resume record names next action and unchanged original checkout."
+        "Every F01-F26 and AC001-AC084 has an explicit disposition/status. AC083 remains not-run; F26 remains deferred. Resume record names next action and unchanged original checkout.",
+        "PR #23 opened and attached; AC083 is blocked-environment and AC039 remains not-run as a complete criterion.",
+        "PR #23 opened and attached; AC039 has full-app changed-record and browser component deletion evidence. AC083 remains blocked-environment."
       ]
     }
   ],
-  "next_action": "Review and commit documentation/evidence, open the one requested PR, and record interactive real-native AC083 results when available.",
-  "last_updated_utc": "2026-11-12T17:17:35Z"
+  "next_action": "User completes AC083 native temporary-file test; report result and update this PR evidence. Run new hosted checks for the updated PR head. Resolve inherited ADR-0002 lifecycle record through its owning governance process before any merge offer.",
+  "last_updated_utc": "2026-11-12T18:00:36Z",
+  "pull_request": {
+    "number": 23,
+    "url": "https://github.com/SUaDtL/SIM/pull/23",
+    "last_hosted_pass_head": "336896e78c2d4427d245062817b0051f8c6cb8d9",
+    "base": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+    "state": "open, not merged",
+    "hosted_checks": "Windows npm run check passed in 4m41s and gitleaks passed at 336896e. The follow-on test/evidence update requires fresh hosted checks; CodeRabbit skipped because automatic reviews are disabled.",
+    "governance_limit": "CodeArbiter ADR ancestry verifier rejects unchanged ADR-0002 evidence inherited from main. A user-authorized, logged one-time override allowed PR creation only; merge remains unauthorized."
+  }
 }
