@@ -114,6 +114,76 @@ export interface DependencyInput {
   viaCdsId?: number | null;
 }
 
+/** A To-Be scenario: a named set of changes over the As-Is records (WORK-013, CAP-010). */
+export interface Scenario {
+  readonly id: number;
+  readonly name: string;
+  readonly description: string | null;
+}
+
+export interface ScenarioInput {
+  name: string;
+  description?: string | null;
+}
+
+/**
+ * One change in a scenario. A merged service's consumers and dependencies move to the service it is
+ * merged into, which is an existing service or one the same scenario adds.
+ */
+export type ScenarioChangeInput =
+  | {
+      readonly kind: "add";
+      readonly name: string;
+      readonly networkId: number;
+      readonly marking: Marking;
+      readonly providerOrgId?: number | null;
+      readonly description?: string | null;
+    }
+  | { readonly kind: "retire"; readonly serviceId: number }
+  | {
+      readonly kind: "merge";
+      readonly serviceId: number;
+      /** Exactly one of these: an existing service, or an "add" change in the same scenario. */
+      readonly intoServiceId?: number | null;
+      readonly intoChangeId?: number | null;
+    }
+  | {
+      readonly kind: "rehome";
+      readonly serviceId: number;
+      readonly networkId: number;
+      /** A new provider; null keeps the current one. */
+      readonly providerOrgId?: number | null;
+    };
+
+export type ScenarioChange =
+  | {
+      readonly id: number;
+      readonly scenarioId: number;
+      readonly kind: "add";
+      readonly name: string;
+      readonly networkId: number;
+      readonly marking: Marking;
+      readonly providerOrgId: number | null;
+      readonly description: string | null;
+    }
+  | { readonly id: number; readonly scenarioId: number; readonly kind: "retire"; readonly serviceId: number }
+  | {
+      readonly id: number;
+      readonly scenarioId: number;
+      readonly kind: "merge";
+      readonly serviceId: number;
+      readonly intoServiceId: number | null;
+      readonly intoChangeId: number | null;
+    }
+  | {
+      readonly id: number;
+      readonly scenarioId: number;
+      readonly kind: "rehome";
+      readonly serviceId: number;
+      readonly networkId: number;
+      readonly providerOrgId: number | null;
+    };
+
 export interface WriteOptions {
   /** The user confirmed saving text that looks like an IP address or host name (Q-032). */
   readonly confirmSensitive?: boolean;
@@ -150,4 +220,6 @@ export interface Snapshot {
   readonly dependencies: readonly Dependency[];
   /** Saved map positions; a node without one has not been placed yet. */
   readonly positions: readonly NodePosition[];
+  readonly scenarios: readonly Scenario[];
+  readonly scenarioChanges: readonly ScenarioChange[];
 }
