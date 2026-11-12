@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "target": "app",
+      "commit_sha": "9e2da06c477a9c43a89b497b0a4804d1b05a99a3",
+      "changelog": "The map's View list shows As-Is, any To-Be scenario, or one map comparing a scenario with As-Is: added and merged-into services in green, re-homed ones purple and dashed, retired and merged-away ones as faded ghosts, with the change in service count and cross-domain connections; scenario views never move saved positions.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "db0f38794b8a4bcd5be8aa8ec1a9cd9615e8b58c",
+      "changelog": "To-Be scenarios record changes over the As-Is services (add a service, retire one, merge one into another, re-home one to another network or provider) without changing As-Is, so later As-Is edits carry into every scenario; each change is one undo step, and a service a scenario adds counts on the classification banner.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "693dac7c989881147f20056ad5f38539ab8abaa6",
+      "changelog": "\"Export SVG\" saves the map view as a vector image that stays sharp at any size and can be edited in slide tools, with every label, highlight and filter as shown and the classification banner top and bottom.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "5f5efa9018136dd23098d9fa5e717998dec3ce5a",
+      "changelog": "\"Import CSV\" adds records from CSV files, one per template (downloadable from the dialog), with a preview of what will be added, what already exists and which rows are refused and why; rows that look like host data are left out unless chosen, and the whole import is one undo step.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "79f8a38deb21abbbc09435e88f1879cdffde886f",
+      "changelog": "\"Open demo\" opens a fictional UNCLASSIFIED demo enterprise: six networks and a cloud SaaS zone, about a hundred services, three CDS and several providing organizations.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "362b4c6ccd073430845d0fd7b9370b3aecca43e5",
+      "changelog": "Zoomed out, service labels hide until you hover, highlight or zoom in, network and CDS labels grow, and labels get a white halo; a CDS is never drawn on top of a network's box, and an end-to-end check guards edge crossings, label overlaps and network overlaps.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "81e9e33b337a646533c25151c23afcf90d7062c6",
+      "changelog": "Undo and Redo (buttons, Ctrl+Z, Ctrl+Y or Ctrl+Shift+Z) for every edit including drags and Re-layout, a prompt before New or Open discards unsaved edits, and \"Find on map\" to bring a node into view by name.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "ea8f3751e7595422c40f708dcfeef532a79e6c83",
+      "changelog": "\"Export PNG\" saves the map as shown (zoom, highlight and filters) at twice screen resolution, framed by the classification banner top and bottom.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "f4411b1059d07238ea1a2fadea8b0cf040aa5656",
+      "changelog": "Classification banner at the top and bottom showing the highest marking in the dataset, colored by level, with an optional caveat set from \"Banner caveat\".",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "1874d8b41ad30b3ab2449cb229d57002c5e01731",
+      "changelog": "Click a service, network or CDS to highlight everything that chains to it while the rest fades, and filter the map by network, category or organization.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "e84c52af11a3283ec254a7b42be1ecab6696360c",
+      "changelog": "Node positions are saved in the dataset (schema v2): drag to arrange, new nodes are placed without moving anything else, and \"Re-layout\" arranges everything afresh after a confirmation.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "2271cf73c51bc0126c97244b386672d8680d322e",
+      "changelog": "Links to foundational services such as identity and DNS are hidden on the map by default so cross-domain paths stand out; \"Show foundational links\" brings them back.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "a5252c88d20fb9fffee7fd6cc925c56ddd0116e6",
+      "changelog": "Service map: each network is a box holding its services, external networks form a dashed zone, each CDS sits between the networks it joins, and dependencies are colored by how they travel (grey local, orange through a CDS, red dashed across a boundary with no CDS, tan to an external network).",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "6da305dce2afa741e165c19e1376ee2ba54d3122",
+      "changelog": "Editing a CDS or moving a service can no longer break an existing CDS route, and a network a CDS joins cannot be deleted.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    },
+    {
+      "target": "app",
+      "commit_sha": "a146ced30566d917554ccbcd7ffdc063ad32e5c5",
+      "changelog": "Side-panel data entry: add, edit and delete networks, services, organizations, applications, categories and CDS, and set Tier 1-3 support, consuming organizations and service dependencies, with errors shown at the field.",
+      "reason": "Published before the CHANGELOG: footer convention was adopted; note condensed from the merged [Unreleased] changelog entry.",
+      "authorization": "Approved by the maintainer (SUaDtL) on 2026-11-12 for the v0.1.0 release."
+    }
+  ]
+}
