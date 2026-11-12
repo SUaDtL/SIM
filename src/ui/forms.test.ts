@@ -41,8 +41,8 @@ function editOnly(type: EntityType, id: number, changes: FormValues): unknown {
 }
 
 describe("form model", () => {
-  it("covers all six entity types", () => {
-    expect(ENTITY_TYPES).toEqual(["network", "service", "organization", "application", "category", "cds"]);
+  it("covers every entity type and scenarios", () => {
+    expect(ENTITY_TYPES).toEqual(["network", "service", "organization", "application", "category", "cds", "scenario"]);
   });
 
   it("round-trips every entity unchanged when only the name is edited", () => {
@@ -79,6 +79,7 @@ describe("form model", () => {
       application: { name: "Teams", vendor: "", description: "" },
       category: { name: "C2", color: "" },
       cds: { name: "Cross Guard", networkIds: [String(s.nipr.id), String(s.sipr.id)], description: "" },
+      scenario: { name: "Consolidate", description: "" },
     };
     for (const type of ENTITY_TYPES) {
       const d = descriptor(type);

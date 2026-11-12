@@ -13,7 +13,7 @@ export const addedServiceId = (changeId: number): number => -changeId;
 export type ServiceStatus = "added" | "retired" | "merged" | "rehomed" | "merge-target";
 
 export const dependencyKey = (d: { consumerServiceId: number; providerServiceId: number }) =>
-  `${String(d.consumerServiceId)}|${String(d.providerServiceId)}`;
+  `${String(d.consumerServiceId)}-${String(d.providerServiceId)}`;
 
 const changesOf = (snapshot: Snapshot, scenarioId: number): ScenarioChange[] =>
   snapshot.scenarioChanges.filter((c) => c.scenarioId === scenarioId);
@@ -143,7 +143,7 @@ export interface Comparison {
    */
   readonly overlay: Snapshot;
   readonly status: ReadonlyMap<number, ServiceStatus>;
-  /** Keys ("consumer|provider") of overlay dependencies that exist only in As-Is. */
+  /** Keys ("consumer-provider", as the graph names a dependency) of overlay dependencies that exist only in As-Is. */
   readonly removedDependencies: ReadonlySet<string>;
   readonly services: { readonly asIs: number; readonly toBe: number };
   readonly crossDomain: { readonly asIs: number; readonly toBe: number };
