@@ -35,6 +35,8 @@ describe("schema v1", () => {
       "network",
       "org_consumes",
       "organization",
+      "scenario",
+      "scenario_change",
       "service",
       "service_dependency",
       "support_assignment",
@@ -156,6 +158,64 @@ describe("schema v2: map positions", () => {
         run(`UPDATE ${table} SET ${set} WHERE id = 1`);
       }).toThrow(/constraint failed/i);
     }
+  });
+});
+
+describe("schema v3: scenarios", () => {
+  beforeEach(() => {
+    seed();
+    run("INSERT INTO scenario (id, name) VALUES (1, 'Consolidate')");
+  });
+  const change = (cols: string, values: string) => () => {
+    run(`INSERT INTO scenario_change (scenario_id, kind, ${cols}) VALUES (1, ${values})`);
+  };
+
+  it("holds each kind of change with exactly its own fields", () => {
+    change("network_id, name, marking", "'add', 2, 'Portal', 'SECRET'")();
+    change("service_id", "'retire', 2")();
+    expect(change("service_id, network_id", "'rehome', 1, 2")).not.toThrow();
+    expect(db.exec("SELECT count(*) FROM scenario_change")[0]?.values[0]?.[0]).toBe(3);
+  });
+
+  it.each([
+    ["add without a name", "network_id, marking", "'add', 1, 'CUI'"],
+    ["add with an unknown marking", "network_id, name, marking", "'add', 1, 'X', 'SECRETISH'"],
+    ["retire with a network", "service_id, network_id", "'retire', 1, 2"],
+    ["merge into itself", "service_id, into_service_id", "'merge', 1, 1"],
+    ["merge with no target", "service_id", "'merge', 1"],
+    ["re-home without a network", "service_id, provider_org_id", "'rehome', 1, 1"],
+    ["an unknown kind", "service_id", "'split', 1"],
+  ])("refuses %s", (_, cols, values) => {
+    expect(change(cols, values)).toThrow(/constraint failed/i);
+  });
+
+  it("keeps a merge into an added service inside its own scenario, and never pointing at itself", () => {
+    run("INSERT INTO scenario (id, name) VALUES (2, 'Other')");
+    run(
+      "INSERT INTO scenario_change (id, scenario_id, kind, network_id, name, marking) VALUES (10, 1, 'add', 1, 'Portal', 'CUI')",
+    );
+    expect(() => {
+      run("INSERT INTO scenario_change (scenario_id, kind, service_id, into_change_id) VALUES (2, 'merge', 1, 10)");
+    }).toThrow(/FOREIGN KEY/);
+    expect(() => {
+      run(
+        "INSERT INTO scenario_change (id, scenario_id, kind, service_id, into_change_id) VALUES (11, 1, 'merge', 1, 11)",
+      );
+    }).toThrow(/constraint failed/i);
+    run("INSERT INTO scenario_change (scenario_id, kind, service_id, into_change_id) VALUES (1, 'merge', 1, 10)");
+    run("DELETE FROM scenario_change WHERE id = 10");
+    expect(db.exec("SELECT count(*) FROM scenario_change")[0]?.values[0]?.[0]).toBe(0);
+  });
+
+  it("takes one change per service and scenario, and goes with its scenario or service", () => {
+    change("service_id", "'retire', 1")();
+    expect(change("service_id, into_service_id", "'merge', 1, 2")).toThrow(/UNIQUE/);
+    change("service_id, into_service_id", "'merge', 2, 1")();
+    run("DELETE FROM service WHERE id = 1");
+    expect(db.exec("SELECT count(*) FROM scenario_change")[0]?.values[0]?.[0]).toBe(0);
+    change("network_id, name, marking", "'add', 1, 'Portal', 'CUI'")();
+    run("DELETE FROM scenario WHERE id = 1");
+    expect(db.exec("SELECT count(*) FROM scenario_change")[0]?.values[0]?.[0]).toBe(0);
   });
 });
 

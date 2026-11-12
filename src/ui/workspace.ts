@@ -42,6 +42,9 @@ export function createWorkspace(initial: Repository): Workspace {
     open: (type, id) => {
       editor.open(type, id);
     },
+    openScenario: (id) => {
+      editor.open("scenario", id);
+    },
   });
   const element = el("main", { class: "workspace" }, list.element, map.element, editor.element);
 

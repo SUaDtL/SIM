@@ -2,7 +2,15 @@ import { MARKINGS, type Marking } from "../db/markings";
 import type { Repository } from "../domain/repository";
 import type { NetworkKind, WriteOptions } from "../domain/types";
 
-export const ENTITY_TYPES = ["network", "service", "organization", "application", "category", "cds"] as const;
+export const ENTITY_TYPES = [
+  "network",
+  "service",
+  "organization",
+  "application",
+  "category",
+  "cds",
+  "scenario",
+] as const;
 export type EntityType = (typeof ENTITY_TYPES)[number];
 
 /** Raw form state: text and select values are strings ("" = none), checkboxes booleans, checklists id strings. */
@@ -306,6 +314,34 @@ const cds: EntityDescriptor = {
   errorFields: { "CDS name": "name", networks: "networkIds", description: "description" },
 };
 
+/** A To-Be scenario (WORK-013); its changes are relationship rows in the editor. */
+const scenario: EntityDescriptor = {
+  type: "scenario",
+  label: "Scenario",
+  plural: "Scenarios",
+  fields: [NAME, DESCRIPTION],
+  list: (repo) => {
+    const changes = repo.listScenarioChanges();
+    return repo.listScenarios().map((x) => {
+      const n = changes.filter((c) => c.scenarioId === x.id).length;
+      return { id: x.id, name: x.name, detail: `${String(n)} ${n === 1 ? "change" : "changes"}` };
+    });
+  },
+  get: (repo, id) => repo.getScenario(id),
+  values(repo, id) {
+    const x = id === null ? undefined : repo.getScenario(id);
+    return { name: x?.name ?? "", description: x?.description ?? "" };
+  },
+  save(repo, id, v, options) {
+    const input = { name: str(v, "name"), description: str(v, "description") };
+    return (id === null ? repo.createScenario(input, options) : repo.updateScenario(id, input, options)).id;
+  },
+  remove: (repo, id) => {
+    repo.deleteScenario(id);
+  },
+  errorFields: { "scenario name": "name", description: "description" },
+};
+
 const DESCRIPTORS: Record<EntityType, EntityDescriptor> = {
   network,
   service,
@@ -313,6 +349,7 @@ const DESCRIPTORS: Record<EntityType, EntityDescriptor> = {
   application,
   category,
   cds,
+  scenario,
 };
 
 export function descriptor(type: EntityType): EntityDescriptor {

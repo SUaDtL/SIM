@@ -12,6 +12,7 @@ import {
   suggestsFoundational,
 } from "./forms";
 import type { Selection } from "./list-panel";
+import { scenarioChanges } from "./scenario-changes";
 
 export interface EditorContext {
   repo(): Repository;
@@ -153,7 +154,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     if (id !== null) actions.append(deleteControl(type, id, noun, message));
     form.append(actions);
 
-    relations = type === "service" && id !== null ? el("div", { class: "relations" }) : null;
+    relations = (type === "service" || type === "scenario") && id !== null ? el("div", { class: "relations" }) : null;
     element.replaceChildren(el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`), form, relations ?? "");
     renderRelations();
     ctx.selectionChanged();
@@ -211,6 +212,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function renderRelations(): void {
+    if (relations && current?.type === "scenario" && current.id !== null) {
+      relations.replaceChildren(...scenarioChanges(ctx.repo(), current.id));
+      return;
+    }
     if (!relations || current?.type !== "service" || current.id === null) return;
     const repo = ctx.repo();
     const serviceId = current.id;

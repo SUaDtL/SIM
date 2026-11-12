@@ -19,8 +19,11 @@ import { frameWithBanner } from "./export";
 import { mapStyle } from "./style";
 import { svgDocument, type SvgScene } from "./svg";
 import { sceneFromMap } from "./svg-scene";
+import { applyScenario, type Comparison, compareScenario } from "../scenario/scenario";
 
 cytoscape.use(fcose);
+
+type View = { readonly kind: "as-is" } | { readonly kind: "to-be" | "compare"; readonly scenarioId: number };
 
 export interface MapViewContext {
   snapshot(): Snapshot;
@@ -32,6 +35,8 @@ export interface MapViewContext {
    * into the edit that added it, and the first layout of an opened dataset is not undoable.
    */
   savePositions(positions: readonly NodePosition[], history: History): void;
+  /** Open a scenario in the editor (a tapped service the scenario adds). */
+  openScenario(id: number): void;
   /** Hand an exported PNG to the caller to save. */
   saveImage(image: Blob, extension: "png" | "svg"): void;
 }
@@ -147,6 +152,15 @@ export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
   const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
+  // As-Is, a To-Be scenario, or one map comparing a scenario with As-Is (WORK-013).
+  const viewSelect = el("select", { id: "map-view" });
+  viewSelect.addEventListener("change", () => {
+    const [kind, id] = viewSelect.value.split(":");
+    view = kind === "to-be" || kind === "compare" ? { kind, scenarioId: Number(id) } : { kind: "as-is" };
+    switchView();
+  });
+  const metrics = el("p", { class: "scenario-metrics", "data-testid": "scenario-metrics" });
+  metrics.hidden = true;
   const foundationalBox = el("input", { type: "checkbox" });
   const foundationalLabel = el("span", {});
   foundationalBox.addEventListener("change", () => {
@@ -197,6 +211,12 @@ export function createMapView(ctx: MapViewContext): MapView {
     { class: "map-toolbar" },
     el(
       "div",
+      { class: "map-tools" },
+      el("span", { class: "map-filter" }, el("label", { for: viewSelect.id }, "View"), viewSelect),
+      metrics,
+    ),
+    el(
+      "div",
       { class: "map-tools", role: "group", "aria-label": "Filter the map" },
       el("span", { class: "map-filter" }, el("label", { for: findBox.id }, "Find on map"), findBox, findOptions),
       filterLabel("Network", filterNetwork),
@@ -233,6 +253,8 @@ export function createMapView(ctx: MapViewContext): MapView {
   /** The node whose chain is highlighted (decomposition CAP-005), if any. */
   let chainRoot: string | null = null;
   let filter: MapFilter = {};
+  let view: View = { kind: "as-is" };
+  let comparison: Comparison | null = null;
   let pending: History | null = null;
   const strength: Record<History, number> = { none: 0, merge: 1, own: 2 };
 
@@ -241,6 +263,8 @@ export function createMapView(ctx: MapViewContext): MapView {
    * change events it fires) never runs inside a repository listener or a half-finished sync.
    */
   function persist(history: History): void {
+    // Scenario views arrange nodes for this session only: their positions are never saved.
+    if (view.kind !== "as-is") return;
     const queued = pending !== null;
     if (pending === null || strength[history] > strength[pending]) pending = history;
     if (queued) return;
@@ -329,6 +353,17 @@ export function createMapView(ctx: MapViewContext): MapView {
         e.toggleClass("chain-root", id === chainRoot);
         e.toggleClass("dimmed", chain !== null && !inChain);
         e.toggleClass("filtered", filtered.has(id));
+        const status = comparison && e.isNode() ? comparison.status.get(e.data("entityId") as number) : undefined;
+        const service = e.data("entity") === "service";
+        e.toggleClass("added", service && status === "added");
+        e.toggleClass("merge-target", service && status === "merge-target");
+        e.toggleClass("rehomed", service && status === "rehomed");
+        e.toggleClass("retired", service && status === "retired");
+        e.toggleClass("merged", service && status === "merged");
+        e.toggleClass(
+          "removed",
+          comparison !== null && e.isEdge() && comparison.removedDependencies.has(e.data("dependency") as string),
+        );
       });
     });
     applyZoom();
@@ -453,7 +488,10 @@ export function createMapView(ctx: MapViewContext): MapView {
     const node = target as NodeSingular;
     chainRoot = node.id();
     applyView();
-    ctx.open(node.data("entity") as MapEntity, node.data("entityId") as number);
+    const entityId = node.data("entityId") as number;
+    // A service a scenario adds exists only in that scenario: open the scenario.
+    if (entityId < 0 && view.kind !== "as-is") ctx.openScenario(view.scenarioId);
+    else ctx.open(node.data("entity") as MapEntity, entityId);
   });
   // Dragging a network drags its services; either way, save the new arrangement.
   cy.on("dragfree", "node", () => {
@@ -465,7 +503,7 @@ export function createMapView(ctx: MapViewContext): MapView {
    * move nodes back); returns the added or re-parented leaves that have none and need placing.
    */
   function sync(): NodeCollection {
-    const current = ctx.snapshot();
+    const current = viewSnapshot(ctx.snapshot());
     snapshot = current;
     graph = buildGraph(current);
     positions = current.positions;
@@ -584,7 +622,64 @@ export function createMapView(ctx: MapViewContext): MapView {
     }
   }
 
+  /**
+   * The snapshot the chosen view shows. A deleted scenario falls back to As-Is. Fills the view list
+   * and the metrics line, and locks dragging outside As-Is.
+   */
+  function viewSnapshot(asIs: Snapshot): Snapshot {
+    if (view.kind !== "as-is" && !asIs.scenarios.some((x) => view.kind !== "as-is" && x.id === view.scenarioId)) {
+      view = { kind: "as-is" };
+    }
+    const value = view.kind === "as-is" ? "as-is" : `${view.kind}:${String(view.scenarioId)}`;
+    viewSelect.replaceChildren(
+      option("as-is", "As-Is", value === "as-is"),
+      ...asIs.scenarios.flatMap((x) => [
+        option(`to-be:${String(x.id)}`, `To-Be: ${x.name}`, value === `to-be:${String(x.id)}`),
+        option(`compare:${String(x.id)}`, `Compare: ${x.name}`, value === `compare:${String(x.id)}`),
+      ]),
+    );
+    viewSelect.value = value;
+    viewSelect.disabled = asIs.scenarios.length === 0;
+    cy.autoungrabify(view.kind !== "as-is");
+    relayout.disabled = view.kind !== "as-is";
+    if (view.kind === "as-is") {
+      comparison = null;
+      metrics.hidden = true;
+      return asIs;
+    }
+    const compared = compareScenario(asIs, view.scenarioId);
+    comparison = view.kind === "compare" ? compared : null;
+    const change = (a: number, b: number) =>
+      `${String(a)} → ${String(b)} (${b - a > 0 ? "+" : b - a < 0 ? "−" : "±"}${String(Math.abs(b - a))})`;
+    metrics.textContent =
+      `Services ${change(compared.services.asIs, compared.services.toBe)}; ` +
+      `cross-domain connections ${change(compared.crossDomain.asIs, compared.crossDomain.toBe)}` +
+      (view.kind === "compare"
+        ? ". Green: added or merged into; purple dashed: re-homed; faded: retired (red) or merged away."
+        : "");
+    metrics.hidden = false;
+    return view.kind === "compare" ? compared.overlay : applyScenario(asIs, view.scenarioId);
+  }
+
+  /** Redraw for another view, keeping the viewport so As-Is and To-Be line up. */
+  function switchView(): void {
+    chainRoot = null;
+    cy.elements().remove();
+    const fresh = sync();
+    if (fresh.nonempty()) {
+      withAllLabels(() => {
+        if (fresh.length === cy.nodes().filter((n) => !n.isParent()).length) layoutAll(cy);
+        else {
+          startBeside(fresh);
+          place(cy, fresh);
+        }
+      });
+      persist("none");
+    }
+  }
+
   function reset(): void {
+    view = { kind: "as-is" };
     showFoundational = false;
     foundationalBox.checked = false;
     chainRoot = null;

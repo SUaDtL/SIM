@@ -65,6 +65,13 @@ All notable changes to SIM are documented here. The format follows
   hundred services, three CDS and several providing organizations, all marked UNCLASSIFIED with
   the banner caveat "DEMO - FICTIONAL DATA". The layout check uses the same dataset.
 - A CDS is never drawn on top of a network's box; a layout that lands one there moves it out.
+- To-Be scenarios: a scenario records changes over the As-Is services (add a service, retire one,
+  merge one into another, re-home one to another network or provider) without changing As-Is, so
+  later As-Is edits carry into every scenario. The map's View list shows As-Is, any scenario, or
+  one map comparing a scenario with As-Is: added and merged-into services in green, re-homed ones
+  purple and dashed, retired and merged-away ones as faded ghosts, with the change in service count
+  and cross-domain connections. Scenario views never move saved positions. Each change is one undo
+  step, and a service a scenario adds counts on the classification banner.
 - "Import CSV" adds records from CSV files, one per template (networks, organizations,
   categories, applications, services, CDS, support tiers, consumers, dependencies); the templates
   download from the dialog. A preview shows what will be added, what is already in the dataset

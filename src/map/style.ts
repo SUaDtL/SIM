@@ -92,6 +92,23 @@ export const mapStyle: StylesheetJson = [
     selector: "edge.external",
     style: { width: 3, "line-color": "#b08850", "target-arrow-color": "#b08850", "line-style": "dotted" },
   },
+  // Compare view (WORK-013): what a scenario adds or keeps is green, what it moves is purple and
+  // dashed, and what it removes stays as a faded ghost (red border when retired).
+  {
+    selector: "node.service.added",
+    style: { "background-color": "#e6f4ea", "border-color": "#1a7f37", "border-width": 3 },
+  },
+  { selector: "node.service.merge-target", style: { "border-color": "#1a7f37", "border-width": 4 } },
+  {
+    selector: "node.service.rehomed",
+    style: { "border-color": "#6f42c1", "border-width": 3, "border-style": "dashed" },
+  },
+  {
+    selector: "node.service.retired, node.service.merged",
+    style: { opacity: 0.45, "border-style": "dashed", "background-color": "#f6f7f9" },
+  },
+  { selector: "node.service.retired", style: { "border-color": "#c62828" } },
+  { selector: "edge.removed", style: { opacity: 0.3, "line-style": "dashed", width: 1.5 } },
   // A highlighted chain stands out and the rest fades. A network is faded through its own fill,
   // border and label: "opacity" on a container would also fade the services inside it.
   { selector: "node.chain-root", style: { "border-color": "#2457a6", "border-width": 4 } },

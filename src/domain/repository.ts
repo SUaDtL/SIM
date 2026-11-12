@@ -19,6 +19,10 @@ import type {
   NodePosition,
   Organization,
   OrganizationInput,
+  Scenario,
+  ScenarioChange,
+  ScenarioChangeInput,
+  ScenarioInput,
   Service,
   ServiceInput,
   Snapshot,
@@ -42,6 +46,7 @@ const NAME_FIELD: Record<string, string> = {
   application: "application name",
   service: "service name",
   cds: "CDS name",
+  scenario: "scenario name",
 };
 
 /** Undo history length; the oldest steps are dropped beyond it. */
@@ -510,6 +515,151 @@ export class Repository {
     }, "dependency");
   }
 
+  // ---- scenarios (WORK-013) ----
+
+  listScenarios(): Scenario[] {
+    return this.rows("SELECT * FROM scenario ORDER BY name").map(toScenario);
+  }
+
+  getScenario(id: number): Scenario | undefined {
+    const row = this.row("SELECT * FROM scenario WHERE id = ?", [id]);
+    return row && toScenario(row);
+  }
+
+  createScenario(input: ScenarioInput, options: WriteOptions = {}): Scenario {
+    const v = this.scenario(input, options);
+    return this.write(() => {
+      const id = this.insert("INSERT INTO scenario (name, description) VALUES (?, ?)", v);
+      return this.mustGet(this.getScenario(id));
+    }, "scenario");
+  }
+
+  updateScenario(id: number, input: ScenarioInput, options: WriteOptions = {}): Scenario {
+    const v = this.scenario(input, options);
+    return this.write(() => {
+      this.update("UPDATE scenario SET name = ?, description = ? WHERE id = ?", [...v, id], "scenario");
+      return this.mustGet(this.getScenario(id));
+    }, "scenario");
+  }
+
+  deleteScenario(id: number): void {
+    this.write(() => {
+      this.update("DELETE FROM scenario WHERE id = ?", [id], "scenario");
+    }, "scenario");
+  }
+
+  private scenario(input: ScenarioInput, options: WriteOptions): SqlValue[] {
+    const name = cleanName(input.name, NAME_FIELD["scenario"] ?? "name");
+    const description = cleanText(input.description);
+    checkSensitive({ "scenario name": name, description }, options.confirmSensitive === true);
+    return [name, description];
+  }
+
+  listScenarioChanges(scenarioId?: number): ScenarioChange[] {
+    const where = scenarioId === undefined ? "" : "WHERE scenario_id = ?";
+    const params = scenarioId === undefined ? [] : [scenarioId];
+    return this.rows(`SELECT * FROM scenario_change ${where} ORDER BY scenario_id, id`, params).map(toScenarioChange);
+  }
+
+  /**
+   * Add one change to a scenario. The As-Is records are never touched: a change only says what the
+   * scenario does to them, so later As-Is edits carry into every scenario.
+   */
+  addScenarioChange(scenarioId: number, input: ScenarioChangeInput, options: WriteOptions = {}): ScenarioChange {
+    this.requireExists("scenario", scenarioId, "scenario");
+    const values = this.scenarioChange(input, this.listScenarioChanges(scenarioId), options);
+    return this.write(() => {
+      const id = this.insert(
+        `INSERT INTO scenario_change (scenario_id, kind, service_id, into_service_id, into_change_id, network_id,
+         provider_org_id, name, marking, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [scenarioId, input.kind, ...values],
+      );
+      return this.mustGet(this.listScenarioChanges(scenarioId).find((c) => c.id === id));
+    }, "scenario change");
+  }
+
+  /** Remove a change; merges into a service the change added go with it. */
+  removeScenarioChange(id: number): void {
+    this.write(() => {
+      this.update("DELETE FROM scenario_change WHERE id = ?", [id], "scenario change");
+    }, "scenario change");
+  }
+
+  /** Check a change against the scenario's others; returns its columns after scenario_id and kind. */
+  private scenarioChange(
+    input: ScenarioChangeInput,
+    changes: readonly ScenarioChange[],
+    options: WriteOptions,
+  ): SqlValue[] {
+    const nameTaken = (networkId: number, name: string) =>
+      this.row("SELECT 1 FROM service WHERE network_id = ? AND name = ? COLLATE NOCASE", [networkId, name]) !==
+        undefined ||
+      changes.some((c) => c.kind === "add" && c.networkId === networkId && c.name.toLowerCase() === name.toLowerCase());
+    if (input.kind === "add") {
+      const name = cleanName(input.name, "service name");
+      this.requireExists("network", input.networkId, "network");
+      const providerOrgId = this.optionalRef("organization", input.providerOrgId, "provider");
+      const marking = requireMarking(input.marking);
+      const description = cleanText(input.description);
+      if (nameTaken(input.networkId, name)) {
+        throw new ValidationError("DUPLICATE", "service name", "That service already exists on that network.");
+      }
+      checkSensitive({ "service name": name, description }, options.confirmSensitive === true);
+      return [null, null, null, input.networkId, providerOrgId, name, marking, description];
+    }
+
+    const service = this.getService(input.serviceId);
+    if (!service) throw new ValidationError("NOT_FOUND", "service", "The selected service does not exist.");
+    if (changes.some((c) => c.kind !== "add" && c.serviceId === service.id)) {
+      throw new ValidationError("DUPLICATE", "service", `${service.name} already has a change in this scenario.`);
+    }
+    // A service others merge into must stay; merging it away too would leave them nowhere to go.
+    const target = changes.some((c) => c.kind === "merge" && c.intoServiceId === service.id);
+    if (target && input.kind !== "rehome") {
+      throw new ValidationError(
+        "IN_USE",
+        "service",
+        `Other services merge into ${service.name} in this scenario; change those merges first.`,
+      );
+    }
+    if (input.kind === "retire") return [service.id, null, null, null, null, null, null, null];
+
+    if (input.kind === "merge") {
+      const intoServiceId = input.intoServiceId ?? null;
+      const intoChangeId = input.intoChangeId ?? null;
+      if ((intoServiceId === null) === (intoChangeId === null)) {
+        throw new ValidationError("REQUIRED", "into", "Choose the service to merge into.");
+      }
+      if (intoServiceId === service.id) {
+        throw new ValidationError("SELF_LINK", "into", "A service cannot be merged into itself.");
+      }
+      if (intoServiceId !== null) {
+        this.requireExists("service", intoServiceId, "into");
+        if (changes.some((c) => (c.kind === "retire" || c.kind === "merge") && c.serviceId === intoServiceId)) {
+          throw new ValidationError(
+            "INVALID_VALUE",
+            "into",
+            "That service is retired or merged away in this scenario.",
+          );
+        }
+      } else if (!changes.some((c) => c.kind === "add" && c.id === intoChangeId)) {
+        throw new ValidationError("NOT_FOUND", "into", "Choose a service this scenario adds.");
+      }
+      return [service.id, intoServiceId, intoChangeId, null, null, null, null, null];
+    }
+
+    this.requireExists("network", input.networkId, "network");
+    const providerOrgId = this.optionalRef("organization", input.providerOrgId, "provider");
+    const moves = input.networkId !== service.networkId;
+    if (!moves && (providerOrgId === null || providerOrgId === service.providerOrgId)) {
+      throw new ValidationError("INVALID_VALUE", "network", "Choose another network or another provider.");
+    }
+    if (moves && nameTaken(input.networkId, service.name)) {
+      throw new ValidationError("DUPLICATE", "network", `That network already has a service named ${service.name}.`);
+    }
+    return [service.id, null, null, input.networkId, providerOrgId, null, null, null];
+  }
+
   // ---- map positions ----
 
   listPositions(): NodePosition[] {
@@ -589,9 +739,11 @@ export class Repository {
   /** The banner marking: the highest marking on any network or service (CON-002). */
   datasetMarking(): Marking {
     return highestMarking(
-      this.rows("SELECT marking FROM network UNION SELECT marking FROM service").map((r) =>
-        requireMarking(r["marking"]),
-      ),
+      // A service a scenario adds counts too: the banner shows the highest marking in the file.
+      this.rows(
+        "SELECT marking FROM network UNION SELECT marking FROM service " +
+          "UNION SELECT marking FROM scenario_change WHERE marking IS NOT NULL",
+      ).map((r) => requireMarking(r["marking"])),
     );
   }
 
@@ -615,6 +767,8 @@ export class Repository {
       consumption: this.listConsumption(),
       dependencies: this.listDependencies(),
       positions: this.listPositions(),
+      scenarios: this.listScenarios(),
+      scenarioChanges: this.listScenarioChanges(),
     };
   }
 
@@ -917,6 +1071,46 @@ const toApplication = (r: Row): Application => ({
   vendor: text(r["vendor"]),
   description: text(r["description"]),
 });
+
+const toScenario = (r: Row): Scenario => ({
+  id: Number(r["id"]),
+  name: String(r["name"]),
+  description: text(r["description"]),
+});
+
+function toScenarioChange(r: Row): ScenarioChange {
+  const base = { id: Number(r["id"]), scenarioId: Number(r["scenario_id"]) };
+  switch (r["kind"]) {
+    case "add":
+      return {
+        ...base,
+        kind: "add",
+        name: String(r["name"]),
+        networkId: Number(r["network_id"]),
+        marking: requireMarking(r["marking"]),
+        providerOrgId: id(r["provider_org_id"]),
+        description: text(r["description"]),
+      };
+    case "retire":
+      return { ...base, kind: "retire", serviceId: Number(r["service_id"]) };
+    case "merge":
+      return {
+        ...base,
+        kind: "merge",
+        serviceId: Number(r["service_id"]),
+        intoServiceId: id(r["into_service_id"]),
+        intoChangeId: id(r["into_change_id"]),
+      };
+    default:
+      return {
+        ...base,
+        kind: "rehome",
+        serviceId: Number(r["service_id"]),
+        networkId: Number(r["network_id"]),
+        providerOrgId: id(r["provider_org_id"]),
+      };
+  }
+}
 
 const toService = (r: Row): Service => ({
   id: Number(r["id"]),

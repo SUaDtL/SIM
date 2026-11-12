@@ -40,6 +40,7 @@ src/file/           File System Access API with download/upload fallback
 src/ui/             Workspace UI: list panel, editor, form model (forms.ts), DOM helpers, CSS
 src/map/            Map view: graph model (graph.ts, pure), Cytoscape + fcose view, map style, PNG/SVG export
 src/demo/           Fictional UNCLASSIFIED demo enterprise, built through the repository
+src/scenario/       To-Be scenarios: applyScenario and compareScenario (pure) over a snapshot
 src/import/         CSV import: parser (csv.ts), templates, and the engine that writes through the repository
 tests/helpers/      Node test helpers (sql.js WASM loading, schema inspection, dataset to CSV rows)
 tests/unit/         Unit tests that are not colocated (e.g. build-output checks)
@@ -72,6 +73,7 @@ e2e/                Playwright tests that open dist/sim.html from file://
   reads the canvas through Cytoscape's `_cyreg` registry on the `map-canvas` container, never a
   global). Repository changes update elements in place. Nodes sit at their saved positions; new or
   re-parented nodes are placed by fcose with every other leaf pinned; Re-layout re-runs it on everything.
+  Scenario and compare views draw `applyScenario` / `compareScenario` snapshots and never write positions.
   Chain highlight (`traceChain`) and filters (`filterGraph`) are pure functions in `graph.ts`; the view
   re-applies them as classes after every sync, so they survive edits and drags, and they never write.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
