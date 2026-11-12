@@ -1,0 +1,157 @@
+name: release
+
+# Publishes one version from main, started by hand with the version to confirm. The prepare job
+# holds no write access: it checks the main commit (CI green, manifest and changelog at this
+# version, no existing tag) and builds sim.html. The publish job runs no npm code: it rebuilds the
+# notes from CHANGELOG.md at that exact commit, checks the built file against the digest prepare
+# reported, tags the commit and creates the GitHub Release. Rerunning a failed publish job
+# resumes: a tag already at the commit is kept, and an existing release is not recreated.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 0.1.0 (must match package.json and CHANGELOG.md)"
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+      digest: ${{ steps.digest.outputs.digest }}
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Runs before any project code. The token is scoped to this step; git has no credentials,
+      # so remote checks go through the API.
+      - name: Check the candidate commit
+        id: check
+        env:
+          REF: ${{ github.ref }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          [ "$REF" = "refs/heads/main" ] || fail "Run this workflow from main."
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || fail "Version must be MAJOR.MINOR.PATCH."
+          tag="v$VERSION"
+          sha=$(git rev-parse HEAD)
+          main=$(gh api "repos/$REPO/git/ref/heads/main" --jq .object.sha)
+          [ "$sha" = "$main" ] || fail "main moved since this run started."
+          manifest=$(node -p 'require("./package.json").version')
+          [ "$manifest" = "$VERSION" ] || fail "package.json says $manifest, not $VERSION."
+          if gh api "repos/$REPO/git/ref/tags/$tag" --silent 2>/dev/null; then
+            fail "Tag $tag already exists."
+          fi
+          runs=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$sha&branch=main&event=push&status=success" --jq '.total_count')
+          [ "$runs" -gt 0 ] || fail "No successful ci run on main for $sha; wait for CI and rerun."
+          bash .github/scripts/release-notes.sh "$RUNNER_TEMP/notes"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+
+      - name: Build sim.html
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          mkdir -p release
+          cp dist/sim.html "release/sim-$VERSION.html"
+
+      - name: Record the build digest
+        id: digest
+        run: |
+          set -euo pipefail
+          digest=$(sha256sum "release/sim-$VERSION.html" | cut -d' ' -f1)
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release
+          path: release/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ inputs.version }}
+      SHA: ${{ needs.prepare.outputs.sha }}
+      DIGEST: ${{ needs.prepare.outputs.digest }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      # Credentials stay for the tag push; this job runs no project or npm code.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          fetch-depth: 2
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: ${{ runner.temp }}/release
+
+      - name: Tag the checked commit and publish the release
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          tag="v$VERSION"
+          dir="$RUNNER_TEMP/release"
+          [ "$(git rev-parse HEAD)" = "$SHA" ] || fail "Checked-out commit is not the prepared one."
+          # release-notes.sh compares with the parent commit; fetch-depth 2 brings it.
+          git rev-parse --verify -q "HEAD^1" >/dev/null || fail "Parent commit missing from the checkout."
+          [[ "$DIGEST" =~ ^[0-9a-f]{64}$ ]] || fail "prepare reported no build digest."
+          html="$dir/sim-$VERSION.html"
+          [ "$(sha256sum "$html" | cut -d' ' -f1)" = "$DIGEST" ] || fail "sim.html does not match the digest prepare built."
+          (cd "$dir" && sha256sum "sim-$VERSION.html" > "sim-$VERSION.html.sha256")
+          bash .github/scripts/release-notes.sh "$RUNNER_TEMP/notes"
+
+          remote=$(git ls-remote --tags origin "refs/tags/$tag" "refs/tags/$tag^{}")
+          if [ -z "$remote" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            # verbatim keeps the "## [x]" and "### Added" lines, which default cleanup strips as comments.
+            git tag -a "$tag" -F "$RUNNER_TEMP/notes/tag-message.txt" --cleanup=verbatim "$SHA"
+            echo "pre-push tag=$tag tag_object=$(git rev-parse "refs/tags/$tag") commit=$SHA"
+            git push origin "refs/tags/$tag:refs/tags/$tag"
+            remote=$(git ls-remote --tags origin "refs/tags/$tag" "refs/tags/$tag^{}")
+          else
+            echo "Tag $tag already on the remote; resuming."
+          fi
+          echo "$remote"
+          grep -q "^$SHA	refs/tags/$tag\^{}$" <<< "$remote" || fail "Remote tag $tag does not point at $SHA."
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; checking it."
+          else
+            gh release create "$tag" --verify-tag --latest --title "SIM $VERSION" \
+              --notes-file "$RUNNER_TEMP/notes/notes.md" "$html" "$dir/sim-$VERSION.html.sha256"
+          fi
+          # Read back: a non-draft release on this tag with exactly the two files.
+          [ "$(gh release view "$tag" --json isDraft --jq .isDraft)" = "false" ] || fail "Release is a draft."
+          assets=$(gh release view "$tag" --json assets --jq '[.assets[].name] | sort | join(" ")')
+          [ "$assets" = "sim-$VERSION.html sim-$VERSION.html.sha256" ] || fail "Unexpected release assets: $assets"
+          gh release view "$tag" --json url --jq .url

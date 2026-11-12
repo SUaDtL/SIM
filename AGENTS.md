@@ -26,7 +26,15 @@ channels). It does not download browsers.
 ## CI
 
 `.github/workflows/secrets-scan.yml` runs gitleaks 8.30.1 (checksum-pinned) over the full
-git history on every push and pull request. Actions are pinned to commit SHAs.
+git history on every push and pull request. `.github/workflows/ci.yml` runs `npm run check` on
+Windows (Edge and Chrome are preinstalled) on every pull request and push to main.
+`.github/workflows/release.yml` is started by hand from main with the version: a read-only job
+checks that CI passed on that commit, that `package.json` and a new `## [version]` section in
+`CHANGELOG.md` match, and builds `sim.html`; a second job, which runs no npm code, rebuilds the
+notes from that commit (`.github/scripts/release-notes.sh`), checks the build against the digest
+the first job reported, tags the commit `v<version>` and publishes the GitHub Release with
+`sim-<version>.html` and its SHA-256. Rerunning a failed publish job resumes without re-tagging.
+Actions are pinned to commit SHAs.
 
 ## Layout
 
