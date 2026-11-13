@@ -1,5 +1,6 @@
 import type { Core, EdgeSingular, NodeSingular, SingularElementArgument } from "cytoscape";
 import type { LineStyle, Point, SvgEdge, SvgLabel, SvgNode, SvgScene } from "./svg";
+import { MAP_BACKGROUND } from "./style";
 
 /**
  * Read the drawn map into an SVG scene (WORK-012): what is visible in the current view, with each
@@ -57,6 +58,7 @@ function nodeLabel(n: NodeSingular, measure: Measure): SvgLabel | null {
     color: text(n, "color"),
     opacity: number(n, "text-opacity"),
     halo: number(n, "text-outline-opacity") > 0 ? halo : 0,
+    haloColor: text(n, "text-outline-color"),
   };
 }
 
@@ -121,6 +123,7 @@ export function sceneFromMap(cy: Core, scale: number, measure: Measure): SvgScen
     .filter((n) => inView(n));
   return {
     view: { x: extent.x1, y: extent.y1, width: extent.w, height: extent.h },
+    background: MAP_BACKGROUND,
     pixelWidth: Math.round(cy.width() * scale),
     pixelHeight: Math.round(cy.height() * scale),
     containers: nodes.filter((n) => n.isParent()).map((n) => svgNode(n, measure)),

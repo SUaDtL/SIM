@@ -19,6 +19,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Give the workspace a dark technical palette, quieter navigation, structured inventory rows and responsive two-column forms; preserve dark map backgrounds and label halos in capture and keep file feedback readable.
 - Read-summary refresh preserves Apply notices and does not interrupt file saving by advancing the draft token.
 - Sensitive-input confirmation binds all changed service fields and support notes to the exact current draft.
 - Rejected navigation leaves filters, selection, framing and drafts unchanged; stale navigation decisions cannot cross a dataset replacement.

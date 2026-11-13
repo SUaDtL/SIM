@@ -10,11 +10,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-picker.spec.ts",
         "e2e/connected-editor.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -24,10 +25,11 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-picker.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -37,11 +39,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability.spec.ts",
         "e2e/usability-records.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -51,12 +54,13 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/acceptance-journeys.spec.ts",
         "e2e/connected-editor-acceptance.spec.ts",
         "e2e/usability-validation.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -66,10 +70,11 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-picker.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -79,10 +84,11 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-records.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -92,10 +98,11 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-records.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -105,11 +112,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-records.spec.ts",
         "e2e/connected-navigation-acceptance.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -119,12 +127,13 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability.spec.ts",
         "e2e/connected-focus.spec.ts",
         "e2e/usability-shell.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -134,11 +143,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-picker.spec.ts",
         "e2e/reference-picker-component.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -148,11 +158,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-layout.spec.ts",
         "visuals/MANIFEST.json"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -162,11 +173,12 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-layout.spec.ts",
         "visuals/MANIFEST.json"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -176,12 +188,13 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/dataset-file.spec.ts",
         "e2e/recovery.spec.ts",
         "e2e/session-import-journeys.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -191,12 +204,13 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/connected-projection.spec.ts",
         "e2e/scenario.spec.ts",
         "e2e/connected-navigation-acceptance.spec.ts"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     },
     {
@@ -206,19 +220,20 @@
       "status": "automated-pass",
       "candidate_commit": null,
       "evidence": [
+        "VISUAL-CHECK.log",
         "FULL-CHECK.log",
         "e2e/usability-records.spec.ts",
         "e2e/usability-shell.spec.ts",
         "e2e/editor-external-deletion.spec.ts",
         "IMPLEMENTATION.md"
       ],
-      "candidate_binding": "SOURCE-SHA256.json",
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
       "human_observation": "pending representative-user evaluation; automated result only"
     }
   ],
   "branch": "codex/sim-usability-redesign",
-  "candidate_source_manifest": "SOURCE-SHA256.json",
-  "candidate_build_sha256": "3c49802c46b3ae8f3f37ac21717b0543da4daba357b0061e4bd48695fc801865",
+  "candidate_source_manifest": "VISUAL-SOURCE-SHA256.json",
+  "candidate_build_sha256": "881ea8f68eeeb72388a43be5345d9b8f92e613de447eedfe29afe5cd520d1de6",
   "human_evaluation": {
     "status": "not-run",
     "feedback": "User first-service checkpoint: No blocker; continue.",
@@ -226,6 +241,7 @@
       "No representative uncoached comparative task study or timings",
       "No screen-reader certification",
       "Current file API tests use stubs; prior user Chrome native save success belongs to merged increment"
-    ]
+    ],
+    "visual_feedback": "User rejected initial aesthetic and explicitly selected Dark technical workspace. Revised dark aesthetic awaits user feedback."
   }
 }

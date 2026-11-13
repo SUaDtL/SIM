@@ -901,7 +901,7 @@ test("exports the current view as SVG with the banner, every label and the highl
         [...t.querySelectorAll("tspan")].map((s) => s.textContent).join(" "),
       ),
       dimmed: doc.querySelectorAll('svg svg g[opacity="0.25"]').length,
-      rootBorder: doc.querySelectorAll('svg svg [stroke="rgb(36,87,166)"][stroke-width="4"]').length,
+      rootBorder: doc.querySelectorAll('svg svg [stroke="rgb(101,199,220)"][stroke-width="4"]').length,
       width,
     };
   }, svg);

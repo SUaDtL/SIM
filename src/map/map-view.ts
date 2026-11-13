@@ -17,7 +17,7 @@ import {
   traceChain,
 } from "./graph";
 import { frameWithBanner, layoutFrame, type FrameContent } from "./export";
-import { mapStyle } from "./style";
+import { MAP_BACKGROUND, mapStyle } from "./style";
 import { svgDocument, type SvgScene } from "./svg";
 import { sceneFromMap } from "./svg-scene";
 import { applyScenario, type Comparison, compareScenario } from "../scenario/scenario";
@@ -818,7 +818,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       let rendered: Promise<Blob>;
       try {
         applyZoom(true);
-        rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 }));
+        rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: MAP_BACKGROUND, full: false, scale: 2 }));
       } finally {
         applyZoom();
       }

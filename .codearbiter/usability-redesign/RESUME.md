@@ -7,3 +7,5 @@ Verification:361 unit+368 browser passed, exactbuild/source manifest and indepen
 Preserve preexisting untracked .codearbiter/views/work/WORK-558058DEB941EE8B8ED8A42A7DBF20E6.html and WORK-982097E0781E04B13C7F18321630004D.html. New derived work view is local-only. Do not reset/clean/stash or rewrite native artifacts/ADR history. Continue delivery through commit-gate and one new SIM PR; never push main or merge without authority. If reopened after delivery, verify exact branch/HEAD/PR checks rather than trusting this precommit note.
 
 Local-only PNG evidence remains under usability-redesign/visuals/ after binary text-review refusal; do not delete it or call it unrelated preexisting work. Its hashes and reproduction paths are committed in MANIFEST.json. No binary override was used.
+
+Visual follow-up: user selected Dark technical workspace after rejecting the initial aesthetic. Dark UI/map/capture changes and CI render synchronization are implemented on PR25. Latest local check:362 unit+368 browser passed3.3m; see VISUAL-SOURCE-SHA256.json and VISUAL-CHECK.log. User aesthetic acceptance and hosted rerun remain separate. No merge/release authorized.

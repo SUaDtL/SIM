@@ -24,8 +24,9 @@ export interface SvgLabel {
   readonly bold: boolean;
   readonly color: string;
   readonly opacity: number;
-  /** White halo width around the letters. */
+  /** Halo width around the letters, with the drawn map's outline color. */
   readonly halo: number;
+  readonly haloColor?: string;
 }
 
 export interface SvgNode {
@@ -60,6 +61,7 @@ export interface SvgEdge {
 }
 
 export interface SvgScene {
+  readonly background?: string;
   /** The part of the map shown, in map coordinates. */
   readonly view: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
   /** Size of the drawn map in pixels (without the banner). */
@@ -119,7 +121,7 @@ function label(l: SvgLabel): string {
       "font-weight": l.bold ? "bold" : null,
       fill: l.color,
       opacity: opacity(l.opacity),
-      stroke: l.halo > 0 ? "#ffffff" : null,
+      stroke: l.halo > 0 ? (l.haloColor ?? "#ffffff") : null,
       "stroke-width": l.halo > 0 ? l.halo * 2 : null,
       "stroke-opacity": l.halo > 0 ? 0.85 : null,
       "stroke-linejoin": l.halo > 0 ? "round" : null,
@@ -238,7 +240,9 @@ export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | 
       height: scene.pixelHeight,
       viewBox: `${num(v.x)} ${num(v.y)} ${num(v.width)} ${num(v.height)}`,
     },
-    [...scene.containers.map(node), ...scene.edges.map(edge), ...scene.nodes.map(node)].join(""),
+    (scene.background
+      ? tag("rect", { x: v.x, y: v.y, width: v.width, height: v.height, fill: scene.background })
+      : "") + [...scene.containers.map(node), ...scene.edges.map(edge), ...scene.nodes.map(node)].join(""),
   );
   const frameLines = (lines: FrameLayout["topLines"], offset: number) =>
     lines

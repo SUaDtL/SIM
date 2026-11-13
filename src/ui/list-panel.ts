@@ -124,7 +124,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   const element = el(
     "aside",
     { class: "list-panel", "data-testid": "list-panel", "aria-label": "Entities" },
-    toggle,
+    el("div", { class: "inventory-heading" }, el("h2", {}, "Inventory"), toggle),
     body,
   );
 
@@ -174,13 +174,13 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     previous.disabled = page === 0;
     next.disabled = page + 1 >= shown.pages;
     pagination.hidden = shown.pages <= 1;
-    empty.textContent =
-      all.length === 0
-        ? `No ${d.plural.toLowerCase()} yet. Use Add ${nounOf(type)} to begin.`
-        : shown.total === 0
-          ? "No matching records. Try another name or context."
-          : "";
-    empty.hidden = empty.textContent === "";
+    empty.replaceChildren();
+    if (all.length === 0 || shown.total === 0)
+      empty.append(
+        el("h3", {}, all.length === 0 ? `No ${d.plural.toLowerCase()} yet` : "No matching records"),
+        el("p", {}, all.length === 0 ? `Use Add ${nounOf(type)} to begin.` : "Try another name or context."),
+      );
+    empty.hidden = all.length > 0 && shown.total > 0;
   }
 
   return {

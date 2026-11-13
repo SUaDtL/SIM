@@ -149,6 +149,31 @@ test("keeps a spike-sized map readable: few crossings and label overlaps, no ove
     await (await chooser).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
     await showMap(page);
     await expect(page.getByTestId("map-summary")).toContainText("services");
+    // Summary text describes the model. The newly visible canvas is resized by
+    // ResizeObserver, and its zoom-dependent labels update on the following frame.
+    await expect
+      .poll(() =>
+        page.getByTestId("map-canvas").evaluate((canvas) => {
+          const cy = (canvas as unknown as { _cyreg?: { cy: { width(): number; height(): number } } })._cyreg?.cy;
+          return (
+            canvas.clientWidth > 0 &&
+            canvas.clientHeight > 0 &&
+            cy?.width() === canvas.clientWidth &&
+            cy.height() === canvas.clientHeight
+          );
+        }),
+      )
+      .toBe(true);
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              resolve();
+            });
+          }),
+        ),
+    );
     runs.push(await measure(page));
   }
   for (const m of runs) {

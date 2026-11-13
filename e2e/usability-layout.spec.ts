@@ -197,6 +197,9 @@ for (const factor of [2, 4]) {
   test(`T11/T12: actual browser zoom ${String(factor * 100)} percent preserves editing and picker access`, async ({
     playwright,
   }, info) => {
+    // Isolated installed-browser startup, SQLite/graph loading and native screenshots
+    // share this budget on the slower Windows runner. All behavior assertions remain.
+    test.setTimeout(90_000);
     const profile = mkdtempSync(join(tmpdir(), "sim-usability-browser-zoom-"));
     mkdirSync(join(profile, "Default"));
     // Chromium stores default zoom by storage partition. The default partition's

@@ -61,6 +61,24 @@ describe("escapeXml", () => {
 });
 
 describe("svgDocument", () => {
+  it("preserves a dark viewport and its label halo while retaining both classification bands", () => {
+    const base = node();
+    const dark = {
+      ...scene(),
+      background: "#102030",
+      nodes: [
+        {
+          ...base,
+          label: { ...(base.label as NonNullable<SvgNode["label"]>), color: "#d9e5ef", haloColor: "#102030" },
+        },
+      ],
+    };
+    const svg = svgDocument(dark, "SECRET", null);
+    expect(svg).toContain('<rect x="-10" y="-20" width="400" height="300" fill="#102030"/>');
+    expect(svg).toContain('fill="#d9e5ef"');
+    expect(svg).toContain('stroke="#102030"');
+    expect(svg.match(/>SECRET<\/text>/g)).toHaveLength(2);
+  });
   it("places derived title and legend outside the map rectangle, with both marking bands intact", () => {
     const layout = layoutFrame(800, {
       title: "Map fixture — Compare: Future",

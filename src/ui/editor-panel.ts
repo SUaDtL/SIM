@@ -807,7 +807,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         () => {
           const owner = current;
           activePicker = openReferencePicker({
-            label: "Start from an existing service",
+            label: "source service",
             returnFocus: start,
             isCurrent: () => owner === current && ctx.repo() === repo,
             options: () =>
@@ -861,7 +861,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       "",
       () => {
         activePicker = openReferencePicker({
-          label,
+          label: d.label.toLowerCase(),
           returnFocus: trigger,
           selectedValue: field().value,
           allowNone: field().options[0]?.value === "",

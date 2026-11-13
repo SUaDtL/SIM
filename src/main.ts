@@ -549,7 +549,13 @@ async function boot(): Promise<void> {
   workspaceReady = true;
 
   const title = document.createElement("h1");
-  title.textContent = "SIM - Service Integration Map";
+  const brand = document.createElement("span");
+  brand.className = "app-brand";
+  brand.textContent = "SIM";
+  const product = document.createElement("span");
+  product.className = "app-product";
+  product.textContent = "Service Integration Map";
+  title.append(brand, document.createTextNode(" "), product);
   const version = document.createElement("p");
   version.dataset["testid"] = "sqlite-version";
   version.textContent = `SQLite ${sqliteVersion(db)}`;
