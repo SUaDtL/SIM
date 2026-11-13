@@ -45,4 +45,34 @@ describe("export banner", () => {
     expect(frame.topHeight).toBeGreaterThan(frame.topLines.at(-1)?.y ?? 0);
     expect(frame.bottomHeight).toBeGreaterThan(frame.bottomLines.at(-1)?.y ?? 0);
   });
+
+  it.each([
+    [2400, 1400],
+    [3600, 900],
+    [1600, 2400],
+  ])("keeps detached capture annotations readable when %ix%i is fitted to a 1280x720 slide", (width, height) => {
+    const frame = layoutFrame(
+      width,
+      {
+        title: "Synthetic decision review / Network connections",
+        details: [
+          "Focused network: Coral",
+          "1 foundational dependency hidden",
+          "Committed document has unsaved changes",
+        ],
+        legend: [
+          "Depends on: consumer → provider",
+          "Cross-network dependency, no CDS recorded",
+          "Recorded dependencies; connectivity is not verified",
+        ],
+      },
+      (text, size) => text.length * size * 0.6,
+      height,
+    );
+    const band = frame.bandHeight ?? bandHeight(width);
+    const fit = Math.min(1280 / width, 720 / (height + frame.topHeight + frame.bottomHeight + 2 * band));
+    expect(Math.min(...frame.bottomLines.map((line) => line.size)) * fit).toBeGreaterThanOrEqual(11.9);
+    expect(frame.topLines.every((line) => line.text.length * line.size * 0.6 <= width * 0.95)).toBe(true);
+    expect(frame.bottomLines.every((line) => line.text.length * line.size * 0.6 <= width * 0.95)).toBe(true);
+  });
 });

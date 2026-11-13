@@ -711,10 +711,35 @@ test("exports the current view as a PNG framed by the classification banner, wit
       if (!context) throw new Error("no canvas");
       context.drawImage(image, 0, 0);
       const at = (x: number, y: number) => [...context.getImageData(x, y, 1, 1).data.slice(0, 3)];
-      const middle = context.getImageData(0, 80, image.width, image.height - 160).data;
-      let drawn = 0;
-      for (let i = 0; i < middle.length; i += 4) if (middle[i] !== 255 || middle[i + 1] !== 255) drawn++;
-      return { top: at(3, 3), bottom: at(3, image.height - 3), drawn };
+      const column = context.getImageData(3, 0, 1, image.height).data;
+      const mapRows: number[] = [];
+      for (let y = 0; y < image.height; y++) {
+        const i = y * 4;
+        if (column[i] === 13 && column[i + 1] === 20 && column[i + 2] === 28) mapRows.push(y);
+      }
+      const mapTop = mapRows[0];
+      const mapBottom = mapRows.at(-1);
+      if (mapTop === undefined || mapBottom === undefined) throw new Error("No map rectangle in captured PNG");
+      const mapHeight = mapBottom - mapTop + 1;
+      const middle = context.getImageData(0, mapTop, image.width, mapHeight).data;
+      const countGraphPixels = (data: Uint8ClampedArray) => {
+        let drawn = 0;
+        // The fixture's service fill is a graph feature. Neither dark viewport, white framing nor
+        // a valid classification band can satisfy this oracle when the renderer omits the graph.
+        for (let i = 0; i < data.length; i += 4)
+          if (data[i] === 43 && data[i + 1] === 67 && data[i + 2] === 86) drawn++;
+        return drawn;
+      };
+      // Negative control: preserve the actual classification bands, erase only the graph region.
+      context.fillStyle = "#0d141c";
+      context.fillRect(0, mapTop, image.width, mapHeight);
+      const blank = context.getImageData(0, mapTop, image.width, mapHeight).data;
+      return {
+        top: at(3, 3),
+        bottom: at(3, image.height - 3),
+        drawn: countGraphPixels(middle),
+        blankDrawn: countGraphPixels(blank),
+      };
     },
     `data:image/png;base64,${bytes.toString("base64")}`,
   );
@@ -722,6 +747,7 @@ test("exports the current view as a PNG framed by the classification banner, wit
   expect(pixels.top).toEqual(banner);
   expect(pixels.bottom).toEqual(banner);
   expect(pixels.drawn).toBeGreaterThan(1000);
+  expect(pixels.blankDrawn).toBe(0);
 
   await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
   expect(watch.errors).toEqual([]);

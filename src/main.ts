@@ -9,7 +9,8 @@ import {
 } from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
 import { DEMO_NAME, populateDemo } from "./demo/demo";
-import { ValidationError } from "./domain/errors";
+import { SensitiveInputWarning, ValidationError } from "./domain/errors";
+import { findSensitive } from "./domain/validate";
 import { commitPreparedImport, describeAdded, prepareImport } from "./import/engine";
 import { Repository } from "./domain/repository";
 import { DatasetSession, type SaveResult } from "./session/dataset-session";
@@ -32,6 +33,8 @@ import {
 import "./ui/app.css";
 import { createBanner } from "./ui/banner";
 import { openImportDialog } from "./ui/import-dialog";
+import type { ImportReceipt } from "./ui/import-receipt";
+import { openHelp } from "./ui/help";
 import { createWorkspace, type Workspace } from "./ui/workspace";
 
 interface State {
@@ -41,6 +44,7 @@ interface State {
   name: string;
   fileName: string | null;
   handle: FileHandle | null;
+  importReceipt?: ImportReceipt;
   recovery?: { handle: FileHandle; controller: Recovery; unsubscribe: () => void };
 }
 
@@ -243,6 +247,9 @@ async function onNew(): Promise<void> {
   const request = ++replacementRequest;
   const name = window.prompt("Name for the new dataset", "Untitled dataset");
   if (name === null) return;
+  const matches = findSensitive(name);
+  if (matches.length > 0 && !window.confirm(new SensitiveInputWarning([{ field: "Dataset name", matches }]).message))
+    return;
   try {
     await installCandidate(await createDataset(name), request, null, null, false);
   } catch (error) {
@@ -293,6 +300,12 @@ async function onImport(): Promise<void> {
   if (!(await workspace.resolveActiveDraft("import"))) return;
   const owner = state;
   openImportDialog({
+    ...(owner.importReceipt ? { lastReceipt: owner.importReceipt } : {}),
+    receiptSource: () => ({
+      name: owner.name,
+      marking: owner.repo.datasetMarking(),
+      caveat: owner.repo.datasetCaveat(),
+    }),
     async preview(files, options) {
       const copy = await openDataset(exportDataset(owner.db));
       try {
@@ -306,7 +319,8 @@ async function onImport(): Promise<void> {
       return commitPreparedImport(owner.repo, prepared);
     },
     isCurrentSession: () => state.session === owner.session,
-    done(report, options) {
+    done(report, options, receipt) {
+      owner.importReceipt = receipt;
       const left = report.rejected.length + (options.includeFlagged ? 0 : report.flagged.length);
       show(
         `Imported ${describeAdded(report.added)}.` +
@@ -592,7 +606,18 @@ async function boot(): Promise<void> {
   aboutBody.className = "file-menu-actions";
   const aboutDescription = document.createElement("p");
   aboutDescription.textContent = "SIM runs offline. Your data stays in the local SQLite files you choose.";
-  aboutBody.append(version, aboutDescription, button("Open demo", onDemo));
+  const licenses = (): Promise<void> => {
+    const dialog = document.getElementById("sim-license-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.showModal();
+    else show("License notices are unavailable in this build.", "error");
+    return Promise.resolve();
+  };
+  document.getElementById("sim-license-close")?.addEventListener("click", () => {
+    const dialog = document.getElementById("sim-license-dialog");
+    if (dialog instanceof HTMLDialogElement) dialog.close();
+    aboutTitle.focus();
+  });
+  aboutBody.append(version, aboutDescription, button("Open demo", onDemo), button("Licenses and notices", licenses));
   aboutBody.addEventListener("click", (event) => {
     if (event.target instanceof HTMLElement && event.target.closest("button")) {
       about.open = false;
@@ -607,6 +632,17 @@ async function boot(): Promise<void> {
     button("Save file", () => onSave(false)),
     undoButton,
     redoButton,
+    button("Help", () => {
+      openHelp({
+        demo: () => {
+          void onDemo();
+        },
+        licenses: () => {
+          void licenses();
+        },
+      });
+      return Promise.resolve();
+    }),
     about,
   );
   const header = document.createElement("header");

@@ -10,8 +10,17 @@ import {
 } from "../import/engine";
 import { readTemplate, TEMPLATES, type TemplateFile } from "../import/templates";
 import { button, el } from "./dom";
+import { isMarking } from "../db/markings";
+import {
+  createImportReceipt,
+  importReceiptCounts,
+  importReceiptCsv,
+  type ImportReceipt,
+  type ImportReceiptFile,
+  type ImportReceiptSource,
+} from "./import-receipt";
 
-/** Longest list of rows shown for one kind of note; the rest are counted. */
+/** Bound each rendered diagnostic list without discarding any reviewed rows. */
 const MAX_LISTED = 50;
 
 export interface ImportDialogContext {
@@ -22,7 +31,11 @@ export interface ImportDialogContext {
   /** The dialog's originating dataset is still active. */
   isCurrentSession(): boolean;
   /** Called with what the import actually did, after the dialog closes. */
-  done(report: ImportReport, options: ImportOptions): void;
+  done(report: ImportReport, options: ImportOptions, receipt: ImportReceipt): void;
+  /** Latest completed import, owned only by this dataset session. */
+  readonly lastReceipt?: ImportReceipt;
+  /** Current source metadata; detached diagnostics must retain their handling context. */
+  receiptSource(): ImportReceiptSource;
   /** Save a template file through the browser's download. */
   download(blob: Blob, fileName: string): void;
 }
@@ -44,14 +57,85 @@ async function readFile(file: File): Promise<ReadFile> {
   }
 }
 
-function notes(list: readonly RowNote[]): HTMLUListElement {
+function notes(list: readonly RowNote[], title: string): HTMLElement {
+  let page = 0;
   const ul = el("ul", { class: "import-notes" });
-  for (const n of list.slice(0, MAX_LISTED)) ul.append(el("li", {}, `${n.file} row ${String(n.row)}: ${n.message}`));
-  if (list.length > MAX_LISTED) ul.append(el("li", {}, `... and ${String(list.length - MAX_LISTED)} more.`));
-  return ul;
+  const count = el("p", { role: "status" });
+  const previous = button("Previous rows", () => {
+    page--;
+    render();
+  });
+  const next = button("Next rows", () => {
+    page++;
+    render();
+  });
+  const paging = el("div", { class: "actions" }, previous, next);
+  paging.hidden = list.length <= MAX_LISTED;
+  const group = el("div", { role: "group", "aria-label": title, class: "import-note-group" }, count, ul, paging);
+  function render(): void {
+    const start = page * MAX_LISTED;
+    const end = Math.min(start + MAX_LISTED, list.length);
+    count.textContent = `Rows ${String(start + 1)}–${String(end)} of ${String(list.length)}`;
+    ul.replaceChildren(
+      ...list.slice(start, end).map((n) => el("li", {}, `${n.file} row ${String(n.row)}: ${n.message}`)),
+    );
+    previous.disabled = page === 0;
+    next.disabled = end >= list.length;
+  }
+  render();
+  return group;
 }
 
 const rows = (n: number) => `${String(n)} ${n === 1 ? "row" : "rows"}`;
+
+function receiptContent(receipt: ImportReceipt, download: () => void): HTMLElement {
+  const counts = importReceiptCounts(receipt);
+  const summary =
+    `Added ${String(counts.added)} ${counts.added === 1 ? "record" : "records"} or links; ` +
+    `${String(counts.present)} already-present rows; ${String(counts.rejected)} rejected rows; ` +
+    `${String(counts.held)} host-like rows held; ${String(counts.unreadable)} unreadable ${counts.unreadable === 1 ? "file" : "files"}.`;
+  const fileList = el("ul", { class: "import-files" });
+  for (const file of receipt.files)
+    fileList.append(
+      el(
+        "li",
+        {},
+        file.error === null
+          ? `${file.name}: ${rows(file.rows ?? 0)} reviewed`
+          : `${file.name}: ${file.error} This file was not imported.`,
+      ),
+    );
+  const body = el(
+    "section",
+    { "aria-label": "Last import receipt" },
+    el("p", { class: "warning" }, `Classification: ${receipt.classification}`),
+    el("p", {}, `Source dataset: ${receipt.source.name}`),
+    ...receipt.caveats.map((caveat) => el("p", {}, `Source caveat: ${caveat}`)),
+    el("p", { "data-testid": "receipt-summary" }, summary),
+    el(
+      "p",
+      { class: "hint" },
+      "This receipt records the completed import, even if you later undo it. Counts describe records/links and row diagnostics; warning notes are not extra imported rows.",
+    ),
+    el(
+      "p",
+      {},
+      receipt.options.includeFlagged
+        ? "Host-like rows were permitted after confirmation; other validation still applied."
+        : "Host-like rows were held.",
+    ),
+    fileList,
+    button("Download receipt", download),
+  );
+  for (const [title, list] of [
+    ["Rejected rows", receipt.report.rejected],
+    ["Already-present rows", receipt.report.present],
+    ["Host-like rows", receipt.report.flagged],
+  ] as const) {
+    if (list.length > 0) body.append(el("h3", {}, title), notes(list, title));
+  }
+  return body;
+}
 
 /**
  * The Import CSV dialog (WORK-011): template downloads, a file picker, a preview of exactly what the
@@ -61,6 +145,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
   let files: readonly ReadFile[] = [];
   let generation = 0;
   let prepared: PreparedImport | null = null;
+  let reviewedReceipt: ImportReceipt | null = null;
   let closed = false;
   let committing = false;
   let notice = "";
@@ -70,6 +155,35 @@ export function openImportDialog(ctx: ImportDialogContext): void {
   const preview = el("div", { class: "import-preview", "aria-live": "polite" });
   const importButton = button("Import", commit, { class: "primary" });
   importButton.disabled = true;
+  const lastReceipt = ctx.lastReceipt;
+  const lastBody = el("div");
+  const last = el("details", { class: "import-last-receipt" }, el("summary", {}, "Last import receipt"), lastBody);
+  if (lastReceipt) {
+    last.addEventListener("toggle", () => {
+      // Keep historical diagnostics out of the active preview's accessible tree until requested.
+      lastBody.replaceChildren(
+        ...(last.open
+          ? [
+              receiptContent(lastReceipt, () => {
+                downloadReceipt(lastReceipt, "sim-import-receipt.csv");
+              }),
+            ]
+          : []),
+      );
+    });
+  }
+
+  function downloadReceipt(receipt: ImportReceipt, name: string): void {
+    if (closed || !ctx.isCurrentSession()) return;
+    ctx.download(new Blob([importReceiptCsv(receipt)], { type: "text/csv;charset=utf-8" }), name);
+  }
+
+  const receiptFiles = (): readonly ImportReceiptFile[] =>
+    files.map((file) => ({
+      name: file.name,
+      rows: file.file?.rows.length ?? null,
+      error: file.error ?? null,
+    }));
 
   const templates = el("ul", { class: "import-templates" });
   for (const t of TEMPLATES) {
@@ -96,6 +210,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         "or already in the dataset. Records that already exist are left as they are.",
     ),
     el("details", {}, el("summary", {}, "Download templates"), templates),
+    lastReceipt ? last : null,
     el("div", { class: "field" }, el("label", { for: "import-files" }, "CSV files"), input),
     preview,
     el("div", { class: "actions" }, importButton, button("Cancel", close)),
@@ -105,12 +220,13 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     closed = true;
     generation++;
     prepared = null;
+    reviewedReceipt = null;
     importButton.disabled = true;
     dialog.close();
   }
 
   function commit(): void {
-    if (closed || committing || prepared === null) return;
+    if (closed || committing || prepared === null || reviewedReceipt === null) return;
     if (!ctx.isCurrentSession()) {
       prepared = null;
       importButton.disabled = true;
@@ -118,6 +234,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       return;
     }
     const selected = prepared;
+    const selectedReceipt = reviewedReceipt;
     committing = true;
     importButton.disabled = true;
     let report: ImportReport;
@@ -135,12 +252,25 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       return;
     }
     close();
-    ctx.done(report, selected.options);
+    ctx.done(
+      report,
+      selected.options,
+      createImportReceipt(
+        "committed",
+        selectedReceipt.files,
+        selected.options,
+        report,
+        ctx.receiptSource(),
+        [],
+        selectedReceipt,
+      ),
+    );
   }
 
   async function refresh(): Promise<void> {
     const mine = ++generation;
     prepared = null;
+    reviewedReceipt = null;
     importButton.disabled = true;
     const chosen = files.flatMap((f) => (f.file ? [f.file] : []));
     const options = { includeFlagged: includeFlagged.checked };
@@ -153,7 +283,28 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       );
     }
     if (chosen.length === 0) {
-      preview.replaceChildren(fileList);
+      const receipt = createImportReceipt(
+        "preview",
+        receiptFiles(),
+        options,
+        {
+          added: {},
+          present: [],
+          rejected: [],
+          flagged: [],
+        },
+        ctx.receiptSource(),
+      );
+      preview.replaceChildren(
+        fileList,
+        ...(files.length > 0
+          ? [
+              button("Download preview receipt", () => {
+                downloadReceipt(receipt, "sim-import-preview.csv");
+              }),
+            ]
+          : []),
+      );
       return;
     }
     preview.replaceChildren(
@@ -178,10 +329,30 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       return;
     }
     prepared = { files: chosen, options, report: result.report, effect: result.effect };
+    const incomingMarkings = chosen.flatMap((file) =>
+      file.rows.map((row) => row.values["marking"]?.trim().toUpperCase().replace(/\s+/g, " ")).filter(isMarking),
+    );
+    const receipt = createImportReceipt(
+      "preview",
+      receiptFiles(),
+      options,
+      result.report,
+      ctx.receiptSource(),
+      incomingMarkings,
+    );
+    reviewedReceipt = receipt;
     const parts: Node[] = [
       fileList,
       ...(notice ? [el("p", { class: "field-error" }, notice)] : []),
       el("p", { "data-testid": "import-summary" }, `Import will add ${describeAdded(result.report.added)}.`),
+      el(
+        "p",
+        { class: "hint" },
+        `Receipt classification: ${receipt.classification}. Highest recognized input marking; unreadable files and unrecognized markings need source review.`,
+      ),
+      button("Download preview receipt", () => {
+        downloadReceipt(receipt, "sim-import-preview.csv");
+      }),
     ];
     if (result.report.flagged.length > 0) {
       parts.push(
@@ -194,7 +365,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
             `${rows(result.report.flagged.length)} look like an IP address or host name, which SIM is not meant to hold. ` +
               "They are left out unless you choose otherwise.",
           ),
-          notes(result.report.flagged),
+          notes(result.report.flagged, "Host-like rows"),
           el("label", { class: "check" }, includeFlagged, "Import these rows anyway"),
         ),
       );
@@ -202,7 +373,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     if (result.report.rejected.length > 0) {
       parts.push(
         el("h3", {}, `${rows(result.report.rejected.length)} will not be imported`),
-        notes(result.report.rejected),
+        notes(result.report.rejected, "Rejected rows"),
       );
     }
     if (result.report.present.length > 0) {
@@ -211,7 +382,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
           "details",
           {},
           el("summary", {}, `${rows(result.report.present.length)} already in the dataset, left as they are`),
-          notes(result.report.present),
+          notes(result.report.present, "Already-present rows"),
         ),
       );
     }
@@ -222,6 +393,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
   input.addEventListener("change", () => {
     const mine = ++generation;
     prepared = null;
+    reviewedReceipt = null;
     importButton.disabled = true;
     notice = "";
     files = [];
@@ -242,6 +414,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     closed = true;
     generation++;
     prepared = null;
+    reviewedReceipt = null;
     dialog.remove();
   });
 

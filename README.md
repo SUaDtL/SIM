@@ -13,6 +13,9 @@ npm run build      # produces dist/sim.html
 ```
 
 Open `dist/sim.html` in Edge or Chrome by double-clicking it. No server or internet needed.
+Open **Help** for a bundled first-map example, map vocabulary, and Apply/Save/recovery guidance.
+Help preserves your unfinished draft. **About and demo → Licenses and notices** contains the
+project terms and the full license/attribution texts for the bundled runtime dependencies.
 
 ## Add and connect services
 
@@ -29,6 +32,9 @@ alongside the service fields. **Add service** creates the initial aggregate in o
 the existing service. Save file applies a valid active draft before writing the file.
 Details, Connections and Support share that same draft. Apply reveals errors in the
 relevant section. Cancel follows the unapplied-work decision before returning to inspection.
+The editor keeps the record name and network visible on every tab, including the source
+and destination context when creating a similar service. Projected summaries distinguish
+outgoing dependencies from incoming **Used by** service counts.
 Host-like text requires confirmation of the exact current payload; editing it withdraws
 the old acknowledgement.
 
@@ -71,6 +77,14 @@ Focus, Fit and Back do not change saved node positions or create Undo steps.
 **Capture** saves a PNG directly; **Capture options → Export SVG** saves a vector image.
 Both capture the current view with scope, legend and the
 full dataset or projection marking, including higher classifications outside the focus.
+The visible legend explains consumer-to-provider arrows and unverified connectivity.
+Scope disclosure counts hidden foundational dependencies and names active filters/focus;
+detached captures retain those omissions, the current-viewport boundary and the same caveat.
+Display-only curve offsets reduce links crossing unrelated nodes or labels without changing
+recorded endpoints or saved positions. This is bounded avoidance, not a complete obstacle router.
+Caption and classification sizes account for map height and wrapping, targeting readable
+annotations when the whole capture fits a 1280×720 slide. Check your actual presentation or
+print size; this does not guarantee human readability of every map label.
 With an unapplied draft, choose **Capture current view**, **Apply and capture**, or Cancel.
 An export failure after Apply retains the applied change and its Undo step.
 The visible export status reports progress, cancellation or failure. Inventory and Map
@@ -82,6 +96,22 @@ Save file, Undo/Redo and document/recovery status remain visible. **About** cont
 SQLite version and fictional demo. Inventory, relationship and picker results have bounded
 pages, counts and local search. At very short zoomed viewports the page scrolls to the editor;
 the classification banners remain visible and the editor keeps its own scroll body.
+
+## Reconcile CSV imports
+
+**File → Import CSV** previews additions, already-present rows and rejected or host-like rows.
+Diagnostics use bounded pages so every row remains reachable. **Download preview receipt**
+retains the complete file/row/reason report, including files that could not be read.
+After importing, reopen Import CSV and expand **Last import receipt** to review or download
+the most recent completed import. Choose corrected files for another preview and retry.
+Cancelling a preview leaves that completed receipt intact. It describes the completed import
+even if you later Undo it; it is not a live count of the current dataset.
+
+Receipts stay in memory for the originating dataset session and clear on New/Open/demo or restart.
+Downloads include source and classification metadata, including higher recognized incoming
+markings on rejected rows; unreadable or unrecognized input cannot be fully assessed.
+Handle source CSV and diagnostics according to their actual classification. Warning notes
+are not extra imported rows, and additions count records/links rather than guaranteed whole-row successes.
 
 ## Recovery and external file changes
 
@@ -99,6 +129,8 @@ An update already writing when recovery is stopped can finish. Edits made just b
 or an interrupted write may be absent. Recovery does not guarantee power-loss durability.
 
 Before a native file write, SIM checks its contents against the opened or last-written bytes.
+Files over the 100 MiB dataset limit are refused before reading their bytes, including
+Open, existing Save As targets and externally enlarged files checked before overwrite.
 If another program changed the file, SIM refuses to overwrite it and retains your current work;
 use **Save As** to a separate location or reopen the external version. This check is best effort:
 another process can still write between the check and commit. SIM does not lock other programs

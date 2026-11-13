@@ -24,6 +24,8 @@ import { applyScenario, type Comparison, compareScenario } from "../scenario/sce
 import { searchEntities } from "../ui/relations";
 import type { EntityType } from "../ui/forms";
 import { focusGraph, type FocusRequest } from "./focus";
+import { routeOffset } from "./route-offset";
+import "./market.css";
 
 cytoscape.use(fcose);
 
@@ -196,6 +198,15 @@ export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
   const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
+  const scope = el("p", { class: "map-scope", "data-testid": "map-scope", "aria-live": "polite" });
+  let scopeEntries: readonly string[] = [];
+  const legend = el(
+    "p",
+    { class: "map-legend", "data-testid": "map-legend" },
+    el("span", {}, "Arrows: consumer → provider"),
+    el("span", { class: "map-legend-crossing" }, "Red dashed: cross-network, no CDS recorded"),
+    el("span", {}, "Recorded dependencies; connectivity is not verified"),
+  );
   const exportStatus = el("p", { class: "map-feedback", "data-testid": "map-export-status", role: "status" });
   // As-Is, a To-Be scenario, or one map comparing a scenario with As-Is (WORK-013).
   const viewSelect = el("select", { id: "map-view" });
@@ -323,6 +334,8 @@ export function createMapView(ctx: MapViewContext): MapView {
       capturePanel,
     ),
     metrics,
+    scope,
+    legend,
   );
   const element = el(
     "section",
@@ -704,6 +717,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
+    applyRouteOffsets();
     const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
     foundationalLabel.textContent = `Show foundational links (${String(links)})`;
     const root = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
@@ -739,6 +753,65 @@ export function createMapView(ctx: MapViewContext): MapView {
       ...(chain && root ? { chain: { label: root.data.label.split("\n")[0] ?? "", ...chain } } : {}),
       ...(filtered.size > 0 ? { filtered } : {}),
     });
+    const total = new Set(graph.edges.map((edge) => edge.data.dependency)).size;
+    const qualifiers = [
+      `${String(hiddenFoundational)} foundational ${hiddenFoundational === 1 ? "dependency" : "dependencies"} hidden · ` +
+        `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
+      ...(focus ? [focusGraph(graph, focus).label] : []),
+      ...(
+        [
+          ["Network", filterNetwork],
+          ["Category", filterCategory],
+          ["Organization", filterOrg],
+        ] as const
+      ).flatMap(([label, select]) =>
+        select.value
+          ? [
+              `${label}${focus ? " filter suspended during focus" : ""}: ${select.selectedOptions[0]?.textContent ?? select.value}`,
+            ]
+          : [],
+      ),
+    ];
+    scopeEntries = qualifiers;
+    scope.textContent = qualifiers.join(" · ");
+  }
+
+  /** Route decoration changes display geometry only, never the snapshot or repository. */
+  function applyRouteOffsets(): void {
+    cy.edges().removeStyle("curve-style control-point-distances control-point-weights");
+    const leaves = cy.nodes().filter((node) => !node.isParent() && node.visible());
+    // Compound containers are intentionally crossed. Only their title/marking text is an obstacle.
+    const headings = cy
+      .nodes(".network")
+      .filter((node) => node.visible())
+      .map((node) => {
+        const box = node.boundingBox({
+          includeNodes: false,
+          includeEdges: false,
+          includeLabels: true,
+          includeOverlays: false,
+        });
+        return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
+      });
+    cy.edges()
+      .filter((edge) => edge.visible())
+      .forEach((edge) => {
+        const source = edge.source();
+        const target = edge.target();
+        const obstacles = [
+          ...leaves
+            .filter((node) => node.id() !== source.id() && node.id() !== target.id())
+            .map((node) => node.boundingBox({ includeLabels: true, includeOverlays: false })),
+          ...headings,
+        ];
+        const distance = routeOffset(source.position(), target.position(), obstacles);
+        if (distance !== 0)
+          edge.style({
+            "curve-style": "unbundled-bezier",
+            "control-point-distances": String(distance),
+            "control-point-weights": "0.5",
+          });
+      });
   }
 
   function updateExportButtons(): void {
@@ -749,20 +822,9 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   function captureContent(name: string, unsaved: boolean): FrameContent {
     const viewName = viewSelect.selectedOptions[0]?.textContent ?? "As-Is";
-    const activeFilters: [string, HTMLSelectElement][] = [
-      ["Network", filterNetwork],
-      ["Category", filterCategory],
-      ["Organization", filterOrg],
-    ];
     const details = [
-      ...(focus ? [focusGraph(graph, focus).label] : []),
-      ...activeFilters.flatMap(([label, select]) =>
-        select.value
-          ? [
-              `${label}${focus ? " filter suspended during focus" : ""}: ${select.selectedOptions[0]?.textContent ?? select.value}`,
-            ]
-          : [],
-      ),
+      ...scopeEntries,
+      "Current viewport: records outside the pan/zoom view are not captured",
       ...(chainRoot === null
         ? []
         : [
@@ -779,6 +841,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     const edges = visible.edges();
     const nodes = visible.nodes();
     const legend = [
+      "Recorded dependencies; connectivity is not verified",
       ...(edges.nonempty() ? ["Depends on: consumer → provider"] : []),
       ...(edges.filter(".via-cds").nonempty() ? ["Dependency routed via CDS"] : []),
       ...(edges.filter(".cross-domain").nonempty() ? ["Cross-network dependency, no CDS recorded"] : []),
@@ -811,10 +874,15 @@ export function createMapView(ctx: MapViewContext): MapView {
       const { marking, caveat } = ctx.snapshot();
       const context = document.createElement("canvas").getContext("2d");
       if (!context) throw new Error("no 2D canvas");
-      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) => {
-        context.font = `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`;
-        return context.measureText(text).width;
-      });
+      const frame = layoutFrame(
+        cy.width() * 2,
+        captureContent(source.name, source.unsaved),
+        (text, size, bold) => {
+          context.font = `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`;
+          return context.measureText(text).width;
+        },
+        cy.height() * 2,
+      );
       let rendered: Promise<Blob>;
       try {
         applyZoom(true);
@@ -856,8 +924,12 @@ export function createMapView(ctx: MapViewContext): MapView {
         context.font = font;
         return context.measureText(text).width;
       };
-      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) =>
-        measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
+      const frame = layoutFrame(
+        cy.width() * 2,
+        captureContent(source.name, source.unsaved),
+        (text, size, bold) =>
+          measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
+        cy.height() * 2,
       );
       let scene: SvgScene;
       try {
@@ -961,6 +1033,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   });
   // Dragging a network drags its services; either way, save the new arrangement.
   cy.on("dragfree", "node", () => {
+    applyRouteOffsets();
     persist("own");
   });
 

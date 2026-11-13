@@ -1,0 +1,23 @@
+.map-scope,
+.map-legend {
+  flex-basis: 100%;
+  margin: 0;
+  color: #a7bbcd;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+
+.map-legend > span:first-child {
+  color: #d9e5ef;
+}
+
+.map-legend-crossing {
+  border-left: 3px dashed #f27575;
+  padding-left: 8px;
+}

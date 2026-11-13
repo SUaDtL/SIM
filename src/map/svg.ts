@@ -209,7 +209,7 @@ function edge(e: SvgEdge): string {
 /** The scene as a standalone SVG document, with the banner above and below the map. */
 export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | null, frame?: FrameLayout): string {
   const width = scene.pixelWidth;
-  const band = bandHeight(width);
+  const band = frame?.bandHeight ?? bandHeight(width);
   const top = frame?.topHeight ?? 0;
   const bottom = frame?.bottomHeight ?? 0;
   const height = scene.pixelHeight + top + bottom + 2 * band;

@@ -211,7 +211,11 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     });
     const reuse = el(
       "section",
-      { class: "reuse-notice", "data-testid": "similar-source" },
+      {
+        class: "reuse-notice",
+        "data-testid": "similar-source",
+        "data-source-context": `${source.name} (${repo.getNetwork(source.networkId)?.name ?? "Unavailable"})`,
+      },
       el("h3", {}, `Starting from ${source.name}`),
       el(
         "p",
@@ -259,9 +263,33 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function draftChanged(): void {
+    updateEditingIdentity();
     const status = element.querySelector<HTMLElement>('[data-testid="editor-draft-summary"]');
     if (status) status.textContent = hasPendingDraft() ? "Unapplied draft across all sections" : "No unapplied changes";
     ctx.draftChanged?.();
+  }
+
+  function updateEditingIdentity(): void {
+    if (!current || !editing) return;
+    const identity = element.querySelector<HTMLElement>('[data-testid="editor-identity"]');
+    if (!identity) return;
+    const name =
+      element.querySelector<HTMLInputElement>("#field-name")?.value.trim() || `Unnamed ${nounOf(current.type)}`;
+    const networkId = element.querySelector<HTMLSelectElement>("#field-networkId")?.value;
+    const network = networkId
+      ? (ctx.repo().getNetwork(Number(networkId))?.name ?? "Unavailable network")
+      : "Choose destination network";
+    const draft = `${name}${current.type === "service" ? ` (${network})` : ""}`;
+    if (current.id !== null) {
+      const original = typeof baseValues?.["name"] === "string" ? baseValues["name"] : name;
+      const saved = current.type === "service" ? ctx.repo().getService(current.id) : null;
+      const context = saved ? ` (${ctx.repo().getNetwork(saved.networkId)?.name ?? "Unavailable network"})` : "";
+      const qualified = `${original}${context}`;
+      identity.textContent = `Editing ${qualified}${draft === qualified ? "" : ` · Draft: ${draft}`}`;
+    } else {
+      const source = element.querySelector<HTMLElement>('[data-testid="similar-source"]')?.dataset["sourceContext"];
+      identity.textContent = `New ${nounOf(current.type)}: ${draft}${source ? ` · Source: ${source}` : ""}`;
+    }
   }
 
   function discardActiveDraft(): void {
@@ -308,9 +336,14 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         const network = projected.networks.find((item) => item.id === service.networkId);
         details.push(el("p", {}, `Network: ${network?.name ?? "Unavailable"}; marking: ${service.marking}`));
         const providers = projected.dependencies.filter((item) => item.consumerServiceId === service.id);
+        const usedBy = projected.dependencies.filter((item) => item.providerServiceId === service.id);
         const consumers = projected.consumption.filter((item) => item.serviceId === service.id);
         details.push(
-          el("p", {}, `${String(providers.length)} dependencies; ${String(consumers.length)} consumer organizations.`),
+          el(
+            "p",
+            {},
+            `${String(providers.length)} outgoing dependencies; Used by ${String(usedBy.length)} ${usedBy.length === 1 ? "service" : "services"}; ${String(consumers.length)} consumer organizations.`,
+          ),
         );
         if ("projection" in projected) {
           const provenance = (projected as ProjectedSnapshot).projection;
@@ -796,6 +829,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         "header",
         { class: "editor-heading" },
         el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`),
+        el("p", { class: "editor-identity", "data-testid": "editor-identity" }),
         el("p", { class: "hint" }, "One draft. Apply all sections together."),
       ),
       tabs,
@@ -1498,6 +1532,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     }
     if (current.type === "scenario") scenarioBuilder?.refresh();
     else if (!hasPendingDraft()) renderRelations();
+    updateEditingIdentity();
   }
 
   function reload(): void {

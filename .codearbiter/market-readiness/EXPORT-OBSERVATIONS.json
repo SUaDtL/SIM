@@ -1,0 +1,168 @@
+[
+  {
+    "channel": "chrome",
+    "browser_version": "156.0.8078.80",
+    "dist_sha256": "0c4dd516e9efbbc67973c94e4880ed2f461de28a295eb3086998177f019a7a47",
+    "errors": [],
+    "requests": [],
+    "scope": "0 foundational dependencies hidden \u00c2\u00b7 3 of 4 recorded dependencies in scope \u00c2\u00b7 Network connections Coral: 3 dependencies",
+    "legend": "Arrows: consumer \u00e2\u2020\u2019 provider\nRed dashed: cross-network, no CDS recorded\nRecorded dependencies; connectivity is not verified",
+    "statusBefore": "Synthetic decision review | decision-review.sqlite | Saved",
+    "statusAfter": "Synthetic decision review | decision-review.sqlite | Saved",
+    "svg": {
+      "width": 1932,
+      "height": 1590,
+      "fit": 0.4528301886792453,
+      "labels": [
+        {
+          "text": "Synthetic decision review / As-Is",
+          "font": 46.74,
+          "slidePixels": 21.165283018867925
+        },
+        {
+          "text": "0 foundational dependencies hidden \u00c2\u00b7 3 of 4 recorded dependencies in scope",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Network connections Coral: 3 dependencies",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Current viewport: records outside the pan/zoom view are not captured",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Recorded dependencies; connectivity is not verified",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Depends on: consumer \u00e2\u2020\u2019 provider",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Dependency routed via CDS",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Cross-network dependency, no CDS recorded",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Dependency on external network",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Foundational service",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Remote endpoint: service outside the focused network",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "SECRET//SYNTHETIC",
+          "font": 29,
+          "slidePixels": 13.132075471698114
+        },
+        {
+          "text": "SECRET//SYNTHETIC",
+          "font": 29,
+          "slidePixels": 13.132075471698114
+        }
+      ]
+    }
+  },
+  {
+    "channel": "msedge",
+    "browser_version": "157.0.4341.46",
+    "dist_sha256": "0c4dd516e9efbbc67973c94e4880ed2f461de28a295eb3086998177f019a7a47",
+    "errors": [],
+    "requests": [],
+    "scope": "0 foundational dependencies hidden \u00c2\u00b7 3 of 4 recorded dependencies in scope \u00c2\u00b7 Network connections Coral: 3 dependencies",
+    "legend": "Arrows: consumer \u00e2\u2020\u2019 provider\nRed dashed: cross-network, no CDS recorded\nRecorded dependencies; connectivity is not verified",
+    "statusBefore": "Synthetic decision review | decision-review.sqlite | Saved",
+    "statusAfter": "Synthetic decision review | decision-review.sqlite | Saved",
+    "svg": {
+      "width": 1932,
+      "height": 1590,
+      "fit": 0.4528301886792453,
+      "labels": [
+        {
+          "text": "Synthetic decision review / As-Is",
+          "font": 46.74,
+          "slidePixels": 21.165283018867925
+        },
+        {
+          "text": "0 foundational dependencies hidden \u00c2\u00b7 3 of 4 recorded dependencies in scope",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Network connections Coral: 3 dependencies",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Current viewport: records outside the pan/zoom view are not captured",
+          "font": 28.04,
+          "slidePixels": 12.697358490566037
+        },
+        {
+          "text": "Recorded dependencies; connectivity is not verified",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Depends on: consumer \u00e2\u2020\u2019 provider",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Dependency routed via CDS",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Cross-network dependency, no CDS recorded",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Dependency on external network",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Foundational service",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "Remote endpoint: service outside the focused network",
+          "font": 26.48,
+          "slidePixels": 11.990943396226415
+        },
+        {
+          "text": "SECRET//SYNTHETIC",
+          "font": 29,
+          "slidePixels": 13.132075471698114
+        },
+        {
+          "text": "SECRET//SYNTHETIC",
+          "font": 29,
+          "slidePixels": 13.132075471698114
+        }
+      ]
+    }
+  }
+]

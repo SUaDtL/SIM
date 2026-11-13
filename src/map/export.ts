@@ -29,6 +29,8 @@ export interface FrameLine {
 }
 
 export interface FrameLayout {
+  /** Enlarged with annotations when preparing a capture for a 1280×720 presentation. */
+  readonly bandHeight?: number;
   readonly topHeight: number;
   readonly bottomHeight: number;
   readonly topLines: readonly FrameLine[];
@@ -40,6 +42,7 @@ export function layoutFrame(
   width: number,
   content: FrameContent,
   measure: (text: string, size: number, bold: boolean) => number = (text, size) => text.length * size * 0.6,
+  mapHeight?: number,
 ): FrameLayout {
   const pad = Math.max(16, Math.round(width * 0.025));
   const maxWidth = Math.max(1, width - 2 * pad);
@@ -77,18 +80,38 @@ export function layoutFrame(
     }
     return { lines, height: y + pad };
   };
-  const titleSize = Math.max(20, Math.min(30, Math.round(width * 0.025)));
-  const top = rows([
-    { text: content.title, size: titleSize, bold: true },
-    ...content.details.map((text) => ({ text, size: 18, bold: false })),
-  ]);
-  const bottom = rows(content.legend.map((text) => ({ text, size: 17, bold: false })));
-  return {
-    topHeight: top.height,
-    bottomHeight: bottom.height,
-    topLines: top.lines,
-    bottomLines: bottom.lines,
+  const atScale = (scale: number): FrameLayout => {
+    const titleSize = Math.max(20, Math.min(30, Math.round(width * 0.025))) * scale;
+    const top = rows([
+      { text: content.title, size: titleSize, bold: true },
+      ...content.details.map((text) => ({ text, size: 18 * scale, bold: false })),
+    ]);
+    const bottom = rows(content.legend.map((text) => ({ text, size: 17 * scale, bold: false })));
+    return {
+      ...(mapHeight === undefined ? {} : { bandHeight: Math.max(bandHeight(width), Math.ceil((17 * scale) / 0.6)) }),
+      topHeight: top.height,
+      bottomHeight: bottom.height,
+      topLines: top.lines,
+      bottomLines: bottom.lines,
+    };
   };
+  let scale = 1;
+  let frame = atScale(scale);
+  // Include the additional caption and band height in the fit calculation: width-only sizing
+  // makes a tall map's legend tiny. Bounded iteration also handles line wrapping after growth.
+  if (mapHeight !== undefined) {
+    for (let pass = 0; pass < 16; pass++) {
+      const fit = Math.min(
+        1280 / width,
+        720 / (mapHeight + frame.topHeight + frame.bottomHeight + 2 * (frame.bandHeight ?? 0)),
+      );
+      const displayed = 17 * scale * fit;
+      if (displayed >= 11.99) break;
+      scale = Math.min(32, scale * (12 / displayed));
+      frame = atScale(scale);
+    }
+  }
+  return frame;
 }
 
 /**
@@ -105,7 +128,7 @@ export async function frameWithBanner(
   try {
     // A closed ImageBitmap reports zero size, so keep its size first.
     const { width, height } = image;
-    const band = bandHeight(width);
+    const band = frame?.bandHeight ?? bandHeight(width);
     const top = frame?.topHeight ?? 0;
     const bottom = frame?.bottomHeight ?? 0;
     const canvas = document.createElement("canvas");

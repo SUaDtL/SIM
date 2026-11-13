@@ -2,6 +2,8 @@
 // save-in-place, falling back to <input type=file> and a download link elsewhere.
 // Dataset bytes never go to browser storage (security-controls FACT-002 item 4).
 
+import { DatasetError, MAX_DATASET_BYTES } from "../db/dataset";
+
 interface Writable {
   write(data: Uint8Array<ArrayBuffer>): Promise<void>;
   close(): Promise<void>;
@@ -27,7 +29,20 @@ export class FileConflictError extends Error {
 }
 
 export function rememberFileBaseline(handle: FileHandle, bytes: Uint8Array): void {
+  checkSize(bytes.byteLength);
   baselines.set(handle, new Uint8Array(bytes));
+}
+
+function checkSize(size: number): void {
+  if (size > MAX_DATASET_BYTES) throw new DatasetError("TOO_LARGE");
+}
+
+/** Check metadata before allocation; keep the byte check for inconsistent file providers. */
+async function readBoundedFile(file: File): Promise<Uint8Array> {
+  checkSize(file.size);
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  checkSize(bytes.byteLength);
+  return bytes;
 }
 
 export async function sameFile(left: FileHandle, right: FileHandle): Promise<boolean> {
@@ -75,7 +90,7 @@ export async function pickDatasetFile(): Promise<PickedFile | null> {
       const [handle] = await fsa.showOpenFilePicker({ types });
       if (!handle) return null;
       const file = await handle.getFile();
-      const bytes = new Uint8Array(await file.arrayBuffer());
+      const bytes = await readBoundedFile(file);
       rememberFileBaseline(handle, bytes);
       return { bytes, fileName: file.name, handle };
     } catch (error) {
@@ -84,7 +99,7 @@ export async function pickDatasetFile(): Promise<PickedFile | null> {
     }
   }
   const file = await chooseWithInput();
-  return file ? { bytes: new Uint8Array(await file.arrayBuffer()), fileName: file.name, handle: null } : null;
+  return file ? { bytes: await readBoundedFile(file), fileName: file.name, handle: null } : null;
 }
 
 function chooseWithInput(): Promise<File | null> {
@@ -108,7 +123,7 @@ export async function pickSaveTarget(suggestedName: string): Promise<FileHandle 
   if (!fsa) return null;
   try {
     const handle = await fsa.showSaveFilePicker({ types, suggestedName, excludeAcceptAllOption: true });
-    rememberFileBaseline(handle, new Uint8Array(await (await handle.getFile()).arrayBuffer()));
+    rememberFileBaseline(handle, await readBoundedFile(await handle.getFile()));
     return handle;
   } catch (error) {
     if (isCancel(error)) return null;
@@ -117,6 +132,7 @@ export async function pickSaveTarget(suggestedName: string): Promise<FileHandle 
 }
 
 export function writeToHandle(handle: FileHandle, bytes: Uint8Array, isCurrent = (): boolean => true): Promise<void> {
+  if (bytes.byteLength > MAX_DATASET_BYTES) return Promise.reject(new DatasetError("TOO_LARGE"));
   const captured = new Uint8Array(bytes);
   const operation = writerTail.then(() => writeChecked(handle, captured, isCurrent));
   writerTail = operation.catch(() => undefined);
@@ -128,7 +144,7 @@ async function writeChecked(handle: FileHandle, bytes: Uint8Array, isCurrent: ()
   const baseline = baselines.get(handle);
   if (!baseline) throw new Error("File baseline is unavailable. Choose the file again.");
   {
-    const current = new Uint8Array(await (await handle.getFile()).arrayBuffer());
+    const current = await readBoundedFile(await handle.getFile());
     if (current.length !== baseline.length || current.some((value, index) => value !== baseline[index])) {
       throw new FileConflictError();
     }

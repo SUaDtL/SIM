@@ -8,6 +8,10 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Bundled offline workflow Help, persistent qualified editor identity, a live map legend and visible scope/hidden-dependency disclosure.
+- Complete paginated CSV reconciliation and session-local completed-import receipts with downloadable diagnostics, source/classification metadata and spreadsheet formula protection.
+- Complete project/runtime license and attribution texts embedded in the standalone HTML from the installed production dependency closure; missing or unqualified runtime license texts fail the build.
+- Display-only edge avoidance and proportional PNG/SVG framing for presentation-sized annotation readability, with explicit recorded-dependency uncertainty and capture scope.
 - Read-first record summaries, Inventory/Map workspaces, a wider tabbed aggregate editor and searchable reference pickers with inline creation.
 - Independent Create similar service drafts with explicit destination and optional support copying; bounded inventory and relationship collections with qualified identities.
 - File/About and contextual map controls, direct PNG Capture, draft return paths and narrow/zoomed form reflow.

@@ -17,6 +17,55 @@
   background: var(--surface);
 }
 
+.help-dialog,
+#sim-license-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.help-dialog h3 {
+  margin: 24px 0 8px;
+}
+
+.help-dialog li {
+  margin: 10px 0;
+}
+
+.help-intro {
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+
+.help-dialog dt {
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.help-dialog dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+#sim-license-dialog pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.editor-identity {
+  margin: 6px 0;
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.import-note-pages {
+  margin-block: 12px;
+}
+
 *,
 *::before,
 *::after {
