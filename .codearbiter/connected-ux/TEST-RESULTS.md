@@ -11,6 +11,8 @@ hosted CI are reported on PR24; this document does not substitute for those chec
 Working directory for all local commands:
 `C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM`.
 
+Implementation source commit: `a5a780ee5ccded86c55372002b298d9739a1238d`. The subsequent delivery-docs commit changes no application or test source.
+
 ## Observed local evidence
 
 - `npm run check`: exit 0, typecheck, lint, Prettier, single-file build, **342 unit tests and 280 Edge/Chrome browser tests**. Log: `%TEMP%\sim-connected-check-complete.log`. This run preceded the final additional initial-route refusal test.

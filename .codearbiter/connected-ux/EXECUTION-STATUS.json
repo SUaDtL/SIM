@@ -5316,5 +5316,6 @@
     "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-check-final-subject.log",
     "source_manifest": "SOURCE-IDENTITY.json"
   },
-  "scope_summary": "73 mandatory cases have individual automated assertion evidence; UX4-010 also has actual visual capture inspection. Native F26 and screen-reader certification are outside these automated claims."
+  "scope_summary": "73 mandatory cases have individual automated assertion evidence; UX4-010 also has actual visual capture inspection. Native F26 and screen-reader certification are outside these automated claims.",
+  "implementation_commit": "a5a780ee5ccded86c55372002b298d9739a1238d"
 }

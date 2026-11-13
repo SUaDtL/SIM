@@ -10,6 +10,8 @@
 
 Final local `npm run check` passed 342 unit and 296 browser tests; all 73 cases passed. Native plan tasks are DONE and work implementation complete. Exact delivery commit/hosted CI is on PR24; native acceptance remains pending.
 
+Implementation source commit: `a5a780ee5ccded86c55372002b298d9739a1238d`. The same PR also carries this source-bound delivery note and its generated audit entry.
+
 ## Continue safely
 
 1. Inspect Git status and the exact branch/PR head. Do not reset, stash, delete native recovery metadata or stage `.codearbiter/views/` derived snapshots. Preserve unrelated worktrees.
