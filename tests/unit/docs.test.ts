@@ -31,6 +31,17 @@ describe("project documents", () => {
     expect(read("CHANGELOG.md")).toContain("## [Unreleased]");
   });
 
+  it("explains connected editing ownership and capture/recovery limits in user help", () => {
+    const help = read("README.md");
+    expect(help).toMatch(/shared record[\s\S]*own Undo step[\s\S]*remains if you later cancel/);
+    expect(help).toMatch(/Incoming dependencies belong to[\s\S]*consuming service/);
+    expect(help).toMatch(/Focus temporarily suspends inventory filters/);
+    expect(help).toMatch(/full dataset or projection marking/);
+    expect(help).toMatch(/export failure after Apply retains the applied change/);
+    expect(help).toMatch(/unapplied form text is excluded/);
+    expect(help).toMatch(/no file handles or dataset bytes are kept in browser storage/);
+  });
+
   it("points CLAUDE.md at AGENTS.md", () => {
     expect(read("CLAUDE.md")).toContain("AGENTS.md");
   });

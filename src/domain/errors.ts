@@ -13,11 +13,18 @@ export type ValidationCode =
   | "STALE";
 
 /** A write was refused; nothing was changed. `field` names what the user should fix. */
+export interface DiagnosticTarget {
+  readonly type: "network" | "service" | "organization" | "application" | "category" | "cds" | "scenario";
+  readonly id: number;
+  readonly label: string;
+}
+
 export class ValidationError extends Error {
   constructor(
     readonly code: ValidationCode,
     readonly field: string,
     message: string,
+    readonly targets: readonly DiagnosticTarget[] = [],
   ) {
     super(message);
     this.name = "ValidationError";

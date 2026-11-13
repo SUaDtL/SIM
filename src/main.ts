@@ -13,17 +13,20 @@ import { ValidationError } from "./domain/errors";
 import { commitPreparedImport, describeAdded, prepareImport } from "./import/engine";
 import { Repository } from "./domain/repository";
 import { DatasetSession, type SaveResult } from "./session/dataset-session";
+import { Recovery } from "./session/recovery";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
 import {
   downloadBlob,
   downloadDataset,
+  FileConflictError,
   type FileHandle,
   pickDatasetFile,
   pickSaveTarget,
   suggestedFileName,
   supportsSaveInPlace,
+  sameFile,
   writeToHandle,
 } from "./file/dataset-file";
 import "./ui/app.css";
@@ -38,6 +41,7 @@ interface State {
   name: string;
   fileName: string | null;
   handle: FileHandle | null;
+  recovery?: { handle: FileHandle; controller: Recovery; unsubscribe: () => void };
 }
 
 let state: State;
@@ -56,6 +60,11 @@ const message = document.createElement("p");
 message.dataset["testid"] = "dataset-message";
 message.setAttribute("role", "status");
 const banner = createBanner();
+const recoveryStatus = document.createElement("p");
+recoveryStatus.dataset["testid"] = "recovery-status";
+recoveryStatus.setAttribute("role", "status");
+let recoveryIntent = false;
+let recoveryRequest = 0;
 const undoButton = button("Undo", () => travel("undo"));
 const redoButton = button("Redo", () => travel("redo"));
 
@@ -84,7 +93,8 @@ async function travel(direction: "undo" | "redo"): Promise<void> {
   render();
 }
 
-function show(text: string): void {
+function show(text: string, severity: "neutral" | "error" = "neutral"): void {
+  message.dataset["severity"] = viewRefreshFailed ? "error" : severity;
   message.textContent =
     text +
     (viewRefreshFailed
@@ -123,6 +133,8 @@ function replace(db: Database, fileName: string | null, handle: FileHandle | nul
     throw error;
   }
   old.session.dispose();
+  stopRecovery(old);
+  recoveryStatus.textContent = "Recovery is off for this dataset.";
   old.db.close();
   show("");
   render();
@@ -209,7 +221,7 @@ async function installCandidate(
     replace(db, fileName, handle, opened);
   } catch (error) {
     db.close();
-    show(error instanceof DatasetError ? error.message : "Could not switch datasets.");
+    show(error instanceof DatasetError ? error.message : "Could not switch datasets.", "error");
   }
 }
 
@@ -220,7 +232,7 @@ async function onNew(): Promise<void> {
   try {
     await installCandidate(await createDataset(name), request, null, null, false);
   } catch (error) {
-    show(error instanceof DatasetError ? error.message : "Could not create the dataset.");
+    show(error instanceof DatasetError ? error.message : "Could not create the dataset.", "error");
   }
 }
 
@@ -236,7 +248,7 @@ function onCaveat(): Promise<void> {
     show("");
   } catch (error) {
     if (!(error instanceof ValidationError)) throw error;
-    show(error.message);
+    show(error.message, "error");
   }
   return Promise.resolve();
 }
@@ -255,7 +267,7 @@ async function onDemo(): Promise<void> {
     // Opening it gives a fresh repository, so building the demo is not in the undo history.
     await installCandidate(db, request, null, null, false);
   } catch {
-    show("Could not prepare the demo dataset.");
+    show("Could not prepare the demo dataset.", "error");
   }
 }
 
@@ -313,12 +325,12 @@ async function onOpen(): Promise<void> {
       );
     }
   } catch (error) {
-    show(error instanceof DatasetError ? error.message : "Could not open the file.");
+    show(error instanceof DatasetError ? error.message : "Could not open the file.", "error");
   }
 }
 
 async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refused"> {
-  if (saveIntent || state.session.isSaving()) return "busy";
+  if (saveIntent || recoveryIntent || state.session.isSaving()) return "busy";
   saveIntent = true;
   const owner = state;
   const revision = owner.repo.currentRevision();
@@ -336,8 +348,12 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
         if (state === owner) show("File save cancelled.");
         return "cancelled";
       }
+      if (owner.recovery && (await sameFile(handle, owner.recovery.handle))) {
+        show("Choose a dataset file separate from the recovery copy.", "error");
+        return "refused";
+      }
       if (state !== owner || owner.repo.currentRevision() !== revision || workspace.activeDraftToken() !== draftToken) {
-        if (state === owner) show("The dataset changed while choosing a file. Try Save file again.");
+        if (state === owner) show("The dataset changed while choosing a file. Try Save file again.", "error");
         return "refused";
       }
       const hadDraft = workspace.hasPendingDraft();
@@ -345,19 +361,30 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
       draftApplied = hadDraft;
       if (!(await settleSavePlacement(owner))) return "refused";
       const selectedHandle = handle;
-      const pending = owner.session.saveNative(selectedHandle, (bytes) => writeToHandle(selectedHandle, bytes));
+      const observed = { conflict: false };
+      const pending = owner.session.saveNative(selectedHandle, async (bytes) => {
+        try {
+          await writeToHandle(selectedHandle, bytes);
+        } catch (error) {
+          observed.conflict = error instanceof FileConflictError;
+          throw error;
+        }
+      });
       render();
       const result = await pending;
       if (state !== owner) return "superseded";
       if (result === "saved") owner.handle = handle;
       show(
-        result === "cancelled-after-write"
-          ? draftApplied
-            ? "Changes applied. File save cancelled; changes remain unsaved and undoable."
-            : "File save cancelled; changes remain unsaved."
-          : result === "failed"
-            ? failureMessage()
-            : "",
+        observed.conflict
+          ? "This file changed outside SIM. Your work is retained. Use Save As to keep a separate copy, or reopen the changed file."
+          : result === "cancelled-after-write"
+            ? draftApplied
+              ? "Changes applied. File save cancelled; changes remain unsaved and undoable."
+              : "File save cancelled; changes remain unsaved."
+            : result === "failed"
+              ? failureMessage()
+              : "",
+        observed.conflict || result === "failed" ? "error" : "neutral",
       );
       render();
       return result;
@@ -372,6 +399,7 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
         result === "download-requested"
           ? "Download requested. Confirm that you retained the file before discarding this dataset."
           : "Could not request the download.",
+        result === "download-requested" ? "neutral" : "error",
       );
       render();
       return result;
@@ -379,12 +407,61 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
   } catch {
     if (state === owner) {
       owner.session.failSave();
-      show(failureMessage());
+      show(failureMessage(), "error");
       render();
     }
     return "failed";
   } finally {
     saveIntent = false;
+  }
+}
+
+function stopRecovery(owner: State, cancelSelection = true): void {
+  if (cancelSelection) ++recoveryRequest;
+  owner.recovery?.unsubscribe();
+  owner.recovery?.controller.dispose();
+  delete owner.recovery;
+  if (owner === state) recoveryStatus.textContent = "Recovery is off. Existing recovery files are retained.";
+}
+
+async function onRecovery(): Promise<void> {
+  if (saveIntent || recoveryIntent || state.session.isSaving()) return;
+  if (!supportsSaveInPlace()) {
+    show("Automatic recovery requires file access in Chrome or Edge. Use Save As to retain a manual copy.");
+    return;
+  }
+  recoveryIntent = true;
+  const request = ++recoveryRequest;
+  const owner = state;
+  try {
+    const handle = await pickSaveTarget(suggestedFileName(`${owner.name} recovery`));
+    if (!handle || state !== owner || request !== recoveryRequest) return;
+    if (owner.handle && (await sameFile(handle, owner.handle))) {
+      show("Choose a recovery file separate from the dataset file.", "error");
+      return;
+    }
+    if (state !== owner || request !== recoveryRequest) return;
+    stopRecovery(owner, false);
+    const controller: Recovery = new Recovery(
+      () => exportDataset(owner.db),
+      (bytes) => writeToHandle(handle, bytes, () => state === owner && owner.recovery?.controller === controller),
+      (text) => {
+        if (state === owner) recoveryStatus.textContent = `${handle.name}: ${text}`;
+      },
+    );
+    owner.recovery = {
+      handle,
+      controller,
+      unsubscribe: owner.repo.subscribe(() => {
+        controller.schedule();
+      }),
+    };
+    await controller.flush();
+  } catch {
+    if (state === owner)
+      show("Could not enable recovery. Choose a separate writable recovery file and try again.", "error");
+  } finally {
+    recoveryIntent = false;
   }
 }
 
@@ -404,7 +481,7 @@ async function settleSavePlacement(owner: State): Promise<boolean> {
   }
   if (state !== owner) return false;
   if (observed.laterEdit || workspace.activeDraftToken() !== draftToken) {
-    show("The dataset changed while preparing the file. Try Save file again.");
+    show("The dataset changed while preparing the file. Try Save file again.", "error");
     return false;
   }
   return true;
@@ -457,13 +534,19 @@ async function boot(): Promise<void> {
     button("Import CSV", onImport),
     button("Save file", () => onSave(false)),
     button("Save As", () => onSave(true)),
+    button("Choose recovery file", onRecovery),
+    button("Retry recovery", () => state.recovery?.controller.flush() ?? Promise.resolve()),
+    button("Stop recovery", () => {
+      stopRecovery(state);
+      return Promise.resolve();
+    }),
     button("Banner caveat", onCaveat),
     undoButton,
     redoButton,
   );
   const header = document.createElement("header");
   header.className = "app-header";
-  header.append(title, toolbar, status, draftStatus, version, message);
+  header.append(title, toolbar, status, draftStatus, recoveryStatus, version, message);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
   // Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) undo and redo dataset edits, except while typing in a field,
   // where the browser's own text undo applies.

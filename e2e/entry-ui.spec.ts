@@ -175,8 +175,8 @@ test("deletes with an in-panel confirmation and refuses to delete a network in u
 test("edits support tiers, consumers and dependencies on a service", async ({ page }) => {
   await load(page);
   await show(page, "Services");
-  await expect(page.getByRole("button", { name: "Add service", exact: true })).toBeDisabled();
-  await expect(page.getByTestId("add-hint")).toContainText("network");
+  await expect(page.getByRole("button", { name: "Add service", exact: true })).toBeEnabled();
+  await expect(page.getByTestId("add-hint")).toBeHidden();
   await seed(page);
 
   await select(page, "Organizations", "J6");
@@ -196,7 +196,7 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
   await e.getByRole("button", { name: "Add dependency" }).click();
 
   expect(await values(e.getByTestId("consumers").locator(".row-name"))).toEqual(["J7"]);
-  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard"]);
+  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard (SIPR)"]);
   await expect(e.getByRole("button", { name: "Apply changes" })).toBeEnabled();
 
   // Navigation first offers to keep the complete draft.
@@ -204,7 +204,7 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
   const choice = page.getByRole("dialog", { name: "Unapplied changes" });
   await choice.getByRole("button", { name: "Stay" }).click();
   await expect(e.getByLabel("Name", { exact: true })).toHaveValue("Email");
-  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard"]);
+  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard (SIPR)"]);
 
   // Apply & continue commits fields and relationships together before selection changes.
   await select(page, "Services", "Chat");
@@ -214,12 +214,12 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
   await expect(e.getByLabel("Tier 1 support", { exact: true }).locator("option:checked")).toHaveText("J7");
   await expect(e.getByLabel("Tier 2 support", { exact: true }).locator("option:checked")).toHaveText("(none)");
   await expect(e.getByLabel("Tier 3 support", { exact: true }).locator("option:checked")).toHaveText("J6");
-  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard"]);
+  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard (SIPR)"]);
 
   await e.getByRole("button", { name: "Remove dependency on Chat" }).click();
   await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveCount(0);
   await e.getByRole("button", { name: "Discard changes" }).click();
-  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard"]);
+  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard (SIPR)"]);
 });
 
 test("a new service takes its network's marking and success is not shown as an error", async ({ page }) => {

@@ -15,3 +15,5 @@
 [2026-11-11T23:47:30Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-011 CSV import: parser, templates, engine, preview dialog, bulk layout | BASIS: new module, more than 2 files, repository change
 [2026-11-12T01:10:47Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-012 SVG export of the current map view with banner | BASIS: new modules, more than 2 files
 [2026-11-12T01:59:38Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: WORK-013 As-Is/To-Be scenarios, compare view and reduction metrics | BASIS: migration, new module, more than 2 files
+[2026-11-13T13:43:13.6415381Z] | BY: SUaDtL | LANE: full | SCOPE: SIM F26 optional selected-file recovery and external writer detection | BASIS: file/session/UI changes exceed small lane; user selected opt-in recovery file, applied changes only
+[2026-11-13T15:39:40.1109458Z] | BY: SUaDtL | LANE: full | SCOPE: Connected UX full packet on existing F26 branch and PR24 | BASIS: 73 cases across editor, repository, navigation and map; user explicitly retained branch/PR

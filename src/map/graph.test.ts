@@ -162,6 +162,26 @@ describe("buildGraph", () => {
     expect(classesOf(s.idam.id, s.m365.id)).toEqual(["external"]);
   });
 
+  it("reports actual hidden foundational dependencies when a chain reveals a normally hidden route (UX0-009)", () => {
+    const s = seed();
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.idam.id });
+    const graph = buildGraph(repo.snapshot());
+    const chain = { ...traceChain(graph, nodeId("service", s.mail.id)), label: "Email" };
+    expect(chain.edges.size).toBe(1);
+    expect(summarize(graph, { foundationalHidden: true, chain, hiddenFoundationalCount: 0 })).not.toContain(
+      "is hidden",
+    );
+    expect(summarize(graph, { foundationalHidden: true, chain, hiddenFoundationalCount: 1 })).toContain(
+      "1 dependency on a foundational service is hidden.",
+    );
+    expect(summarize(graph, { foundationalHidden: true, chain, hiddenFoundationalCount: 2 })).toContain(
+      "2 dependencies on foundational services are hidden.",
+    );
+    expect(summarize(graph, { foundationalHidden: true, chain })).toContain(
+      "1 dependency on a foundational service is hidden.",
+    );
+  });
+
   it("summarizes the map in words for screen readers, counting dependencies rather than edges", () => {
     const s = seed();
     repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.guard.id });

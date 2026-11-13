@@ -12,6 +12,29 @@ export interface FileHandle {
   readonly name: string;
   getFile(): Promise<File>;
   createWritable(): Promise<Writable>;
+  isSameEntry?(other: FileHandle): Promise<boolean>;
+}
+
+const baselines = new WeakMap<FileHandle, Uint8Array>();
+let writerTail: Promise<void> = Promise.resolve();
+
+export class FileConflictError extends Error {
+  constructor() {
+    super(
+      "This file changed outside SIM. Your work is retained. Use Save As to keep a separate copy, or reopen the changed file.",
+    );
+  }
+}
+
+export function rememberFileBaseline(handle: FileHandle, bytes: Uint8Array): void {
+  baselines.set(handle, new Uint8Array(bytes));
+}
+
+export async function sameFile(left: FileHandle, right: FileHandle): Promise<boolean> {
+  if (left === right) return true;
+  // Native handles provide isSameEntry; inability to establish identity fails closed.
+  if (!left.isSameEntry) throw new Error("Could not verify that the recovery and dataset files are separate.");
+  return left.isSameEntry(right);
 }
 
 interface PickerOptions {
@@ -52,7 +75,9 @@ export async function pickDatasetFile(): Promise<PickedFile | null> {
       const [handle] = await fsa.showOpenFilePicker({ types });
       if (!handle) return null;
       const file = await handle.getFile();
-      return { bytes: new Uint8Array(await file.arrayBuffer()), fileName: file.name, handle };
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      rememberFileBaseline(handle, bytes);
+      return { bytes, fileName: file.name, handle };
     } catch (error) {
       if (isCancel(error)) return null;
       throw error;
@@ -82,18 +107,38 @@ export async function pickSaveTarget(suggestedName: string): Promise<FileHandle 
   const fsa = fileSystemAccess();
   if (!fsa) return null;
   try {
-    return await fsa.showSaveFilePicker({ types, suggestedName, excludeAcceptAllOption: true });
+    const handle = await fsa.showSaveFilePicker({ types, suggestedName, excludeAcceptAllOption: true });
+    rememberFileBaseline(handle, new Uint8Array(await (await handle.getFile()).arrayBuffer()));
+    return handle;
   } catch (error) {
     if (isCancel(error)) return null;
     throw error;
   }
 }
 
-export async function writeToHandle(handle: FileHandle, bytes: Uint8Array): Promise<void> {
+export function writeToHandle(handle: FileHandle, bytes: Uint8Array, isCurrent = (): boolean => true): Promise<void> {
+  const captured = new Uint8Array(bytes);
+  const operation = writerTail.then(() => writeChecked(handle, captured, isCurrent));
+  writerTail = operation.catch(() => undefined);
+  return operation;
+}
+
+async function writeChecked(handle: FileHandle, bytes: Uint8Array, isCurrent: () => boolean): Promise<void> {
+  if (!isCurrent()) throw new DOMException("Operation stopped", "AbortError");
+  const baseline = baselines.get(handle);
+  if (!baseline) throw new Error("File baseline is unavailable. Choose the file again.");
+  {
+    const current = new Uint8Array(await (await handle.getFile()).arrayBuffer());
+    if (current.length !== baseline.length || current.some((value, index) => value !== baseline[index])) {
+      throw new FileConflictError();
+    }
+  }
+  if (!isCurrent()) throw new DOMException("Operation stopped", "AbortError");
   const writable = await handle.createWritable();
   try {
     await writable.write(new Uint8Array(bytes));
     await writable.close();
+    rememberFileBaseline(handle, bytes);
   } catch (error) {
     try {
       await writable.abort?.();

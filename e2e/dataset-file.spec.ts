@@ -59,6 +59,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "notes.sqlite", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByTestId("dataset-message")).toHaveText(/not a SIM dataset/);
+    await expect(page.getByTestId("dataset-message")).toHaveAttribute("data-severity", "error");
     await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Changes not saved to file");
   });
 
@@ -136,6 +137,7 @@ test.describe("with the File System Access API (save in place)", () => {
             },
             close: () => {
               written[name] = chunks;
+              bytes = new Uint8Array(chunks);
               return Promise.resolve();
             },
           });
@@ -219,6 +221,7 @@ test.describe("with the File System Access API (save in place)", () => {
             deferred.finishPicker = () => {
               resolve({
                 name: "stale.sqlite",
+                getFile: () => Promise.resolve(new File([], "stale.sqlite")),
                 createWritable: () => Promise.reject(new Error("should not write")),
               });
             };
@@ -263,6 +266,7 @@ test.describe("with the File System Access API (save in place)", () => {
         showSaveFilePicker: () =>
           Promise.resolve({
             name: "failed.sqlite",
+            getFile: () => Promise.resolve(new File([], "failed.sqlite")),
             createWritable: () => Promise.reject(new Error("denied")),
           }),
       });
@@ -282,6 +286,7 @@ test.describe("with the File System Access API (save in place)", () => {
         showSaveFilePicker: () =>
           Promise.resolve({
             name: "cancelled.sqlite",
+            getFile: () => Promise.resolve(new File([], "cancelled.sqlite")),
             createWritable: () => Promise.reject(new DOMException("cancelled", "AbortError")),
           }),
       });

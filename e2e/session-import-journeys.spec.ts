@@ -160,6 +160,7 @@ test("J6: a late CSV read cannot replace the reviewed preview, survive Escape, o
   await fresh.getByRole("button", { name: "Import", exact: true }).click();
   await expect(fresh).toHaveCount(0);
   await expect(page.getByTestId("dataset-message")).toHaveText("Imported 2 networks. 1 row was not imported.");
+  await expect(page.getByTestId("dataset-message")).toHaveAttribute("data-severity", "neutral");
   const list = page.getByTestId("entity-list");
   await expect(list.getByRole("button", { name: "Amber" })).toBeVisible();
   await expect(list.getByRole("button", { name: "Blue" })).toBeVisible();

@@ -1,0 +1,199 @@
+{
+  "format": "sim.visual-evidence/v1",
+  "run": "connected-final-296-20261113",
+  "artifact_root": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296",
+  "source_build_sha256": "370d6c0d26dd801cf5b0e1c1885d717f61097c37254999e0b867b482f8de9fd1",
+  "method": "Actual file:// Edge and Chrome downloads and page screenshots at 1600x1000 and 1024x768; Chrome rasterization of actual SVG downloads; integrator inspected representative As-Is and Compare captures. Earlier agent inspected full projected matrix. Synthetic fixtures only. Regenerate via e2e/connected-focus.spec.ts.",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-chrome\\network-focus-page.png",
+      "sha256": "6e3d411b052b76c6ef9d6a5bb845fe62b5d46465209d96d05d115c5b2dab8104",
+      "bytes": 125786
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-chrome\\network-focus.png",
+      "sha256": "b181fa76583f99898363ac8b56efbc04ea2163940f8c9ae08faf445df9ded71b",
+      "bytes": 196602
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-chrome\\network-focus.svg",
+      "sha256": "fdf1c2ec14912aa3ec50c8ffb956cc82da6c1a6b1b8d69954acecfe40c13f394",
+      "bytes": 4557
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-msedge\\network-focus-page.png",
+      "sha256": "6e3d411b052b76c6ef9d6a5bb845fe62b5d46465209d96d05d115c5b2dab8104",
+      "bytes": 125786
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-msedge\\network-focus.png",
+      "sha256": "b181fa76583f99898363ac8b56efbc04ea2163940f8c9ae08faf445df9ded71b",
+      "bytes": 196602
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-187c8-nd-return-context-at-1600px-msedge\\network-focus.svg",
+      "sha256": "7b3c6f8f765b76abe44518e92130c567ea9aedcbbc2236d06f8b04b31317f663",
+      "bytes": 4557
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-chrome\\network-focus-page.png",
+      "sha256": "ac1af507a6099b4c5a29326584b27b31d7b1a339b68546a07fe59054f83301de",
+      "bytes": 83569
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-chrome\\network-focus.png",
+      "sha256": "f191daf10e95987d790844b7ce248df136091f82d82a953dd7a5d5660f8676ba",
+      "bytes": 87484
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-chrome\\network-focus.svg",
+      "sha256": "c4b014e326ec25d9ba0e15f2428250d9147415c700c8eaa3779875af252a2dbf",
+      "bytes": 4545
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-chrome\\network-focus.svg.render.png",
+      "sha256": "0466034ec5d44b6a3915985099f713de532e910f951e4f0650c23163b5b16364",
+      "bytes": 51164
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-msedge\\network-focus-page.png",
+      "sha256": "ac1af507a6099b4c5a29326584b27b31d7b1a339b68546a07fe59054f83301de",
+      "bytes": 83569
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-msedge\\network-focus.png",
+      "sha256": "f191daf10e95987d790844b7ce248df136091f82d82a953dd7a5d5660f8676ba",
+      "bytes": 87484
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-network-fo-7306c-nd-return-context-at-1024px-msedge\\network-focus.svg",
+      "sha256": "c4b014e326ec25d9ba0e15f2428250d9147415c700c8eaa3779875af252a2dbf",
+      "bytes": 4545
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1024-page.png",
+      "sha256": "253adc1d0126c837ebfcc9ea9da834bb0802caac413bf87951dfc85d86d69f73",
+      "bytes": 91151
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1024.png",
+      "sha256": "564a2863faba9e49b038a462e6f01edc6fe07989ca45d1fc2f75fb6992fe9184",
+      "bytes": 78254
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1024.svg",
+      "sha256": "a8d383d8174c5f8e69cfcfd1acb306e06cdac39743322425ab65c5c8698b270c",
+      "bytes": 4391
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1024.svg.render.png",
+      "sha256": "b477b94c6a04fa35ed2702521a03257d35be60dae13a8c0dce8395bbc3a86d70",
+      "bytes": 45699
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1600-page.png",
+      "sha256": "f16c356145d65f31f495cbcfcf093dc35d0fa2bd8ae0d7ffc5e5d5e71b6e8fb6",
+      "bytes": 115635
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1600.png",
+      "sha256": "3bbea9ae488567761f7ceac5cecd2daa3d5c6b62c0af0743e376016ac244d525",
+      "bytes": 192522
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\compare-focus-1600.svg",
+      "sha256": "28d696e12de14aece680cd4d12fd6aa0e264feefd158f558e8a08758be6ebbde",
+      "bytes": 4400
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1024-page.png",
+      "sha256": "6d0c852d6057ab9e56d5ed328981be7a6d0b7bbfa07e8c7c7f8b886caae866b8",
+      "bytes": 86250
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1024.png",
+      "sha256": "3511811bb4812be89fb7964f3d2955004eea60558cfc200edba19f23b6dfade8",
+      "bytes": 78359
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1024.svg",
+      "sha256": "fde5a0df24bd3a509a075ba6b0f6804d33ef221cb7b45fc779fbe899b6848c7a",
+      "bytes": 4389
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1600-page.png",
+      "sha256": "9317f517fe33839efce546bb77ca8eb58255629c286196d9179daf829d8db6c6",
+      "bytes": 110871
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1600.png",
+      "sha256": "48bfafbed39529675a222f954111659e7cdb57081c2d4ec71b2cd4760b17f830",
+      "bytes": 189048
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-chrome\\to-be-focus-1600.svg",
+      "sha256": "3c322758319dc021529bd8aa8e2d182af4a153de24c5a9ed0703ee1c3ba307fd",
+      "bytes": 4399
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1024-page.png",
+      "sha256": "253adc1d0126c837ebfcc9ea9da834bb0802caac413bf87951dfc85d86d69f73",
+      "bytes": 91151
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1024.png",
+      "sha256": "564a2863faba9e49b038a462e6f01edc6fe07989ca45d1fc2f75fb6992fe9184",
+      "bytes": 78254
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1024.svg",
+      "sha256": "a8d383d8174c5f8e69cfcfd1acb306e06cdac39743322425ab65c5c8698b270c",
+      "bytes": 4391
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1600-page.png",
+      "sha256": "f16c356145d65f31f495cbcfcf093dc35d0fa2bd8ae0d7ffc5e5d5e71b6e8fb6",
+      "bytes": 115635
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1600.png",
+      "sha256": "3bbea9ae488567761f7ceac5cecd2daa3d5c6b62c0af0743e376016ac244d525",
+      "bytes": 192522
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\compare-focus-1600.svg",
+      "sha256": "28d696e12de14aece680cd4d12fd6aa0e264feefd158f558e8a08758be6ebbde",
+      "bytes": 4400
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1024-page.png",
+      "sha256": "6d0c852d6057ab9e56d5ed328981be7a6d0b7bbfa07e8c7c7f8b886caae866b8",
+      "bytes": 86250
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1024.png",
+      "sha256": "3511811bb4812be89fb7964f3d2955004eea60558cfc200edba19f23b6dfade8",
+      "bytes": 78359
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1024.svg",
+      "sha256": "fde5a0df24bd3a509a075ba6b0f6804d33ef221cb7b45fc779fbe899b6848c7a",
+      "bytes": 4389
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1600-page.png",
+      "sha256": "9317f517fe33839efce546bb77ca8eb58255629c286196d9179daf829d8db6c6",
+      "bytes": 110871
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1600.png",
+      "sha256": "48bfafbed39529675a222f954111659e7cdb57081c2d4ec71b2cd4760b17f830",
+      "bytes": 189048
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-evidence-20261113\\final-green-296\\connected-focus-projected--0f31a-n-To-Be-and-Compare-capture-msedge\\to-be-focus-1600.svg",
+      "sha256": "3c322758319dc021529bd8aa8e2d182af4a153de24c5a9ed0703ee1c3ba307fd",
+      "bytes": 4399
+    }
+  ]
+}

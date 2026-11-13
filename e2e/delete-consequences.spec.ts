@@ -143,6 +143,11 @@ test("Cancel and blocked delete preserve a dirty draft; completed delete discard
   await networkName.fill("Unapplied NIPR");
   await editor(page).getByRole("button", { name: "Delete network" }).click();
   await expect(editor(page)).toContainText("services using this network block deletion");
+  await editor(page).getByRole("button", { name: "Inspect blocking service Orders", exact: true }).click();
+  const blockingOwner = page.getByRole("dialog", { name: "Inspect related record" });
+  await expect(blockingOwner).toContainText("Service: Orders");
+  await blockingOwner.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(networkName).toHaveValue("Unapplied NIPR");
   await editor(page).getByRole("button", { name: "Confirm delete" }).click();
   await expect(editor(page).getByTestId("editor-message")).toContainText("still in use");
   await expect(networkName).toHaveValue("Unapplied NIPR");
