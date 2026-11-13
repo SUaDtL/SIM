@@ -40,7 +40,8 @@ Actions are pinned to commit SHAs.
 
 ```
 sim.html            Vite entry page (output: dist/sim.html)
-src/main.ts         App bootstrap and shell (New/Open/Save/Save As, status line)
+src/main.ts         App bootstrap and shell (New/Open/Save file/Save As, status line)
+src/session/        Dataset session, logical saved checkpoint, and file-operation ownership
 src/db/             SQLite (sql.js) engine, dataset create/open validation, markings
 src/db/migrations/  Forward-only schema migrations (PRAGMA user_version)
 src/domain/         Repository (the only write path), entity types, validation, IP/FQDN detection
@@ -59,8 +60,9 @@ e2e/                Playwright tests that open dist/sim.html from file://
 ## Module boundaries
 
 - `src/domain/repository.ts` is the only write path to a dataset. UI and the CSV importer
-  write through it. The importer runs inside `repository.group()`, so an import is one undo step
-  and one change event; its preview runs the same engine on a throwaway copy of the dataset. The map reads `repository.snapshot()`; its only write is node positions,
+  write through it. Accepted CSV import runs inside `repository.atomic()`, so an import commits
+  or rolls back as one undo step and one change event; its preview runs the same engine on a
+  throwaway copy of the dataset. The map reads `repository.snapshot()`; its only write is node positions,
   which it hands to a `savePositions` callback that the workspace turns into one `setPositions`
   call. Writes are validated, run in a transaction, and fire `subscribe()` listeners only on
   success; `setPositions` writes and notifies nothing when no position changed.
@@ -74,9 +76,11 @@ e2e/                Playwright tests that open dist/sim.html from file://
 - **Migrations are forward-only.** Never edit a migration that has been merged; add a new one
   to `src/db/migrations/index.ts`. Each runs in a transaction with its `user_version` bump.
 - UI code builds DOM with `src/ui/dom.ts` (`el`, `button`, `option`); never HTML strings.
-  The editor saves an entity's own fields with one repository call; each relationship row
-  (support tier, consumer, dependency) is its own write. Repository change events refresh the
-  list and relationship rows but never rebuild a form the user is typing in.
+  The editor uses Apply changes for existing records and type-specific Add for creation.
+  Existing-service fields, support tiers, consumers, and outgoing dependencies share one
+  staged draft and one atomic repository command; Discard changes restores that draft.
+  Save file applies a valid active draft before capturing file bytes. Repository change events
+  refresh projections without rebuilding a form the user is typing in.
 - The map turns `repository.snapshot()` into elements with the pure `buildGraph` (unit-tested; e2e
   reads the canvas through Cytoscape's `_cyreg` registry on the `map-canvas` container, never a
   global). Repository changes update elements in place. Nodes sit at their saved positions; new or
@@ -85,7 +89,9 @@ e2e/                Playwright tests that open dist/sim.html from file://
   Chain highlight (`traceChain`) and filters (`filterGraph`) are pure functions in `graph.ts`; the view
   re-applies them as classes after every sync, so they survive edits and drags, and they never write.
 - Opened `.sqlite` files are untrusted: `openDataset` checks header, `application_id`
-  (`SIM1`), version, integrity and foreign keys, and caps size at 100 MB.
+  (`SIM1`), version, integrity, foreign keys, and unsafe integer identities, and caps size at
+  100 MB. Safely representable legacy semantic issues may be admitted unchanged; opening a
+  file does not silently repair or rewrite it.
 - Only `src/main.ts` imports the WASM (`?url`); `src/db` stays environment-neutral so Node
   tests and Playwright fixtures can use it with `configureSqliteWasm` or an explicit `wasm`.
 - The SQLite WASM is imported with `?url` (not `?inline`; Vite 8 on Windows cannot load it
@@ -101,8 +107,10 @@ e2e/                Playwright tests that open dist/sim.html from file://
   `innerHTML`/`outerHTML`/`insertAdjacentHTML`, and `Math.random` (use `crypto.getRandomValues`).
   Build DOM with `textContent`/`createElement`. Any exception needs a justified
   `eslint-disable` comment and an override entry.
-- **Never store IP addresses or FQDNs.** The data model has no fields for them; this keeps
-  classified data out of SIM.
+- **No dedicated IP-address or FQDN fields.** Host-like text in free-text fields triggers
+  `SensitiveInputWarning` and may be saved only after explicit confirmation of the listed
+  values (decomposition Q-032). A warning is not a guarantee that the dataset contains no
+  classified data.
 - **Fictional test data only.** Fixtures, demos and tests use synthetic UNCLASSIFIED data.
   Never commit real customer data.
 - The classification banner always shows the highest marking present.

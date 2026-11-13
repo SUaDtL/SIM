@@ -8,7 +8,9 @@ export type ValidationCode =
   | "CYCLE"
   | "CDS_NETWORKS"
   | "CDS_ROUTE"
-  | "SELF_LINK";
+  | "SELF_LINK"
+  | "UNSAFE_ID"
+  | "STALE";
 
 /** A write was refused; nothing was changed. `field` names what the user should fix. */
 export class ValidationError extends Error {

@@ -45,6 +45,7 @@ export function parseCsv(text: string): CsvRow[] {
   let fields: string[] = [];
   let field = "";
   let quoted = false;
+  let afterQuote = false;
   let line = 1;
   let rowStart = 1;
   let quoteStart = 0;
@@ -55,6 +56,7 @@ export function parseCsv(text: string): CsvRow[] {
     }
     fields.push(field);
     field = "";
+    afterQuote = false;
     if (fields.length > MAX_COLUMNS) throw new CsvError(`More than ${String(MAX_COLUMNS)} columns.`, rowStart);
   };
   const endRow = () => {
@@ -73,12 +75,24 @@ export function parseCsv(text: string): CsvRow[] {
         if (source[i + 1] === '"') {
           field += '"';
           i++;
-        } else quoted = false;
+        } else {
+          quoted = false;
+          afterQuote = true;
+        }
       } else {
-        if (ch === "\n") line++;
+        if (ch === "\n" || (ch === "\r" && source[i + 1] !== "\n")) line++;
         field += ch;
       }
       continue;
+    }
+    if (afterQuote) {
+      if (ch === " " || ch === "\t") {
+        field += ch;
+        continue;
+      }
+      if (ch !== "," && ch !== "\n" && ch !== "\r") {
+        throw new CsvError("Unexpected text after a quoted value.", rowStart);
+      }
     }
     if (ch === '"' && field === "") {
       quoted = true;

@@ -45,6 +45,222 @@ function seed() {
 }
 
 describe("entity CRUD", () => {
+  it("preserves untouched legacy fields across ordinary entity updates", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const organization = repo.createOrganization({ name: "Ops" });
+    const category = repo.createCategory({ name: "Tools", color: "#abcdef" });
+    const application = repo.createApplication({ name: "Console" });
+    const service = repo.createService({ name: "Queue", networkId: network.id, marking: "CUI" });
+    const scenario = repo.createScenario({ name: "Plan" });
+    const db = (repo as unknown as { db: import("sql.js").Database }).db;
+    const longName = `  ${"N".repeat(205)}  `;
+    db.run("UPDATE network SET name = ?, description = ? WHERE id = ?", [longName, "  old network text  ", network.id]);
+    db.run("UPDATE organization SET name = ? WHERE id = ?", [longName, organization.id]);
+    db.run("UPDATE category SET color = ? WHERE id = ?", ["legacy-color", category.id]);
+    db.run("UPDATE application SET vendor = ? WHERE id = ?", ["  old vendor  ", application.id]);
+    db.run("UPDATE service SET name = ? WHERE id = ?", [longName, service.id]);
+    db.run("UPDATE scenario SET description = ? WHERE id = ?", ["  old plan text  ", scenario.id]);
+
+    repo.updateNetwork(network.id, {
+      name: longName,
+      kind: "external",
+      marking: "CUI",
+      description: "  old network text  ",
+    });
+    repo.updateOrganization(organization.id, { name: longName, parentId: null });
+    repo.updateCategory(category.id, { name: "Updated Tools", color: "legacy-color" });
+    repo.updateApplication(application.id, { name: "Updated Console", vendor: "  old vendor  " });
+    repo.updateService(service.id, { name: longName, networkId: network.id, marking: "CUI", foundational: true });
+    repo.updateScenario(scenario.id, { name: "Updated Plan", description: "  old plan text  " });
+
+    expect(repo.getNetwork(network.id)).toMatchObject({
+      name: longName,
+      description: "  old network text  ",
+      kind: "external",
+    });
+    expect(repo.getOrganization(organization.id)?.name).toBe(longName);
+    expect(repo.getCategory(category.id)).toMatchObject({ name: "Updated Tools", color: "legacy-color" });
+    expect(repo.getApplication(application.id)).toMatchObject({ name: "Updated Console", vendor: "  old vendor  " });
+    expect(repo.getService(service.id)).toMatchObject({ name: longName, foundational: true });
+    expect(repo.getScenario(scenario.id)).toMatchObject({ name: "Updated Plan", description: "  old plan text  " });
+  });
+
+  it("allows unrelated organization and CDS edits while preserving legacy issues", async () => {
+    const first = repo.createNetwork({ name: "First", kind: "internal", marking: "CUI" });
+    const second = repo.createNetwork({ name: "Second", kind: "internal", marking: "CUI" });
+    const a = repo.createOrganization({ name: "A" });
+    const b = repo.createOrganization({ name: "B", parentId: a.id });
+    const cds = repo.createCds({ name: "Bridge", networkIds: [first.id, second.id] });
+    const db = (repo as unknown as { db: import("sql.js").Database }).db;
+    db.run("UPDATE organization SET parent_id = ? WHERE id = ?", [b.id, a.id]);
+    db.run("DELETE FROM cds_network WHERE cds_id = ? AND network_id = ?", [cds.id, second.id]);
+    const longName = `  ${"B".repeat(205)}  `;
+    db.run("UPDATE cds SET name = ?, description = ? WHERE id = ?", [longName, "  old bridge text  ", cds.id]);
+
+    repo.updateOrganization(a.id, { name: "A renamed", parentId: b.id });
+    repo.updateCds(cds.id, { name: longName, networkIds: [first.id], description: "  old bridge text  " });
+    expect(repo.getOrganization(a.id)).toMatchObject({ name: "A renamed", parentId: b.id });
+    expect(repo.getCds(cds.id)).toMatchObject({
+      name: longName,
+      description: "  old bridge text  ",
+      networkIds: [first.id],
+    });
+    expect(await codeOf(() => repo.updateOrganization(a.id, { name: "A renamed", parentId: a.id }))).toBe(
+      "CYCLE:parent",
+    );
+    expect(
+      await codeOf(() =>
+        repo.updateCds(cds.id, { name: longName, networkIds: [], description: "  old bridge text  " }),
+      ),
+    ).toBe("CDS_NETWORKS:networks");
+  });
+
+  it("keeps untouched legacy service text byte-for-byte during a relationship edit", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const org = repo.createOrganization({ name: "Ops" });
+    const service = repo.createService({ name: "Legacy", networkId: network.id, marking: "CUI" });
+    const db = (repo as unknown as { db: import("sql.js").Database }).db;
+    const legacyName = `  ${"L".repeat(205)}  `;
+    const legacyDescription = "  Existing text  ";
+    db.run("UPDATE service SET name = ?, description = ? WHERE id = ?", [legacyName, legacyDescription, service.id]);
+    const base = repo.readServiceEditBase(service.id);
+    const result = repo.applyServiceDraft(service.id, base, {
+      fields: { name: legacyName, networkId: network.id, marking: "CUI", description: legacyDescription },
+      support: [],
+      consumerOrgIds: [org.id],
+      dependencies: [],
+    });
+    expect(result.status).toBe("committed");
+    expect(repo.getService(service.id)).toMatchObject({ name: legacyName, description: legacyDescription });
+  });
+  it("refuses a final projected name collision across two rehomes", async () => {
+    const a = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const b = repo.createNetwork({ name: "Blue", kind: "internal", marking: "CUI" });
+    const c = repo.createNetwork({ name: "Cedar", kind: "internal", marking: "CUI" });
+    const first = repo.createService({ name: "Mail", networkId: a.id, marking: "CUI" });
+    const second = repo.createService({ name: "Mail", networkId: b.id, marking: "CUI" });
+    const plan = repo.createScenario({ name: "Move" });
+    repo.addScenarioChange(plan.id, { kind: "rehome", serviceId: first.id, networkId: c.id });
+    expect(
+      await codeOf(() => repo.addScenarioChange(plan.id, { kind: "rehome", serviceId: second.id, networkId: c.id })),
+    ).toBe("DUPLICATE:network");
+    expect(repo.listScenarioChanges(plan.id)).toHaveLength(1);
+  });
+
+  it("allows a planned replacement after retiring its baseline name", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const service = repo.createService({ name: "Mail", networkId: network.id, marking: "CUI" });
+    const plan = repo.createScenario({ name: "Replace" });
+    repo.addScenarioChange(plan.id, { kind: "retire", serviceId: service.id });
+    expect(
+      repo.addScenarioChange(plan.id, { kind: "add", name: "Mail", networkId: network.id, marking: "CUI" }).kind,
+    ).toBe("add");
+  });
+
+  it("uses SQLite ASCII-only NOCASE for projected identity", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const plan = repo.createScenario({ name: "Unicode" });
+    repo.addScenarioChange(plan.id, { kind: "add", name: "Ä", networkId: network.id, marking: "CUI" });
+    expect(
+      repo.addScenarioChange(plan.id, { kind: "add", name: "ä", networkId: network.id, marking: "CUI" }).kind,
+    ).toBe("add");
+    expect(repo.scenarioNameCollisions(plan.id)).toEqual([]);
+  });
+
+  it("diagnoses baseline drift and permits incremental scenario repair", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const plan = repo.createScenario({ name: "Future" });
+    const planned = repo.addScenarioChange(plan.id, {
+      kind: "add",
+      name: "Mail",
+      networkId: network.id,
+      marking: "CUI",
+    });
+    repo.createService({ name: "Mail", networkId: network.id, marking: "CUI" });
+    expect(repo.scenarioNameCollisions(plan.id)).toMatchObject([{ networkId: network.id }]);
+    expect(repo.createCategory({ name: "Unrelated" }).name).toBe("Unrelated");
+    repo.removeScenarioChange(planned.id);
+    expect(repo.scenarioNameCollisions(plan.id)).toEqual([]);
+  });
+  it("lets a service edit proceed when an unrelated legacy route is already invalid", async () => {
+    const db = await createDataset("Legacy", wasm);
+    const current = new Repository(db);
+    const a = current.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const b = current.createNetwork({ name: "Blue", kind: "internal", marking: "CUI" });
+    const c = current.createNetwork({ name: "Cedar", kind: "internal", marking: "CUI" });
+    const source = current.createService({ name: "Source", networkId: a.id, marking: "CUI" });
+    const target = current.createService({ name: "Target", networkId: b.id, marking: "CUI" });
+    const other = current.createService({ name: "Other", networkId: c.id, marking: "CUI" });
+    const cds = current.createCds({ name: "Guard", networkIds: [a.id, b.id] });
+    current.addDependency({ consumerServiceId: source.id, providerServiceId: target.id, viaCdsId: cds.id });
+    db.run("DELETE FROM cds_network WHERE cds_id = ? AND network_id = ?", [cds.id, b.id]);
+    const base = current.readServiceEditBase(other.id);
+    const result = current.applyServiceDraft(other.id, base, {
+      fields: { name: "Other renamed", networkId: c.id, marking: "CUI" },
+      support: [],
+      consumerOrgIds: [],
+      dependencies: [],
+    });
+    expect(result.status).toBe("committed");
+    expect(current.getService(other.id)?.name).toBe("Other renamed");
+    db.close();
+  });
+  it("lets legacy route owners change unrelated fields but blocks a worsened route", async () => {
+    const a = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const b = repo.createNetwork({ name: "Blue", kind: "internal", marking: "CUI" });
+    const source = repo.createService({ name: "Source", networkId: a.id, marking: "CUI" });
+    const target = repo.createService({ name: "Target", networkId: b.id, marking: "CUI" });
+    const cds = repo.createCds({ name: "Guard", networkIds: [a.id, b.id] });
+    repo.addDependency({ consumerServiceId: source.id, providerServiceId: target.id, viaCdsId: cds.id });
+    const db = (repo as unknown as { db: import("sql.js").Database }).db;
+    db.run("DELETE FROM cds_network WHERE cds_id = ? AND network_id = ?", [cds.id, b.id]);
+
+    repo.updateService(source.id, { name: "Source renamed", networkId: a.id, marking: "CUI" });
+    repo.updateCds(cds.id, { name: "Guard renamed", networkIds: [a.id] });
+    expect(repo.getService(source.id)?.name).toBe("Source renamed");
+    expect(repo.getCds(cds.id)?.name).toBe("Guard renamed");
+    expect(await codeOf(() => repo.updateService(target.id, { name: "Target", networkId: a.id, marking: "CUI" }))).toBe(
+      "CDS_ROUTE:network",
+    );
+  });
+  it("does not re-prompt stored sensitive text during an unrelated service edit", () => {
+    const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
+    const org = repo.createOrganization({ name: "Ops" });
+    const service = repo.createService(
+      { name: "mail.example.test", networkId: network.id, marking: "CUI" },
+      { confirmSensitive: true },
+    );
+    repo.setSupport(service.id, 1, org.id, "already.example.test", { confirmSensitive: true });
+    const base = repo.readServiceEditBase(service.id);
+    const result = repo.applyServiceDraft(service.id, base, {
+      fields: { name: service.name, networkId: network.id, marking: "CUI" },
+      support: base.support,
+      consumerOrgIds: [org.id],
+      dependencies: [],
+    });
+    expect(result.status).toBe("committed");
+    expect(repo.listSupport(service.id)[0]?.notes).toBe("already.example.test");
+  });
+  it("describes delete effects and refuses a stale consequence confirmation", async () => {
+    const s = seed();
+    repo.addConsumption(s.j6.id, s.mail.id);
+    repo.setSupport(s.mail.id, 1, s.j6.id);
+    const plan = repo.planDelete("service", s.mail.id);
+    expect(plan.details.join(" ")).toContain("consumer");
+    expect(plan.details.join(" ")).toContain("support");
+    repo.addConsumption(s.desk.id, s.mail.id);
+    expect(
+      await codeOf(() => {
+        repo.deleteWithPlan("service", s.mail.id, plan.signature);
+      }),
+    ).toBe("STALE:delete");
+    expect(repo.getService(s.mail.id)).toBeDefined();
+    const refreshed = repo.planDelete("service", s.mail.id);
+    repo.deleteWithPlan("service", s.mail.id, refreshed.signature);
+    expect(repo.getService(s.mail.id)).toBeUndefined();
+    expect(repo.undo()).toBe(true);
+    expect(repo.getService(s.mail.id)).toBeDefined();
+  });
   it("round-trips every entity type", () => {
     const s = seed();
     expect(repo.getNetwork(s.nipr.id)).toEqual({
@@ -439,7 +655,9 @@ describe("banner caveat", () => {
     expect(repo.snapshot().caveat).toBeNull();
     repo.setCaveat("//rel to usa, fvey");
     expect(repo.snapshot().caveat).toBe("REL TO USA, FVEY");
+    repo.setCaveat("REL TO USA, FVEY");
     repo.setCaveat("  ");
+    repo.setCaveat(null);
     expect(repo.datasetCaveat()).toBeNull();
     expect(calls).toBe(2);
   });
@@ -452,6 +670,17 @@ describe("banner caveat", () => {
       }),
     ).toBe("INVALID_VALUE:caveat");
     expect(repo.datasetCaveat()).toBe("NOFORN");
+  });
+
+  it("restores the previous caveat when a replacement is undone and redone", () => {
+    repo.setCaveat("NOFORN");
+    repo.setCaveat("REL TO USA");
+    expect(repo.datasetCaveat()).toBe("REL TO USA");
+
+    expect(repo.undo()).toBe(true);
+    expect(repo.datasetCaveat()).toBe("NOFORN");
+    expect(repo.redo()).toBe(true);
+    expect(repo.datasetCaveat()).toBe("REL TO USA");
   });
 });
 
@@ -592,5 +821,293 @@ describe("undo and redo", () => {
     let steps = 0;
     while (repo.undo()) steps++;
     expect(steps).toBe(MAX_UNDO_STEPS);
+  });
+});
+
+describe("repository notifications", () => {
+  it("keeps a committed write successful and notifies later subscribers when one throws", () => {
+    const calls: string[] = [];
+    const failures: unknown[][] = [];
+    repo.subscribeProjectionFailures((errors) => {
+      failures.push([...errors]);
+    });
+    repo.subscribe(() => {
+      calls.push("first");
+      throw new Error("synthetic view failure");
+    });
+    repo.subscribe(() => {
+      calls.push("second");
+    });
+
+    const network = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    expect(repo.getNetwork(network.id)?.name).toBe("NIPR");
+    expect(calls).toEqual(["first", "second"]);
+    expect(failures).toHaveLength(1);
+    expect(failures[0]?.[0]).toEqual(new Error("synthetic view failure"));
+  });
+
+  it("keeps Undo successful when a view subscriber fails", () => {
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    const failures: unknown[][] = [];
+    repo.subscribe(() => {
+      throw new Error("synthetic Undo view failure");
+    });
+    repo.subscribeProjectionFailures((errors) => failures.push([...errors]));
+
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toEqual([]);
+    expect(failures).toHaveLength(1);
+  });
+
+  it("delivers reentrant writes after the current notification reaches every subscriber", () => {
+    const seen: number[] = [];
+    let nested = false;
+    repo.subscribe(() => {
+      if (!nested) {
+        nested = true;
+        repo.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
+      }
+    });
+    repo.subscribe((change) => {
+      seen.push(change.revision);
+    });
+
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    expect(seen).toEqual([1, 2]);
+  });
+});
+
+describe("atomic commands", () => {
+  it("rolls back all writes, inverse history and notifications when a command fails", () => {
+    let notifications = 0;
+    repo.subscribe(() => {
+      notifications++;
+    });
+
+    expect(() =>
+      repo.atomic(() => {
+        repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+        throw new Error("synthetic command failure");
+      }),
+    ).toThrow("synthetic command failure");
+    expect(repo.listNetworks()).toEqual([]);
+    expect(repo.canUndo()).toBe(false);
+    expect(notifications).toBe(0);
+  });
+
+  it("keeps an independently caught inner refusal out of the accepted command", () => {
+    const first = repo.atomic(() => {
+      const network = repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+      expect(() => repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" })).toThrow();
+      repo.createNetwork({ name: "SIPR", kind: "internal", marking: "SECRET" });
+      return network;
+    });
+    expect(first.name).toBe("NIPR");
+    expect(repo.listNetworks().map((network) => network.name)).toEqual(["NIPR", "SIPR"]);
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toEqual([]);
+  });
+
+  it("rolls back data when preparing history fails before SQL commit", () => {
+    const internal = repo as unknown as { record: (start: number, history: string) => boolean };
+    internal.record = () => {
+      throw new Error("synthetic history preparation failure");
+    };
+
+    expect(() => repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" })).toThrow(
+      "synthetic history preparation failure",
+    );
+    expect(repo.listNetworks()).toEqual([]);
+    expect(repo.canUndo()).toBe(false);
+  });
+
+  it("retains an Undo step when statement extraction fails before BEGIN", () => {
+    repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+    const internal = repo as unknown as {
+      rows: (sql: string, params?: number[]) => Record<string, unknown>[];
+    };
+    const originalRows = internal.rows.bind(repo);
+    internal.rows = (sql, params) => {
+      if (sql.includes("SELECT sql FROM undo_log")) throw new Error("synthetic statement extraction failure");
+      return originalRows(sql, params);
+    };
+
+    expect(() => repo.undo()).toThrow("synthetic statement extraction failure");
+    expect(repo.listNetworks()).toHaveLength(1);
+    expect(repo.canUndo()).toBe(true);
+    internal.rows = originalRows;
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toEqual([]);
+  });
+
+  it("nests group and atomic in either direction without leaking intermediate notifications", () => {
+    let notifications = 0;
+    repo.subscribe(() => {
+      notifications++;
+    });
+    repo.group(() => {
+      repo.createNetwork({ name: "A", kind: "internal", marking: "CUI" });
+      repo.atomic(() => {
+        repo.createNetwork({ name: "B", kind: "internal", marking: "CUI" });
+      });
+    });
+    expect(notifications).toBe(1);
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toEqual([]);
+
+    notifications = 0;
+    repo.atomic(() => {
+      repo.group(() => {
+        repo.createNetwork({ name: "C", kind: "internal", marking: "CUI" });
+        expect(() => repo.createNetwork({ name: "C", kind: "internal", marking: "CUI" })).toThrow();
+        repo.createNetwork({ name: "D", kind: "internal", marking: "CUI" });
+      });
+    });
+    expect(notifications).toBe(1);
+    expect(repo.listNetworks().map((network) => network.name)).toEqual(["C", "D"]);
+    expect(repo.undo()).toBe(true);
+    expect(repo.listNetworks()).toEqual([]);
+  });
+
+  it("rejects a thenable callback and rolls back its synchronous writes", () => {
+    expect(() =>
+      repo.atomic(() => {
+        repo.createNetwork({ name: "NIPR", kind: "internal", marking: "CUI" });
+        return { then: (): void => undefined };
+      }),
+    ).toThrow("An atomic command must be synchronous.");
+    expect(repo.listNetworks()).toEqual([]);
+    expect(repo.canUndo()).toBe(false);
+  });
+});
+
+describe("legacy semantic repairs", () => {
+  it("bounds parent validation when an admitted legacy hierarchy already contains a cycle", () => {
+    const first = repo.createOrganization({ name: "First" });
+    const second = repo.createOrganization({ name: "Second" });
+    const third = repo.createOrganization({ name: "Third" });
+    const detached = repo.createOrganization({ name: "Detached" });
+    const db = (repo as unknown as { db: { run(sql: string, values: number[]): void } }).db;
+    db.run("UPDATE organization SET parent_id = ? WHERE id = ?", [second.id, first.id]);
+    db.run("UPDATE organization SET parent_id = ? WHERE id = ?", [third.id, second.id]);
+    db.run("UPDATE organization SET parent_id = ? WHERE id = ?", [first.id, third.id]);
+
+    const originalGet = repo.getOrganization.bind(repo);
+    let lookups = 0;
+    repo.getOrganization = (id) => {
+      if (++lookups > 10) throw new Error("unbounded ancestry walk");
+      return originalGet(id);
+    };
+    expect(() => repo.updateOrganization(detached.id, { name: "Detached", parentId: first.id })).toThrow(
+      ValidationError,
+    );
+    expect(lookups).toBeLessThanOrEqual(10);
+  });
+
+  it("refuses generated IDs beyond the exactly representable range before commit", async () => {
+    const db = (
+      repo as unknown as {
+        db: { run(sql: string, values: (number | string)[]): void; exec(sql: string): { values: unknown[][] }[] };
+      }
+    ).db;
+    db.run("INSERT INTO network (id, name, kind, marking) VALUES (?, ?, ?, ?)", [
+      Number.MAX_SAFE_INTEGER,
+      "High ID",
+      "internal",
+      "CUI",
+    ]);
+
+    expect(await codeOf(() => repo.createNetwork({ name: "Next", kind: "internal", marking: "CUI" }))).toBe(
+      "UNSAFE_ID:id",
+    );
+    const names = db.exec("SELECT name FROM network ORDER BY name")[0]?.values.map((row) => row[0]);
+    expect(names).toEqual(["High ID"]);
+    expect(repo.canUndo()).toBe(false);
+  });
+});
+
+describe("service draft command", () => {
+  it("applies fields and owned relationships in one Undo step", () => {
+    const s = seed();
+    const base = repo.readServiceEditBase(s.mail.id);
+    const before = repo.snapshot();
+
+    const result = repo.applyServiceDraft(s.mail.id, base, {
+      fields: { name: "Mail", networkId: s.nipr.id, marking: "CUI", providerOrgId: s.j6.id },
+      support: [{ tier: 1, orgId: s.desk.id, notes: "Weekdays" }],
+      consumerOrgIds: [s.desk.id],
+      dependencies: [{ providerServiceId: s.idam.id, viaCdsId: null }],
+    });
+    expect(result.status).toBe("committed");
+    expect(repo.getService(s.mail.id)?.name).toBe("Mail");
+    expect(repo.getService(s.mail.id)?.applicationId).toBe(s.exchange.id);
+    expect(repo.listSupport(s.mail.id)).toMatchObject([{ tier: 1, orgId: s.desk.id, notes: "Weekdays" }]);
+    expect(repo.listConsumption()).toContainEqual({ orgId: s.desk.id, serviceId: s.mail.id });
+    expect(repo.listDependencies()).toContainEqual({
+      consumerServiceId: s.mail.id,
+      providerServiceId: s.idam.id,
+      viaCdsId: null,
+    });
+    expect(repo.undo()).toBe(true);
+    expect(repo.snapshot()).toEqual(before);
+  });
+
+  it("accepts a final-state network move after replacing an invalid intermediate CDS route", () => {
+    const s = seed();
+    repo.addDependency({ consumerServiceId: s.mail.id, providerServiceId: s.patch.id, viaCdsId: s.cds.id });
+    const base = repo.readServiceEditBase(s.mail.id);
+
+    const result = repo.applyServiceDraft(s.mail.id, base, {
+      fields: { name: "Email", networkId: s.sipr.id, marking: "SECRET", providerOrgId: s.j6.id },
+      support: [],
+      consumerOrgIds: [],
+      dependencies: [{ providerServiceId: s.patch.id, viaCdsId: null }],
+    });
+    expect(result.status).toBe("committed");
+    expect(repo.getService(s.mail.id)?.networkId).toBe(s.sipr.id);
+    expect(
+      repo.listDependencies().find((dependency) => dependency.consumerServiceId === s.mail.id)?.viaCdsId,
+    ).toBeNull();
+    expect(repo.undo()).toBe(true);
+    expect(repo.getService(s.mail.id)?.networkId).toBe(s.nipr.id);
+    expect(repo.listDependencies().find((dependency) => dependency.consumerServiceId === s.mail.id)?.viaCdsId).toBe(
+      s.cds.id,
+    );
+  });
+
+  it("revalidates an unrelated change but reports a relevant aggregate conflict", () => {
+    const s = seed();
+    const base = repo.readServiceEditBase(s.mail.id);
+    repo.setPositions([{ entity: "service", id: s.mail.id, x: 5, y: 7 }]);
+    repo.updateCategory(s.cyber.id, { name: "Cybersecurity", color: "#e0624f" });
+    const draft = {
+      fields: { name: "Mail", networkId: s.nipr.id, marking: "CUI" as const },
+      support: [],
+      consumerOrgIds: [],
+      dependencies: [],
+    };
+    expect(repo.applyServiceDraft(s.mail.id, base, draft).status).toBe("committed");
+
+    const stale = repo.readServiceEditBase(s.mail.id);
+    repo.setSupport(s.mail.id, 1, s.desk.id, "Current desk");
+    const before = repo.snapshot();
+    const result = repo.applyServiceDraft(s.mail.id, stale, draft);
+    expect(result.status).toBe("conflict");
+    expect(repo.snapshot()).toEqual(before);
+  });
+
+  it("refuses a move that would break an incoming CDS route without deleting that route", () => {
+    const s = seed();
+    repo.addDependency({ consumerServiceId: s.patch.id, providerServiceId: s.mail.id, viaCdsId: s.cds.id });
+    const base = repo.readServiceEditBase(s.mail.id);
+    const before = repo.snapshot();
+    const result = repo.applyServiceDraft(s.mail.id, base, {
+      fields: { name: "Email", networkId: s.sipr.id, marking: "SECRET" },
+      support: [],
+      consumerOrgIds: [],
+      dependencies: [],
+    });
+    expect(result.status).toBe("refused");
+    expect(repo.snapshot()).toEqual(before);
   });
 });

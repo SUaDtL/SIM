@@ -1,0 +1,1998 @@
+{
+  "format": "sim.workflow-execution-status/v1",
+  "audit_commit": "10487a3da6c6fc6b0e7c194ab0d6a56ab6ec2a43",
+  "receiving_head": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+  "verified_base": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+  "branch": "codex/sim-workflow-coherence",
+  "worktree": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+  "current_candidate_identity": "6baae769f9c73986fc4eb15f8d498f7ab66ff03b",
+  "status": "implementation-complete; PR-23-open; native-save-readback-user-reported; native-denial-unobserved",
+  "environment": {
+    "node": "v24.18.0",
+    "npm": "11.16.0",
+    "edge": "installed; 92/92 final offline file:// E2E cases passed",
+    "chrome": "installed; 92/92 final offline file:// E2E cases passed",
+    "chrome_native_file": "User-reported Save, Save after edit, Save As, cancelled Save As with draft retained, and reopen/readback succeeded in real Chrome from file://; no permission prompt appeared."
+  },
+  "packages": [
+    {
+      "id": "WP00",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+      "evidence": [
+        "Packet tools/verify_packet.py: 46 files, 12 packages, 84 acceptance cases; exit 0.",
+        "Baseline npm run check on receiving HEAD: typecheck, lint, format, build, 241 unit tests, 94 Edge/Chrome file:// E2E; exit 0. Native picker paths are stubbed."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP01",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP01."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP02",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP02."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP03",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP03."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP04",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "partial",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP04."
+      ],
+      "blockers": [
+        "AC083 native permission denial remains unobserved because Chrome displayed no permission prompt."
+      ]
+    },
+    {
+      "id": "WP05",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "262aa0fc3c83775155b44e672430c3efc51f1e0e",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP05."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP06",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP06."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP07",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP07."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP08",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP08."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP09",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP09."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP10",
+      "status": "implemented",
+      "implementation_readiness": "ready",
+      "acceptance_status": "passed",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP10."
+      ],
+      "blockers": []
+    },
+    {
+      "id": "WP11",
+      "status": "handoff-complete",
+      "implementation_readiness": "ready",
+      "acceptance_status": "partial",
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant case and finding dispositions are recorded below for WP11."
+      ],
+      "blockers": [
+        "AC083 native permission denial remains unobserved because Chrome displayed no permission prompt."
+      ]
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "AC001",
+      "status": "passed",
+      "method": "read-only review",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+      "evidence": [
+        "Receiving base inspected against audit pin; original main checkout's unrelated local files preserved.",
+        "Baseline npm run check passed 241 unit and 94 Edge/Chrome file:// E2E cases; exit 0."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC002",
+      "status": "passed",
+      "method": "command evidence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+      "evidence": [
+        "Receiving base inspected against audit pin; original main checkout's unrelated local files preserved.",
+        "Baseline npm run check passed 241 unit and 94 Edge/Chrome file:// E2E cases; exit 0."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC003",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, e2e/banner.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC004",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, e2e/banner.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC005",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, e2e/banner.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC006",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC007",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC008",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC009",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC010",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC011",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC012",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC013",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC014",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC015",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC016",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC017",
+      "status": "passed",
+      "method": "unit/property sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC018",
+      "status": "passed",
+      "method": "injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC019",
+      "status": "passed",
+      "method": "injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC020",
+      "status": "passed",
+      "method": "injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC021",
+      "status": "passed",
+      "method": "injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC022",
+      "status": "passed",
+      "method": "browser and injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC023",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC024",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC025",
+      "status": "passed",
+      "method": "injected I/O sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC026",
+      "status": "passed",
+      "method": "browser adapter sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC027",
+      "status": "passed",
+      "method": "unit plus file adapter sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC028",
+      "status": "passed",
+      "method": "measured diagnostic",
+      "command_argv": [
+        "node",
+        "--expose-gc",
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/checkpoint-probe.mjs"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/checkpoint-report.json",
+        "Demo: 7 networks/92 services, median canonical read 1.50 ms; synthetic 20-network/500-service fixture: 2.60 ms. Local diagnostic, not a 100 MB bound."
+      ],
+      "limitation": "Measured demo and 500-service synthetic fixture only; no claim about the 100 MB maximum."
+    },
+    {
+      "id": "AC029",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC030",
+      "status": "passed",
+      "method": "DOM and browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC031",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC032",
+      "status": "passed",
+      "method": "browser plus injected adapter",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC033",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC034",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC035",
+      "status": "passed",
+      "method": "repository plus browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC036",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC037",
+      "status": "passed",
+      "method": "unit plus DOM sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC038",
+      "status": "passed",
+      "method": "forms/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC039",
+      "status": "passed",
+      "method": "DOM/command sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "262aa0fc3c83775155b44e672430c3efc51f1e0e",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts",
+        "AC039 changed-relationship conflict E2E in acceptance-journeys.spec.ts passed in Edge and Chrome; explicit Reload current record action retains draft until chosen.",
+        "The full-app changed-relationship sequence passed in Edge and Chrome; a browser component test bundled the production editor, injected a synthetic repository deletion notification, and proved pending draft preservation, stale-Apply refusal, targeted Close, and unrelated record editing in both browsers. Final local gate: 308 unit and 186 Edge/Chrome tests; exit 0."
+      ],
+      "limitation": "The deletion branch is a browser component DOM/command sequence with a synthetic repository event, not a full-app UI path; the app exposes no second deletion command against the selected editor record."
+    },
+    {
+      "id": "AC040",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC041",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC042",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts",
+        "Confirmed child in children.csv resolved its parent in later parents.csv; focused engine test passed."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC043",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC044",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC045",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC046",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts",
+        "Unicode Ä/ä and padded/canonical legacy network identity tests were RED before the fix and GREEN after; exact stored keys use SQLite ASCII NOCASE."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC047",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC048",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC049",
+      "status": "passed",
+      "method": "browser plus graph sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC050",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC051",
+      "status": "passed",
+      "method": "browser/layout invariant",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts",
+        "Majority-fresh CSV import moved old leaves before the fix; after repair both Edge and Chrome preserve manually arranged prior positions."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC052",
+      "status": "passed",
+      "method": "browser/history sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC053",
+      "status": "passed",
+      "method": "injected queue plus browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC054",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/graph.test.ts, e2e/map.spec.ts, e2e/layout-quality.spec.ts, e2e/history.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC055",
+      "status": "passed",
+      "method": "injected export sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/export.test.ts, src/map/svg.test.ts, e2e/map.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC056",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/export.test.ts, src/map/svg.test.ts, e2e/map.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC057",
+      "status": "passed",
+      "method": "unit plus browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/export.test.ts, src/map/svg.test.ts, e2e/map.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC058",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/export.test.ts, src/map/svg.test.ts, e2e/map.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC059",
+      "status": "passed",
+      "method": "actual artifact inspection plus semantic tests",
+      "command_argv": [
+        "node",
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/export-probe.mjs"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/export-report.json",
+        "Ten PNG/SVG pairs at 1600x1000 and 1024x768 across As-Is, To-Be, Compare, filter and chain: matching dimensions, banner/marking, title, legend and visible map scene; visual inspection completed."
+      ],
+      "limitation": "Viewport cropping of map content is intentional; frame text/bands are not clipped. PNG text parity was visually inspected, not OCR-tested."
+    },
+    {
+      "id": "AC060",
+      "status": "passed",
+      "method": "actual browser/export inspection",
+      "command_argv": [
+        "node",
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/export-probe.mjs"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "C:/Users/brenn/AppData/Local/Temp/sim-acceptance-evidence-20261112/export-report.json",
+        "Ten PNG/SVG pairs at 1600x1000 and 1024x768 across As-Is, To-Be, Compare, filter and chain: matching dimensions, banner/marking, title, legend and visible map scene; visual inspection completed."
+      ],
+      "limitation": "Viewport cropping of map content is intentional; frame text/bands are not clipped. PNG text parity was visually inspected, not OCR-tested."
+    },
+    {
+      "id": "AC061",
+      "status": "passed",
+      "method": "browser journey",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/map/export.test.ts, src/map/svg.test.ts, e2e/map.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC062",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC063",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC064",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC065",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC066",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC067",
+      "status": "passed",
+      "method": "end-to-end user walkthrough",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/entry-ui.spec.ts, e2e/dataset-file.spec.ts, e2e/map.spec.ts, e2e/import.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts, tests/unit/docs.test.ts",
+        "J1/J2/J3/J6/J7 integrated browser journeys plus J4 delete-consequence and J5 map/capture suites passed in Edge and Chrome; journeys were run in separate synthetic sessions."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC068",
+      "status": "passed",
+      "method": "comparative walkthrough",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/entry-ui.spec.ts, e2e/dataset-file.spec.ts, e2e/map.spec.ts, e2e/import.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts, tests/unit/docs.test.ts",
+        "Current J1 requires only network and service names, two Add actions and one Save file; context preselects the network. Base source/flow required a separate network selection; no new metadata, prompt, Apply or export setup is mandatory."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC069",
+      "status": "passed",
+      "method": "browser/accessibility inspection",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/entry-ui.spec.ts, e2e/dataset-file.spec.ts, e2e/map.spec.ts, e2e/import.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts, tests/unit/docs.test.ts",
+        "Keyboard Enter/escape, dialog resolution, status/alert text and offline/CSP browser cases passed in the declared channels."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC070",
+      "status": "passed",
+      "method": "source/document review",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/entry-ui.spec.ts, e2e/dataset-file.spec.ts, e2e/map.spec.ts, e2e/import.spec.ts, e2e/scenario.spec.ts, e2e/banner.spec.ts, tests/unit/docs.test.ts",
+        "AGENTS.md and HTML context wording reconciled with Q-032; tests/unit/docs.test.ts passed. ADR lifecycle state was not fabricated."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC071",
+      "status": "passed",
+      "method": "command evidence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/offline-boot.spec.ts, e2e/csp.spec.ts, tests/unit/build-output.test.ts, tests/unit/lint-policy.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC072",
+      "status": "passed",
+      "method": "independent review",
+      "command_argv": null,
+      "cwd": null,
+      "exit_code": null,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "Independent security review: no HIGH/CRITICAL issue. Independent coverage review found padded legacy CSV mislink and majority-fresh layout movement; both reproduced, fixed and re-reviewed with no remaining HIGH/CRITICAL finding."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC073",
+      "status": "passed",
+      "method": "handoff review",
+      "command_argv": null,
+      "cwd": null,
+      "exit_code": null,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "This 84-case status file, updated traceability.csv and RESUME.md record current candidate, tests, reviews, deferral F26 and AC083 limitation."
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC074",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, e2e/banner.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC075",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC076",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, src/db/schema.test.ts, src/import/engine.test.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC077",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/domain/repository.test.ts, e2e/banner.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC078",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/import/engine.test.ts, src/import/csv.test.ts, e2e/import.spec.ts, e2e/history.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC079",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC080",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/scenario/scenario.test.ts, src/domain/repository.test.ts, e2e/scenario.spec.ts, src/map/graph.test.ts, src/map/svg.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC081",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: e2e/dataset-file.spec.ts, e2e/history.spec.ts, src/db/open.test.ts, src/domain/repository.test.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC082",
+      "status": "passed",
+      "method": "DOM/browser sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/ui/forms.test.ts, src/domain/validate.test.ts, src/domain/repository.test.ts, e2e/entry-ui.spec.ts, e2e/history.spec.ts, e2e/dataset-file.spec.ts, e2e/scenario.spec.ts"
+      ],
+      "limitation": null
+    },
+    {
+      "id": "AC083",
+      "status": "blocked-environment",
+      "method": "real native browser/manual evidence",
+      "command_argv": null,
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": null,
+      "candidate_identity": "6baae769f9c73986fc4eb15f8d498f7ab66ff03b",
+      "evidence": [
+        "The File System Access E2E suite uses picker/writable stubs; it is adapter evidence only.",
+        "In real Chrome on file://, the OS Save picker opened for a synthetic network; Escape cancelled it and SIM kept the dataset unsaved. Filename entry through the available Windows UI controller could not be targeted reliably, so no actual write/readback/reopen or permission-denial result was observed.",
+        "User-reported real Chrome file:// test on 2026-11-12: Save to a temporary .sqlite file, Save after an edit, Save As, cancel Save As with the draft retained, and reopen/readback all succeeded. The user did not provide the temporary path and no permission prompt appeared to deny."
+      ],
+      "limitation": "The real Chrome write/readback path is user-reported, not tool-observed by this agent. Native permission denial was not exercised because Chrome did not present a prompt. No power-loss durability or external-writer locking is claimed."
+    },
+    {
+      "id": "AC084",
+      "status": "passed",
+      "method": "unit/sequence",
+      "command_argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-workflow-coherence\\SIM",
+      "exit_code": 0,
+      "candidate_identity": "b2a5491e36dedee9d4c5c3b559b4e57c21027c68",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Relevant suite targets: src/db/open.test.ts, src/db/migrate.test.ts, src/db/schema.test.ts, src/domain/repository.test.ts, src/scenario/scenario.test.ts"
+      ],
+      "limitation": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F02",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F03",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F04",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F05",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F06",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F07",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F08",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F09",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F10",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F11",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F12",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F13",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F14",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F15",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F16",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F17",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F18",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F19",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F20",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F21",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F22",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F23",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F24",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F25",
+      "disposition": "candidate-fixed",
+      "current_source": "Source commit b2a5491e36dedee9d4c5c3b559b4e57c21027c68 plus the documentation candidate for F25.",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Focused acceptance evidence appears in the mapped AC records and traceability.csv."
+      ],
+      "reason": "The audited source matched the receiving base at intake; the candidate changed the owning workflow and passed current checks."
+    },
+    {
+      "id": "F26",
+      "disposition": "deferred-with-reason",
+      "current_source": "No recovery/conflict subsystem was added by the coherence PR.",
+      "evidence": [
+        "Packet 06-DEFERRED-FEATURES.md; no schema migration or browser storage introduced."
+      ],
+      "reason": "Separate recovery and external-writer conflict product decision after coherence."
+    }
+  ],
+  "gates": [
+    {
+      "id": "G0",
+      "status": "passed",
+      "evidence": [
+        "Verified audit pin, receiving base, branch/worktree and baseline 241/94 gate; preserved unrelated original-checkout files."
+      ]
+    },
+    {
+      "id": "G1",
+      "status": "passed",
+      "evidence": [
+        "Native workflow-coherence spec/plan and packet contract bound the existing add/edit/save/import/map/capture flows; no new required metadata or schema."
+      ]
+    },
+    {
+      "id": "G2",
+      "status": "passed",
+      "evidence": [
+        "Focused RED/GREEN regression evidence for caveat/history, native stream abort, legacy values, CSV wrong-link, and bulk layout; final 308-unit suite passed."
+      ]
+    },
+    {
+      "id": "G3",
+      "status": "passed",
+      "evidence": [
+        "184 Edge/Chrome file:// cases passed offline; ten synthetic PNG/SVG pairs inspected with full-source marking and current-view context."
+      ]
+    },
+    {
+      "id": "G4",
+      "status": "passed",
+      "evidence": [
+        "npm run check on application source b2a5491: typecheck, lint, format, build, 308 unit tests and 184 Edge/Chrome offline file:// tests; exit 0.",
+        "Staged application source passed gitleaks; independent security and coverage reviews cleared HIGH findings after repair.",
+        "PR #23 exact-head Windows check passed in 4m41s and gitleaks passed; head 336896e78c2d4427d245062817b0051f8c6cb8d9.",
+        "PR #23 Windows check passed in 4m41s and gitleaks passed at 336896e; new test commit 262aa0f passed the local 308-unit/186-E2E gate and awaits hosted checks."
+      ]
+    },
+    {
+      "id": "G5",
+      "status": "passed",
+      "evidence": [
+        "Every F01-F26 and AC001-AC084 has an explicit disposition/status. AC083 remains not-run; F26 remains deferred. Resume record names next action and unchanged original checkout.",
+        "PR #23 opened and attached; AC083 is blocked-environment and AC039 remains not-run as a complete criterion.",
+        "PR #23 opened and attached; AC039 has full-app changed-record and browser component deletion evidence. AC083 remains blocked-environment.",
+        "User-reported real Chrome Save, repeat Save, Save As, cancellation and reopen/readback succeeded. Permission denial was unavailable because no prompt appeared; AC083 retains a blocked-environment limit."
+      ]
+    }
+  ],
+  "next_action": "Wait for exact-head hosted CI after the evidence update. AC083 permission denial remains blocked-environment because no prompt appeared in real Chrome; retain that limit unless a supported native denial is observed. Resolve the inherited ADR-0002 lifecycle record through its owning governance process before any merge offer.",
+  "last_updated_utc": "2026-11-12T18:08:46Z",
+  "pull_request": {
+    "number": 23,
+    "url": "https://github.com/SUaDtL/SIM/pull/23",
+    "last_hosted_pass_head": "6baae769f9c73986fc4eb15f8d498f7ab66ff03b",
+    "base": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+    "state": "open, not merged",
+    "hosted_checks": "PR #23 Windows npm run check and gitleaks passed at 6baae76; the documentation evidence update will require a fresh exact-head verdict.",
+    "governance_limit": "CodeArbiter ADR ancestry verifier rejects unchanged ADR-0002 evidence inherited from main. A user-authorized, logged one-time override allowed PR creation only; merge remains unauthorized.",
+    "observed_head_before_evidence_update": "6baae769f9c73986fc4eb15f8d498f7ab66ff03b"
+  }
+}

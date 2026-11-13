@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { MARKINGS } from "../db/markings";
-import { BANNER_COLORS, bandHeight } from "./export";
+import { BANNER_COLORS, bandHeight, layoutFrame } from "./export";
 
 const css = readFileSync(new URL("../ui/app.css", import.meta.url), "utf8");
 
@@ -26,5 +26,23 @@ describe("export banner", () => {
   it("scales the banner band with the image and keeps it readable", () => {
     expect(bandHeight(400)).toBe(28);
     expect(bandHeight(3200)).toBe(80);
+  });
+
+  it("wraps long context and legend without reducing the map rectangle", () => {
+    const frame = layoutFrame(
+      800,
+      {
+        title: "A very long synthetic dataset title repeated again and again for a narrow capture",
+        details: ["Compare: a long fictional scenario name with many words"],
+        legend: ["Depends on: consumer → provider; this is a dependency model, not measured traffic"],
+      },
+      (text, size) => text.length * size,
+    );
+    expect(frame.topLines.length).toBeGreaterThan(2);
+    expect(frame.bottomLines.length).toBeGreaterThan(1);
+    expect(frame.topLines.every((line) => line.text.length * line.size <= 760)).toBe(true);
+    expect(frame.bottomLines.every((line) => line.text.length * line.size <= 760)).toBe(true);
+    expect(frame.topHeight).toBeGreaterThan(frame.topLines.at(-1)?.y ?? 0);
+    expect(frame.bottomHeight).toBeGreaterThan(frame.bottomLines.at(-1)?.y ?? 0);
   });
 });

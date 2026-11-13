@@ -46,7 +46,7 @@ async function addNetwork(page: Page, name: string, marking: string): Promise<vo
   await page.getByRole("button", { name: "Add network" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill(name);
   await editor(page).getByLabel("Marking", { exact: true }).selectOption({ label: marking });
-  await editor(page).getByRole("button", { name: "Save network" }).click();
+  await editor(page).getByRole("button", { name: "Add network" }).click();
   await expect(editor(page).getByRole("heading", { name: "Edit network" })).toBeVisible();
 }
 
@@ -84,28 +84,32 @@ test("adds a caveat after the marking, keeps it through save and reopen, and cle
   const problems = await load(page);
   await addNetwork(page, "SIPR", "SECRET");
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
   await download;
-  await expect(status(page)).toContainText("| Saved");
+  await expect(status(page)).toContainText("| Download requested");
 
   await setCaveat(page, null);
   await expectBanner(page, "SECRET", "SECRET");
-  await expect(status(page)).toContainText("| Saved");
+  await expect(status(page)).toContainText("| Download requested");
 
   await setCaveat(page, "//rel to usa, fvey");
   await expectBanner(page, "SECRET//REL TO USA, FVEY", "SECRET");
-  await expect(status(page)).toContainText("| Unsaved");
+  await expect(status(page)).toContainText("| Changes not saved to file");
 
   await setCaveat(page, "relay.example.mil");
   await expect(page.getByTestId("dataset-message")).toContainText("A caveat may use");
   await expectBanner(page, "SECRET//REL TO USA, FVEY", "SECRET");
 
   const saved = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
   const path = info.outputPath("caveat.sqlite");
   await (await saved).saveAs(path);
   page.once("dialog", (d) => void d.accept("Other"));
   await page.getByRole("button", { name: "New" }).click();
+  await page
+    .getByRole("dialog", { name: "Unsaved changes" })
+    .getByRole("button", { name: "Discard all and continue" })
+    .click();
   await expectBanner(page, "UNCLASSIFIED", "UNCLASSIFIED");
 
   const chooser = page.waitForEvent("filechooser");
@@ -139,7 +143,7 @@ test("shows TOP SECRET with dark text on orange", async ({ page }) => {
 test("opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a demo", async ({ page }) => {
   const problems = await load(page);
   await page.getByRole("button", { name: "Open demo" }).click();
-  await expect(status(page)).toHaveText("Demo enterprise (fictional) | not saved yet | Unsaved");
+  await expect(status(page)).toHaveText("Demo enterprise (fictional) | not saved yet | Changes not saved to file");
   await expectBanner(page, "UNCLASSIFIED//DEMO - FICTIONAL DATA", "UNCLASSIFIED");
   await expect(page.getByTestId("map-summary")).toContainText("7 networks");
   await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();

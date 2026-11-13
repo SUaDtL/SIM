@@ -42,7 +42,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
     await expect(status(page)).toHaveText("Fixture enterprise | fixture.sqlite | Saved");
 
     const download = page.waitForEvent("download");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
     const file = await download;
     expect(file.suggestedFilename()).toBe("fixture.sqlite");
     const path = info.outputPath("saved.sqlite");
@@ -54,18 +54,67 @@ test.describe("without the File System Access API (download/upload fallback)", (
   });
 
   test("shows a readable error for a file that is not a dataset and keeps the current one", async ({ page }) => {
-    await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Unsaved");
+    await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Changes not saved to file");
     const chooser = page.waitForEvent("filechooser");
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "notes.sqlite", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByTestId("dataset-message")).toHaveText(/not a SIM dataset/);
-    await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Unsaved");
+    await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Changes not saved to file");
   });
 
   test("New asks for a name and starts an unsaved dataset", async ({ page }) => {
     page.once("dialog", (dialog) => void dialog.accept("Acme Corp"));
     await page.getByRole("button", { name: "New" }).click();
-    await expect(status(page)).toHaveText("Acme Corp | not saved yet | Unsaved");
+    await expect(status(page)).toHaveText("Acme Corp | not saved yet | Changes not saved to file");
+  });
+
+  test("Save file applies an active draft and requests a download in one action", async ({ page }, info) => {
+    await page.getByRole("button", { name: "Add network" }).click();
+    await page.getByTestId("editor").getByLabel("Name").fill("Draft network");
+    await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    const file = await download;
+    const path = info.outputPath("draft-saved.sqlite");
+    await file.saveAs(path);
+    const db = await openDataset(new Uint8Array(readFileSync(path)), { wasm });
+    try {
+      expect(db.exec("SELECT name FROM network")[0]?.values).toEqual([["Draft network"]]);
+    } finally {
+      db.close();
+    }
+    await expect(status(page)).toContainText("Download requested");
+  });
+
+  test("an invalid Open candidate leaves a pending draft intact without a discard decision", async ({ page }) => {
+    await page.getByRole("button", { name: "Add network" }).click();
+    const name = page.getByTestId("editor").getByLabel("Name");
+    await name.fill("Unapplied network");
+    const chooser = page.waitForEvent("filechooser");
+    await page.getByRole("button", { name: "Open", exact: true }).click();
+    await (await chooser).setFiles({ name: "invalid.sqlite", mimeType: "text/plain", buffer: Buffer.from("invalid") });
+    await expect(page.getByTestId("dataset-message")).toContainText("not a SIM dataset");
+    await expect(name).toHaveValue("Unapplied network");
+    await expect(page.getByRole("dialog", { name: "Unsaved changes" })).toHaveCount(0);
+    await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
+  });
+
+  test("a valid New candidate offers Stay and Discard for a pending draft", async ({ page }) => {
+    await page.getByRole("button", { name: "Add network" }).click();
+    const name = page.getByTestId("editor").getByLabel("Name");
+    await name.fill("Unapplied network");
+    page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    const decision = page.getByRole("dialog", { name: "Unsaved changes" });
+    await expect(decision).toBeVisible();
+    await decision.getByRole("button", { name: "Stay" }).click();
+    await expect(name).toHaveValue("Unapplied network");
+    await expect(status(page)).toContainText("Untitled dataset");
+    page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    await decision.getByRole("button", { name: "Discard all and continue" }).click();
+    await expect(status(page)).toContainText("Next dataset | not saved yet");
+    await expect(page.getByTestId("draft-status")).toBeEmpty();
   });
 });
 
@@ -109,7 +158,7 @@ test.describe("with the File System Access API (save in place)", () => {
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await expect(status(page)).toHaveText("Fixture enterprise | fixture.sqlite | Saved");
 
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
     await expect.poll(() => written(page, "fixture.sqlite")).not.toBeNull();
     expect(await networks(new Uint8Array((await written(page, "fixture.sqlite")) ?? []))).toHaveLength(2);
 
@@ -122,12 +171,126 @@ test.describe("with the File System Access API (save in place)", () => {
 
   test("does not touch browser storage", async ({ page }) => {
     await page.getByRole("button", { name: "Open", exact: true }).click();
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
     const storage = await page.evaluate(async () => ({
       local: localStorage.length,
       session: sessionStorage.length,
       idb: (await indexedDB.databases()).length,
     }));
     expect(storage).toEqual({ local: 0, session: 0, idb: 0 });
+  });
+
+  test("canceling the first native save leaves the draft unapplied", async ({ page }) => {
+    await page.evaluate(() => {
+      Object.assign(window, {
+        showSaveFilePicker: () => Promise.reject(new DOMException("cancelled", "AbortError")),
+      });
+    });
+    await page.getByRole("button", { name: "Add network" }).click();
+    const name = page.getByTestId("editor").getByLabel("Name");
+    await name.fill("Pending network");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(page.getByTestId("dataset-message")).toContainText("File save cancelled");
+    await expect(name).toHaveValue("Pending network");
+    await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
+    await expect(page.getByTestId("entity-list").getByText("Pending network")).toHaveCount(0);
+  });
+
+  test("a denied native picker reports failure without applying the draft", async ({ page }) => {
+    await page.evaluate(() => {
+      Object.assign(window, {
+        showSaveFilePicker: () => Promise.reject(new Error("denied")),
+      });
+    });
+    await page.getByRole("button", { name: "Add network" }).click();
+    await page.getByTestId("editor").getByLabel("Name").fill("Pending network");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(status(page)).toContainText("Could not save");
+    await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
+    await expect(page.getByTestId("entity-list").getByText("Pending network")).toHaveCount(0);
+  });
+
+  test("editing during a pending native picker does not save a substituted draft", async ({ page }) => {
+    await page.evaluate(() => {
+      const deferred = window as unknown as { finishPicker?: () => void };
+      Object.assign(window, {
+        showSaveFilePicker: () =>
+          new Promise((resolve) => {
+            deferred.finishPicker = () => {
+              resolve({
+                name: "stale.sqlite",
+                createWritable: () => Promise.reject(new Error("should not write")),
+              });
+            };
+          }),
+      });
+    });
+    await page.getByRole("button", { name: "Add network" }).click();
+    const name = page.getByTestId("editor").getByLabel("Name");
+    await name.fill("First draft");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    await name.fill("Second draft");
+    await page.evaluate(() => {
+      (window as unknown as { finishPicker: () => void }).finishPicker();
+    });
+    await expect(page.getByTestId("dataset-message")).toContainText("changed while choosing a file");
+    await expect(name).toHaveValue("Second draft");
+    await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
+    await expect(page.getByTestId("entity-list").getByText("Second draft")).toHaveCount(0);
+  });
+
+  test("Save and continue persists the old pending draft before installing New", async ({ page }) => {
+    await page.getByRole("button", { name: "Add network" }).click();
+    await page.getByTestId("editor").getByLabel("Name").fill("Old draft network");
+    page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await page.getByRole("button", { name: "New", exact: true }).click();
+    const decision = page.getByRole("dialog", { name: "Unsaved changes" });
+    await decision.getByRole("button", { name: "Save and continue" }).click();
+    await expect(status(page)).toContainText("Next dataset | not saved yet");
+    const bytes = await written(page, "new-Untitled dataset.sqlite");
+    expect(bytes).not.toBeNull();
+    const db = await openDataset(new Uint8Array(bytes ?? []), { wasm });
+    try {
+      expect(db.exec("SELECT name FROM network")[0]?.values).toEqual([["Old draft network"]]);
+    } finally {
+      db.close();
+    }
+  });
+
+  test("a native write failure retains the applied change for Undo and retry", async ({ page }) => {
+    await page.evaluate(() => {
+      Object.assign(window, {
+        showSaveFilePicker: () =>
+          Promise.resolve({
+            name: "failed.sqlite",
+            createWritable: () => Promise.reject(new Error("denied")),
+          }),
+      });
+    });
+    await page.getByRole("button", { name: "Add network" }).click();
+    await page.getByTestId("editor").getByLabel("Name").fill("Applied network");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(status(page)).toContainText("Could not save");
+    await expect(page.getByTestId("entity-list").getByText("Applied network")).toBeVisible();
+    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    await expect(page.getByTestId("entity-list").getByText("Applied network")).toHaveCount(0);
+  });
+
+  test("a canceled native write reports that Apply already succeeded", async ({ page }) => {
+    await page.evaluate(() => {
+      Object.assign(window, {
+        showSaveFilePicker: () =>
+          Promise.resolve({
+            name: "cancelled.sqlite",
+            createWritable: () => Promise.reject(new DOMException("cancelled", "AbortError")),
+          }),
+      });
+    });
+    await page.getByRole("button", { name: "Add network" }).click();
+    await page.getByTestId("editor").getByLabel("Name").fill("Applied network");
+    await page.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(page.getByTestId("dataset-message")).toContainText("Changes applied. File save cancelled");
+    await expect(status(page)).toContainText("Could not save");
+    await expect(page.getByTestId("entity-list").getByText("Applied network")).toBeVisible();
   });
 });

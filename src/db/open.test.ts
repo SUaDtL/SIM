@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { rawDatabase, wasm } from "../../tests/helpers/sqlite";
-import { createDataset, DatasetError, datasetName, exportDataset, MAX_DATASET_BYTES, openDataset } from "./dataset";
+import {
+  createDataset,
+  DatasetError,
+  datasetName,
+  exportDataset,
+  inspectDatasetSemantics,
+  MAX_DATASET_BYTES,
+  openDataset,
+} from "./dataset";
 import { LATEST_VERSION, migrate } from "./migrate";
 import { MIGRATIONS } from "./migrations";
 
@@ -143,6 +151,36 @@ describe("openDataset schema verification", () => {
 });
 
 describe("openDataset rejects bad rows behind a matching schema", () => {
+  it("refuses an integer identity that sql.js would round before the repository reads it", async () => {
+    const bytes = await simBytes((db) => {
+      db.run(
+        "INSERT INTO network (id, name, kind, marking) VALUES (9007199254740992, 'Far network', 'internal', 'CUI')",
+      );
+    });
+    expect(await codeOf(bytes)).toBe("UNSAFE_ID");
+  });
+
+  it("identifies the exact unsupported identity without rounding its diagnostic", async () => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO organization (id, name) VALUES (-9007199254740992, 'Far organization')");
+    });
+    const error = await openDataset(bytes, { wasm }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(DatasetError);
+    expect((error as DatasetError).code).toBe("UNSAFE_ID");
+    expect((error as DatasetError).message).toContain("organization.id=-9007199254740992");
+  });
+
+  it("accepts the exact safe integer boundary for stored identities", async () => {
+    const bytes = await simBytes((db) => {
+      db.run(
+        "INSERT INTO network (id, name, kind, marking) VALUES (9007199254740991, 'Last safe network', 'internal', 'CUI')",
+      );
+    });
+    const opened = await openDataset(bytes, { wasm });
+    expect(inspectDatasetSemantics(opened).filter((issue) => issue.code === "UNSAFE_ID")).toEqual([]);
+    expect(opened.exec("SELECT CAST(id AS TEXT) FROM network")[0]?.values).toEqual([["9007199254740991"]]);
+  });
+
   it("refuses rows that bypassed CHECK constraints", async () => {
     const bytes = await simBytes((db) => {
       db.run("PRAGMA ignore_check_constraints = ON");
@@ -163,6 +201,99 @@ describe("openDataset rejects bad rows behind a matching schema", () => {
       db.run("PRAGMA writable_schema = OFF");
     });
     expect(["CORRUPT", "SCHEMA_MISMATCH"]).toContain(await codeOf(bytes));
+  });
+});
+
+describe("openDataset legacy semantic inspection", () => {
+  it("keeps a safely representable organization cycle readable and reports its bounded witness", async () => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO organization (id, name) VALUES (1, 'One'), (2, 'Two'), (3, 'Three')");
+      db.run("UPDATE organization SET parent_id = 2 WHERE id = 1");
+      db.run("UPDATE organization SET parent_id = 3 WHERE id = 2");
+      db.run("UPDATE organization SET parent_id = 1 WHERE id = 3");
+    });
+    const opened = await openDataset(bytes, { wasm });
+    expect(inspectDatasetSemantics(opened)).toContainEqual({
+      code: "ORG_CYCLE",
+      table: "organization",
+      rowId: "1",
+      witness: "parent cycle 1 -> 2 -> 3 -> 1",
+      severity: "legacy",
+    });
+    expect(opened.exec("SELECT parent_id FROM organization WHERE id = 3")[0]?.values).toEqual([[1]]);
+  });
+
+  it("reports CDS arity and exact unrouted endpoints while preserving the legacy rows", async () => {
+    const bytes = await simBytes((db) => {
+      db.run(
+        "INSERT INTO network (id, name, kind, marking) VALUES (1, 'A', 'internal', 'CUI'), (2, 'B', 'internal', 'CUI')",
+      );
+      db.run(
+        "INSERT INTO service (id, name, network_id, marking) VALUES (1, 'Alpha', 1, 'CUI'), (2, 'Beta', 2, 'CUI')",
+      );
+      db.run("INSERT INTO cds (id, name) VALUES (5, 'Bridge')");
+      db.run("INSERT INTO cds_network (cds_id, network_id) VALUES (5, 1)");
+      db.run("INSERT INTO service_dependency (consumer_service_id, provider_service_id, via_cds_id) VALUES (1, 2, 5)");
+    });
+    const opened = await openDataset(bytes, { wasm });
+    const issues = inspectDatasetSemantics(opened);
+    expect(
+      issues.some((issue) => issue.code === "CDS_ARITY" && issue.rowId === "5" && issue.witness.includes("1 network")),
+    ).toBe(true);
+    expect(
+      issues.some((issue) => issue.code === "CDS_ROUTE" && issue.rowId === "1:2" && issue.witness.includes("2(2)")),
+    ).toBe(true);
+    expect(opened.exec("SELECT via_cds_id FROM service_dependency")[0]?.values).toEqual([[5]]);
+  });
+
+  it("reports a malformed scenario merge target without rejecting a readable v3 file", async () => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO network (id, name, kind, marking) VALUES (1, 'A', 'internal', 'CUI')");
+      db.run(
+        "INSERT INTO service (id, name, network_id, marking) VALUES (1, 'Alpha', 1, 'CUI'), (2, 'Beta', 1, 'CUI')",
+      );
+      db.run("INSERT INTO scenario (id, name) VALUES (1, 'Plan')");
+      db.run("INSERT INTO scenario_change (id, scenario_id, kind, service_id) VALUES (1, 1, 'retire', 1)");
+      db.run(
+        "INSERT INTO scenario_change (id, scenario_id, kind, service_id, into_change_id) VALUES (2, 1, 'merge', 2, 1)",
+      );
+    });
+    const opened = await openDataset(bytes, { wasm });
+    expect(
+      inspectDatasetSemantics(opened).some((issue) => issue.code === "SCENARIO_TARGET" && issue.rowId === "2"),
+    ).toBe(true);
+  });
+
+  it("reports a legacy scenario merge cycle without recursive traversal", async () => {
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO network (id, name, kind, marking) VALUES (1, 'A', 'internal', 'CUI')");
+      db.run(
+        "INSERT INTO service (id, name, network_id, marking) VALUES (1, 'Alpha', 1, 'CUI'), (2, 'Beta', 1, 'CUI')",
+      );
+      db.run("INSERT INTO scenario (id, name) VALUES (1, 'Cycle plan')");
+      db.run(
+        "INSERT INTO scenario_change (id, scenario_id, kind, service_id, into_service_id) VALUES (1, 1, 'merge', 1, 2)",
+      );
+      db.run(
+        "INSERT INTO scenario_change (id, scenario_id, kind, service_id, into_service_id) VALUES (2, 1, 'merge', 2, 1)",
+      );
+    });
+    const opened = await openDataset(bytes, { wasm });
+    expect(
+      inspectDatasetSemantics(opened).some(
+        (issue) => issue.code === "SCENARIO_CHAIN" && issue.witness.includes("1 -> 2 -> 1"),
+      ),
+    ).toBe(true);
+  });
+
+  it("retains safely readable noncanonical names and optional colors exactly", async () => {
+    const name = "  " + "L".repeat(201) + "  ";
+    const bytes = await simBytes((db) => {
+      db.run("INSERT INTO category (name, color) VALUES (?, ?)", [name, "not-a-color"]);
+    });
+    const opened = await openDataset(bytes, { wasm });
+    expect(opened.exec("SELECT name, color FROM category")[0]?.values).toEqual([[name, "not-a-color"]]);
+    expect(inspectDatasetSemantics(opened)).toEqual([]);
   });
 });
 

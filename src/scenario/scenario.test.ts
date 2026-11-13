@@ -6,7 +6,14 @@ import { populateDemo } from "../demo/demo";
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import { Repository } from "../domain/repository";
 import type { Network, Organization, Service } from "../domain/types";
-import { addedServiceId, applyScenario, compareScenario, crossDomainCount, dependencyKey } from "./scenario";
+import {
+  addedServiceId,
+  applyScenario,
+  compareScenario,
+  crossDomainCount,
+  dependencyKey,
+  serviceOrigin,
+} from "./scenario";
 
 let db: Database;
 let repo: Repository;
@@ -127,6 +134,55 @@ describe("scenario changes in the repository", () => {
 });
 
 describe("applyScenario", () => {
+  it("keeps a signed baseline service distinct from a scenario-added service", () => {
+    db.run("INSERT INTO service (id, name, network_id, marking) VALUES (-1, 'Legacy service', ?, 'CUI')", [nipr.id]);
+    const scenario = repo.createScenario({ name: "Signed IDs" });
+    const planned = repo.addScenarioChange(scenario.id, {
+      kind: "add",
+      name: "Planned service",
+      networkId: nipr.id,
+      marking: "CUI",
+    });
+
+    const projected = applyScenario(repo.snapshot(), scenario.id);
+    const ids = projected.services.map((service) => service.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(projected.services.find((service) => service.name === "Legacy service")?.id).toBe(-1);
+    const plannedId = projected.projection.plannedServiceIds.get(planned.id);
+    expect(plannedId).toBeDefined();
+    expect(plannedId).not.toBe(-1);
+    expect(serviceOrigin(projected, -1)).toEqual({ kind: "baseline", serviceId: -1 });
+    expect(serviceOrigin(projected, plannedId ?? 0)).toEqual({
+      kind: "planned",
+      scenarioId: scenario.id,
+      changeId: planned.id,
+    });
+  });
+
+  it("reserves free preferred IDs before assigning collision fallbacks and resolves merges to the planned origin", () => {
+    db.run("INSERT INTO service (id, name, network_id, marking) VALUES (-1, 'Legacy service', ?, 'CUI')", [nipr.id]);
+    const scenario = repo.createScenario({ name: "Two additions" });
+    const first = repo.addScenarioChange(scenario.id, {
+      kind: "add",
+      name: "First",
+      networkId: nipr.id,
+      marking: "CUI",
+    });
+    const second = repo.addScenarioChange(scenario.id, {
+      kind: "add",
+      name: "Second",
+      networkId: nipr.id,
+      marking: "CUI",
+    });
+    repo.addScenarioChange(scenario.id, { kind: "merge", serviceId: wiki.id, intoChangeId: first.id });
+    const projected = applyScenario(repo.snapshot(), scenario.id);
+    const firstId = projected.projection.plannedServiceIds.get(first.id);
+    expect(projected.projection.plannedServiceIds.get(second.id)).toBe(-2);
+    expect(firstId).toBe(-3);
+    expect(projected.services.some((service) => service.id === wiki.id)).toBe(false);
+    expect(projected.dependencies.some((dependency) => dependency.consumerServiceId === firstId)).toBe(true);
+  });
+
   it("merges, retires, re-homes and adds without changing As-Is", () => {
     const s = repo.createScenario({ name: "Plan" });
     repo.addScenarioChange(s.id, { kind: "merge", serviceId: siprMail.id, intoServiceId: mail.id });
@@ -147,6 +203,19 @@ describe("applyScenario", () => {
     // The merged service's support is dropped; Wiki's two links to mail become one.
     expect(toBe.support).toEqual([]);
     expect(toBe.dependencies).toEqual([{ consumerServiceId: wiki.id, providerServiceId: mail.id, viaCdsId: null }]);
+    expect(toBe.projection.impacts.droppedSupport).toEqual([
+      { serviceId: siprMail.id, tier: 1, orgId: j6.id, notes: null },
+    ]);
+    expect(toBe.projection.impacts.transferredConsumption).toContainEqual({
+      orgId: j3.id,
+      fromServiceId: siprMail.id,
+      toServiceId: mail.id,
+      coalesced: true,
+    });
+    expect(toBe.projection.impacts.coalescedDependencies).toContainEqual({
+      key: dependencyKey({ consumerServiceId: wiki.id, providerServiceId: mail.id }),
+      sourceCount: 2,
+    });
     // Wiki moved network, so it is placed afresh; Email keeps its place.
     expect(toBe.positions).toEqual([{ entity: "service", id: mail.id, x: 2, y: 2 }]);
     expect(asIs.services).toHaveLength(4);
@@ -159,10 +228,24 @@ describe("applyScenario", () => {
     repo.addDependency({ consumerServiceId: wiki.id, providerServiceId: siprMail.id, viaCdsId: guard.id });
     const s = repo.createScenario({ name: "Plan" });
     repo.addScenarioChange(s.id, { kind: "rehome", serviceId: siprMail.id, networkId: ops.id });
-    const route = applyScenario(repo.snapshot(), s.id).dependencies.find(
+    const asIs = repo.snapshot();
+    const projected = applyScenario(asIs, s.id);
+    const route = projected.dependencies.find(
       (d) => d.consumerServiceId === wiki.id && d.providerServiceId === siprMail.id,
     );
     expect(route?.viaCdsId).toBeNull();
+    const key = dependencyKey({ consumerServiceId: wiki.id, providerServiceId: siprMail.id });
+    expect(projected.projection.dependencyProvenance.get(key)).toMatchObject({
+      status: "unresolved",
+      previousViaCdsIds: [guard.id],
+      reason: "CDS no longer joins both projected networks",
+    });
+    expect(compareScenario(asIs, s.id).routeChanges).toContainEqual({
+      key,
+      beforeViaCdsId: guard.id,
+      afterViaCdsId: null,
+      status: "unresolved",
+    });
     expect(repo.listDependencies().find((d) => d.viaCdsId === guard.id)).toBeDefined();
   });
 });

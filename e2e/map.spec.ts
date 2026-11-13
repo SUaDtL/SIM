@@ -3,6 +3,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { readFileSync } from "node:fs";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
+import { toCsv } from "../src/import/csv";
 import { wasm } from "../tests/helpers/sqlite";
 
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
@@ -65,7 +66,9 @@ async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "map.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
   await expect(page.getByTestId("map-summary")).toContainText("networks");
-  await expect(page.getByTestId("dataset-status")).toHaveText(`Map fixture | map.sqlite | ${saved}`);
+  await expect(page.getByTestId("dataset-status")).toHaveText(
+    `Map fixture | map.sqlite | ${saved === "Unsaved" ? "Changes not saved to file" : "Saved"}`,
+  );
 }
 
 async function openFixture(page: Page): Promise<void> {
@@ -75,7 +78,7 @@ async function openFixture(page: Page): Promise<void> {
 /** Save through the download fallback and return the file's bytes. */
 async function save(page: Page): Promise<Uint8Array> {
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
   return new Uint8Array(readFileSync(await (await download).path()));
 }
 
@@ -103,6 +106,7 @@ interface MapView {
   edges: { source: string; target: string; classes: string[]; visible: boolean }[];
   zoom: number;
   width: number;
+  height: number;
   extent: Box;
   pan: { x: number; y: number };
 }
@@ -130,6 +134,7 @@ function readMap(page: Page): Promise<MapView> {
       edges(): Coll;
       zoom(): number;
       width(): number;
+      height(): number;
       extent(): Box;
       pan(): { x: number; y: number };
     }
@@ -154,6 +159,7 @@ function readMap(page: Page): Promise<MapView> {
       })),
       zoom: cy.zoom(),
       width: cy.width(),
+      height: cy.height(),
       extent: cy.extent(),
       pan: cy.pan(),
     };
@@ -237,13 +243,13 @@ test("updates as data is edited and opens a tapped node in the editor", async ({
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Calendar");
   await editor.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
-  await editor.getByRole("button", { name: "Save service" }).click();
+  await editor.getByRole("button", { name: "Add service" }).click();
   await expect(page.getByTestId("map-summary")).toContainText("7 services");
   let map = await readMap(page);
   expect(byLabel(map, "Calendar").parent).toBe(byLabel(map, "NIPR").id);
 
   await editor.getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
-  await editor.getByRole("button", { name: "Save service" }).click();
+  await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect.poll(async () => byLabel(await readMap(page), "Calendar").parent).toBe(byLabel(map, "SIPR").id);
 
   await editor.getByRole("button", { name: "Delete service" }).click();
@@ -301,7 +307,8 @@ test("hides links to foundational services until asked, without moving anything"
   await page.getByRole("button", { name: "Add service" }).click();
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Calendar");
-  await editor.getByRole("button", { name: "Save service" }).click();
+  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
+  await editor.getByRole("button", { name: "Add service" }).click();
   await expect(page.getByTestId("map-summary")).toContainText("7 services");
   await expect(toggle).toBeChecked();
   expect(shown(await readMap(page))).toHaveLength(5);
@@ -311,8 +318,12 @@ test("hides links to foundational services until asked, without moving anything"
 
   // A newly opened dataset starts with them hidden again (after confirming the edit may be lost).
   await toggle.check();
-  page.once("dialog", (d) => void d.accept());
-  await openFixture(page);
+  const reopening = openFixture(page);
+  await page
+    .getByRole("dialog", { name: "Unsaved changes" })
+    .getByRole("button", { name: "Discard all and continue" })
+    .click();
+  await reopening;
   await expect(toggle).not.toBeChecked();
   expect(shown(await readMap(page))).toHaveLength(3);
   expect(watch.errors).toEqual([]);
@@ -376,7 +387,7 @@ test("saves where services and networks are dragged", async ({ page }) => {
   const before = placed(map);
 
   await drag(page, map, byLabel(map, "Chat").position, { x: 60, y: 40 });
-  await expect(page.getByTestId("dataset-status")).toContainText("| Unsaved");
+  await expect(page.getByTestId("dataset-status")).toContainText("| Changes not saved to file");
   map = await readMap(page);
   expect(byLabel(map, "Chat").position.x).toBeGreaterThan((before["Chat"]?.x ?? 0) + 20);
 
@@ -399,7 +410,13 @@ test("saves where services and networks are dragged", async ({ page }) => {
   expect(byLabel(map, "Identity").position.x - (before["Identity"]?.x ?? 0)).toBeCloseTo(dx, 1);
 
   const moved = placed(map);
-  await openFile(page, await save(page), "Saved");
+  const bytes = await save(page);
+  const reopening = openFile(page, bytes, "Saved");
+  await page
+    .getByRole("dialog", { name: "Unsaved changes" })
+    .getByRole("button", { name: "Discard all and continue" })
+    .click();
+  await reopening;
   expect(near(placed(await readMap(page)), moved, 0.06)).toBe(true);
   expect(watch.errors).toEqual([]);
 });
@@ -414,13 +431,13 @@ test("places new services and networks without moving anything already placed", 
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Calendar");
   await editor.getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
-  await editor.getByRole("button", { name: "Save service" }).click();
+  await editor.getByRole("button", { name: "Add service" }).click();
   await expect(page.getByTestId("map-summary")).toContainText("7 services");
 
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page.getByRole("button", { name: "Add network" }).click();
   await editor.getByLabel("Name", { exact: true }).fill("MPE");
-  await editor.getByRole("button", { name: "Save network" }).click();
+  await editor.getByRole("button", { name: "Add network" }).click();
   await expect(page.getByTestId("map-summary")).toContainText("4 networks");
 
   const map = await readMap(page);
@@ -435,6 +452,43 @@ test("places new services and networks without moving anything already placed", 
   for (const n of ["NIPR", "SIPR", "External", "NIPR-SIPR guard"]) {
     expect(overlaps(mpe.box, byLabel(map, n).box), n).toBe(false);
   }
+  expect(watch.errors).toEqual([]);
+});
+
+test("a majority-fresh CSV batch preserves manually arranged existing leaves", async ({ page }) => {
+  const watch = await load(page);
+  await arranged(page);
+  const initial = await readMap(page);
+  await drag(page, initial, byLabel(initial, "Email").position, { x: 55, y: 35 });
+  const before = placed(await readMap(page));
+  const rows = Array.from({ length: 12 }, (_, index) => [
+    `New service ${String(index + 1)}`,
+    "SIPR",
+    "SECRET",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  await page.getByRole("button", { name: "Import CSV" }).click();
+  const dialog = page.getByRole("dialog", { name: "Import CSV" });
+  await dialog.getByLabel("CSV files").setInputFiles({
+    name: "services.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      toCsv([
+        ["name", "network", "marking", "application", "category", "provider", "foundational", "description"],
+        ...rows,
+      ]),
+      "utf8",
+    ),
+  });
+  await expect(dialog.getByTestId("import-summary")).toContainText("12 services");
+  await dialog.getByRole("button", { name: "Import", exact: true }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("18 services");
+  const after = placed(await readMap(page));
+  expect(near(Object.fromEntries(Object.entries(after).filter(([label]) => label in before)), before, 1e-6)).toBe(true);
   expect(watch.errors).toEqual([]);
 });
 
@@ -454,7 +508,7 @@ test("re-lays out the whole map only after confirming", async ({ page }) => {
     void d.accept();
   });
   await page.getByRole("button", { name: "Re-layout" }).click();
-  await expect(page.getByTestId("dataset-status")).toContainText("| Unsaved");
+  await expect(page.getByTestId("dataset-status")).toContainText("| Changes not saved to file");
   expect(message).toContain("moves every node");
   expect(near(placed(await readMap(page)), before, 1)).toBe(false);
   expect(watch.errors).toEqual([]);
@@ -467,10 +521,9 @@ async function tap(page: Page, map: MapView, at: { x: number; y: number }) {
   await page.mouse.click(canvas.x + at.x * map.zoom + map.pan.x, canvas.y + at.y * map.zoom + map.pan.y);
 }
 
-/** A model point below everything on the map, so a click there lands on the background. */
+/** A model point in the viewport's lower-right margin, clear of the fitted graph. */
 const below = (map: MapView) => {
-  const bottom = Math.max(...map.nodes.map((n) => n.box.y2));
-  return { x: map.nodes[0]?.position.x ?? 0, y: bottom + 30 };
+  return { x: (map.width - 5 - map.pan.x) / map.zoom, y: (map.height - 5 - map.pan.y) / map.zoom };
 };
 const has = (map: MapView, label: string, cls: string) => byLabel(map, label).classes.includes(cls);
 
@@ -521,6 +574,7 @@ test("keeps the chain through drags and edits and clears it when its start is de
   await editor.getByLabel("Depends on service").selectOption({ label: "Wiki (SIPR)" });
   await editor.getByLabel("Via CDS").selectOption({ label: "NIPR-SIPR guard" });
   await editor.getByRole("button", { name: "Add dependency" }).click();
+  await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect.poll(async () => has(await readMap(page), "Wiki", "chain")).toBe(true);
 
   await editor.getByRole("button", { name: "Delete service" }).click();
@@ -625,6 +679,129 @@ test("exports the current view as a PNG framed by the classification banner, wit
   expect(watch.requests).toEqual([]);
 });
 
+test("keeps an export busy through repository refresh and recovers from a synchronous render failure", async ({
+  page,
+}) => {
+  await load(page);
+  await openFixture(page);
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    const original = cy["png"] as (options: unknown) => Blob | Promise<Blob>;
+    cy["png"] = (options: unknown) => {
+      const pixels = Promise.resolve(original.call(cy, options));
+      return new Promise<Blob>((resolve) => {
+        cy["releasePng"] = () => void pixels.then(resolve);
+      });
+    };
+    cy["restorePng"] = () => {
+      cy["png"] = original;
+    };
+  });
+
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Export SVG" })).toBeDisabled();
+  await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
+  await page.getByRole("button", { name: "Add service" }).click();
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Name", { exact: true }).fill("Calendar");
+  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
+  await editor.getByRole("button", { name: "Add service" }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("7 services");
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeDisabled();
+  const download = page.waitForEvent("download");
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    (cy["releasePng"] as () => void)();
+    (cy["restorePng"] as () => void)();
+  });
+  expect((await download).suggestedFilename()).toBe("Map fixture map.png");
+  await expect(page.getByTestId("map-export-status")).toHaveText("PNG download started.");
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeEnabled();
+
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    cy["png"] = () => {
+      throw new Error("synthetic render failure");
+    };
+  });
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  await expect(page.getByTestId("map-export-status")).toHaveText("Could not export PNG. Try again.");
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeEnabled();
+
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    (cy["restorePng"] as () => void)();
+    const original = window.createImageBitmap.bind(window);
+    window.createImageBitmap = () => Promise.reject(new Error("synthetic bitmap failure"));
+    cy["restoreBitmap"] = () => {
+      window.createImageBitmap = original;
+    };
+  });
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  await expect(page.getByTestId("map-export-status")).toHaveText("Could not export PNG. Try again.");
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    (cy["restoreBitmap"] as () => void)();
+  });
+  const retry = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  expect((await retry).suggestedFilename()).toBe("Map fixture map.png");
+});
+
+test("delivers a frozen PNG with the original dataset name after replacing the dataset", async ({ page }) => {
+  await load(page);
+  await openFixture(page);
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    const original = cy["png"] as (options: unknown) => Blob | Promise<Blob>;
+    cy["png"] = (options: unknown) => {
+      const pixels = Promise.resolve(original.call(cy, options));
+      return new Promise<Blob>((resolve) => {
+        cy["releasePng"] = () => void pixels.then(resolve);
+      });
+    };
+  });
+  await page.getByRole("button", { name: "Export PNG" }).click();
+  await expect(page.getByRole("button", { name: "Export PNG" })).toBeDisabled();
+
+  const replacement = await createDataset("Replacement", wasm);
+  new Repository(replacement).createNetwork({ name: "Only", kind: "internal", marking: "UNCLASSIFIED" });
+  page.once("dialog", (dialog) => void dialog.accept());
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (
+    await chooser
+  ).setFiles({
+    name: "replacement.sqlite",
+    mimeType: "application/x-sqlite3",
+    buffer: Buffer.from(replacement.export()),
+  });
+  await expect(page.getByTestId("dataset-status")).toContainText("Replacement");
+  const download = page.waitForEvent("download");
+  await page.getByTestId("map-canvas").evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
+    (cy["releasePng"] as () => void)();
+  });
+  const frozen = await download;
+  expect(frozen.suggestedFilename()).toBe("Map fixture map.png");
+  const bytes = readFileSync(await frozen.path());
+  const data = `data:image/png;base64,${bytes.toString("base64")}`;
+  const top = await page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("no canvas");
+    context.drawImage(image, 0, 0);
+    return [...context.getImageData(2, 2, 1, 1).data.slice(0, 3)];
+  }, data);
+  expect(top).toEqual([200, 16, 46]);
+});
+
 test("exports the current view as SVG with the banner, every label and the highlight, without writing", async ({
   page,
 }) => {
@@ -664,7 +841,9 @@ test("exports the current view as SVG with the banner, every label and the highl
   }, svg);
   expect(read.error).toBeNull();
   expect(read.bands).toEqual(["#c8102e", "#c8102e"]);
-  expect(read.bannerTexts).toEqual([bannerText, bannerText]);
+  expect(read.bannerTexts.slice(-2)).toEqual([bannerText, bannerText]);
+  expect(read.bannerTexts).toContain("Map fixture — As-Is");
+  expect(read.bannerTexts).toContain("Depends on: consumer → provider");
   expect(read.width).toBe(Math.round(map.width * 2));
   const shown = map.nodes.filter((n) => n.visible && n.entity !== "network");
   for (const n of shown) expect(read.labels, n.label).toContain(n.label);

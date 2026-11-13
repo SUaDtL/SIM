@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BANNER_COLORS, bandHeight } from "./export";
+import { BANNER_COLORS, bandHeight, layoutFrame } from "./export";
 import { mapStyle } from "./style";
 import { escapeXml, type SvgEdge, type SvgNode, type SvgScene, svgDocument } from "./svg";
 
@@ -61,6 +61,20 @@ describe("escapeXml", () => {
 });
 
 describe("svgDocument", () => {
+  it("places derived title and legend outside the map rectangle, with both marking bands intact", () => {
+    const layout = layoutFrame(800, {
+      title: "Map fixture — Compare: Future",
+      details: ["Network: NIPR", "Committed document has unsaved changes"],
+      legend: ["Depends on: consumer → provider", "Cross-network dependency, no CDS recorded"],
+    });
+    const svg = svgDocument(scene(), "SECRET", null, layout);
+    expect(svg).toContain("Map fixture — Compare: Future");
+    expect(svg).toContain("Depends on: consumer → provider");
+    expect(svg).toContain(`y="${String(bandHeight(800) + layout.topHeight)}"`);
+    expect(svg).toContain(`height="${String(600 + layout.topHeight + layout.bottomHeight + 2 * bandHeight(800))}"`);
+    expect(svg).toContain("Committed document has unsaved changes");
+  });
+
   it("frames the map with the banner above and below, at the PNG export's band height", () => {
     const svg = svgDocument(scene(), "SECRET", "REL TO USA");
     const band = bandHeight(800);

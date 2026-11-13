@@ -175,6 +175,14 @@ test("hides unreadably small service labels until hovered or zoomed into", async
   ).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: await enterprise() });
   await expect(page.getByTestId("map-summary")).toContainText("services");
   const canvas = page.getByTestId("map-canvas");
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("no canvas");
+  const zoom = () => canvas.evaluate((c) => (c as unknown as { _cyreg: { cy: { zoom(): number } } })._cyreg.cy.zoom());
+  // A taller unobscured canvas may fit services above the readable-label threshold.
+  // Exercise the actual small-label state rather than assuming Fit always reaches it.
+  await page.mouse.move(box.x + 5, box.y + 5);
+  for (let i = 0; i < 30 && (await zoom()) >= 0.48; i++) await page.mouse.wheel(0, 200);
+  await expect.poll(zoom).toBeLessThan(0.5);
 
   /** The service nearest the canvas center (by id once chosen), with its on-screen label: empty means hidden. */
   const service = (id?: string) =>
@@ -201,15 +209,19 @@ test("hides unreadably small service labels until hovered or zoomed into", async
 
   const fitted = await service();
   expect(fitted.label).toBe("");
-  const box = await canvas.boundingBox();
-  if (!box) throw new Error("no canvas");
-  await page.mouse.move(box.x + fitted.at.x, box.y + fitted.at.y);
-  await expect.poll(async () => (await service(fitted.id)).label).toBe(fitted.name);
+  // Wheel/layout work can still adjust rendered positions; aim at the current
+  // node center on each poll instead of retaining an earlier screen point.
+  await expect
+    .poll(async () => {
+      const current = await service(fitted.id);
+      await page.mouse.move(box.x + current.at.x, box.y + current.at.y);
+      return (await service(fitted.id)).label;
+    })
+    .toBe(fitted.name);
 
   await page.mouse.move(box.x + 5, box.y + box.height - 5);
   await expect.poll(async () => (await service(fitted.id)).label).toBe("");
   // Zoomed in until service labels render at 8 px or more (zoom 0.5), they show without hovering.
-  const zoom = () => canvas.evaluate((c) => (c as unknown as { _cyreg: { cy: { zoom(): number } } })._cyreg.cy.zoom());
   for (let i = 0; i < 30 && (await zoom()) < 0.55; i++) await page.mouse.wheel(0, -200);
   expect(await zoom()).toBeGreaterThanOrEqual(0.55);
   await expect.poll(async () => (await service(fitted.id)).label).toBe(fitted.name);

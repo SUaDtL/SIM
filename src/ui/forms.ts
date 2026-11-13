@@ -1,6 +1,6 @@
 import { MARKINGS, type Marking } from "../db/markings";
 import type { Repository } from "../domain/repository";
-import type { NetworkKind, WriteOptions } from "../domain/types";
+import type { NetworkKind, ServiceInput, WriteOptions } from "../domain/types";
 
 export const ENTITY_TYPES = [
   "network",
@@ -90,6 +90,19 @@ const idString = (id: number | null): string => (id === null ? "" : String(id));
 /** The repository revalidates kind and marking, so an unchecked cast cannot store a bad value. */
 const asKind = (v: string): NetworkKind => v as NetworkKind;
 const asMarking = (v: string): Marking => v as Marking;
+
+export function serviceInputFromValues(v: FormValues): ServiceInput {
+  return {
+    name: str(v, "name"),
+    networkId: ref(v, "networkId") ?? 0,
+    marking: asMarking(str(v, "marking")),
+    providerOrgId: ref(v, "providerOrgId"),
+    applicationId: ref(v, "applicationId"),
+    categoryId: ref(v, "categoryId"),
+    foundational: v["foundational"] === true,
+    description: str(v, "description"),
+  };
+}
 
 const network: EntityDescriptor = {
   type: "network",
@@ -182,16 +195,7 @@ const service: EntityDescriptor = {
     };
   },
   save(repo, id, v, options) {
-    const input = {
-      name: str(v, "name"),
-      networkId: ref(v, "networkId") ?? 0,
-      marking: asMarking(str(v, "marking")),
-      providerOrgId: ref(v, "providerOrgId"),
-      applicationId: ref(v, "applicationId"),
-      categoryId: ref(v, "categoryId"),
-      foundational: v["foundational"] === true,
-      description: str(v, "description"),
-    };
+    const input = serviceInputFromValues(v);
     return (id === null ? repo.createService(input, options) : repo.updateService(id, input, options)).id;
   },
   remove: (repo, id) => {
