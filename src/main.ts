@@ -93,7 +93,8 @@ async function travel(direction: "undo" | "redo"): Promise<void> {
   render();
 }
 
-function show(text: string): void {
+function show(text: string, severity: "neutral" | "error" = "neutral"): void {
+  message.dataset["severity"] = viewRefreshFailed ? "error" : severity;
   message.textContent =
     text +
     (viewRefreshFailed
@@ -220,7 +221,7 @@ async function installCandidate(
     replace(db, fileName, handle, opened);
   } catch (error) {
     db.close();
-    show(error instanceof DatasetError ? error.message : "Could not switch datasets.");
+    show(error instanceof DatasetError ? error.message : "Could not switch datasets.", "error");
   }
 }
 
@@ -231,7 +232,7 @@ async function onNew(): Promise<void> {
   try {
     await installCandidate(await createDataset(name), request, null, null, false);
   } catch (error) {
-    show(error instanceof DatasetError ? error.message : "Could not create the dataset.");
+    show(error instanceof DatasetError ? error.message : "Could not create the dataset.", "error");
   }
 }
 
@@ -247,7 +248,7 @@ function onCaveat(): Promise<void> {
     show("");
   } catch (error) {
     if (!(error instanceof ValidationError)) throw error;
-    show(error.message);
+    show(error.message, "error");
   }
   return Promise.resolve();
 }
@@ -266,7 +267,7 @@ async function onDemo(): Promise<void> {
     // Opening it gives a fresh repository, so building the demo is not in the undo history.
     await installCandidate(db, request, null, null, false);
   } catch {
-    show("Could not prepare the demo dataset.");
+    show("Could not prepare the demo dataset.", "error");
   }
 }
 
@@ -324,7 +325,7 @@ async function onOpen(): Promise<void> {
       );
     }
   } catch (error) {
-    show(error instanceof DatasetError ? error.message : "Could not open the file.");
+    show(error instanceof DatasetError ? error.message : "Could not open the file.", "error");
   }
 }
 
@@ -348,11 +349,11 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
         return "cancelled";
       }
       if (owner.recovery && (await sameFile(handle, owner.recovery.handle))) {
-        show("Choose a dataset file separate from the recovery copy.");
+        show("Choose a dataset file separate from the recovery copy.", "error");
         return "refused";
       }
       if (state !== owner || owner.repo.currentRevision() !== revision || workspace.activeDraftToken() !== draftToken) {
-        if (state === owner) show("The dataset changed while choosing a file. Try Save file again.");
+        if (state === owner) show("The dataset changed while choosing a file. Try Save file again.", "error");
         return "refused";
       }
       const hadDraft = workspace.hasPendingDraft();
@@ -383,6 +384,7 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
             : result === "failed"
               ? failureMessage()
               : "",
+        observed.conflict || result === "failed" ? "error" : "neutral",
       );
       render();
       return result;
@@ -397,6 +399,7 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
         result === "download-requested"
           ? "Download requested. Confirm that you retained the file before discarding this dataset."
           : "Could not request the download.",
+        result === "download-requested" ? "neutral" : "error",
       );
       render();
       return result;
@@ -404,7 +407,7 @@ async function onSave(saveAs: boolean): Promise<SaveResult | "cancelled" | "refu
   } catch {
     if (state === owner) {
       owner.session.failSave();
-      show(failureMessage());
+      show(failureMessage(), "error");
       render();
     }
     return "failed";
@@ -434,7 +437,7 @@ async function onRecovery(): Promise<void> {
     const handle = await pickSaveTarget(suggestedFileName(`${owner.name} recovery`));
     if (!handle || state !== owner || request !== recoveryRequest) return;
     if (owner.handle && (await sameFile(handle, owner.handle))) {
-      show("Choose a recovery file separate from the dataset file.");
+      show("Choose a recovery file separate from the dataset file.", "error");
       return;
     }
     if (state !== owner || request !== recoveryRequest) return;
@@ -455,7 +458,8 @@ async function onRecovery(): Promise<void> {
     };
     await controller.flush();
   } catch {
-    if (state === owner) show("Could not enable recovery. Choose a separate writable recovery file and try again.");
+    if (state === owner)
+      show("Could not enable recovery. Choose a separate writable recovery file and try again.", "error");
   } finally {
     recoveryIntent = false;
   }
@@ -477,7 +481,7 @@ async function settleSavePlacement(owner: State): Promise<boolean> {
   }
   if (state !== owner) return false;
   if (observed.laterEdit || workspace.activeDraftToken() !== draftToken) {
-    show("The dataset changed while preparing the file. Try Save file again.");
+    show("The dataset changed while preparing the file. Try Save file again.", "error");
     return false;
   }
   return true;

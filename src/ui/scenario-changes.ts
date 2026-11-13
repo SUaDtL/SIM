@@ -2,8 +2,9 @@ import { MARKINGS, type Marking } from "../db/markings";
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import type { ScenarioChange, ScenarioChangeInput } from "../domain/types";
-import { applyScenario } from "../scenario/scenario";
+import { applyScenario, serviceOrigin } from "../scenario/scenario";
 import { button, el, option } from "./dom";
+import type { EntityType } from "./forms";
 
 /**
  * The changes in one scenario (WORK-013): each as a row with Remove, and a form to add one. Every
@@ -71,6 +72,7 @@ export function createScenarioChanges(
   repo: Repository,
   scenarioId: number,
   onIntentChanged: () => void = () => undefined,
+  onInspect?: (target: { type: EntityType; id: number }) => void,
 ): ScenarioChangeBuilder {
   let all = repo.listScenarioChanges(scenarioId);
   const message = el("p", { class: "message", "data-testid": "change-message", role: "alert" });
@@ -312,7 +314,8 @@ export function createScenarioChanges(
     );
     empty.hidden = all.length > 0;
     const issues = repo.scenarioNameCollisions(scenarioId);
-    const projection = applyScenario(repo.snapshot(), scenarioId).projection;
+    const projected = applyScenario(repo.snapshot(), scenarioId);
+    const projection = projected.projection;
     const unresolved = [...projection.dependencyProvenance.values()].filter(
       (dependency) => dependency.status === "unresolved",
     );
@@ -334,6 +337,49 @@ export function createScenarioChanges(
         ? `${String(impact.coalescedDependencies.length)} dependency link${impact.coalescedDependencies.length === 1 ? " is" : "s are"} coalesced in the projection.`
         : "",
     ].filter(Boolean);
+    const targets = new Map<string, { type: EntityType; id: number; label: string }>();
+    const addTarget = (type: EntityType, id: number, label: string): void => {
+      targets.set(`${type}:${String(id)}`, { type, id, label });
+    };
+    const addService = (id: number): void => {
+      const origin = serviceOrigin(projected, id);
+      if (origin.kind === "planned") {
+        addTarget("scenario", origin.scenarioId, `Inspect originating scenario change ${String(origin.changeId)}`);
+        return;
+      }
+      const record = repo.getService(origin.serviceId);
+      if (!record) return;
+      const network = repo.getNetwork(record.networkId);
+      addTarget("service", record.id, `Inspect service ${record.name} (${network?.name ?? "Unavailable"})`);
+    };
+    for (const issue of issues) {
+      for (const id of issue.serviceIds) addService(id);
+      const network = repo.getNetwork(issue.networkId);
+      if (network) addTarget("network", network.id, `Inspect affected network ${network.name}`);
+    }
+    for (const route of unresolved) {
+      for (const source of route.sourceDependencies) {
+        // Source provenance uses stored baseline IDs, never projected IDs or parsed display names.
+        for (const id of [source.consumerServiceId, source.providerServiceId]) {
+          const record = repo.getService(id);
+          if (record)
+            addTarget(
+              "service",
+              id,
+              `Inspect service ${record.name} (${repo.getNetwork(record.networkId)?.name ?? "Unavailable"})`,
+            );
+        }
+      }
+      for (const id of route.previousViaCdsIds) {
+        const cds = repo.getCds(id);
+        if (cds) addTarget("cds", id, `Inspect CDS ${cds.name}`);
+      }
+      for (const id of route.responsibleChangeIds) {
+        const change = all.find((item) => item.id === id);
+        if (change)
+          addTarget("scenario", change.scenarioId, `Inspect originating scenario change ${String(change.id)}`);
+      }
+    }
     diagnostics.replaceChildren(
       ...(issues.length > 0
         ? [
@@ -342,6 +388,13 @@ export function createScenarioChanges(
           ]
         : []),
       ...(effects.length > 0 ? [el("ul", {}, ...effects.map((effect) => el("li", {}, effect)))] : []),
+      ...[...targets.values()].map((target) => {
+        const control = button(target.label, () => {
+          onInspect?.({ type: target.type, id: target.id });
+        });
+        control.disabled = onInspect === undefined;
+        return control;
+      }),
     );
     diagnostics.hidden = issues.length === 0 && effects.length === 0;
   }

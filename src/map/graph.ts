@@ -160,6 +160,8 @@ export function summarize(
   graph: Graph,
   view: {
     readonly foundationalHidden?: boolean;
+    /** Actual hidden logical dependencies after chain/focus/filter visibility has been applied. */
+    readonly hiddenFoundationalCount?: number;
     /** The highlighted chain and the name of the node it starts from. */
     readonly chain?: Chain & { readonly label: string };
     /** Element IDs hidden by a filter. */
@@ -172,7 +174,8 @@ export function summarize(
   const deps = [...byDependency.values()];
   const of = (kind: EdgeKind) => String(deps.filter((d) => d.kind === kind).length);
   const unresolved = deps.filter((d) => d.kind === "unresolved").length;
-  const hidden = view.foundationalHidden ? deps.filter((d) => d.foundational).length : 0;
+  const hidden =
+    view.hiddenFoundationalCount ?? (view.foundationalHidden ? deps.filter((d) => d.foundational).length : 0);
   return (
     `${count(entities("network"), "network")}, ${count(entities("service"), "service")}, ` +
     `${String(entities("cds"))} CDS. ${count(deps.length, "dependency", "dependencies")}: ${of("local")} local, ` +

@@ -198,7 +198,7 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export SVG" }).click();
   const image = readFileSync(await (await download).path(), "utf8");
-  expect(image).toContain("Selection journey — Compare: Plan");
+  expect(image).toContain("Selection journey / Compare: Plan");
 });
 
 test("AC021: a late older Open candidate cannot replace the newer one", async ({ page }) => {

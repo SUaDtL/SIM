@@ -104,6 +104,10 @@ export const mapStyle: StylesheetJson = [
   },
   { selector: "node.service.merge-target", style: { "border-color": "#1a7f37", "border-width": 4 } },
   {
+    selector: "node.service.remote-endpoint",
+    style: { "border-style": "dashed", "border-width": 3, "border-color": "#52677d" },
+  },
+  {
     selector: "node.service.rehomed",
     style: { "border-color": "#6f42c1", "border-width": 3, "border-style": "dashed" },
   },

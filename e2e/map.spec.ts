@@ -701,6 +701,8 @@ test("keeps an export busy through repository refresh and recovers from a synchr
   await page.getByRole("button", { name: "Export PNG" }).click();
   await expect(page.getByRole("button", { name: "Export PNG" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Export SVG" })).toBeDisabled();
+  await expect(page.getByTestId("map-export-status")).toHaveText("Exporting PNG…");
+  await expect(page.getByTestId("map-area")).toHaveAttribute("aria-busy", "true");
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
   await page.getByRole("button", { name: "Add service" }).click();
   const editor = page.getByTestId("editor");
@@ -718,6 +720,7 @@ test("keeps an export busy through repository refresh and recovers from a synchr
   expect((await download).suggestedFilename()).toBe("Map fixture map.png");
   await expect(page.getByTestId("map-export-status")).toHaveText("PNG download started.");
   await expect(page.getByRole("button", { name: "Export PNG" })).toBeEnabled();
+  await expect(page.getByTestId("map-area")).toHaveAttribute("aria-busy", "false");
 
   await page.getByTestId("map-canvas").evaluate((container) => {
     const cy = (container as unknown as { _cyreg: { cy: Record<string, unknown> } })._cyreg.cy;
@@ -842,7 +845,7 @@ test("exports the current view as SVG with the banner, every label and the highl
   expect(read.error).toBeNull();
   expect(read.bands).toEqual(["#c8102e", "#c8102e"]);
   expect(read.bannerTexts.slice(-2)).toEqual([bannerText, bannerText]);
-  expect(read.bannerTexts).toContain("Map fixture — As-Is");
+  expect(read.bannerTexts).toContain("Map fixture / As-Is");
   expect(read.bannerTexts).toContain("Depends on: consumer → provider");
   expect(read.width).toBe(Math.round(map.width * 2));
   const shown = map.nodes.filter((n) => n.visible && n.entity !== "network");

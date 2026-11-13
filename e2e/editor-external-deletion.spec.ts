@@ -38,7 +38,26 @@ test("AC039: an external deletion keeps the pending draft until its targeted clo
       [1, { id: 1, name: "Orders zone", kind: "internal", marking: "UNCLASSIFIED", description: "" }],
       [2, { id: 2, name: "Other zone", kind: "internal", marking: "UNCLASSIFIED", description: "" }],
     ]);
-    const repository = { getNetwork: (id: number) => networks.get(id) };
+    const repository = {
+      getNetwork: (id: number) => networks.get(id),
+      listNetworks: () => [...networks.values()],
+      snapshot: () => ({
+        marking: "UNCLASSIFIED",
+        caveat: null,
+        networks: [...networks.values()],
+        services: [],
+        organizations: [],
+        applications: [],
+        categories: [],
+        cds: [],
+        support: [],
+        consumption: [],
+        dependencies: [],
+        scenarios: [],
+        scenarioChanges: [],
+        positions: [],
+      }),
+    };
     const editor = harness.SIMEditorHarness.createEditor({
       repo: () => repository,
       selectionChanged: () => undefined,

@@ -1,0 +1,833 @@
+{
+  "receiving_base": "a70d59843cf295d9405d7570b7221112d9d82666",
+  "review_pin": "a8a330c66f4b075dedc6e40c17fb122359a77fe3",
+  "findings": [
+    {
+      "id": "F01",
+      "journey": "Create a service",
+      "title": "Missing references interrupt the task",
+      "observation": "Network, provider organization, application and category are existing-record selects. New services cannot be started through the list when no network exists.",
+      "consequence": "A missing prerequisite sends the user into a different entity workflow before they can finish the service.",
+      "evidence": "Executed component + source",
+      "probes": [
+        "editor-journey-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/forms.ts",
+          "line_start": 143,
+          "line_end": 174,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/forms.ts#L143-L174",
+          "label": "forms.ts"
+        },
+        {
+          "path": "src/ui/list-panel.ts",
+          "line_start": 22,
+          "line_end": 38,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/list-panel.ts#L22-L38",
+          "label": "list-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 830,
+          "line_end": 835,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L830-L835",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "Foundation",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts; src/ui/list-panel.ts",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: inline network and provider creation retain a new service draft"
+      ]
+    },
+    {
+      "id": "F02",
+      "journey": "Create a service",
+      "title": "The detour commits an incomplete intention",
+      "observation": "In the synthetic production-component journey, Apply and continue created Reporting with no provider. Creating Platform Operations afterward did not link it back. Stay retained service text while the list had already changed to Organizations.",
+      "consequence": "The user must find the service again and finish a relationship they already intended.",
+      "evidence": "Executed component",
+      "probes": [
+        "editor-journey-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/workspace.ts",
+          "line_start": 85,
+          "line_end": 125,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/workspace.ts#L85-L125",
+          "label": "workspace.ts"
+        },
+        {
+          "path": "src/ui/list-panel.ts",
+          "line_start": 30,
+          "line_end": 42,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/list-panel.ts#L30-L42",
+          "label": "list-panel.ts"
+        }
+      ],
+      "scope": "Foundation / R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: bounded child editor",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: inline creation keeps explicit service defaults and parked relation-only intent"
+      ]
+    },
+    {
+      "id": "F03",
+      "journey": "Create or edit",
+      "title": "New-service relationships are a second step",
+      "observation": "Support, organizational consumers and dependencies are rendered only after a service has an ID. A new-record form has no direct Cancel or Discard button.",
+      "consequence": "Users must first Add the service to work on its connections; leaving a draft uses indirect navigation.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 496,
+          "line_end": 520,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L496-L520",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 591,
+          "line_end": 608,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L591-L608",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "Foundation / R2",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/domain/repository.ts: createServiceDraft",
+      "current_evidence": [
+        "src/domain/initial-service.test.ts: creates initial fields and relationships as one undoable aggregate"
+      ]
+    },
+    {
+      "id": "F04",
+      "journey": "Navigate records",
+      "title": "References cannot be followed",
+      "observation": "Support, organizational consumer and dependency rows have plain labels. Related scalar fields are selects. Rows do not offer an Inspect action.",
+      "consequence": "Users must remember a name, change entity type or search, and reconstruct the previous context.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 622,
+          "line_end": 716,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L622-L716",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 830,
+          "line_end": 835,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L830-L835",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/workspace.ts: peek",
+      "current_evidence": [
+        "e2e/connected-navigation.spec.ts: reference peek preserves scalar and support draft, returns focus, and adds no history"
+      ]
+    },
+    {
+      "id": "F05",
+      "journey": "Navigate records",
+      "title": "Reverse relationships are absent from details",
+      "observation": "Organization, application, category, network and CDS editors have no derived relationship sections. Service details list outgoing dependencies and consuming organizations, but no incoming dependent services.",
+      "consequence": "Users cannot answer who uses this service or where this organization, application or CDS is used from that record.",
+      "evidence": "Source + executed component",
+      "probes": [
+        "editor-journey-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 516,
+          "line_end": 520,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L516-L520",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 718,
+          "line_end": 735,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L718-L735",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "R1 / R2",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/relations.ts: relatedEntities",
+      "current_evidence": [
+        "src/ui/relations.test.ts; e2e/connected-navigation.spec.ts: non-map references expose separate recorded reverse roles and application/category membership"
+      ]
+    },
+    {
+      "id": "F06",
+      "journey": "Navigate records",
+      "title": "List, map and details have separate selection contexts",
+      "observation": "Selecting a list row opens the editor without a map-reveal call. Contextual Add service leaves the list category at Networks. Map view changes do not coordinate the active inspector.",
+      "consequence": "The three regions can describe different records or scopes, requiring the user to work out which one a command affects.",
+      "evidence": "Source + executed component",
+      "probes": [
+        "shell-focus-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/workspace.ts",
+          "line_start": 104,
+          "line_end": 168,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/workspace.ts#L104-L168",
+          "label": "workspace.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 179,
+          "line_end": 184,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L179-L184",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 812,
+          "line_end": 833,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L812-L833",
+          "label": "map-view.ts"
+        }
+      ],
+      "scope": "R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/workspace.ts: open/back; src/ui/list-panel.ts: reveal",
+      "current_evidence": [
+        "e2e/connected-navigation.spec.ts: accepted Back restores prior service, list filter and map framing without Undo"
+      ]
+    },
+    {
+      "id": "F07",
+      "journey": "Navigate records",
+      "title": "Stay does not cancel Find's map effects",
+      "observation": "Current Find clears filters, changes the chain and centers the target before invoking the editor draft decision. The extracted-handler probe retained editor A after Stay while the map was already centered on B.",
+      "consequence": "A user can protect their draft but still lose the view they were using.",
+      "evidence": "Source-extracted handler probe",
+      "probes": [
+        "map-current-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 362,
+          "line_end": 376,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L362-L376",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "line_start": 85,
+          "line_end": 102,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/workspace.ts#L85-L102",
+          "label": "workspace.ts"
+        }
+      ],
+      "scope": "Immediate repair / R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/map/map-view.ts: navigateFound admission",
+      "current_evidence": [
+        "e2e/connected-navigation.spec.ts: Stay rejects a Find request before selection, filters, chain or framing change"
+      ]
+    },
+    {
+      "id": "F08",
+      "journey": "Find a record",
+      "title": "Find matches exact display strings",
+      "observation": "Find requires the qualified service label, returns false silently for a bare name, and selects the first matching network/CDS display name. The list search covers only the chosen entity type.",
+      "consequence": "Users need prior knowledge of type and label format; duplicate names can resolve to the wrong type.",
+      "evidence": "Source-extracted handler probe + source",
+      "probes": [
+        "map-current-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 339,
+          "line_end": 376,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L339-L376",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 657,
+          "line_end": 662,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L657-L662",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/ui/list-panel.ts",
+          "line_start": 80,
+          "line_end": 105,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/list-panel.ts#L80-L105",
+          "label": "list-panel.ts"
+        }
+      ],
+      "scope": "R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/relations.ts; src/map/map-view.ts: typed results",
+      "current_evidence": [
+        "e2e/connected-navigation.spec.ts: partial Find keeps duplicate services and cross-type names distinct with keyboard selection"
+      ]
+    },
+    {
+      "id": "F09",
+      "journey": "Inspect a projection",
+      "title": "Projected context has an incomplete lifecycle",
+      "observation": "Projected inspection clears current editor identity. Ordinary refresh/reload return without it. Edit As-Is switches view and opens the baseline record without revealing it through any retained filter.",
+      "consequence": "Details can outlive their displayed projection; an intentionally opened baseline service can remain hidden on the map.",
+      "evidence": "Source inference; integrated journey still needed",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 109,
+          "line_end": 146,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L109-L146",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 739,
+          "line_end": 764,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L739-L764",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "line_start": 149,
+          "line_end": 165,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/workspace.ts#L149-L165",
+          "label": "workspace.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 829,
+          "line_end": 833,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L829-L833",
+          "label": "map-view.ts"
+        }
+      ],
+      "scope": "R1",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/workspace.ts: projectedOrigin lifecycle",
+      "current_evidence": [
+        "e2e/connected-projection.spec.ts: View invalidation, planned-origin Undo, Edit As-Is and Back"
+      ]
+    },
+    {
+      "id": "F10",
+      "journey": "Understand a connection",
+      "title": "Dependency rows lose endpoint identity",
+      "observation": "The add picker includes a provider's network, but existing dependency rows omit it. The executed editor rendered two distinct Directory providers as identical Directory rows.",
+      "consequence": "The user cannot confidently inspect or remove the intended same-named provider from the row label.",
+      "evidence": "Executed component + source",
+      "probes": [
+        "editor-journey-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 680,
+          "line_end": 716,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L680-L716",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "R2",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: qualified dependency labels",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing"
+      ]
+    },
+    {
+      "id": "F11",
+      "journey": "Change a connection",
+      "title": "Routes require remove and re-add",
+      "observation": "An existing dependency has Remove only. The composer offers every CDS rather than candidates for the intended network pair. Final repository validation still refuses invalid changes.",
+      "consequence": "A route correction is cumbersome, and the UI offers choices that fail late.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 680,
+          "line_end": 716,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L680-L716",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/domain/repository.ts",
+          "line_start": 657,
+          "line_end": 690,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/domain/repository.ts#L657-L690",
+          "label": "repository.ts"
+        }
+      ],
+      "scope": "R2",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: direct staged route editor",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing"
+      ]
+    },
+    {
+      "id": "F12",
+      "journey": "Inspect a connection",
+      "title": "Map edges cannot be inspected",
+      "observation": "The map tap handler returns for non-node targets. There is no connection-level inspector for a direct edge or either segment of a CDS route.",
+      "consequence": "Users can see a line but cannot use it to inspect its endpoints, meaning or route.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 625,
+          "line_end": 638,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L625-L638",
+          "label": "map-view.ts"
+        }
+      ],
+      "scope": "R2",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/workspace.ts: inspectConnection; src/map/map-view.ts: edge tap",
+      "current_evidence": [
+        "e2e/connected-focus.spec.ts: both CDS segments open the same owning connection inspector without writing"
+      ]
+    },
+    {
+      "id": "F13",
+      "journey": "Edit a connection",
+      "title": "Control reconstruction loses working position",
+      "observation": "Relationship changes reconstruct the relation subtree. A focused support selector and a focused selected list button both became BODY in jsdom; the support draft itself was correctly retained.",
+      "consequence": "Keyboard position can be lost after a meaningful action, even though data is safe.",
+      "evidence": "Executed DOM component; no browser Tab/AT claim",
+      "probes": [
+        "shell-focus-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 612,
+          "line_end": 648,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L612-L648",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/list-panel.ts",
+          "line_start": 93,
+          "line_end": 105,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/list-panel.ts#L93-L105",
+          "label": "list-panel.ts"
+        }
+      ],
+      "scope": "Immediate repair",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: targeted reconciliation and focus",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh"
+      ]
+    },
+    {
+      "id": "F14",
+      "journey": "Focus the map",
+      "title": "Strict filters remove boundary dependencies",
+      "observation": "Network A filtering retained Caller and Reporting but hid Caller \u2192 Identity on B, including its CDS route. Filtering to Caller's provider organization retained Caller with zero visible dependencies.",
+      "consequence": "A user trying to understand connections can hide the very relationships they need to inspect.",
+      "evidence": "Executed complete graph implementation",
+      "probes": [
+        "map-current-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/map/graph.ts",
+          "line_start": 302,
+          "line_end": 338,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/graph.ts#L302-L338",
+          "label": "graph.ts"
+        }
+      ],
+      "scope": "R3",
+      "entry_assessment": "present",
+      "disposition": "resolved-with-separate-focus",
+      "current_source": "src/map/focus.ts; strict filterGraph unchanged",
+      "current_evidence": [
+        "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px and 1024px"
+      ]
+    },
+    {
+      "id": "F15",
+      "journey": "Focus the map",
+      "title": "Chain highlighting cannot ask a narrow directional question",
+      "observation": "A chain contains both complete upstream and downstream walks. It correctly avoids pulling in another consumer merely because it shares a provider.",
+      "consequence": "There is no direct-only Depends on or Used by view with deliberate expansion.",
+      "evidence": "Executed complete graph implementation",
+      "probes": [
+        "map-current-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/map/graph.ts",
+          "line_start": 218,
+          "line_end": 287,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/graph.ts#L218-L287",
+          "label": "graph.ts"
+        }
+      ],
+      "scope": "R3",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/map/focus.ts: directed traversal",
+      "current_evidence": [
+        "src/map/focus.test.ts: direct/expand/cycle cases; e2e/connected-focus.spec.ts: directional focus expands explicitly without data writes or position changes"
+      ]
+    },
+    {
+      "id": "F16",
+      "journey": "Read the map",
+      "title": "Foundational visibility summary can contradict the graph",
+      "observation": "With the toggle off and a selected chain, real headless Cytoscape showed one foundational dependency while the summary counted both foundational dependencies as hidden.",
+      "consequence": "The text description can disagree with the visible highlight.",
+      "evidence": "Executed graph + headless Cytoscape; no screenshot",
+      "probes": [
+        "map-current-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/map/graph.ts",
+          "line_start": 162,
+          "line_end": 185,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/graph.ts#L162-L185",
+          "label": "graph.ts"
+        },
+        {
+          "path": "src/map/style.ts",
+          "line_start": 118,
+          "line_end": 135,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/style.ts#L118-L135",
+          "label": "style.ts"
+        }
+      ],
+      "scope": "Immediate repair / R3",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/map/map-view.ts: actual visible logical dependency count; src/map/graph.ts: summarize",
+      "current_evidence": [
+        "src/map/graph.test.ts: reports actual hidden foundational dependencies when a chain reveals a normally hidden route"
+      ]
+    },
+    {
+      "id": "F17",
+      "journey": "Capture a view",
+      "title": "Export feedback is visually hidden",
+      "observation": "PNG/SVG success and error text is written to a sr-only status paragraph. Progress is indicated only by disabled buttons with unchanged labels.",
+      "consequence": "A failed export can leave a sighted user with only a re-enabled button and no visible explanation.",
+      "evidence": "Source + CSS",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 174,
+          "line_end": 177,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L174-L177",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "line_start": 448,
+          "line_end": 572,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/map/map-view.ts#L448-L572",
+          "label": "map-view.ts"
+        },
+        {
+          "path": "src/ui/app.css",
+          "line_start": 217,
+          "line_end": 223,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/app.css#L217-L223",
+          "label": "app.css"
+        }
+      ],
+      "scope": "Immediate repair / R3",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/map/map-view.ts: visible export status and aria-busy",
+      "current_evidence": [
+        "e2e/map.spec.ts: held capture progress; e2e/connected-focus.spec.ts: cancellation and rendering failure"
+      ]
+    },
+    {
+      "id": "F18",
+      "journey": "Work in the editor",
+      "title": "The workspace cannot focus the active task",
+      "observation": "The grid reserves 260px for the list and 340px for details, with no responsive breakpoint or editor collapse. Apply/Discard sit above all service relationships and are not sticky.",
+      "consequence": "Long relationship work and map work compete for fixed space; applying requires leaving the active lower section.",
+      "evidence": "Source and width arithmetic; no browser geometry claim",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/app.css",
+          "line_start": 139,
+          "line_end": 163,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/app.css#L139-L163",
+          "label": "app.css"
+        },
+        {
+          "path": "src/ui/app.css",
+          "line_start": 361,
+          "line_end": 365,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/app.css#L361-L365",
+          "label": "app.css"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 496,
+          "line_end": 520,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L496-L520",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "Supporting polish, not a fourth major feature",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/workspace.ts: Focus editor; src/ui/app.css: responsive form/actions",
+      "current_evidence": [
+        "e2e/connected-focus.spec.ts: keyboard editor focus keeps Apply reachable at laptop width and restores the map"
+      ]
+    },
+    {
+      "id": "F19",
+      "journey": "Review an edit",
+      "title": "A warning acknowledgement can outlive its support-note payload",
+      "observation": "The executed editor warned about first.example.mil; after changing the support note to second.example.mil, Save anyway stored the changed value under the old visible warning.",
+      "consequence": "The confirmation no longer describes the exact content being applied.",
+      "evidence": "Executed production editor + real repository",
+      "probes": [
+        "editor-integrity-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 338,
+          "line_end": 352,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L338-L352",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 489,
+          "line_end": 493,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L489-L493",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 637,
+          "line_end": 640,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L637-L640",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "Immediate repair",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: full exact draft signature; src/domain/repository.ts: aggregate finding collection",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: changed support note cannot reuse an old sensitive acknowledgement; src/domain/initial-service.test.ts: all changed scalar/support findings"
+      ]
+    },
+    {
+      "id": "F20",
+      "journey": "Recover from an issue",
+      "title": "Diagnostics do not lead to the affected object",
+      "observation": "Delete blockers and scenario diagnostics are text. Scenario rows have Remove only; Open scenario carries no specific change ID. Import note classes cap visible detail at 50, close after Import, and leave a count summary; open-file issues expose only three witnesses.",
+      "consequence": "A correct refusal still sends the user to manually locate and repair its cause.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 551,
+          "line_end": 589,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L551-L589",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/scenario-changes.ts",
+          "line_start": 291,
+          "line_end": 340,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/scenario-changes.ts#L291-L340",
+          "label": "scenario-changes.ts"
+        },
+        {
+          "path": "src/ui/import-dialog.ts",
+          "line_start": 14,
+          "line_end": 51,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/import-dialog.ts#L14-L51",
+          "label": "import-dialog.ts"
+        },
+        {
+          "path": "src/ui/import-dialog.ts",
+          "line_start": 202,
+          "line_end": 219,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/import-dialog.ts#L202-L219",
+          "label": "import-dialog.ts"
+        },
+        {
+          "path": "src/main.ts",
+          "line_start": 283,
+          "line_end": 313,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/main.ts#L283-L313",
+          "label": "main.ts"
+        }
+      ],
+      "scope": "R1 first; full issue review later",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/domain/errors.ts: typed diagnostic targets; src/ui/editor-panel.ts; src/ui/scenario-changes.ts",
+      "current_evidence": [
+        "e2e/route-diagnostics.spec.ts; e2e/delete-consequences.spec.ts; e2e/scenario-builder.spec.ts"
+      ]
+    },
+    {
+      "id": "F21",
+      "journey": "Start or learn",
+      "title": "Guidance does not reflect the actual starting state",
+      "observation": "Closing details in a populated fixture still showed Create first network. The header exposes nine actions and SQLite version but no in-app help surface. Literal template examples are not a self-contained sample import.",
+      "consequence": "The user must learn record order, terminology and repair paths from outside the task.",
+      "evidence": "Source + executed components/parser",
+      "probes": [
+        "shell-focus-probe-results.json",
+        "template-example-probe-results.json"
+      ],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 244,
+          "line_end": 254,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L244-L254",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/main.ts",
+          "line_start": 447,
+          "line_end": 467,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/main.ts#L447-L467",
+          "label": "main.ts"
+        },
+        {
+          "path": "src/import/templates.ts",
+          "line_start": 28,
+          "line_end": 77,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/import/templates.ts#L28-L77",
+          "label": "templates.ts"
+        }
+      ],
+      "scope": "Small guidance fixes; sample bundle later",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/ui/editor-panel.ts: initial guidance derived from actual networks",
+      "current_evidence": [
+        "e2e/connected-navigation.spec.ts: existing-network guidance and normalized unchanged Apply preserve the saved checkpoint"
+      ]
+    },
+    {
+      "id": "F22",
+      "journey": "Read status",
+      "title": "Success, cancellation and failure share danger styling",
+      "observation": "Every dataset-message uses the danger color, including successful import and neutral save/download messages.",
+      "consequence": "Status severity is harder to distinguish at a glance.",
+      "evidence": "Source + CSS; no contrast measurement",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/app.css",
+          "line_start": 67,
+          "line_end": 70,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/app.css#L67-L70",
+          "label": "app.css"
+        },
+        {
+          "path": "src/main.ts",
+          "line_start": 283,
+          "line_end": 288,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/main.ts#L283-L288",
+          "label": "main.ts"
+        },
+        {
+          "path": "src/main.ts",
+          "line_start": 336,
+          "line_end": 375,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/main.ts#L336-L375",
+          "label": "main.ts"
+        }
+      ],
+      "scope": "Immediate polish",
+      "entry_assessment": "present",
+      "disposition": "resolved",
+      "current_source": "src/main.ts: explicit outcome severity; src/ui/editor-panel.ts: neutral success",
+      "current_evidence": [
+        "e2e/dataset-file.spec.ts: invalid dataset error severity; e2e/session-import-journeys.spec.ts: import neutral severity; e2e/entry-ui.spec.ts: success not error"
+      ]
+    },
+    {
+      "id": "F23",
+      "journey": "Preserve relationship intent",
+      "title": "An unadded selection is not a draft relation",
+      "observation": "Choosing a consumer/dependency option does not add it; a separate Add action does. Any relation change rebuilds those controls, resetting other unadded selections.",
+      "consequence": "A user can mistake a selected option for a staged connection or lose the choice while editing another relation.",
+      "evidence": "Source",
+      "probes": [],
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 612,
+          "line_end": 614,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L612-L614",
+          "label": "editor-panel.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "line_start": 652,
+          "line_end": 716,
+          "url": "https://github.com/SUaDtL/SIM/blob/a8a330c66f4b075dedc6e40c17fb122359a77fe3/src/ui/editor-panel.ts#L652-L716",
+          "label": "editor-panel.ts"
+        }
+      ],
+      "scope": "R2",
+      "entry_assessment": "present",
+      "disposition": "resolved-by-preserving-pending-intent",
+      "current_source": "src/ui/editor-panel.ts: independent unadded picks retained across render",
+      "current_evidence": [
+        "e2e/connected-editor.spec.ts: unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh; picks remain uncommitted until Add"
+      ]
+    }
+  ],
+  "assessment": "Original historical observations retained verbatim. Receiving editor/map/repository blobs matched the pin. Current dispositions identify the implementation and exact assertions; execution outcomes are in EXECUTION-STATUS.json and TEST-RESULTS.md. Strict filters remain strict and unadded picks remain pending by design."
+}

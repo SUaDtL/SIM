@@ -6,6 +6,20 @@ All notable changes to SIM are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Optional chosen-file recovery for applied changes, with separate status, retry and stop controls; native saves refuse an externally changed file.
+- Contextual creation of missing service references while preserving the parent draft, with atomic initial service relationships.
+- Typed partial Find, read-only reference peeks, recorded reverse relationships and Back with restored list and map context.
+- Direct dependency route editing, distinct incoming and outgoing ownership, and shared connection inspection with projected provenance.
+- Directional and network-boundary map focus, explicit expansion, faithful focused PNG/SVG capture and a responsive editor focus mode.
+
+### Fixed
+
+- Sensitive-input confirmation binds all changed service fields and support notes to the exact current draft.
+- Rejected navigation leaves filters, selection, framing and drafts unchanged; stale navigation decisions cannot cross a dataset replacement.
+- Relationship refresh retains unadded choices and focus, foundational counts describe visible routes, and capture progress and errors remain visible.
+
 ## [0.1.0] — 2026-11-12
 
 ### Added

@@ -16,12 +16,14 @@ export interface ListPanelContext {
 export interface ListPanel {
   readonly element: HTMLElement;
   render(): void;
+  viewContext(): { type: EntityType; filter: string; collapsed: boolean; scroll: number };
+  restoreContext(context: { type: EntityType; filter: string; collapsed: boolean; scroll: number }): void;
+  reveal(type: EntityType): void;
 }
 
 /** Why a new item of this type cannot be added yet, or null when it can. */
 function addBlocker(repo: Repository, type: EntityType): string | null {
   const networks = repo.listNetworks().length;
-  if (type === "service" && networks === 0) return "Add a network first; every service lives on one.";
   if (type === "cds" && networks < 2) return "A CDS joins two or more networks; add networks first.";
   return null;
 }
@@ -105,5 +107,27 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     empty.hidden = empty.textContent === "";
   }
 
-  return { element, render };
+  return {
+    element,
+    render,
+    viewContext: () => ({ type, filter: filter.value, collapsed, scroll: element.scrollTop }),
+    restoreContext: (context) => {
+      type = context.type;
+      typeSelect.value = type;
+      filter.value = context.filter;
+      collapsed = context.collapsed;
+      body.hidden = collapsed;
+      element.classList.toggle("collapsed", collapsed);
+      toggle.textContent = collapsed ? "Show list" : "Hide list";
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+      render();
+      element.scrollTop = context.scroll;
+    },
+    reveal: (next) => {
+      type = next;
+      typeSelect.value = next;
+      filter.value = "";
+      render();
+    },
+  };
 }

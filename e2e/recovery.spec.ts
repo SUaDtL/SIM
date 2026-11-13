@@ -68,19 +68,19 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   });
   await page.getByRole("button", { name: "Choose recovery file" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery copy updated");
+  const priorWrites = await page.evaluate(() => (window as unknown as Files).writes["recovery.sqlite"] ?? 0);
   await page.getByRole("button", { name: "Add network", exact: true }).click();
   await page.getByTestId("editor").getByLabel("Name").fill("Synthetic recovery network");
   await page.getByTestId("editor").getByRole("button", { name: "Add network", exact: true }).click();
   await expect
-    .poll(async () => {
-      const db = await openDataset(new Uint8Array(await files(page, "recovery.sqlite")), { wasm });
-      try {
-        return db.exec("SELECT name FROM network")[0]?.values;
-      } finally {
-        db.close();
-      }
-    })
-    .toEqual([["Synthetic recovery network"]]);
+    .poll(() => page.evaluate(() => (window as unknown as Files).writes["recovery.sqlite"] ?? 0))
+    .toBeGreaterThan(priorWrites);
+  const applied = await openDataset(new Uint8Array(await files(page, "recovery.sqlite")), { wasm });
+  try {
+    expect(applied.exec("SELECT name FROM network")[0]?.values).toEqual([["Synthetic recovery network"]]);
+  } finally {
+    applied.close();
+  }
   await expect(page.getByTestId("dataset-status")).toContainText("Changes not saved to file");
   const retained = await files(page, "recovery.sqlite");
   await page.getByTestId("editor").getByLabel("Name").fill("Unapplied text");

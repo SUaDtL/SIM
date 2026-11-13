@@ -154,6 +154,17 @@ test("legacy scenario collision is diagnosed and its invalid change can be remov
     ]);
   });
   await expect(page.getByTestId("scenario-diagnostics")).toContainText("Portal");
+  const description = page.getByTestId("editor").getByLabel("Description", { exact: true });
+  await description.fill("Keep this scenario draft");
+  await page
+    .getByTestId("scenario-diagnostics")
+    .getByRole("button", { name: "Inspect service Portal (NIPR)", exact: true })
+    .click();
+  const inspect = page.getByRole("dialog", { name: "Inspect related record" });
+  await expect(inspect).toContainText("Service: Portal");
+  await expect(inspect.getByRole("button", { name: /Network: NIPR/ })).toBeVisible();
+  await inspect.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(description).toHaveValue("Keep this scenario draft");
   await page.getByRole("button", { name: /Remove change: Re-home Portal/ }).click();
   await expect(page.getByTestId("scenario-diagnostics")).toBeHidden();
 });
@@ -181,4 +192,6 @@ test("scenario diagnostics explain unresolved routes and merge transfer effects"
   await expect(diagnostics).toContainText("1 support assignment is dropped");
   await expect(diagnostics).toContainText("1 consumer link transfers");
   await expect(diagnostics).toContainText("1 dependency link transfers");
+  await expect(diagnostics.getByRole("button", { name: "Inspect CDS Guard", exact: true })).toBeVisible();
+  await expect(diagnostics.getByRole("button", { name: "Inspect service Orders (NIPR)", exact: true })).toBeVisible();
 });

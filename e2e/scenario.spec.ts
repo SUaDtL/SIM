@@ -262,7 +262,7 @@ test("an invalidated CDS route stays visibly unresolved in the map, summary and 
   expect(file.suggestedFilename()).toContain("To-Be");
   const svg = readFileSync(await file.path(), "utf8");
   expect(svg).toContain("Unresolved former-CDS route; review scenario change");
-  expect(svg).toContain("Route fixture — To-Be: Move provider");
+  expect(svg).toContain("Route fixture / To-Be: Move provider");
   expect(problems).toEqual([]);
 });
 

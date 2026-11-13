@@ -2,7 +2,7 @@ import type { Database, SqlValue } from "sql.js";
 import { datasetName } from "../db/dataset";
 import { highestMarking, isMarking, isValidCaveat, type Marking, normalizeCaveat } from "../db/markings";
 import { applyScenario, serviceOrigin } from "../scenario/scenario";
-import { SensitiveInputWarning, ValidationError } from "./errors";
+import { SensitiveInputWarning, ValidationError, type DiagnosticTarget } from "./errors";
 import type {
   Application,
   ApplicationInput,
@@ -89,6 +89,7 @@ export interface DeletePlan {
   readonly details: readonly string[];
   readonly blocked: string | null;
   readonly signature: string;
+  readonly blockers: readonly { readonly type: DeleteEntityType; readonly id: number; readonly label: string }[];
 }
 export interface ScenarioNameCollision {
   readonly key: string;
@@ -136,6 +137,7 @@ export class Repository {
     const view = this.snapshot();
     const details: string[] = [];
     const effects: unknown[] = [type, id];
+    const blockers: { type: DeleteEntityType; id: number; label: string }[] = [];
     let blocked: string | null = null;
     const add = (label: string, rows: readonly unknown[]): void => {
       if (rows.length === 0) return;
@@ -165,6 +167,14 @@ export class Repository {
         );
         if (services.length > 0 || joins.length > 0)
           blocked = "This network is still in use. Remove its services and CDS joins first.";
+        blockers.push(
+          ...view.services
+            .filter((item) => item.networkId === id)
+            .map((item) => ({ type: "service" as const, id: item.id, label: `Inspect blocking service ${item.name}` })),
+          ...view.cds
+            .filter((item) => item.networkIds.includes(id))
+            .map((item) => ({ type: "cds" as const, id: item.id, label: `Inspect blocking CDS ${item.name}` })),
+        );
         break;
       }
       case "service":
@@ -246,7 +256,7 @@ export class Repository {
         break;
     }
     if (details.length === 0) details.push("No related records will change.");
-    return { details, blocked, signature: JSON.stringify(effects) };
+    return { details, blocked, blockers, signature: JSON.stringify(effects) };
   }
 
   /** Recheck the consequence plan immediately before a confirmed delete. */
@@ -600,13 +610,7 @@ export class Repository {
       // A readable legacy record may contain text that current create rules reject.
       // The shared update validator preserves exact unchanged legacy values.
       const values = this.service(merged, { confirmSensitive: true }, current.service);
-      checkSensitive(
-        {
-          "service name": values[0] === current.service.name ? null : String(values[0]),
-          description: values[7] === current.service.description ? null : values[7] === null ? null : String(values[7]),
-        },
-        options.confirmSensitive === true,
-      );
+      this.checkServiceDraftSensitive({ ...draft, fields: merged }, options, current);
       const support = draft.support.map((row) => {
         requireTier(row.tier);
         this.requireExists("organization", row.orgId, "organization");
@@ -615,10 +619,6 @@ export class Repository {
           prior?.orgId === row.orgId && (row.notes === undefined || row.notes === prior.notes)
             ? prior.notes
             : cleanText(row.notes);
-        checkSensitive(
-          { notes: prior?.orgId === row.orgId && notes === prior.notes ? null : notes },
-          options.confirmSensitive === true,
-        );
         return { serviceId: id, tier: row.tier, orgId: row.orgId, notes };
       });
       if (new Set(support.map((row) => row.tier)).size !== support.length) {
@@ -705,6 +705,56 @@ export class Repository {
       );
       return this.mustGet(this.getService(id));
     }, "service");
+  }
+
+  /** The initial service and all its owned relationships share one transaction and history step. */
+  createServiceDraft(draft: ServiceDraftInput, options: WriteOptions = {}): ServiceDraftResult {
+    const revision = this.currentRevision();
+    const rejected: { result: ServiceDraftResult | null } = { result: null };
+    try {
+      this.checkServiceDraftSensitive(draft, options);
+      const service = this.atomic(() => {
+        const created = this.createService(draft.fields, options);
+        const result = this.applyServiceDraft(created.id, this.readServiceEditBase(created.id), draft, options);
+        if (result.status !== "committed" && result.status !== "unchanged") {
+          rejected.result = result;
+          throw new Error("Initial service aggregate refused");
+        }
+        return result.service;
+      });
+      return { status: "committed", service, revision: this.currentRevision() };
+    } catch (error) {
+      if (rejected.result) return { ...rejected.result, revision };
+      if (error instanceof SensitiveInputWarning) return { status: "needs-confirmation", warning: error, revision };
+      const translated = translate(error, "service");
+      if (translated instanceof ValidationError) return { status: "refused", error: translated, revision };
+      throw translated;
+    }
+  }
+
+  /** One warning covers the normalized command, including every changed support note. */
+  private checkServiceDraftSensitive(draft: ServiceDraftInput, options: WriteOptions, current?: ServiceEditBase): void {
+    const values = this.service(draft.fields, { confirmSensitive: true }, current?.service);
+    const fields: Record<string, string | null> = {
+      "service name": values[0] === current?.service.name ? null : String(values[0]),
+      description: values[7] === current?.service.description || values[7] === null ? null : String(values[7]),
+    };
+    const seen = new Set<Tier>();
+    for (const row of draft.support) {
+      requireTier(row.tier);
+      this.requireExists("organization", row.orgId, "organization");
+      if (seen.has(row.tier))
+        throw new ValidationError("DUPLICATE", "support", "Each support tier can be assigned once.");
+      seen.add(row.tier);
+      const prior = current?.support.find((old) => old.tier === row.tier);
+      const notes =
+        prior?.orgId === row.orgId && (row.notes === undefined || row.notes === prior.notes)
+          ? prior.notes
+          : cleanText(row.notes);
+      fields[`Tier ${String(row.tier)} support notes`] =
+        prior?.orgId === row.orgId && notes === prior.notes ? null : notes;
+    }
+    checkSensitive(fields, options.confirmSensitive === true);
   }
 
   updateService(id: number, input: ServiceInput, options: WriteOptions = {}): Service {
@@ -912,10 +962,20 @@ export class Repository {
       const cds = this.getCds(via);
       if (!cds) throw new ValidationError("NOT_FOUND", "via", "That CDS no longer exists.");
       if (consumer.networkId === provider.networkId) {
-        throw new ValidationError("CDS_ROUTE", "via", "A CDS route must connect services on two different networks.");
+        throw new ValidationError(
+          "CDS_ROUTE",
+          "via",
+          "A CDS route must connect services on two different networks.",
+          this.routeDiagnosticTargets(consumer.id, provider.id, cds.id),
+        );
       }
       if (!cds.networkIds.includes(consumer.networkId) || !cds.networkIds.includes(provider.networkId)) {
-        throw new ValidationError("CDS_ROUTE", "via", `${cds.name} does not join both of these networks.`);
+        throw new ValidationError(
+          "CDS_ROUTE",
+          "via",
+          `${cds.name} does not join both of these networks.`,
+          this.routeDiagnosticTargets(consumer.id, provider.id, cds.id),
+        );
       }
     }
     this.write(() => {
@@ -1545,7 +1605,7 @@ export class Repository {
    */
   private requireValidRoutes(field: string): void {
     const broken = this.row(
-      `SELECT c.name AS consumer, p.name AS provider, x.name AS cds
+      `SELECT c.id AS consumer_id, p.id AS provider_id, x.id AS cds_id, c.name AS consumer, p.name AS provider, x.name AS cds
        FROM service_dependency d
        JOIN service c ON c.id = d.consumer_service_id
        JOIN service p ON p.id = d.provider_service_id
@@ -1562,12 +1622,32 @@ export class Repository {
         "CDS_ROUTE",
         field,
         `This would break the route from ${consumer ?? ""} to ${provider ?? ""} through ${cds ?? ""}; change or remove that dependency first.`,
+        this.routeDiagnosticTargets(
+          Number(broken["consumer_id"]),
+          Number(broken["provider_id"]),
+          Number(broken["cds_id"]),
+        ),
       );
     }
   }
 
   /** Keep existing readable legacy route issues repairable while refusing new or worsened issues. */
-  private brokenRoutes(): Map<string, string> {
+  private routeDiagnosticTargets(consumerId: number, providerId: number, cdsId: number): DiagnosticTarget[] {
+    const consumer = this.getService(consumerId);
+    const provider = this.getService(providerId);
+    const cds = this.getCds(cdsId);
+    return [
+      ...(consumer
+        ? [{ type: "service" as const, id: consumer.id, label: `Inspect consuming service ${consumer.name}` }]
+        : []),
+      ...(provider
+        ? [{ type: "service" as const, id: provider.id, label: `Inspect providing service ${provider.name}` }]
+        : []),
+      ...(cds ? [{ type: "cds" as const, id: cds.id, label: `Inspect route CDS ${cds.name}` }] : []),
+    ];
+  }
+
+  private brokenRoutes(): Map<string, ValidationError> {
     const rows = this.rows(
       `SELECT d.consumer_service_id AS consumer_id, d.provider_service_id AS provider_id, d.via_cds_id AS cds_id,
               c.network_id AS consumer_network, p.network_id AS provider_network,
@@ -1584,7 +1664,7 @@ export class Repository {
           OR NOT EXISTS (SELECT 1 FROM cds_network n WHERE n.cds_id = x.id AND n.network_id = p.network_id)`,
       [],
     );
-    const broken = new Map<string, string>();
+    const broken = new Map<string, ValidationError>();
     for (const row of rows) {
       const signature = JSON.stringify([
         row["consumer_id"],
@@ -1598,15 +1678,20 @@ export class Repository {
       ]);
       broken.set(
         signature,
-        `This would break the route from ${String(row["consumer"])} to ${String(row["provider"])} through ${String(row["cds"])}; change or remove that dependency first.`,
+        new ValidationError(
+          "CDS_ROUTE",
+          "network",
+          `This would break the route from ${String(row["consumer"])} to ${String(row["provider"])} through ${String(row["cds"])}; change or remove that dependency first.`,
+          this.routeDiagnosticTargets(Number(row["consumer_id"]), Number(row["provider_id"]), Number(row["cds_id"])),
+        ),
       );
     }
     return broken;
   }
 
-  private requireNoNewInvalidRoutes(before: Map<string, string>, field: string): void {
-    for (const [signature, message] of this.brokenRoutes()) {
-      if (!before.has(signature)) throw new ValidationError("CDS_ROUTE", field, message);
+  private requireNoNewInvalidRoutes(before: Map<string, ValidationError>, field: string): void {
+    for (const [signature, diagnostic] of this.brokenRoutes()) {
+      if (!before.has(signature)) throw new ValidationError("CDS_ROUTE", field, diagnostic.message, diagnostic.targets);
     }
   }
 

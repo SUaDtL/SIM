@@ -56,6 +56,7 @@ body {
 
 .app-header nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
@@ -66,6 +67,10 @@ body {
 
 .app-header [data-testid="dataset-message"] {
   flex-basis: 100%;
+  color: var(--muted);
+}
+
+.app-header [data-testid="dataset-message"][data-severity="error"] {
   color: var(--danger);
 }
 
@@ -141,6 +146,74 @@ textarea {
   flex: 1;
   grid-template-columns: 260px minmax(0, 1fr) 340px;
   min-height: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.workspace-navigation {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.workspace-navigation p {
+  margin: 0;
+}
+.workspace.editor-focused {
+  grid-template-columns: minmax(0, 1fr);
+}
+.workspace.editor-focused > .list-panel,
+.workspace.editor-focused > .map-area {
+  display: none;
+}
+.workspace.editor-focused > .editor {
+  grid-column: 1 / -1;
+}
+.map-feedback {
+  margin: 4px 8px;
+  font-size: 12px;
+}
+.map-feedback:empty {
+  display: none;
+}
+.find-results {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.find-results:empty {
+  display: none;
+}
+.find-results button {
+  text-align: left;
+}
+.editor form > .actions {
+  position: sticky;
+  bottom: 0;
+  background: var(--panel);
+  padding: 8px 0;
+  z-index: 1;
+}
+dialog {
+  max-width: min(620px, 92vw);
+  max-height: 85vh;
+  overflow: auto;
+}
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: 190px minmax(200px, 1fr) 310px;
+  }
+  .workspace:has(.list-panel.collapsed) {
+    grid-template-columns: auto minmax(200px, 1fr) 310px;
+  }
+  .workspace.editor-focused {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .workspace:has(.list-panel.collapsed) {

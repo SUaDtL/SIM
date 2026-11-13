@@ -1,0 +1,5320 @@
+{
+  "format": "sim.connected-ux-execution/v1",
+  "base": "a70d59843cf295d9405d7570b7221112d9d82666",
+  "review_pin": "a8a330c66f4b075dedc6e40c17fb122359a77fe3",
+  "branch": "codex/sim-f26-recovery",
+  "pr": 24,
+  "cases": [
+    {
+      "id": "UX0-001",
+      "phase": "UX0",
+      "title": "Confirm changed support-note payload",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service support note contains first.example.mil and a pending warning was shown",
+      "when": "Change the support note and activate old Save anyway",
+      "then": "Old acknowledgement is invalid; no write; the current exact text must receive new acknowledgement",
+      "method": "browser+unit",
+      "risk": "data-integrity/security",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-editor.spec.ts: changed support note cannot reuse an old sensitive acknowledgement",
+            "src/domain/initial-service.test.ts: reports every sensitive scalar and support note in one initial/existing aggregate warning"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-002",
+      "phase": "UX0",
+      "title": "Warn on all sensitive aggregate fields",
+      "priority": "must",
+      "status": "passed",
+      "given": "A dirty service has unchanged scalars plus edited support, relation, or child candidate",
+      "when": "Use pending confirmation for a different payload",
+      "then": "Warning signature binds full exact command; no stale acceptance",
+      "method": "browser+unit",
+      "risk": "data-integrity/security",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/domain/initial-service.test.ts: reports every sensitive scalar and support note in one initial/existing aggregate warning",
+            "e2e/connected-editor.spec.ts: child host warning is withdrawn after edits without applying the parent"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-003",
+      "phase": "UX0",
+      "title": "Find Stay is effect-free",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dirty editor and active filters, chain, viewport and selected entity",
+      "when": "Find target then choose Stay",
+      "then": "Editor, selection, list context, filters, chain, viewport and focus are unchanged",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-navigation.spec.ts: Stay rejects a Find request before selection, filters, chain or framing change"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-004",
+      "phase": "UX0",
+      "title": "Find accepted effects are coherent",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dirty editor and valid distinct typed Find result",
+      "when": "Choose Apply and continue",
+      "then": "After successful Apply, selection, list and map update to same accepted target exactly once",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-navigation.spec.ts: Find Apply and continue commits once before revealing the accepted typed target"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-005",
+      "phase": "UX0",
+      "title": "Stable relationship control focus",
+      "priority": "must",
+      "status": "passed",
+      "given": "Keyboard user is in support or dependency field",
+      "when": "Change support or append/remove relationship",
+      "then": "Focus remains or is restored meaningfully; no BODY focus dump",
+      "method": "browser+keyboard",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-editor.spec.ts: unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-006",
+      "phase": "UX0",
+      "title": "New form Cancel is direct",
+      "priority": "must",
+      "status": "passed",
+      "given": "New uncommitted service editor has typed values",
+      "when": "Activate Cancel",
+      "then": "No new service or history; selection returns safely and no forced detour",
+      "method": "browser+keyboard",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-editor.spec.ts: Cancel child preserves parent and creates no history; Cancel parent leaves explicit children"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-007",
+      "phase": "UX0",
+      "title": "Visible export status",
+      "priority": "must",
+      "status": "passed",
+      "given": "Export is in progress, succeeds, or renderer throws",
+      "when": "Observe control and status",
+      "then": "Visible and accessible progress, success or actionable error; controls recover",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/map.spec.ts: keeps an export busy through repository refresh and recovers from a synchronous render failure",
+            "e2e/connected-focus.spec.ts: cancelled captures restore visible status and retain the active draft"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-008",
+      "phase": "UX0",
+      "title": "Status severity matches outcome",
+      "priority": "must",
+      "status": "passed",
+      "given": "Import/download/cancel/refusal/success events occur",
+      "when": "Inspect banners and live regions",
+      "then": "Neutral/success/error styles match actual outcome and wording; download not called Saved",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/dataset-file.spec.ts: shows a readable error for a file that is not a dataset and keeps the current one",
+            "e2e/session-import-journeys.spec.ts: J6: a late CSV read cannot replace the reviewed preview, survive Escape, or alter one-step Undo",
+            "e2e/entry-ui.spec.ts: a new service takes its network marking and success is not shown as an error"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-009",
+      "phase": "UX0",
+      "title": "Foundational visible count",
+      "priority": "must",
+      "status": "passed",
+      "given": "Foundational dependency is ordinarily hidden then exposed by chain highlight",
+      "when": "Read graph summary",
+      "then": "Summary matches actually visible edges, including highlighted edges",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/graph.test.ts: reports actual hidden foundational dependencies when a chain reveals a normally hidden route (UX0-009)",
+            "e2e/connected-focus.spec.ts: foundational summary counts the routes actually hidden after chain reveal"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-010",
+      "phase": "UX0",
+      "title": "Empty-state guidance",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dataset already has networks",
+      "when": "Select no item then inspect empty editor",
+      "then": "Guidance does not say Create first network when networks exist",
+      "method": "browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-navigation.spec.ts: existing-network guidance and normalized unchanged Apply preserve the saved checkpoint"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-011",
+      "phase": "UX0",
+      "title": "Unchanged Apply purity",
+      "priority": "must",
+      "status": "passed",
+      "given": "Existing service draft normalizes to same persisted values",
+      "when": "Apply",
+      "then": "No new history, database revision or dirty file-state transition",
+      "method": "repository+browser",
+      "risk": "history",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/domain/initial-service.test.ts: normalized unchanged Apply preserves revision, notifications and the previous Undo step",
+            "e2e/connected-navigation.spec.ts: existing-network guidance and normalized unchanged Apply preserve the saved checkpoint"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX0-012",
+      "phase": "UX0",
+      "title": "File and capture correctness unchanged",
+      "priority": "must",
+      "status": "passed",
+      "given": "A dirty draft is present",
+      "when": "Save file, Capture current view, Apply and capture in separate tests",
+      "then": "Each uses its existing truthful behavior and distinct effects",
+      "method": "browser+unit",
+      "risk": "data-integrity/file",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/dataset-file.spec.ts: Save file applies an active draft and requests a download in one action",
+            "e2e/connected-focus.spec.ts: capture current view keeps a dirty draft, while failed Apply and capture keeps the applied history"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-001",
+      "phase": "UX1",
+      "title": "Start service with empty networks",
+      "priority": "must",
+      "status": "passed",
+      "given": "Brand new empty dataset with no networks",
+      "when": "Choose Add service from ordinary UI",
+      "then": "Service editor starts; no prerequisite screen navigation is required",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline network and provider creation retain a new service draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Ordinary Add service opens with empty networks, and can create first network from that draft.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-002",
+      "phase": "UX1",
+      "title": "Create network inline",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service draft includes name and description but no network",
+      "when": "Create network -> complete -> Create and use",
+      "then": "Created network ID is selected in invoking field; parent inputs and task context preserved",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline network and provider creation retain a new service draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Create/use network reconciles exact picker while name and description remain unchanged.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-003",
+      "phase": "UX1",
+      "title": "Cancel network child",
+      "priority": "must",
+      "status": "passed",
+      "given": "Parent service has scalar, marking and relation drafts",
+      "when": "Open network child then Escape/Cancel",
+      "then": "Zero child write/history; original service draft, scroll and meaningful focus survive",
+      "method": "browser+keyboard",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor-acceptance.spec.ts",
+          "titles": [
+            "UX1-003 child Cancel preserves the complete parent draft, scroll and invoking focus without history",
+            "UX1-003 child Escape preserves the complete parent draft, scroll and invoking focus without history"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "Escape cancels unwritten child; parent name and invoking Network focus retained; Undo remains disabled.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-004",
+      "phase": "UX1",
+      "title": "Create provider inline",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service draft has a missing providing organization",
+      "when": "Create organization and use",
+      "then": "Organization created as separate command, immediately selected; parent remains unapplied",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline network and provider creation retain a new service draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "a successful provider child survives a missing parent name and the guarded child Undo"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Provider child immediately selected; parent remains draft; guarded Undo independently reverses only the explicit child command.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-005",
+      "phase": "UX1",
+      "title": "Create app and category inline",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service refers to missing application and category",
+      "when": "Create and use each one sequentially",
+      "then": "Each created stable ID appears in exact invoking picker; no manual list-type change",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "new service stages app category support and consumption before first Add and saves their IDs"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "new service stages app category support and consumption before first Add and saves their IDs",
+              "source": "connected-editor.spec.ts",
+              "line": 113,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "new service stages app category support and consumption before first Add and saves their IDs",
+              "source": "connected-editor.spec.ts",
+              "line": 113,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Sequential app/category child creation selects stable saved IDs without list-type switching.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-006",
+      "phase": "UX1",
+      "title": "Create support and consumer organization inline",
+      "priority": "must",
+      "status": "passed",
+      "given": "Support or organizational consumer selector lacks target",
+      "when": "Create and use organization",
+      "then": "Same target appears in that selector; no unintended relation row or parent Apply",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Support and consumer children select invoking picker; consumer list remains empty before explicit Add consumer; parent absent until Add service.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-007",
+      "phase": "UX1",
+      "title": "Targeted option reconciliation",
+      "priority": "must",
+      "status": "passed",
+      "given": "Parent has typed data and selected other fields",
+      "when": "Create child; inspect updated options",
+      "then": "Updated picker contains new child ID without whole editor reset or loss of other fields",
+      "method": "component+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline network and provider creation retain a new service draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline network and provider creation retain a new service draft",
+              "source": "connected-editor.spec.ts",
+              "line": 52,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline creation keeps explicit service defaults and parked relation-only intent"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Mounted parent name, description, explicit overrides and parked notes survive picker reconciliation; saved foreign keys equal selected child IDs.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-008",
+      "phase": "UX1",
+      "title": "Explicit user overrides survive",
+      "priority": "must",
+      "status": "passed",
+      "given": "User explicitly set a service marking/foundational choice",
+      "when": "Create/select a different network inline",
+      "then": "The intentional user value is preserved; no automatic override",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline creation keeps explicit service defaults and parked relation-only intent"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Explicit CUI marking and unchecked foundational override survive inline network creation.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-009",
+      "phase": "UX1",
+      "title": "Parent invalid after child succeeds",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child org created; parent service lacks valid required name",
+      "when": "Try Add parent",
+      "then": "Parent remains pending with field error, no service partial write; org persists as explicit child",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "a successful provider child survives a missing parent name and the guarded child Undo"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Chosen network and successful provider child; Add service with missing name shows field error, creates no service, retains full staged inputs and child; child can later be explicitly undone.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-010",
+      "phase": "UX1",
+      "title": "Parent discard does not cascade child",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child org was explicitly committed; parent remains draft",
+      "when": "Discard parent",
+      "then": "Only parent draft disappears; created shared org remains until explicitly undone/deleted",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Cancel parent leaves shared organization visible; subsequent explicit Undo removes it.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-011",
+      "phase": "UX1",
+      "title": "Undo dirty parent guard",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child created, parent still dirty",
+      "when": "Activate Undo then Keep editing",
+      "then": "Parent retained; no history replay; after Discard draft and continue normal child command can be undone",
+      "method": "browser+unit",
+      "risk": "history",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "a successful provider child survives a missing parent name and the guarded child Undo"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Cancel child preserves parent and creates no history; Cancel parent leaves explicit children",
+              "source": "connected-editor.spec.ts",
+              "line": 81,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Keep editing rejects history replay and preserves draft; Discard draft and continue allows one explicit child command Undo.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-012",
+      "phase": "UX1",
+      "title": "Single bounded child",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child form already active",
+      "when": "Attempt another Create child",
+      "then": "No recursive draft stack or silent navigation that loses parent; clear bounded behavior",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline creation keeps explicit service defaults and parked relation-only intent"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Only one child dialog exists and its organization form exposes no recursive Create organization action.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-013",
+      "phase": "UX1",
+      "title": "Duplicate names bind by ID",
+      "priority": "must",
+      "status": "passed",
+      "given": "Two organizations have similar/duplicate display labels in different contexts",
+      "when": "Create and use a named org",
+      "then": "Parent selection is created ID, not first fuzzy name match",
+      "method": "repository+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "a successful provider child survives a missing parent name and the guarded child Undo"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "a successful provider child survives a missing parent name and the guarded child Undo",
+              "source": "connected-acceptance.spec.ts",
+              "line": 70,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Existing Operations and newly created Operations new remain distinct; selected numeric ID is persisted and reopened as Operations new, rather than a fuzzy existing-name match.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-014",
+      "phase": "UX1",
+      "title": "Initial service staged relations",
+      "priority": "must",
+      "status": "passed",
+      "given": "New service draft has a network and valid support, organizational consumer and provider-service dependency",
+      "when": "Add service once",
+      "then": "Service and owned relations committed atomically in one service history step; no required second edit pass",
+      "method": "browser+unit",
+      "risk": "data-integrity/history",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/initial-service.test.ts",
+          "titles": [
+            "creates initial fields and relationships as one undoable aggregate"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "creates initial fields and relationships as one undoable aggregate",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/initial-service.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Initial support, consumer and dependency are staged before first Add; one Undo removes parent, one Redo restores all; saved/reopened references remain stable.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-015",
+      "phase": "UX1",
+      "title": "Initial aggregate refusal is atomic",
+      "priority": "must",
+      "status": "passed",
+      "given": "New service with valid name but invalid route/final-state candidate",
+      "when": "Apply new aggregate",
+      "then": "No service or relation partial write; full draft retained; actionable errors",
+      "method": "repository+browser",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "an invalid initial route rolls back the service and all staged relations while retaining the full draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "an invalid initial route rolls back the service and all staged relations while retaining the full draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 265,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "an invalid initial route rolls back the service and all staged relations while retaining the full draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 265,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/initial-service.test.ts",
+          "titles": [
+            "rolls back new service creation when an owned relation refuses"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "rolls back new service creation when an owned relation refuses",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/initial-service.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Stage valid new-service route, then rehome draft to invalidate it; Add refuses atomically, graph/history/list unchanged, exact scalar/support/consumer/route draft retained.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-016",
+      "phase": "UX1",
+      "title": "Child and parent save/reopen",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service and multiple children created through the inline flow",
+      "when": "Save .sqlite then reopen",
+      "then": "Stable references and relationships survive, labels reflect same identities, status is truthful",
+      "method": "browser+unit",
+      "risk": "file",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Real UI download is retained and independently read with openDataset; explicit replacement then actual UI Open verifies same numeric IDs, field labels and relationships; fallback says Download requested, reopened file says Saved.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-017",
+      "phase": "UX1",
+      "title": "Exact warning in child",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child contains host-like text requiring acknowledgement",
+      "when": "Change child field after first warning",
+      "then": "Original confirmation withdrawn; only exact currently reviewed payload may commit",
+      "method": "browser+unit",
+      "risk": "security",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "child host warning is withdrawn after edits without applying the parent"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "child host warning is withdrawn after edits without applying the parent",
+              "source": "connected-editor.spec.ts",
+              "line": 232,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "child host warning is withdrawn after edits without applying the parent",
+              "source": "connected-editor.spec.ts",
+              "line": 232,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/initial-service.test.ts",
+          "titles": [
+            "requires sensitive relationship confirmation before creating any part of an initial service"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "requires sensitive relationship confirmation before creating any part of an initial service",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/initial-service.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor-acceptance.spec.ts",
+          "titles": [
+            "UX1-017 an edited child succeeds only after its fresh exact warning is reviewed and confirmed"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "Changing child text withdraws old confirmation; Cancel creates no history; domain exact initial aggregate warning refuses until confirmed.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX1-018",
+      "phase": "UX1",
+      "title": "No surprise parent Apply",
+      "priority": "must",
+      "status": "passed",
+      "given": "Child created successfully",
+      "when": "Return from child form",
+      "then": "Parent not committed or marked Saved to file; explicit parent Apply/Add remains available",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "initial service relations commit together and created reference IDs survive UI save and reopen"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "initial service relations commit together and created reference IDs survive UI save and reopen",
+              "source": "connected-acceptance.spec.ts",
+              "line": 102,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "new service stages app category support and consumption before first Add and saves their IDs"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "new service stages app category support and consumption before first Add and saves their IDs",
+              "source": "connected-editor.spec.ts",
+              "line": 113,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "new service stages app category support and consumption before first Add and saves their IDs",
+              "source": "connected-editor.spec.ts",
+              "line": 113,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "inline creation keeps explicit service defaults and parked relation-only intent"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "inline creation keeps explicit service defaults and parked relation-only intent",
+              "source": "connected-editor.spec.ts",
+              "line": 159,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "After child returns parent remains absent from list, has Unapplied changes and explicit Add, and is not marked Saved.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-001",
+      "phase": "UX2",
+      "title": "Typed partial search",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service and network names share prefix",
+      "when": "Enter partial query",
+      "then": "Results show type, network/other scope and stable disambiguation; no exact-label requirement",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "partial Find keeps duplicate services and cross-type names distinct with keyboard selection"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery returns all seven entity types without mutating snapshot data"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery returns all seven entity types without mutating snapshot data",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Partial case-insensitive results include type/network and stable typed identity for all seven entity types.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-002",
+      "phase": "UX2",
+      "title": "Same-named service disambiguation",
+      "priority": "must",
+      "status": "passed",
+      "given": "Two Directory services exist on different networks",
+      "when": "Search for dir",
+      "then": "Both are offered separately, user chooses exact intended typed ID",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "partial Find keeps duplicate services and cross-type names distinct with keyboard selection"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Two Directory service identities on Amber/Blue are separately offered and selected by exact qualified button.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-003",
+      "phase": "UX2",
+      "title": "Same-name cross-type disambiguation",
+      "priority": "must",
+      "status": "passed",
+      "given": "A network and a CDS share a name",
+      "when": "Search then select",
+      "then": "No first display-label match; results resolve by type and ID",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "partial Find keeps duplicate services and cross-type names distinct with keyboard selection"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery never collapses cross-type identical names and returns an empty result explicitly"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery never collapses cross-type identical names and returns an empty result explicitly",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Same-name network/CDS results coexist and chosen CDS opens correct type.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-004",
+      "phase": "UX2",
+      "title": "No result and keyboard discovery",
+      "priority": "must",
+      "status": "passed",
+      "given": "Search has no match",
+      "when": "Type query, operate via keyboard",
+      "then": "Readable no-results and keyboard suggestion selection; no silent failure",
+      "method": "browser+keyboard",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "partial Find keeps duplicate services and cross-type names distinct with keyboard selection"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "partial Find keeps duplicate services and cross-type names distinct with keyboard selection",
+              "source": "connected-navigation.spec.ts",
+              "line": 89,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery never collapses cross-type identical names and returns an empty result explicitly"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery never collapses cross-type identical names and returns an empty result explicitly",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Readable no-results and keyboard Enter on focused suggestion choose typed record.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-005",
+      "phase": "UX2",
+      "title": "Reference peek draft preservation",
+      "priority": "must",
+      "status": "passed",
+      "given": "Editable service has dirty scalar/relationships",
+      "when": "Peek related organization and close",
+      "then": "Original draft exact, focused invoking control returns, no data history",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "reference peek preserves scalar and support draft, returns focus, and adds no history"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "reference peek preserves scalar and support draft, returns focus, and adds no history",
+              "source": "connected-navigation.spec.ts",
+              "line": 115,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "reference peek preserves scalar and support draft, returns focus, and adds no history",
+              "source": "connected-navigation.spec.ts",
+              "line": 115,
+              "project": "chrome",
+              "statuses": [
+                "failed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "reference peek preserves scalar and support draft, returns focus, and adds no history",
+              "source": "connected-navigation.spec.ts",
+              "line": 115,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-setup-rerun.json"
+            },
+            {
+              "title": "reference peek preserves scalar and support draft, returns focus, and adds no history",
+              "source": "connected-navigation.spec.ts",
+              "line": 115,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-setup-rerun.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Peek traverses related record without guard/mutation; scalar/support text preserved, original invoking control focus restored, Undo disabled.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-006",
+      "phase": "UX2",
+      "title": "Follow reverse organization relations",
+      "priority": "must",
+      "status": "passed",
+      "given": "Organization provides/supports/is consumed by existing services",
+      "when": "Inspect organization",
+      "then": "Accurate derived reverse lists with separate meanings and clickable typed targets",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "non-map references expose separate recorded reverse roles and application/category membership"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "non-map references expose separate recorded reverse roles and application/category membership",
+              "source": "connected-navigation.spec.ts",
+              "line": 203,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "non-map references expose separate recorded reverse roles and application/category membership",
+              "source": "connected-navigation.spec.ts",
+              "line": 203,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities derives organization roles independently without inheriting parent or child relationships"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities derives organization roles independently without inheriting parent or child relationships",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities keeps organizational consumption distinct from incoming and outgoing service dependencies"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities keeps organizational consumption distinct from incoming and outgoing service dependencies",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Organization provider, support and consumption rows remain separate; recorded reverse target can be followed, without inherited parent/child roles.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-007",
+      "phase": "UX2",
+      "title": "Reverse application and category",
+      "priority": "must",
+      "status": "passed",
+      "given": "Application/category assigned to services",
+      "when": "Inspect records",
+      "then": "Accurate derived service references are visible without schema addition",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "non-map references expose separate recorded reverse roles and application/category membership"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "non-map references expose separate recorded reverse roles and application/category membership",
+              "source": "connected-navigation.spec.ts",
+              "line": 203,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "non-map references expose separate recorded reverse roles and application/category membership",
+              "source": "connected-navigation.spec.ts",
+              "line": 203,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities derives application/category membership and network/CDS route ownership"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities derives application/category membership and network/CDS route ownership",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Application/category peek shows accurate recorded service membership.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-008",
+      "phase": "UX2",
+      "title": "Network and CDS relations",
+      "priority": "must",
+      "status": "passed",
+      "given": "Network has services/boundary dependencies, CDS joins two networks",
+      "when": "Inspect network/CDS",
+      "then": "Correct member/joined/routed lists and navigation controls; no inferred physical reachability",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "network and CDS reverse lists distinguish membership from boundary routes and navigate the recorded owner"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "network and CDS reverse lists distinguish membership from boundary routes and navigate the recorded owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 186,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "network and CDS reverse lists distinguish membership from boundary routes and navigate the recorded owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 186,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities derives application/category membership and network/CDS route ownership"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities derives application/category membership and network/CDS route ownership",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Network service membership, joined CDS and boundary dependency rows are distinct; boundary navigates owning consumer; CDS shows exact joined networks and routed consumer; peek preserves editor, Saved and zero history.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-009",
+      "phase": "UX2",
+      "title": "Back restores context",
+      "priority": "must",
+      "status": "passed",
+      "given": "User navigated service -> org -> another service",
+      "when": "Back twice",
+      "then": "Correct prior selection, list category, scenario/view, filters, framing, focus without database Undo",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "accepted Back restores prior service, list filter and map framing without Undo"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "accepted Back restores prior service, list filter and map framing without Undo",
+              "source": "connected-navigation.spec.ts",
+              "line": 137,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "accepted Back restores prior service, list filter and map framing without Undo",
+              "source": "connected-navigation.spec.ts",
+              "line": 137,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "Back from a baseline record restores the planned origin and Compare context"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Back from a baseline record restores the planned origin and Compare context",
+              "source": "connected-projection.spec.ts",
+              "line": 121,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Back from a baseline record restores the planned origin and Compare context",
+              "source": "connected-projection.spec.ts",
+              "line": 121,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "Back Stay keeps the current dirty record and an accepted discard returns correctly"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Back Stay keeps the current dirty record and an accepted discard returns correctly",
+              "source": "connected-navigation.spec.ts",
+              "line": 185,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Back Stay keeps the current dirty record and an accepted discard returns correctly",
+              "source": "connected-navigation.spec.ts",
+              "line": 185,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "a late old Back decision cannot reopen an old target after Open installs a different dataset"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "a late old Back decision cannot reopen an old target after Open installs a different dataset",
+              "source": "connected-projection.spec.ts",
+              "line": 162,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "a late old Back decision cannot reopen an old target after Open installs a different dataset",
+              "source": "connected-projection.spec.ts",
+              "line": 162,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation-acceptance.spec.ts",
+          "titles": [
+            "two Back hops restore each service and organization context plus the originating editor control focus"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "Single Back restores record/list filter/map framing without Undo, projected Back restores origin+Compare view, and old Back cannot affect replacement session.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-010",
+      "phase": "UX2",
+      "title": "Stay cancels list/map navigation",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dirty editor active when selecting another object via map/list/find",
+      "when": "Choose Stay",
+      "then": "All requested selection-dependent effects canceled; explicit pan remains user-controlled",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "Stay rejects a Find request before selection, filters, chain or framing change"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Stay rejects a Find request before selection, filters, chain or framing change",
+              "source": "connected-navigation.spec.ts",
+              "line": 163,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Stay rejects a Find request before selection, filters, chain or framing change",
+              "source": "connected-navigation.spec.ts",
+              "line": 163,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation.spec.ts",
+          "titles": [
+            "Back Stay keeps the current dirty record and an accepted discard returns correctly"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Back Stay keeps the current dirty record and an accepted discard returns correctly",
+              "source": "connected-navigation.spec.ts",
+              "line": 185,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Back Stay keeps the current dirty record and an accepted discard returns correctly",
+              "source": "connected-navigation.spec.ts",
+              "line": 185,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "editing an incoming dependency guards the dirty provider and opens its actual consumer owner"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation-acceptance.spec.ts",
+          "titles": [
+            "Stay from an ordinary list click and physical map tap preserves the complete dirty navigation context"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "Find and Back Stay retain record, filter, chain/framing and dirty draft; incoming Edit Stay keeps provider.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-011",
+      "phase": "UX2",
+      "title": "Projected origin distinct",
+      "priority": "must",
+      "status": "passed",
+      "given": "Compare view has planned, moved, retired and baseline nodes",
+      "when": "Find and inspect nodes",
+      "then": "Read-only projected identity/provenance accurate; virtual IDs not editable",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "projected Find distinguishes a planned service from its same-named baseline peer"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "projected Find distinguishes a planned service from its same-named baseline peer",
+              "source": "connected-projection.spec.ts",
+              "line": 59,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "projected Find distinguishes a planned service from its same-named baseline peer",
+              "source": "connected-projection.spec.ts",
+              "line": 59,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter",
+              "source": "connected-projection.spec.ts",
+              "line": 79,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter",
+              "source": "connected-projection.spec.ts",
+              "line": 79,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/acceptance-journeys.spec.ts",
+          "titles": [
+            "J7: projected Find and tap keep baseline, moved, retired and planned identities distinct"
+          ],
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "cwd": ".",
+          "run": "connected-full-282-20261113",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "asserted_scope": "Planned Portal and same-name baseline peer have distinct Find actions/read-only planned origin; rehomed projection retains baseline Edit As-Is identity.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-012",
+      "phase": "UX2",
+      "title": "Edit As-Is reveals baseline",
+      "priority": "must",
+      "status": "passed",
+      "given": "Projected baseline object currently hidden by filter",
+      "when": "Choose Edit As-Is",
+      "then": "Switches and reveals actual As-Is record through accepted context; does not leave it hidden",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter",
+              "source": "connected-projection.spec.ts",
+              "line": 79,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter",
+              "source": "connected-projection.spec.ts",
+              "line": 79,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Edit As-Is switches from rehomed projection and asserts actual baseline Cytoscape node.visible() even through old hiding filter.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-013",
+      "phase": "UX2",
+      "title": "Projected target invalidation",
+      "priority": "must",
+      "status": "passed",
+      "given": "Scenario removed/revised while projected inspector open",
+      "when": "Refresh/Undo/switch view",
+      "then": "Inspector rebinds valid current target or closes with explanation, no stale writable record",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "switching View closes the old projected inspector with an actionable current-view message"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "switching View closes the old projected inspector with an actionable current-view message",
+              "source": "connected-projection.spec.ts",
+              "line": 110,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "switching View closes the old projected inspector with an actionable current-view message",
+              "source": "connected-projection.spec.ts",
+              "line": 110,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-projection.spec.ts",
+          "titles": [
+            "Undo removing a UI-created planned origin closes its inspector and removes the stale Find target"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "Undo removing a UI-created planned origin closes its inspector and removes the stale Find target",
+              "source": "connected-projection.spec.ts",
+              "line": 137,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "Undo removing a UI-created planned origin closes its inspector and removes the stale Find target",
+              "source": "connected-projection.spec.ts",
+              "line": 137,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities omits stale references and cannot navigate a deleted source or conflate IDs of another type"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities omits stale references and cannot navigate a deleted source or conflate IDs of another type",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Changing View and Undo removing UI-created planned origin close stale inspector with explanation; stale search target disappears.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX2-014",
+      "phase": "UX2",
+      "title": "Diagnostics lead to cause",
+      "priority": "must",
+      "status": "passed",
+      "given": "Deletion blocked or route/scenario validation reports a specific object",
+      "when": "Follow diagnostic link",
+      "then": "Correct typed object/owner opened after guard, no hidden mutation",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/route-diagnostics.spec.ts",
+          "titles": [
+            "incoming rehome and CDS membership refusals link to exact owners without losing drafts"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "incoming rehome and CDS membership refusals link to exact owners without losing drafts",
+              "source": "route-diagnostics.spec.ts",
+              "line": 9,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-route-diagnostic-results.json"
+            },
+            {
+              "title": "incoming rehome and CDS membership refusals link to exact owners without losing drafts",
+              "source": "route-diagnostics.spec.ts",
+              "line": 9,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-route-diagnostic-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/initial-service.test.ts",
+          "titles": [
+            "route refusals identify exact consumer and CDS owners for incoming rehome and CDS edits"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "route refusals identify exact consumer and CDS owners for incoming rehome and CDS edits",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/initial-service.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser+unit",
+          "targets": [
+            "e2e/route-diagnostics.spec.ts: incoming/CDS refused Apply owner peeks preserve drafts",
+            "e2e/delete-consequences.spec.ts: blocked network Inspect blocking service",
+            "e2e/scenario-builder.spec.ts: legacy collision exact owner and unresolved route endpoint/CDS peeks",
+            "src/domain/initial-service.test.ts: exact route diagnostic target IDs"
+          ],
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "cwd": ".",
+          "run": "connected-full-282-20261113",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "asserted_scope": "Ordinary incoming rehome/CDS-membership refusals expose exact consumer links; peek opens correct owner and preserves current dirty network choices.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-001",
+      "phase": "UX3",
+      "title": "Distinct dependency/consumption sections",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service with outgoing, incoming and organizational consumers",
+      "when": "Inspect service",
+      "then": "Depends on, Used by services, Consumed by organizations all present and semantically distinct",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "explicit related entities keeps organizational consumption distinct from incoming and outgoing service dependencies"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "explicit related entities keeps organizational consumption distinct from incoming and outgoing service dependencies",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "editing an incoming dependency guards the dirty provider and opens its actual consumer owner"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor-acceptance.spec.ts",
+          "titles": [
+            "UX3-001 populated outgoing, incoming and organization relations have distinct semantic headings"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "Pure helper distinguishes outgoing dependencies, incoming owning consumers and consuming organizations; browser incoming ownership and outgoing/consumer controls are exercised.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-002",
+      "phase": "UX3",
+      "title": "Qualified endpoint labels",
+      "priority": "must",
+      "status": "passed",
+      "given": "Two providers called Directory exist in different networks",
+      "when": "Inspect connection rows",
+      "then": "Both show distinct network-qualified names and stable identity",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/ui/relations.test.ts",
+          "titles": [
+            "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "typed entity discovery finds partial case-insensitive names and preserves duplicate service IDs with network labels",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/ui/relations.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Two same-name Identity outgoing rows are visibly qualified by Blue and Coral network and retain distinct routes through Apply/Undo/Redo.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-003",
+      "phase": "UX3",
+      "title": "Direct route edit",
+      "priority": "must",
+      "status": "passed",
+      "given": "Valid existing outgoing service dependency",
+      "when": "Choose Edit route, change CDS, Apply",
+      "then": "No Remove/Add detour; one aggregate command/history step; correct route remains",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Direct Edit route changes CDS without Remove/Add; scalar and route persist together and revert in one Undo.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-004",
+      "phase": "UX3",
+      "title": "Cancel route edit",
+      "priority": "must",
+      "status": "passed",
+      "given": "Outgoing dependency edit staged",
+      "when": "Cancel route edit or discard draft",
+      "then": "Persisted dependency and history unchanged",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Cancel route leaves persisted route/history unchanged before any draft Apply.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-005",
+      "phase": "UX3",
+      "title": "Incoming ownership",
+      "priority": "must",
+      "status": "passed",
+      "given": "Provider has a reverse Used by services row",
+      "when": "Choose Edit incoming dependency",
+      "then": "Owning consumer opened through draft guard; provider aggregate is not silently changed",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "editing an incoming dependency guards the dirty provider and opens its actual consumer owner"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "editing an incoming dependency guards the dirty provider and opens its actual consumer owner",
+              "source": "connected-acceptance.spec.ts",
+              "line": 298,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Edit incoming dependency requests consumer owner; dirty provider Stay retains draft, accepted discard opens Orders consumer and route without hidden write.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-006",
+      "phase": "UX3",
+      "title": "Allowed cross-network no-CDS",
+      "priority": "must",
+      "status": "passed",
+      "given": "Consumer/provider on different networks",
+      "when": "Choose No CDS recorded and Apply",
+      "then": "Allowed when domain permits; UI does not promise verified direct connectivity",
+      "method": "repository+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing",
+              "source": "connected-editor.spec.ts",
+              "line": 193,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "validation allows a cross-network dependency without a CDS (shown as a direct crossing on the map)"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "validation allows a cross-network dependency without a CDS (shown as a direct crossing on the map)",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Cross-network route can be explicitly changed to No CDS recorded and applied without an asserted physical connectivity guarantee.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-007",
+      "phase": "UX3",
+      "title": "Relevant CDS candidate set",
+      "priority": "must",
+      "status": "passed",
+      "given": "Different endpoint networks with some unrelated CDSs",
+      "when": "Open CDS choice",
+      "then": "Relevant candidates distinguish membership; invalid ones are not presented as valid routes",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Route choices show only endpoint-joining candidates; old invalid route is explicitly disabled/labeled; unrelated Guard Amber Coral omitted for Blue/Coral pair.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-008",
+      "phase": "UX3",
+      "title": "Reject invalid CDS",
+      "priority": "must",
+      "status": "passed",
+      "given": "CDS not joining both selected networks or both endpoints same network",
+      "when": "Apply",
+      "then": "Refuse entire candidate; keep draft and current committed route",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "an invalid initial route rolls back the service and all staged relations while retaining the full draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "an invalid initial route rolls back the service and all staged relations while retaining the full draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 265,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "an invalid initial route rolls back the service and all staged relations while retaining the full draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 265,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "validation requires a CDS route to join two different networks that the CDS connects"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "validation requires a CDS route to join two different networks that the CDS connects",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Staged route becomes invalid after endpoint network change; entire Apply refused with draft retained, graph unchanged, zero history; no partial new service on initial refusal.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-009",
+      "phase": "UX3",
+      "title": "Validate outgoing after rehome",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service changes network and outgoing CDS relationship",
+      "when": "Apply",
+      "then": "Final-state validation sees both edits atomically or refuses both",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft",
+              "source": "connected-acceptance.spec.ts",
+              "line": 217,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "service draft command accepts a final-state network move after replacing an invalid intermediate CDS route"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "service draft command accepts a final-state network move after replacing an invalid intermediate CDS route",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Correcting CDS and rehoming network in same draft commits final state together, one Undo restores original name/network/CDS.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-010",
+      "phase": "UX3",
+      "title": "Validate incoming after rehome",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service changes network and becomes unreachable via incoming CDS",
+      "when": "Apply",
+      "then": "Refuse complete write and identify consumer; no silent route rewrite",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/route-diagnostics.spec.ts",
+          "titles": [
+            "incoming rehome and CDS membership refusals link to exact owners without losing drafts"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "incoming rehome and CDS membership refusals link to exact owners without losing drafts",
+              "source": "route-diagnostics.spec.ts",
+              "line": 9,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-route-diagnostic-results.json"
+            },
+            {
+              "title": "incoming rehome and CDS membership refusals link to exact owners without losing drafts",
+              "source": "route-diagnostics.spec.ts",
+              "line": 9,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-route-diagnostic-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "service draft command refuses a move that would break an incoming CDS route without deleting that route"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "service draft command refuses a move that would break an incoming CDS route without deleting that route",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/initial-service.test.ts",
+          "titles": [
+            "route refusals identify exact consumer and CDS owners for incoming rehome and CDS edits"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "route refusals identify exact consumer and CDS owners for incoming rehome and CDS edits",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/initial-service.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Incoming provider rehome refused; route not deleted; diagnostic identifies and opens exact owning consumer while provider network draft persists.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-011",
+      "phase": "UX3",
+      "title": "Keep legacy invalid route unchanged",
+      "priority": "must",
+      "status": "passed",
+      "given": "Opened legacy dataset contains unchanged invalid dependency fingerprint",
+      "when": "Edit unrelated legal field",
+      "then": "No silent removal/rewrite; preserve existing admission/guard semantics",
+      "method": "repository",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "entity CRUD lets a service edit proceed when an unrelated legacy route is already invalid"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "entity CRUD lets a service edit proceed when an unrelated legacy route is already invalid",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "entity CRUD lets legacy route owners change unrelated fields but blocks a worsened route"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "entity CRUD lets legacy route owners change unrelated fields but blocks a worsened route",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Existing legacy invalid route survives unrelated legal changes; worsened route refused, no silent normalization/removal.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-012",
+      "phase": "UX3",
+      "title": "Connection inspector identity",
+      "priority": "must",
+      "status": "passed",
+      "given": "A single CDS-routed dependency renders two visual segments",
+      "when": "Click either segment",
+      "then": "Same dependency inspector displays consumer/provider/CDS and truthful route semantics",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-focus.spec.ts",
+          "titles": [
+            "both CDS segments open the same owning connection inspector without writing"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "both CDS segments open the same owning connection inspector without writing",
+              "source": "connected-focus.spec.ts",
+              "line": 260,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "both CDS segments open the same owning connection inspector without writing",
+              "source": "connected-focus.spec.ts",
+              "line": 260,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Tapping each physical CDS segment opens same dependency consumer/provider/CDS inspector; no dataset change/Undo/Saved disturbance.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-013",
+      "phase": "UX3",
+      "title": "Projected connection read-only",
+      "priority": "must",
+      "status": "passed",
+      "given": "To-Be/Compare contains virtual connection endpoint",
+      "when": "Inspect/change attempt",
+      "then": "Projected inspector shows provenance; no baseline mutation via virtual ID",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-focus.spec.ts",
+          "titles": [
+            "projected focused routes remain read-only and retain full marking in To-Be and Compare capture"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "projected focused routes remain read-only and retain full marking in To-Be and Compare capture",
+              "source": "connected-focus.spec.ts",
+              "line": 282,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "projected focused routes remain read-only and retain full marking in To-Be and Compare capture",
+              "source": "connected-focus.spec.ts",
+              "line": 282,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-focus.spec.ts",
+          "titles": [
+            "unresolved projected connection inspector preserves former CDS provenance"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "unresolved projected connection inspector preserves former CDS provenance",
+              "source": "connected-focus.spec.ts",
+              "line": 350,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "unresolved projected connection inspector preserves former CDS provenance",
+              "source": "connected-focus.spec.ts",
+              "line": 350,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "browser",
+          "source": "e2e/connected-navigation-acceptance.spec.ts",
+          "titles": [
+            "a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections"
+          ],
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "command": [
+            "npx",
+            "playwright",
+            "test",
+            "e2e/connected-navigation-acceptance.spec.ts",
+            "e2e/connected-editor-acceptance.spec.ts",
+            "e2e/connected-navigation.spec.ts",
+            "e2e/connected-projection.spec.ts",
+            "--output",
+            "test-results/final-navigation",
+            "--reporter",
+            "line"
+          ],
+          "cwd": ".",
+          "run": "connected-final-navigation-42-20261113",
+          "exit_code": 0,
+          "outcome": "pass"
+        }
+      ],
+      "asserted_scope": "To-Be and Compare inspectors are read-only with provenance and no Edit consuming service; unresolved route preserves former CDS; saved snapshot remains unchanged.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-014",
+      "phase": "UX3",
+      "title": "Unadded intent retained",
+      "priority": "must",
+      "status": "passed",
+      "given": "Target selected in Depends on picker but not appended; a support field then changes",
+      "when": "Return to dependency picker",
+      "then": "Target/route selection remains visible until user intentionally adds or cancels it",
+      "method": "component+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-editor.spec.ts",
+          "titles": [
+            "unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh",
+              "source": "connected-editor.spec.ts",
+              "line": 249,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            },
+            {
+              "title": "unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh",
+              "source": "connected-editor.spec.ts",
+              "line": 249,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-support-results.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Unadded consumer/provider/CDS intent survives scalar input and unrelated support refresh; relationship rows remain unadded.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX3-015",
+      "phase": "UX3",
+      "title": "Aggregate relation Undo",
+      "priority": "must",
+      "status": "passed",
+      "given": "Service fields and two relation changes staged",
+      "when": "Apply then Undo then Redo",
+      "then": "Single atomic history step restores all fields/routes together",
+      "method": "browser+unit",
+      "risk": "history",
+      "evidence": [
+        {
+          "kind": "browser",
+          "source": "e2e/connected-acceptance.spec.ts",
+          "titles": [
+            "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together"
+          ],
+          "observed_result": "passed_in_edge_and_chrome",
+          "executions": [
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "msedge",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            },
+            {
+              "title": "one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together",
+              "source": "connected-acceptance.spec.ts",
+              "line": 320,
+              "project": "chrome",
+              "statuses": [
+                "passed"
+              ],
+              "report": "sim-connected-acceptance-complete-results.json"
+            }
+          ]
+        },
+        {
+          "kind": "unit",
+          "source": "src/domain/repository.test.ts",
+          "titles": [
+            "service draft command applies fields and owned relationships in one Undo step"
+          ],
+          "observed_result": "passed",
+          "executions": [
+            {
+              "title": "service draft command applies fields and owned relationships in one Undo step",
+              "source": "C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM/src/domain/repository.test.ts",
+              "status": "passed",
+              "report": "sim-connected-acceptance-unit.json"
+            }
+          ]
+        }
+      ],
+      "asserted_scope": "Single Apply changes scalar+support+consumer+two outgoing routes; one Undo restores every original field/route and exhausts history; one Redo restores all and exhausts redo.",
+      "remaining_acceptance_detail": "",
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-001",
+      "phase": "UX4",
+      "title": "Focus preserves boundary route",
+      "priority": "must",
+      "status": "passed",
+      "given": "Network A Caller depends on B Identity through A-B guard",
+      "when": "Enter Network connections A",
+      "then": "Caller, Identity, both network boxes, complete CDS route visible; one dependency counted",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: keeps complete crossing routes and containers without unrelated shared-CDS consumers (UX4-001/002)",
+            "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px/1024px"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-002",
+      "phase": "UX4",
+      "title": "Exclude unrelated shared provider",
+      "priority": "must",
+      "status": "passed",
+      "given": "C consumer also depends on Identity or shares CDS",
+      "when": "Focus A boundary",
+      "then": "C unrelated consumer not pulled into focus merely due to common provider/CDS",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: keeps complete crossing routes and containers without unrelated shared-CDS consumers (UX4-001/002)",
+            "e2e/connected-focus.spec.ts: network focus excludes Other consumer"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-003",
+      "phase": "UX4",
+      "title": "Depends on direction",
+      "priority": "must",
+      "status": "passed",
+      "given": "Caller -> Identity and Reporting -> Caller exist",
+      "when": "Focus Depends on Caller",
+      "then": "Direct provider Identity shown; Reporting not included until appropriate direction explicitly chosen",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: depends on shows direct providers and excludes consumers and the next provider tier (UX4-003)",
+            "e2e/connected-focus.spec.ts: directional focus expands explicitly without data writes or position changes"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-004",
+      "phase": "UX4",
+      "title": "Used by direction",
+      "priority": "must",
+      "status": "passed",
+      "given": "Caller -> Identity and Reporting -> Caller exist",
+      "when": "Focus Used by Caller",
+      "then": "Reporting visible; Identity not shown as reverse consumer",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: used by follows incoming consumers rather than providers (UX4-004)",
+            "e2e/connected-focus.spec.ts: directional focus expands explicitly without data writes or position changes"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-005",
+      "phase": "UX4",
+      "title": "Explicit expansion and cycles",
+      "priority": "must",
+      "status": "passed",
+      "given": "Multi-hop dependencies with cycle",
+      "when": "Expand upstream/downstream",
+      "then": "Only chosen direction expands; finite visited set, stable identity and no repeated edge inflation",
+      "method": "graph+browser",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: expands only the chosen direction and terminates cycles without duplicate dependencies (UX4-005)",
+            "e2e/connected-focus.spec.ts: directional focus expands explicitly without data writes or position changes"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-006",
+      "phase": "UX4",
+      "title": "Strict filters unchanged",
+      "priority": "must",
+      "status": "passed",
+      "given": "Strict Network A filter has hidden cross-boundary edge",
+      "when": "Compare inventory filter to Network connections A",
+      "then": "Strict filter remains strict; focus separately includes complete boundary path with visible scope indication",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px/1024px",
+            "e2e/connected-focus.spec.ts: projection layout handles newly planned nodes hidden by a strict inventory filter without writes"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-007",
+      "phase": "UX4",
+      "title": "Back restores filter/framing",
+      "priority": "must",
+      "status": "passed",
+      "given": "Strict filter + custom pan/zoom active",
+      "when": "Enter focus, Fit focus, Back",
+      "then": "Original filter, scenario/view and framing restored without saved coordinate change",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px/1024px"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-008",
+      "phase": "UX4",
+      "title": "Focus not data history",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dataset saved and manually arranged",
+      "when": "Use focus, expansion, Fit, Back",
+      "then": "No repository revision, Undo entry, stored position, or file-dirty change",
+      "method": "repository+browser",
+      "risk": "history",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "src/map/focus.test.ts: uses production graph dependency identities without changing repository history or stored positions (UX4-008)",
+            "e2e/connected-focus.spec.ts: directional focus expands explicitly without data writes or position changes"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-009",
+      "phase": "UX4",
+      "title": "Full classification in focus",
+      "priority": "must",
+      "status": "passed",
+      "given": "Full dataset has higher-marking service outside focused nodes",
+      "when": "Export focus",
+      "then": "Top/bottom banner/caveat reflect authoritative full data/projection, never reduced to subset",
+      "method": "browser+unit",
+      "risk": "security",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: projected focused routes remain read-only and retain full marking in To-Be and Compare capture",
+            "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px/1024px"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-010",
+      "phase": "UX4",
+      "title": "PNG and SVG faithful",
+      "priority": "must",
+      "status": "passed",
+      "given": "Focused As-Is/To-Be/Compare and filtered views at wide/narrow viewport",
+      "when": "Export PNG/SVG",
+      "then": "Scene, labels, scope, legend, route, title and marking correspond to intended frozen view",
+      "method": "browser+visual",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: network focus preserves complete routes, full marking and return context at 1600px/1024px",
+            "e2e/connected-focus.spec.ts: projected focused routes remain read-only and retain full marking in To-Be and Compare capture",
+            "e2e/map.spec.ts: actual PNG/SVG export assertions; visual review in TEST-RESULTS.md"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-011",
+      "phase": "UX4",
+      "title": "Capture current view preserves draft",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dirty service form open",
+      "when": "Choose Capture current view",
+      "then": "Parent draft unchanged; export has no data/history write, error feedback visible",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: capture current view keeps a dirty draft, while failed Apply and capture keeps the applied history"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-012",
+      "phase": "UX4",
+      "title": "Apply and capture error truth",
+      "priority": "must",
+      "status": "passed",
+      "given": "Dirty service form open; Apply succeeds but image rendering fails",
+      "when": "Choose Apply and capture",
+      "then": "Data Apply remains committed with own history; export reports error without false rollback",
+      "method": "browser+unit",
+      "risk": "data-integrity",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: capture current view keeps a dirty draft, while failed Apply and capture keeps the applied history"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-013",
+      "phase": "UX4",
+      "title": "Responsive active task",
+      "priority": "must",
+      "status": "passed",
+      "given": "Long service editor with many relationships on wide and laptop sizes",
+      "when": "Open and edit relationships/map",
+      "then": "Action buttons remain reachable; no disabled navigation traps or unusable canvas",
+      "method": "browser+visual",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/connected-focus.spec.ts: keyboard editor focus keeps Apply reachable at laptop width and restores the map",
+            "e2e/connected-focus.spec.ts: two viewport captures and page images"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    },
+    {
+      "id": "UX4-014",
+      "phase": "UX4",
+      "title": "Offline build and security",
+      "priority": "must",
+      "status": "passed",
+      "given": "Built one-file sim.html opened under file://",
+      "when": "Run complete smoke and monitor requests",
+      "then": "No non-file/data/blob requests, no browser-persisted dataset and no unintended new dependency",
+      "method": "browser+unit",
+      "risk": "UX",
+      "evidence": [
+        {
+          "kind": "automated-assertions",
+          "targets": [
+            "e2e/offline-boot.spec.ts; e2e/csp.spec.ts; e2e/dataset-file.spec.ts: does not touch browser storage",
+            "tests/unit/build-output.test.ts; tests/unit/lint-policy.test.ts; no package/lockfile or migration change"
+          ],
+          "run": "connected-full-282-20261113",
+          "execution": "pass",
+          "browsers": [
+            "msedge",
+            "chrome"
+          ],
+          "cwd": ".",
+          "command": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "final_revalidation": {
+        "run": "connected-final-296-20261113",
+        "command": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "exit_code": 0,
+        "browsers": [
+          "msedge",
+          "chrome"
+        ],
+        "outcome": "pass"
+      }
+    }
+  ],
+  "interpretation": "Individual evidence targets and method establish each case; totals alone do not. Browser methods use installed Edge/Chrome offline file://. Native OS picker and F26 permission/external-writer acceptance are separate.",
+  "supporting_reports": [
+    "sim-connected-acceptance-support-results.json",
+    "sim-connected-acceptance-setup-rerun.json",
+    "sim-connected-acceptance-complete-results.json",
+    "sim-connected-route-diagnostic-results.json",
+    "sim-connected-acceptance-unit.json"
+  ],
+  "latest_full_gate": {
+    "argv": [
+      "npm",
+      "run",
+      "check"
+    ],
+    "cwd": ".",
+    "exit_code": 0,
+    "unit": 342,
+    "browser": 296,
+    "run": "connected-final-296-20261113",
+    "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-connected-check-final-subject.log",
+    "source_manifest": "SOURCE-IDENTITY.json"
+  },
+  "scope_summary": "73 mandatory cases have individual automated assertion evidence; UX4-010 also has actual visual capture inspection. Native F26 and screen-reader certification are outside these automated claims."
+}
