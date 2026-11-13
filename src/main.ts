@@ -67,6 +67,20 @@ let recoveryIntent = false;
 let recoveryRequest = 0;
 const undoButton = button("Undo", () => travel("undo"));
 const redoButton = button("Redo", () => travel("redo"));
+const retryRecoveryButton = button("Retry recovery", () => state.recovery?.controller.flush() ?? Promise.resolve());
+const stopRecoveryButton = button("Stop recovery", () => {
+  stopRecovery(state);
+  return Promise.resolve();
+});
+retryRecoveryButton.hidden = true;
+stopRecoveryButton.hidden = true;
+
+function showRecoveryStatus(text: string, failed = false): void {
+  recoveryStatus.textContent = text;
+  recoveryStatus.dataset["severity"] = failed ? "error" : "neutral";
+  retryRecoveryButton.hidden = !failed || state.recovery === undefined;
+  stopRecoveryButton.hidden = state.recovery === undefined;
+}
 
 function render(): void {
   if (!workspaceReady) return;
@@ -134,7 +148,7 @@ function replace(db: Database, fileName: string | null, handle: FileHandle | nul
   }
   old.session.dispose();
   stopRecovery(old);
-  recoveryStatus.textContent = "Recovery is off for this dataset.";
+  showRecoveryStatus("Recovery is off for this dataset.");
   old.db.close();
   show("");
   render();
@@ -421,7 +435,7 @@ function stopRecovery(owner: State, cancelSelection = true): void {
   owner.recovery?.unsubscribe();
   owner.recovery?.controller.dispose();
   delete owner.recovery;
-  if (owner === state) recoveryStatus.textContent = "Recovery is off. Existing recovery files are retained.";
+  if (owner === state) showRecoveryStatus("Recovery is off. Existing recovery files are retained.");
 }
 
 async function onRecovery(): Promise<void> {
@@ -431,6 +445,8 @@ async function onRecovery(): Promise<void> {
     return;
   }
   recoveryIntent = true;
+  // Stop also owns a picker/handle read that has not yet installed a controller.
+  stopRecoveryButton.hidden = false;
   const request = ++recoveryRequest;
   const owner = state;
   try {
@@ -446,7 +462,7 @@ async function onRecovery(): Promise<void> {
       () => exportDataset(owner.db),
       (bytes) => writeToHandle(handle, bytes, () => state === owner && owner.recovery?.controller === controller),
       (text) => {
-        if (state === owner) recoveryStatus.textContent = `${handle.name}: ${text}`;
+        if (state === owner) showRecoveryStatus(`${handle.name}: ${text}`, text.startsWith("Recovery failed"));
       },
     );
     owner.recovery = {
@@ -462,6 +478,7 @@ async function onRecovery(): Promise<void> {
       show("Could not enable recovery. Choose a separate writable recovery file and try again.", "error");
   } finally {
     recoveryIntent = false;
+    stopRecoveryButton.hidden = state.recovery === undefined;
   }
 }
 
@@ -497,6 +514,16 @@ function button(label: string, action: () => Promise<unknown>): HTMLButtonElemen
   return b;
 }
 
+function dismissDetails(panel: HTMLDetailsElement): void {
+  panel.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopPropagation();
+    panel.open = false;
+    panel.querySelector("summary")?.focus();
+  });
+}
+
 async function boot(): Promise<void> {
   const app = document.getElementById("app");
   if (!app) throw new Error("missing #app root");
@@ -527,26 +554,62 @@ async function boot(): Promise<void> {
   version.dataset["testid"] = "sqlite-version";
   version.textContent = `SQLite ${sqliteVersion(db)}`;
   const toolbar = document.createElement("nav");
-  toolbar.append(
+  toolbar.className = "document-toolbar";
+  toolbar.setAttribute("aria-label", "Document actions");
+  const file = document.createElement("details");
+  file.className = "file-menu";
+  const fileTitle = document.createElement("summary");
+  fileTitle.textContent = "File";
+  const fileActions = document.createElement("div");
+  fileActions.className = "file-menu-actions";
+  fileActions.append(
     button("New", onNew),
     button("Open", onOpen),
-    button("Open demo", onDemo),
     button("Import CSV", onImport),
-    button("Save file", () => onSave(false)),
     button("Save As", () => onSave(true)),
     button("Choose recovery file", onRecovery),
-    button("Retry recovery", () => state.recovery?.controller.flush() ?? Promise.resolve()),
-    button("Stop recovery", () => {
-      stopRecovery(state);
-      return Promise.resolve();
-    }),
+    stopRecoveryButton,
     button("Banner caveat", onCaveat),
+  );
+  fileActions.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLElement && event.target.closest("button")) {
+      file.open = false;
+      fileTitle.focus();
+    }
+  });
+  file.append(fileTitle, fileActions);
+  const about = document.createElement("details");
+  about.className = "file-menu about-menu";
+  const aboutTitle = document.createElement("summary");
+  aboutTitle.textContent = "About and demo";
+  const aboutBody = document.createElement("div");
+  aboutBody.className = "file-menu-actions";
+  const aboutDescription = document.createElement("p");
+  aboutDescription.textContent = "SIM runs offline. Your data stays in the local SQLite files you choose.";
+  aboutBody.append(version, aboutDescription, button("Open demo", onDemo));
+  aboutBody.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLElement && event.target.closest("button")) {
+      about.open = false;
+      aboutTitle.focus();
+    }
+  });
+  about.append(aboutTitle, aboutBody);
+  dismissDetails(file);
+  dismissDetails(about);
+  toolbar.append(
+    file,
+    button("Save file", () => onSave(false)),
     undoButton,
     redoButton,
+    about,
   );
   const header = document.createElement("header");
   header.className = "app-header";
-  header.append(title, toolbar, status, draftStatus, recoveryStatus, version, message);
+  const documentStatus = document.createElement("div");
+  documentStatus.className = "document-status";
+  status.setAttribute("role", "status");
+  documentStatus.append(status, draftStatus, recoveryStatus, retryRecoveryButton, message);
+  header.append(title, toolbar, documentStatus);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
   // Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) undo and redo dataset edits, except while typing in a field,
   // where the browser's own text undo applies.
@@ -565,6 +628,7 @@ async function boot(): Promise<void> {
   window.addEventListener("beforeunload", (event) => {
     if (hasUnsavedEdits()) event.preventDefault();
   });
+  showRecoveryStatus("Recovery is off for this dataset.");
   render();
 }
 

@@ -1,3 +1,4 @@
+import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -35,6 +36,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
 
   test("opens an uploaded dataset and saves it as a download that reopens identically", async ({ page }, info) => {
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (
       await chooser
@@ -56,6 +58,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
   test("shows a readable error for a file that is not a dataset and keeps the current one", async ({ page }) => {
     await expect(status(page)).toHaveText("Untitled dataset | not saved yet | Changes not saved to file");
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "notes.sqlite", mimeType: "text/plain", buffer: Buffer.from("hello") });
     await expect(page.getByTestId("dataset-message")).toHaveText(/not a SIM dataset/);
@@ -65,6 +68,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
 
   test("New asks for a name and starts an unsaved dataset", async ({ page }) => {
     page.once("dialog", (dialog) => void dialog.accept("Acme Corp"));
+    await openFileMenu(page);
     await page.getByRole("button", { name: "New" }).click();
     await expect(status(page)).toHaveText("Acme Corp | not saved yet | Changes not saved to file");
   });
@@ -92,6 +96,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
     const name = page.getByTestId("editor").getByLabel("Name");
     await name.fill("Unapplied network");
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "invalid.sqlite", mimeType: "text/plain", buffer: Buffer.from("invalid") });
     await expect(page.getByTestId("dataset-message")).toContainText("not a SIM dataset");
@@ -105,6 +110,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
     const name = page.getByTestId("editor").getByLabel("Name");
     await name.fill("Unapplied network");
     page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await openFileMenu(page);
     await page.getByRole("button", { name: "New", exact: true }).click();
     const decision = page.getByRole("dialog", { name: "Unsaved changes" });
     await expect(decision).toBeVisible();
@@ -112,6 +118,7 @@ test.describe("without the File System Access API (download/upload fallback)", (
     await expect(name).toHaveValue("Unapplied network");
     await expect(status(page)).toContainText("Untitled dataset");
     page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await openFileMenu(page);
     await page.getByRole("button", { name: "New", exact: true }).click();
     await decision.getByRole("button", { name: "Discard all and continue" }).click();
     await expect(status(page)).toContainText("Next dataset | not saved yet");
@@ -157,6 +164,7 @@ test.describe("with the File System Access API (save in place)", () => {
     page.evaluate((n) => (window as unknown as { __written: Record<string, number[]> }).__written[n] ?? null, name);
 
   test("Save writes back to the opened file and Save As writes to a new file", async ({ page }) => {
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await expect(status(page)).toHaveText("Fixture enterprise | fixture.sqlite | Saved");
 
@@ -164,6 +172,7 @@ test.describe("with the File System Access API (save in place)", () => {
     await expect.poll(() => written(page, "fixture.sqlite")).not.toBeNull();
     expect(await networks(new Uint8Array((await written(page, "fixture.sqlite")) ?? []))).toHaveLength(2);
 
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Save As" }).click();
     await expect(status(page)).toHaveText("Fixture enterprise | new-Fixture enterprise.sqlite | Saved");
     expect(await networks(new Uint8Array((await written(page, "new-Fixture enterprise.sqlite")) ?? []))).toHaveLength(
@@ -172,6 +181,7 @@ test.describe("with the File System Access API (save in place)", () => {
   });
 
   test("does not touch browser storage", async ({ page }) => {
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await page.getByRole("button", { name: "Save file", exact: true }).click();
     const storage = await page.evaluate(async () => ({
@@ -246,6 +256,7 @@ test.describe("with the File System Access API (save in place)", () => {
     await page.getByRole("button", { name: "Add network" }).click();
     await page.getByTestId("editor").getByLabel("Name").fill("Old draft network");
     page.once("dialog", (dialog) => void dialog.accept("Next dataset"));
+    await openFileMenu(page);
     await page.getByRole("button", { name: "New", exact: true }).click();
     const decision = page.getByRole("dialog", { name: "Unsaved changes" });
     await decision.getByRole("button", { name: "Save and continue" }).click();

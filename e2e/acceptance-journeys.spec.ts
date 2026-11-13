@@ -1,3 +1,11 @@
+import {
+  chooseReference,
+  editSelected,
+  editorSection,
+  openFileMenu,
+  showInventory,
+  showMap,
+} from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -16,16 +24,18 @@ async function boot(page: Page): Promise<void> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
 }
 
 async function openBytes(page: Page, bytes: Uint8Array, name = "synthetic.sqlite"): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name, mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
 }
 
 async function select(page: Page, plural: string, name: string): Promise<void> {
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: plural });
   await page
     .getByTestId("entity-list")
@@ -44,7 +54,7 @@ test("J1: create network and service with only required inputs, Save file, then 
   await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Amber");
   await editor.getByLabel("Name", { exact: true }).fill("Mail");
   await editor.getByRole("button", { name: "Add service" }).click();
-  await expect(editor.getByRole("heading", { name: "Edit service" })).toBeVisible();
+  await expect(editor.getByRole("heading", { name: "Service: Mail", exact: true })).toBeVisible();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   const bytes = readFileSync(await (await download).path());
@@ -53,10 +63,10 @@ test("J1: create network and service with only required inputs, Save file, then 
   await boot(reopened);
   await openBytes(reopened, bytes);
   await select(reopened, "Services", "Mail");
+  await expect(reopened.getByTestId("editor").getByRole("button", { name: "Amber", exact: true })).toBeVisible();
   await expect(
-    reopened.getByTestId("editor").getByLabel("Network", { exact: true }).locator("option:checked"),
-  ).toHaveText("Amber");
-  await expect(reopened.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Mail");
+    reopened.getByTestId("editor").getByRole("heading", { name: "Service: Mail", exact: true }),
+  ).toBeVisible();
   await reopened.close();
 });
 
@@ -75,32 +85,39 @@ test("J2: invalid field keeps staged relationships; valid Apply, Undo and Redo m
   await boot(page);
   await openBytes(page, bytes);
   await select(page, "Services", "Orders");
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   const name = editor.getByLabel("Name", { exact: true });
   await name.fill("");
-  await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Operations" });
-  await editor.getByLabel("Add consumer").selectOption({ label: "Operations" });
-  await editor.getByRole("button", { name: "Add consumer" }).click();
-  await editor.getByLabel("Depends on service").selectOption({ label: "Identity (SIPR)" });
+  await editorSection(page, "Support");
+  await chooseReference(page, "Tier 1 support", "Operations");
+  await editorSection(page, "Connections");
+  await chooseReference(page, "Add consumer", "Operations");
+  await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
+  await chooseReference(page, "Depends on service", "Identity (SIPR)");
   await editor.getByLabel("Via CDS").selectOption({ label: "Guard" });
   await editor.getByRole("button", { name: "Add dependency" }).click();
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(editor.getByTestId("error-name")).toContainText("required");
   await expect(editor.getByTestId("consumers")).toContainText("Operations");
-  await expect(editor.getByTestId("dependencies")).toContainText("Identity via Guard");
+  await expect(editor.getByTestId("dependencies")).toContainText("Identity (SIPR) via Guard");
   await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
 
+  await editorSection(page, "Details");
   await name.fill("Revised Orders");
   await editor.getByRole("button", { name: "Apply changes" }).click();
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Revised Orders");
   await page.getByRole("button", { name: "Undo" }).click();
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
   await expect(editor.getByTestId("consumers")).toBeEmpty();
   await expect(editor.getByTestId("dependencies")).toBeEmpty();
   await page.getByRole("button", { name: "Redo" }).click();
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Revised Orders");
   await expect(editor.getByTestId("consumers")).toContainText("Operations");
-  await expect(editor.getByTestId("dependencies")).toContainText("Identity via Guard");
+  await expect(editor.getByTestId("dependencies")).toContainText("Identity (SIPR) via Guard");
 });
 
 test("AC082: Save file refuses invalid scenario builder, then saves metadata and one change together", async ({
@@ -116,6 +133,7 @@ test("AC082: Save file refuses invalid scenario builder, then saves metadata and
   await boot(page);
   await openBytes(page, bytes);
   await select(page, "Scenarios", "Plan");
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Description").fill("Combined planning note");
   await editor.getByLabel("Change", { exact: true }).selectOption("add");
@@ -153,6 +171,7 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
 
   await boot(page);
   await openBytes(page, bytes);
+  await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
   await page.getByRole("button", { name: "Fit map" }).click();
   const editor = page.getByTestId("editor");
@@ -163,6 +182,7 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
     ["Retired (NIPR)", "Comparison status: retired"],
     ["Planned (SIPR)", "Planned service added"],
   ] as const) {
+    await showMap(page);
     await find.fill(query);
     await find.press("Enter");
     await expect(editor).toContainText(status);
@@ -171,6 +191,13 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
   await expect(editor.getByRole("button", { name: "Edit As-Is" })).toHaveCount(0);
 
   const canvas = page.getByTestId("map-canvas");
+  await showMap(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: { resize(): void; fit(): void } } })._cyreg.cy;
+    cy.resize();
+    cy.fit();
+  });
   const point = await canvas.evaluate((container) => {
     interface Node {
       data(key: string): unknown;
@@ -192,9 +219,12 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
   await expect(editor).toContainText("Comparison status: rehomed");
   await editor.getByRole("button", { name: "Edit As-Is" }).click();
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("as-is");
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Moved");
 
+  await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
+  await page.locator("details.map-capture-panel").locator("summary").click();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export SVG" }).click();
   const image = readFileSync(await (await download).path(), "utf8");
@@ -227,7 +257,9 @@ test("AC021: a late older Open candidate cannot replace the newer one", async ({
     },
     { a: firstBytes, b: secondBytes },
   );
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => (window as unknown as { pendingOpenCount: () => number }).pendingOpenCount()))
@@ -257,8 +289,10 @@ test("AC039: a relevant external relationship change preserves the draft and off
   await boot(page);
   await openBytes(page, bytes);
   await select(page, "Services", "Orders");
+  await editSelected(page);
 
   // Begin the import while the editor is clean. A late edit then races the reviewed import.
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   const importDialog = page.getByRole("dialog", { name: "Import CSV" });
   await importDialog.getByLabel("CSV files").setInputFiles({

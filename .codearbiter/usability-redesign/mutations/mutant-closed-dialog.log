@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+
+(node:110224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/1] [msedge] › e2e\reference-picker-component.spec.ts:192:1 › component: stale ownership and a completion after close never assign another session's identity
+  1) [msedge] › e2e\reference-picker-component.spec.ts:192:1 › component: stale ownership and a completion after close never assign another session's identity
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+      Object {
+    -   "selected": Array [],
+    +   "selected": Array [
+    +     "1",
+    +   ],
+        "writes": 0,
+      }
+
+      213 |     (window as unknown as { pickerFixture: { complete?: (value: string) => void } }).pickerFixture.complete?.("1");
+      214 |   });
+    > 215 |   expect(await state(page)).toEqual({ selected: [], writes: 0 });
+          |                             ^
+      216 | });
+      217 |
+        at C:\Users\brenn\AppData\Local\Temp\sim-picker-mutation-8c062a1d34\e2e\reference-picker-component.spec.ts:215:29
+
+    Error Context: test-results\mutant-closed-dialog\reference-picker-component-a1f00--another-session-s-identity-msedge\error-context.md
+
+
+  1 failed
+    [msedge] › e2e\reference-picker-component.spec.ts:192:1 › component: stale ownership and a completion after close never assign another session's identity

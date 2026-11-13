@@ -32,6 +32,7 @@ export interface MapViewState {
   readonly view: View;
   readonly filter: MapFilter;
   readonly chainRoot: string | null;
+  readonly selectedNode?: string | null;
   readonly foundational: boolean;
   readonly zoom: number;
   readonly pan: { x: number; y: number };
@@ -88,6 +89,8 @@ export interface MapView {
   captureView(): MapViewState;
   restoreView(state: MapViewState): void;
   reveal(entity: MapEntity, id: number): void;
+  /** Select a focus subject without changing the viewport or the current map question. */
+  select(entity: MapEntity, id: number): void;
 }
 
 // Readable on-screen label sizes, in pixels (WORK-018). Service labels smaller than this are
@@ -224,30 +227,33 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
   // Find a node by name: pick from the suggestions (or type a full name) and press Enter.
   const findOptions = el("datalist", { id: "map-find-options" });
-  const findBox = el("input", { id: "map-find", type: "search", list: "map-find-options", autocomplete: "off" });
-  let findEdited = false;
+  const findBox = el("input", { id: "map-find", type: "search", autocomplete: "off" });
+  let findPage = 0;
   const findResults = el("div", { "data-testid": "find-results", class: "find-results", "aria-live": "polite" });
   findBox.addEventListener("input", () => {
-    findEdited = true;
+    findPage = 0;
     renderFindResults();
   });
   findBox.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      findEdited = false;
       void find(findBox.value);
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
     }
     if (event.key === "Escape") findResults.replaceChildren();
   });
-  findBox.addEventListener("change", () => {
-    findEdited = false;
-    void find(findBox.value);
-  });
-  findBox.addEventListener("blur", () => {
-    if (findEdited) {
-      findEdited = false;
-      void find(findBox.value);
-    }
+  findResults.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const controls = [...findResults.querySelectorAll<HTMLButtonElement>("li button")];
+    const current = controls.indexOf(document.activeElement as HTMLButtonElement);
+    if (current < 0) return;
+    event.preventDefault();
+    const index = current + (event.key === "ArrowDown" ? 1 : -1);
+    if (index < 0) findBox.focus();
+    else controls[Math.min(index, controls.length - 1)]?.focus();
   });
   // The label sits beside its list, not around it, so the list's name is just the label.
   const filterLabel = (text: string, select: HTMLSelectElement) =>
@@ -255,7 +261,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   const fit = button("Fit map", () => {
     fitMap();
   });
-  const exportPng = button("Export PNG", () => {
+  const exportPng = button("Capture", () => {
     void exportView();
   });
   const exportSvg = button("Export SVG", () => {
@@ -270,32 +276,53 @@ export function createMapView(ctx: MapViewContext): MapView {
     fitMap();
     persist("own");
   });
+  exportPng.title = "Capture the current map as PNG";
+  const filtersTitle = el("summary", {}, "Filters");
+  const filtersPanel = el(
+    "details",
+    { class: "map-filter-panel" },
+    filtersTitle,
+    el(
+      "div",
+      { class: "map-tools", role: "group", "aria-label": "Filter the map" },
+      filterLabel("Network", filterNetwork),
+      filterLabel("Category", filterCategory),
+      filterLabel("Organization", filterOrg),
+      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
+    ),
+  );
+  const layoutPanel = el("details", { class: "map-layout-panel" }, el("summary", {}, "Layout"), relayout);
+  const capturePanel = el("details", { class: "map-capture-panel" }, el("summary", {}, "Capture options"), exportSvg);
+  for (const panel of [filtersPanel, layoutPanel, capturePanel]) {
+    panel.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      panel.open = false;
+      panel.querySelector("summary")?.focus();
+    });
+  }
   const toolbar = el(
     "div",
     { class: "map-toolbar" },
     el(
       "div",
-      { class: "map-tools" },
+      { class: "map-tools map-primary-tools" },
       el("span", { class: "map-filter" }, el("label", { for: viewSelect.id }, "View"), viewSelect),
-      metrics,
-    ),
-    el(
-      "div",
-      { class: "map-tools", role: "group", "aria-label": "Filter the map" },
-      el("span", { class: "map-filter" }, el("label", { for: findBox.id }, "Find on map"), findBox, findOptions),
-      filterLabel("Network", filterNetwork),
-      filterLabel("Category", filterCategory),
-      filterLabel("Organization", filterOrg),
-    ),
-    el(
-      "div",
-      { class: "map-tools" },
-      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
-      relayout,
+      el(
+        "span",
+        { class: "map-filter map-discovery" },
+        el("label", { for: findBox.id }, "Find on map"),
+        findBox,
+        findOptions,
+      ),
+      filtersPanel,
       fit,
+      layoutPanel,
       exportPng,
-      exportSvg,
+      capturePanel,
     ),
+    metrics,
   );
   const element = el(
     "section",
@@ -327,6 +354,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   let positions: readonly NodePosition[] = [];
   /** The node whose chain is highlighted (decomposition CAP-005), if any. */
   let chainRoot: string | null = null;
+  let selectedNode: string | null = null;
   let filter: MapFilter = {};
   let view: View = { kind: "as-is" };
   let comparison: Comparison | null = null;
@@ -336,36 +364,55 @@ export function createMapView(ctx: MapViewContext): MapView {
   let navigationBusy = false;
 
   const focusStatus = el("p", { class: "map-feedback", "data-testid": "focus-status", role: "status" });
-  const focusTools = el("div", { class: "map-tools", role: "group", "aria-label": "Focus map" });
+  const selectedLabel = el("span", { class: "map-selected-label" });
+  const focusTools = el(
+    "div",
+    { class: "map-tools map-selection-actions", role: "group", "aria-label": "Focus map" },
+    selectedLabel,
+  );
+  const focusButtons: { button: HTMLButtonElement; kind: FocusRequest["kind"] }[] = [];
   for (const [label, kind] of [
     ["Depends on", "depends-on"],
     ["Used by", "used-by"],
     ["Network connections", "network-connections"],
   ] as const) {
-    focusTools.append(
-      button(label, () => {
-        const selected = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
-        const subject =
-          kind === "network-connections"
-            ? selected?.data.entity === "network"
-              ? selected.data.id
-              : selected?.data.parent
-            : selected?.data.entity === "service"
-              ? selected.data.id
-              : undefined;
-        if (!subject) {
-          focusStatus.textContent =
-            kind === "network-connections" ? "Select a network or service first." : "Select a service first.";
-          return;
-        }
-        if (!focusReturn) focusReturn = captureView();
-        focus = { kind, subject, depth: 1 };
-        applyView();
-        fitMap();
-      }),
-    );
+    const control = button(label, () => {
+      const selected = selectedNode === null ? undefined : graph.nodes.find((n) => n.data.id === selectedNode);
+      const subject =
+        kind === "network-connections"
+          ? selected?.data.entity === "network"
+            ? selected.data.id
+            : selected?.data.parent
+          : selected?.data.entity === "service"
+            ? selected.data.id
+            : undefined;
+      if (!subject) {
+        focusStatus.textContent =
+          kind === "network-connections" ? "Select a network or service first." : "Select a service first.";
+        return;
+      }
+      if (!focusReturn) focusReturn = captureView();
+      focus = { kind, subject, depth: 1 };
+      chainRoot = null;
+      applyView();
+      fitMap();
+    });
+    focusButtons.push({ button: control, kind });
+    focusTools.append(control);
   }
-  focusTools.append(
+  const highlight = button("Highlight chain", () => {
+    if (selectedNode === null) return;
+    chainRoot = selectedNode;
+    applyView();
+  });
+  const clearHighlight = button("Clear highlight", () => {
+    chainRoot = null;
+    applyView();
+  });
+  focusTools.append(highlight, clearHighlight);
+  const focusActions = el(
+    "div",
+    { class: "map-tools map-focus-actions", role: "group", "aria-label": "Current focus" },
     button("Expand focus", () => {
       if (focus) {
         focus = { ...focus, depth: focus.depth + 1 };
@@ -379,10 +426,10 @@ export function createMapView(ctx: MapViewContext): MapView {
     button("Back from focus", () => {
       const prior = focusReturn;
       focusReturn = null;
-      if (prior) restoreView(prior);
+      if (prior) restoreView({ ...prior, selectedNode });
     }),
   );
-  toolbar.append(focusTools, focusStatus);
+  toolbar.append(focusTools, focusActions, focusStatus);
   type PlacementJob = {
     history: History;
     readonly origin: { readonly sessionId: number; readonly revision: number };
@@ -490,14 +537,13 @@ export function createMapView(ctx: MapViewContext): MapView {
         ctx.navigationAborted?.();
         return false;
       }
-      if (revealFiltered) focus = null;
-      if (target.hasClass("filtered")) {
+      if (revealFiltered && focus === null && target.hasClass("filtered")) {
         for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
         filter = {};
       }
-      chainRoot = node.data.id;
+      selectedNode = node.data.id;
       applyView();
-      if (revealFiltered) {
+      if (revealFiltered && focus === null) {
         if (cy.zoom() < 0.8) cy.zoom(0.8);
         cy.center(target);
       }
@@ -538,8 +584,32 @@ export function createMapView(ctx: MapViewContext): MapView {
         }),
       ),
     );
-    findResults.replaceChildren(...controls);
-    if (controls.length === 0) findResults.textContent = "No matching records. Search names across record types.";
+    const pages = Math.max(1, Math.ceil(controls.length / 30));
+    findPage = Math.max(0, Math.min(findPage, pages - 1));
+    const rows = controls.slice(findPage * 30, (findPage + 1) * 30);
+    const previous = button("Previous search results", () => {
+      findPage--;
+      renderFindResults();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
+    });
+    const next = button("Next search results", () => {
+      findPage++;
+      renderFindResults();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
+    });
+    previous.disabled = findPage === 0;
+    next.disabled = findPage + 1 >= pages;
+    findResults.replaceChildren(
+      el(
+        "p",
+        { role: "status", class: "find-count" },
+        controls.length === 0
+          ? "No matching records. Search names across record types."
+          : `${String(findPage * 30 + 1)}–${String(findPage * 30 + rows.length)} of ${String(controls.length)} matching records`,
+      ),
+      el("ul", { class: "find-result-list" }, ...rows.map((control) => el("li", {}, control))),
+      ...(pages > 1 ? [el("nav", { "aria-label": "Search result pages" }, previous, next)] : []),
+    );
   }
 
   /** The id selected in a filter list, or undefined for "All". */
@@ -573,8 +643,28 @@ export function createMapView(ctx: MapViewContext): MapView {
    */
   function applyView(): void {
     if (chainRoot !== null && cy.getElementById(chainRoot).empty()) chainRoot = null;
+    if (selectedNode !== null && cy.getElementById(selectedNode).empty()) selectedNode = null;
+    const selected = selectedNode === null ? undefined : graph.nodes.find((node) => node.data.id === selectedNode);
+    selectedLabel.textContent = selected ? `Selected: ${findName(selected)}` : "";
+    for (const control of focusButtons) {
+      control.button.hidden =
+        control.kind === "network-connections"
+          ? selected?.data.entity !== "service" && selected?.data.entity !== "network"
+          : selected?.data.entity !== "service";
+    }
+    highlight.hidden = selected === undefined;
+    clearHighlight.hidden = chainRoot === null;
+    focusTools.hidden = selected === undefined && chainRoot === null;
+    focusActions.hidden = focus === null;
+    const activeFilters =
+      [filterNetwork, filterCategory, filterOrg].filter((select) => select.value !== "").length +
+      (showFoundational ? 1 : 0);
+    filtersTitle.textContent = activeFilters === 0 ? "Filters" : `Filters (${String(activeFilters)})`;
     const chain: Chain | null = chainRoot === null ? null : traceChain(graph, chainRoot);
     const membership = focus ? focusGraph(graph, focus) : null;
+    if (selected && membership && !membership.visible.has(selected.data.id)) {
+      selectedLabel.textContent = `Selected: ${findName(selected)} (outside current focus)`;
+    }
     const filtered = membership
       ? new Set(
           [...graph.nodes, ...graph.edges]
@@ -594,7 +684,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         e.toggleClass("hidden", e.hasClass("to-foundational") && !showFoundational && membership === null);
         e.toggleClass("remote-endpoint", membership?.remote.has(id) ?? false);
         e.toggleClass("chain", inChain);
-        e.toggleClass("chain-root", id === chainRoot);
+        e.toggleClass("chain-root", id === selectedNode);
         e.toggleClass("dimmed", chain !== null && !inChain);
         e.toggleClass("filtered", filtered.has(id));
         const status = comparison && e.isNode() ? comparison.status.get(e.data("entityId") as number) : undefined;
@@ -853,7 +943,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   cy.on("tap", (event) => {
     const target = event.target as Core | NodeSingular;
     if (target === cy) {
-      chainRoot = null;
+      selectedNode = null;
       applyView();
       return;
     }
@@ -1045,6 +1135,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   /** Redraw for another view, keeping the viewport so As-Is and To-Be line up. */
   function switchView(): void {
     chainRoot = null;
+    selectedNode = null;
     cy.elements().remove();
     const fresh = sync();
     if (fresh.nonempty()) {
@@ -1087,6 +1178,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     showFoundational = false;
     foundationalBox.checked = false;
     chainRoot = null;
+    selectedNode = null;
     for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
     cy.elements().remove();
     const fresh = sync();
@@ -1110,6 +1202,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       view: { ...view },
       filter: { ...filter },
       chainRoot,
+      selectedNode,
       foundational: showFoundational,
       zoom: cy.zoom(),
       pan: { ...cy.pan() },
@@ -1124,6 +1217,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     filterOrg.value = saved.filter.orgId === undefined ? "" : String(saved.filter.orgId);
     filter = readFilter();
     chainRoot = saved.chainRoot;
+    selectedNode = saved.selectedNode === undefined ? saved.chainRoot : saved.selectedNode;
     focus = saved.focus;
     showFoundational = saved.foundational;
     foundationalBox.checked = showFoundational;
@@ -1134,14 +1228,29 @@ export function createMapView(ctx: MapViewContext): MapView {
   function reveal(entity: MapEntity, id: number): void {
     const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
     if (!node) return;
-    if (!cy.getElementById(node.data.id).visible()) {
+    if (focus === null && !cy.getElementById(node.data.id).visible()) {
       for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
       filter = {};
-      focus = null;
     }
-    chainRoot = node.data.id;
+    selectedNode = node.data.id;
     applyView();
-    cy.center(cy.getElementById(node.data.id));
+    if (focus === null) cy.center(cy.getElementById(node.data.id));
   }
-  return { element, refresh, reset, settlePendingPlacement, showAsIs, inspectOrigin, captureView, restoreView, reveal };
+  function select(entity: MapEntity, id: number): void {
+    const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
+    selectedNode = node?.data.id ?? null;
+    applyView();
+  }
+  return {
+    element,
+    refresh,
+    reset,
+    settlePendingPlacement,
+    showAsIs,
+    inspectOrigin,
+    captureView,
+    restoreView,
+    reveal,
+    select,
+  };
 }

@@ -1,3 +1,4 @@
+import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -26,6 +27,7 @@ async function dataset(name: string): Promise<Buffer> {
 
 async function chooseDataset(page: Page, name: string, bytes: Buffer): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name, mimeType: "application/x-sqlite3", buffer: bytes });
 }
@@ -38,7 +40,7 @@ test.beforeEach(async ({ page }) => {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
 });
 
 test("J3: invalid and late Open candidates preserve a pending draft until a reviewed replacement wins", async ({
@@ -60,6 +62,7 @@ test("J3: invalid and late Open candidates preserve a pending draft until a revi
       showSaveFilePicker: () => Promise.reject(new Error("not used")),
     });
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect(draftName).toHaveValue("Unapplied network");
   await expect(page.getByRole("dialog", { name: "Unsaved changes" })).toHaveCount(0);
@@ -109,6 +112,7 @@ test("J3: invalid and late Open candidates preserve a pending draft until a revi
 test("J6: a late CSV read cannot replace the reviewed preview, survive Escape, or alter one-step Undo", async ({
   page,
 }) => {
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   const dialog = importDialog(page);
   const input = dialog.getByLabel("CSV files");
@@ -147,6 +151,7 @@ test("J6: a late CSV read cannot replace the reviewed preview, survive Escape, o
   await expect(page.getByTestId("entity-list").getByRole("button")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   const fresh = importDialog(page);
   await fresh.getByLabel("CSV files").setInputFiles([

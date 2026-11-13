@@ -1,3 +1,5 @@
+import { openFileMenu, showMap } from "./helpers/usability";
+
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -136,14 +138,16 @@ test("keeps a spike-sized map readable: few crossings and label overlaps, no ove
     delete (window as unknown as Record<string, unknown>)["showOpenFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   const bytes = await enterprise();
   const runs: Metrics[] = [];
   for (let run = 0; run < 3; run++) {
     if (run > 0) page.once("dialog", (d) => void d.accept());
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (await chooser).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
+    await showMap(page);
     await expect(page.getByTestId("map-summary")).toContainText("services");
     runs.push(await measure(page));
   }
@@ -169,10 +173,12 @@ test("hides unreadably small service labels until hovered or zoomed into", async
   });
   await page.goto(simUrl);
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: await enterprise() });
+  await showMap(page);
   await expect(page.getByTestId("map-summary")).toContainText("services");
   const canvas = page.getByTestId("map-canvas");
   const box = await canvas.boundingBox();
@@ -208,7 +214,7 @@ test("hides unreadably small service labels until hovered or zoomed into", async
     }, id);
 
   const fitted = await service();
-  expect(fitted.label).toBe("");
+  await expect.poll(async () => (await service(fitted.id)).label).toBe("");
   // Wheel/layout work can still adjust rendered positions; aim at the current
   // node center on each poll instead of retaining an earlier screen point.
   await expect

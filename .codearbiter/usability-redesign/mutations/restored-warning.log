@@ -1,0 +1,8 @@
+
+Running 1 test using 1 worker
+
+
+(node:120280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/1] [msedge] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent
+  1 passed (1.8s)

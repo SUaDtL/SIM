@@ -3,6 +3,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
+import { editSelected, mapFilters, openFileMenu, showInventory, showMap } from "./helpers/usability";
 
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
@@ -36,7 +37,8 @@ async function loadFixture(page: Page): Promise<void> {
     delete app["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
+  await openFileMenu(page);
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
@@ -46,6 +48,7 @@ async function loadFixture(page: Page): Promise<void> {
 }
 
 async function findRecord(page: Page, query: string, label: string): Promise<void> {
+  await showMap(page);
   await page.getByLabel("Find on map", { exact: true }).fill(query);
   const result = page.getByTestId("find-results").getByRole("button", { name: label, exact: true });
   await result.focus();
@@ -54,6 +57,7 @@ async function findRecord(page: Page, query: string, label: string): Promise<voi
 
 test.beforeEach(async ({ page }) => {
   await loadFixture(page);
+  await showMap(page);
 });
 
 test("projected Find distinguishes a planned service from its same-named baseline peer", async ({ page }) => {
@@ -80,6 +84,7 @@ test("Edit As-Is reveals a rehomed service at its real baseline identity despite
   page,
 }) => {
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
+  await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Blue" });
   await findRecord(page, "moved", "Moved (Blue) · service · projected");
   const editor = page.getByTestId("editor");
@@ -122,7 +127,9 @@ test("Back from a baseline record restores the planned origin and Compare contex
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
   await findRecord(page, "portal", "Portal (Blue) · service · projected");
   await findRecord(page, "operations", "Operations · organization · As-Is");
-  await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Operations");
+  await expect(
+    page.getByTestId("editor").getByRole("heading", { name: "Organization: Operations", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Back", exact: true }).click();
   const editor = page.getByTestId("editor");
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("compare:1");
@@ -137,17 +144,20 @@ test("Back from a baseline record restores the planned origin and Compare contex
 test("Undo removing a UI-created planned origin closes its inspector and removes the stale Find target", async ({
   page,
 }) => {
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("scenario");
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^Plan\b/ })
     .click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
   await editor.getByLabel("Change", { exact: true }).selectOption("add");
   await editor.getByLabel("New service name", { exact: true }).fill("Temporary plan");
   await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
   await editor.getByRole("button", { name: "Add change", exact: true }).click();
   await expect(editor.getByTestId("scenario-changes")).toContainText("Temporary plan");
+  await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
   await findRecord(page, "temporary", "Temporary plan (Blue) · service · projected");
   await expect(editor).toContainText("Planned service added");
@@ -164,6 +174,7 @@ test("a late old Back decision cannot reopen an old target after Open installs a
 }) => {
   await findRecord(page, "portal", "Portal (Amber) · service");
   await findRecord(page, "moved", "Moved (Amber) · service");
+  await editSelected(page);
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Moved pending");
   const next = await createDataset("Replacement dataset", wasm);
   let bytes: number[];
@@ -193,6 +204,7 @@ test("a late old Back decision cannot reopen an old target after Open installs a
       showSaveFilePicker: () => Promise.reject(new DOMException("cancelled", "AbortError")),
     });
   }, bytes);
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => typeof (window as unknown as { releaseOpen?: () => void }).releaseOpen))

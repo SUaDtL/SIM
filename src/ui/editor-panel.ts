@@ -17,7 +17,14 @@ import {
 } from "./forms";
 import type { Selection } from "./list-panel";
 import { createScenarioChanges, type ScenarioChangeBuilder } from "./scenario-changes";
-import { relatedEntities } from "./relations";
+import {
+  captureRecordSummaryView,
+  createRecordSummary,
+  restoreRecordSummaryView,
+  type RecordSummaryViewContext,
+  type SummarySection,
+} from "./record-summary";
+import { openReferencePicker } from "./reference-picker";
 
 export interface EditorContext {
   repo(): Repository;
@@ -27,12 +34,26 @@ export interface EditorContext {
   requestServiceOnNetwork?(networkId: number): void;
   requestNavigate?(target: { type: EntityType; id: number }, intent: "peek" | "edit"): void;
   requestDependency?(consumer: number, provider: number): void;
+  requestCancel?(): void;
+  requestSimilar?(sourceId: number): void;
+}
+
+interface EditorViewContext {
+  editing: boolean;
+  section: string;
+  scrollTop: number;
+  summary: RecordSummaryViewContext | undefined;
 }
 
 export interface EditorPanel {
   readonly element: HTMLElement;
   selection(): Selection | null;
   open(type: EntityType, id: number | null): void;
+  inspect(type: EntityType, id: number): void;
+  createSimilar(sourceId: number): void;
+  isEditing(): boolean;
+  viewContext(): EditorViewContext;
+  restoreViewContext(context: EditorViewContext): void;
   close(): void;
   /** The dataset changed: refresh relationship rows, keeping any text the user is typing. */
   refresh(): void;
@@ -63,14 +84,147 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   const element = el("aside", { class: "editor", "data-testid": "editor", "aria-label": "Editor" });
   let current: Selection | null = null;
   let relations: HTMLElement | null = null;
-  let recordedRelations: HTMLElement | null = null;
   let collectCurrent: (() => FormValues) | null = null;
   let baseValues: FormValues | null = null;
   let applyCurrent: (() => boolean) | null = null;
   let reportExternalChange: ((reason: "changed" | "deleted") => void) | null = null;
   let serviceBase: ServiceEditBase | null = null;
   let scenarioBuilder: ScenarioChangeBuilder | null = null;
-  let activeChild: HTMLDialogElement | null = null;
+  let activePicker: ReturnType<typeof openReferencePicker> | null = null;
+  let editing = false;
+  let activeSection = "details";
+  const relationViews = new Map<string, { query: string; page: number }>();
+  let sectionErrors = new Set<string>();
+  function showSection(section: string): void {
+    activeSection = section;
+    for (const panel of element.querySelectorAll<HTMLElement>("[data-editor-section]"))
+      panel.hidden = panel.dataset["editorSection"] !== section;
+    for (const tab of element.querySelectorAll<HTMLButtonElement>("[data-edit-section]")) {
+      const selected = tab.dataset["editSection"] === section;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      const key = tab.dataset["editSection"] ?? "details";
+      tab.textContent = `${key[0]?.toUpperCase() ?? ""}${key.slice(1)}${sectionErrors.has(key) ? " (error)" : ""}`;
+    }
+  }
+
+  function inspect(
+    type: EntityType,
+    id: number,
+    notice = "",
+    section: SummarySection = "overview",
+    notify = true,
+    initialView?: RecordSummaryViewContext,
+  ): void {
+    activePicker?.close();
+    activePicker = null;
+    editing = false;
+    element.dataset["mode"] = "read";
+    current = { type, id };
+    relations = null;
+    collectCurrent = null;
+    baseValues = null;
+    applyCurrent = null;
+    serviceBase = null;
+    serviceDraft = null;
+    scenarioBuilder = null;
+    relationIntent = { consumer: "", provider: "", via: "", touched: false };
+    const summary = createRecordSummary({
+      repo: ctx.repo(),
+      target: { type, id },
+      initialSection: section,
+      ...(initialView ? { initialView } : {}),
+      onNavigate: (target) => {
+        ctx.requestNavigate?.(target, "peek");
+      },
+      onEdit: (section) => {
+        open(type, id);
+        showSection(section === "overview" || !section ? "details" : section);
+      },
+      onDependency: (consumer, provider) => {
+        ctx.requestDependency?.(consumer, provider);
+      },
+      ...(type === "service"
+        ? {
+            onSimilar: () => {
+              ctx.requestSimilar?.(id);
+            },
+          }
+        : {}),
+      onDelete: () => {
+        const dialog = el("dialog", { "aria-label": `Delete ${nounOf(type)}` });
+        const message = el("p", { role: "alert" });
+        const finish = (): void => {
+          dialog.close();
+          dialog.remove();
+        };
+        const control = deleteControl(type, id, nounOf(type), message, finish);
+        dialog.append(el("h2", {}, `Delete ${nounOf(type)}`), control, message, button("Close", finish));
+        document.body.append(dialog);
+        dialog.showModal();
+        control.querySelector<HTMLButtonElement>("button")?.click();
+      },
+    });
+    if (type === "network")
+      summary.append(
+        button("Add service on this network", () => {
+          ctx.requestServiceOnNetwork?.(id);
+        }),
+      );
+    element.replaceChildren(summary, el("p", { role: "status", class: "notice" }, notice));
+    if (initialView) restoreRecordSummaryView(summary, initialView);
+    ctx.selectionChanged();
+    if (notify) draftChanged();
+  }
+
+  function createSimilar(sourceId: number): void {
+    const repo = ctx.repo();
+    const source = repo.getService(sourceId);
+    if (!source) return;
+    const sourceValues = descriptor("service").values(repo, sourceId);
+    const sourceSupport = repo.listSupport().filter((row) => row.serviceId === sourceId);
+    open("service", null);
+    for (const [key, value] of Object.entries(sourceValues)) {
+      const control = element.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        `#field-${key}`,
+      );
+      if (!control) continue;
+      if (control instanceof HTMLInputElement && control.type === "checkbox") control.checked = value === true;
+      else if (typeof value === "string") control.value = value;
+    }
+    const network = element.querySelector<HTMLSelectElement>("#field-networkId");
+    if (network) {
+      network.prepend(option("", "Choose destination network"));
+      network.value = "";
+      network.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    for (const key of ["marking", "foundational"])
+      element.querySelector(`#field-${key}`)?.dispatchEvent(new Event("change", { bubbles: true }));
+    const copy = el("input", { type: "checkbox", id: "copy-support" });
+    copy.addEventListener("change", () => {
+      if (serviceDraft)
+        serviceDraft.support = copy.checked
+          ? sourceSupport.map((row) => ({ tier: row.tier, orgId: row.orgId, notes: row.notes }))
+          : [];
+      renderRelations();
+      draftChanged();
+    });
+    const reuse = el(
+      "section",
+      { class: "reuse-notice", "data-testid": "similar-source" },
+      el("h3", {}, `Starting from ${source.name}`),
+      el(
+        "p",
+        {},
+        "This is a new independent service. Choose its destination network. Shared references are reused; consuming organizations, dependencies, positions and history are not copied. The source stays unchanged.",
+      ),
+      el("label", { for: "copy-support" }, copy, "Also copy support assignments and notes"),
+    );
+    element.querySelector('[data-editor-section="details"]')?.prepend(reuse);
+    for (const select of element.querySelectorAll<HTMLSelectElement>("select[data-reference]"))
+      select.dispatchEvent(new Event("reference-refresh"));
+    draftChanged();
+  }
   let relationIntent = { consumer: "", provider: "", via: "", touched: false };
   let serviceDraft: {
     support: { tier: Tier; orgId: number; notes: string | null }[];
@@ -105,6 +259,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function draftChanged(): void {
+    const status = element.querySelector<HTMLElement>('[data-testid="editor-draft-summary"]');
+    if (status) status.textContent = hasPendingDraft() ? "Unapplied draft across all sections" : "No unapplied changes";
     ctx.draftChanged?.();
   }
 
@@ -121,6 +277,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     comparison: Comparison | null,
     actions: { editAsIs(entity: MapEntity, id: number): void; openScenario(id: number): void },
   ): void {
+    editing = false;
+    element.dataset["mode"] = "projection";
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
     current = null;
     relations = null;
@@ -273,13 +431,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function close(): void {
+    activePicker?.close();
+    activePicker = null;
+    editing = false;
+    element.dataset["mode"] = "empty";
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
-    activeChild?.close();
-    activeChild?.remove();
-    activeChild = null;
     current = null;
     relations = null;
-    recordedRelations = null;
     collectCurrent = null;
     baseValues = null;
     applyCurrent = null;
@@ -291,6 +449,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function open(type: EntityType, id: number | null, noticeText = ""): void {
+    activePicker?.close();
+    activePicker = null;
+    editing = true;
+    element.dataset["mode"] = "edit";
+    activeSection = "details";
+    sectionErrors = new Set();
+    relationViews.clear();
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
     const repo = ctx.repo();
     const d = descriptor(type);
@@ -378,6 +543,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     };
     collectCurrent = collect;
     const clearErrors = (): void => {
+      for (const control of element.querySelectorAll('[aria-invalid="true"]')) control.removeAttribute("aria-invalid");
       for (const e of errors.values()) {
         e.textContent = "";
         e.hidden = true;
@@ -386,6 +552,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       diagnosticActions.replaceChildren();
       conflictActions.hidden = true;
       notice.textContent = "";
+      sectionErrors.clear();
+      showSection(activeSection);
     };
     const showError = (field: string, text: string, targets: readonly DiagnosticTarget[] = []): void => {
       diagnosticActions.replaceChildren(
@@ -397,11 +565,23 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             }),
           ),
       );
+      const section = /support|notes/i.test(field)
+        ? "support"
+        : /via|dependency|consumer/i.test(field)
+          ? "connections"
+          : "details";
+      sectionErrors.add(section);
+      showSection(type === "service" ? section : "details");
       const key = fieldFor(type, field);
       const target = key === null ? undefined : errors.get(key);
       if (target) {
         target.textContent = text;
         target.hidden = false;
+        const control =
+          element.querySelector<HTMLElement>(`#field-${key ?? ""}-choose`) ??
+          element.querySelector<HTMLElement>(`#field-${key ?? ""}`);
+        control?.setAttribute("aria-invalid", "true");
+        control?.focus();
       } else {
         message.textContent = text;
       }
@@ -439,7 +619,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             }
             throw error;
           }
-          open(type, id, "Scenario changes applied.");
+          inspect(type, id, "Scenario changes applied.");
           return true;
         }
         if (type === "service" && serviceDraft) {
@@ -473,7 +653,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             warning.hidden = false;
             return false;
           }
-          open(
+          inspect(
             type,
             result.service.id,
             result.status === "committed"
@@ -485,7 +665,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           return true;
         }
         const savedId = d.save(ctx.repo(), id, input, { confirmSensitive });
-        open(type, savedId, `${d.label} ${id === null ? "added" : "changes applied"}.`);
+        inspect(type, savedId, `${d.label} ${id === null ? "added" : "changes applied"}.`);
         ctx.selectionChanged();
         return true;
       } catch (error) {
@@ -506,16 +686,57 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     }
     applyCurrent = () => save(collect(), false);
 
-    const form = el(
-      "form",
-      { class: "entity-form", novalidate: "" },
+    const detailsPanel = el(
+      "section",
+      { "data-editor-section": "details", id: "editor-details", role: "tabpanel" },
       ...fields,
+    );
+    relations = type === "service" || (type === "scenario" && id !== null) ? el("div", { class: "relations" }) : null;
+    const body = el(
+      "div",
+      { class: "editor-body", "data-testid": "editor-scroll" },
+      detailsPanel,
+      relations,
       warning,
       message,
       diagnosticActions,
       conflictActions,
       notice,
     );
+    const form = el("form", { class: "entity-form", novalidate: "" }, body);
+    const tabs = el("nav", { class: "editor-tabs", role: "tablist", "aria-label": "Service editing sections" });
+    for (const section of type === "service" ? ["details", "connections", "support"] : ["details"]) {
+      const tab = button(
+        section,
+        () => {
+          showSection(section);
+        },
+        {
+          role: "tab",
+          id: `editor-tab-${section}`,
+          "data-edit-section": section,
+          "aria-controls": `editor-${section}`,
+        },
+      );
+      tab.addEventListener("keydown", (event) => {
+        const list = [...tabs.querySelectorAll<HTMLButtonElement>("button")];
+        const index = list.indexOf(tab);
+        const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+        const next =
+          event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? list.length - 1
+              : (index + offset + list.length) % list.length;
+        if (offset || event.key === "Home" || event.key === "End") {
+          event.preventDefault();
+          list[next]?.click();
+          list[next]?.focus();
+        }
+      });
+      tabs.append(tab);
+    }
+    detailsPanel.setAttribute("aria-labelledby", "editor-tab-details");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       save(collect(), false);
@@ -548,22 +769,62 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ),
       );
     }
-    if (id !== null) actions.append(button("Discard changes", discardActiveDraft, { class: "subtle" }));
-    else actions.append(button("Cancel", close, { class: "subtle" }));
-    if (id !== null) actions.append(deleteControl(type, id, noun, message));
-    form.append(actions);
-
-    relations = type === "service" || (type === "scenario" && id !== null) ? el("div", { class: "relations" }) : null;
-    recordedRelations =
-      id === null
-        ? null
-        : el("section", { "aria-label": "Recorded relationships", "data-testid": "recorded-relationships" });
-    element.replaceChildren(
-      el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`),
-      form,
-      relations ?? "",
-      recordedRelations ?? "",
+    actions.append(
+      button(
+        "Cancel",
+        () => {
+          if (ctx.requestCancel) ctx.requestCancel();
+          else if (id === null) close();
+          else inspect(type, id);
+        },
+        { class: "subtle" },
+      ),
     );
+    const more = el("details", { class: "record-actions" }, el("summary", {}, "More edit actions"));
+    if (id !== null) more.append(button("Discard changes", discardActiveDraft), deleteControl(type, id, noun, message));
+    const footer = el(
+      "footer",
+      { class: "editor-footer" },
+      el("p", { "data-testid": "editor-draft-summary" }),
+      actions,
+    );
+    if (id !== null) footer.append(more);
+    form.append(footer);
+
+    element.replaceChildren(
+      el(
+        "header",
+        { class: "editor-heading" },
+        el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`),
+        el("p", { class: "hint" }, "One draft. Apply all sections together."),
+      ),
+      tabs,
+      form,
+    );
+    if (type === "service" && id === null) {
+      const start = button(
+        "Start from an existing service",
+        () => {
+          const owner = current;
+          activePicker = openReferencePicker({
+            label: "Start from an existing service",
+            returnFocus: start,
+            isCurrent: () => owner === current && ctx.repo() === repo,
+            options: () =>
+              repo.listServices().map((service) => ({
+                value: String(service.id),
+                label: `${service.name} (${repo.getNetwork(service.networkId)?.name ?? "Unavailable"})`,
+                detail: "Create an independent service from these descriptive fields",
+              })),
+            onSelect: (value) => {
+              ctx.requestSimilar?.(Number(value));
+            },
+          });
+        },
+        { id: "start-existing", class: "reference-link" },
+      );
+      detailsPanel.prepend(start);
+    }
     if (type === "service") {
       const references: readonly [string, EntityType, string][] = [
         ["networkId", "network", "Network"],
@@ -578,143 +839,171 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       form.querySelector("#field-networkId")?.addEventListener("change", () => {
         renderRelations();
       });
+    } else if (type === "organization") {
+      const parent = form.querySelector<HTMLSelectElement>("#field-parentId");
+      if (parent) referenceControls(parent, "organization", "Part of");
     }
     renderRelations();
+    showSection(activeSection);
     ctx.selectionChanged();
     draftChanged();
   }
 
-  /** One bounded child form; the parent DOM, draft and explicit overrides stay mounted. */
+  /** A compact selected-value field opens the common bounded picker. */
   function referenceControls(select: HTMLSelectElement, type: EntityType, label: string): void {
     const d = descriptor(type);
-    const noun = nounOf(type);
-    const search = el("input", {
-      type: "search",
-      "aria-label": `Find ${noun} choices`,
-      placeholder: `Search ${label}`,
-    });
-    search.addEventListener("input", () => {
-      const needle = search.value.trim().toLowerCase();
-      for (const item of select.options)
-        item.hidden = item.value !== select.value && !item.text.toLowerCase().includes(needle);
-    });
-    const create = button(
-      type === "network"
-        ? "Create network"
-        : label === "Add consumer"
-          ? "Create consuming organization"
-          : `Create ${noun} for ${label}`,
+    const owner = current;
+    const repo = ctx.repo();
+    select.hidden = true;
+    select.dataset["reference"] = type;
+    const field = (): HTMLSelectElement => element.querySelector<HTMLSelectElement>(`#${select.id}`) ?? select;
+    const trigger = button(
+      "",
       () => {
-        if (activeChild) return;
-        const owner = current;
-        const repo = ctx.repo();
-        const dialog = el("dialog", { "aria-label": `Create ${noun}`, "data-testid": "inline-child" });
-        activeChild = dialog;
-        const controls = new Map<string, () => FormValues[string]>();
-        const errors = new Map<string, HTMLElement>();
-        const message = el("p", { role: "status", "data-testid": "child-message" });
-        const fields = d.fields.map((f) => renderField(repo, f, d.values(repo, null), null, errors, controls));
-        // Child field IDs are local to the modal and must not collide with the mounted parent.
-        const childIds = new Map<string, string>();
-        for (const field of fields) {
-          for (const node of field.querySelectorAll<HTMLElement>("[id]")) {
-            childIds.set(node.id, `child-${node.id}`);
-            node.id = `child-${node.id}`;
-          }
-        }
-        for (const field of fields) {
-          for (const node of field.querySelectorAll<HTMLElement>("[for], [aria-describedby], [aria-labelledby]")) {
-            for (const attribute of ["for", "aria-describedby", "aria-labelledby"]) {
-              const value = node.getAttribute(attribute);
-              if (value)
-                node.setAttribute(
-                  attribute,
-                  value
-                    .split(/\s+/)
-                    .map((id) => childIds.get(id) ?? id)
-                    .join(" "),
-                );
-            }
-          }
-        }
-        const form = el("form", { novalidate: "" }, el("h2", {}, `Create ${noun}`), ...fields, message);
-        let confirmed: string | null = null;
-        const collect = (): FormValues => Object.fromEntries([...controls].map(([key, read]) => [key, read()]));
-        const finish = (): void => {
-          dialog.close();
-          dialog.remove();
-          activeChild = null;
-          const invoking = element.querySelector<HTMLSelectElement>(`#${select.id}`);
-          (invoking ?? select).focus();
-        };
-        const commit = (allow: boolean): void => {
-          const values = collect();
-          if (current !== owner || ctx.repo() !== repo) {
-            finish();
-            return;
-          }
-          if (allow && confirmed !== JSON.stringify(values)) {
-            message.textContent = "The pending edit changed. Review and create again.";
-            return;
-          }
-          try {
-            const id = d.save(repo, null, values, { confirmSensitive: allow });
-            // Reconcile choices in place, including reference controls outside the scalar form.
-            const invoking = element.querySelector<HTMLSelectElement>(`#${select.id}`) ?? select;
-            const none = invoking.options[0]?.value === "" ? invoking.options[0].text : null;
-            invoking.replaceChildren(
-              ...(none === null ? [] : [option("", none)]),
-              ...d.list(repo).map((item) => option(String(item.id), item.name, item.id === id)),
-            );
-            invoking.value = String(id);
+        activePicker = openReferencePicker({
+          label,
+          returnFocus: trigger,
+          selectedValue: field().value,
+          allowNone: field().options[0]?.value === "",
+          isCurrent: () => current === owner && ctx.repo() === repo && element.isConnected,
+          options: () => {
+            const descriptions = new Map(d.list(repo).map((record) => [String(record.id), record.detail]));
+            return [...field().options]
+              .filter((item) => item.value !== "" && !item.disabled && d.get(repo, Number(item.value)) !== undefined)
+              .map((item) => ({
+                value: item.value,
+                label: item.text,
+                detail: descriptions.get(item.value) ?? "",
+              }));
+          },
+          onSelect: (value) => {
+            const invoking = field();
+            invoking.value = value;
             invoking.dispatchEvent(new Event("change", { bubbles: true }));
             invoking.dispatchEvent(new Event("input", { bubbles: true }));
-            const notice = element.querySelector<HTMLElement>(".notice");
-            if (notice) notice.textContent = `${d.label} created and selected. Service changes have not been applied.`;
-            finish();
-            draftChanged();
-          } catch (error) {
-            message.textContent = describe(error);
-            if (error instanceof SensitiveInputWarning) {
-              confirmed = JSON.stringify(values);
-              confirm.hidden = false;
-            }
-          }
-        };
-        const confirm = button("Save anyway", () => {
-          commit(true);
+            update();
+          },
+          ...(type === "service" || type === "cds"
+            ? {}
+            : {
+                create: (query: string, complete: (value: string) => void, back: () => void) => {
+                  const controls = new Map<string, () => FormValues[string]>();
+                  const errors = new Map<string, HTMLElement>();
+                  const defaults = { ...d.values(repo, null), name: query };
+                  const fields = d.fields.map((f) => renderField(repo, f, defaults, null, errors, controls));
+                  const ids = new Map<string, string>();
+                  for (const part of fields)
+                    for (const node of part.querySelectorAll<HTMLElement>("[id]")) {
+                      ids.set(node.id, `child-${node.id}`);
+                      node.id = `child-${node.id}`;
+                    }
+                  for (const part of fields)
+                    for (const node of part.querySelectorAll<HTMLElement>(
+                      "[for], [aria-describedby], [aria-labelledby]",
+                    )) {
+                      for (const attribute of ["for", "aria-describedby", "aria-labelledby"]) {
+                        const value = node.getAttribute(attribute);
+                        if (value)
+                          node.setAttribute(
+                            attribute,
+                            value
+                              .split(/\s+/)
+                              .map((id) => ids.get(id) ?? id)
+                              .join(" "),
+                          );
+                      }
+                    }
+                  const message = el("p", { role: "status", "data-testid": "child-message" });
+                  const form = el(
+                    "form",
+                    { novalidate: "", "data-testid": "inline-child" },
+                    el("h3", {}, `Create ${nounOf(type)}`),
+                    ...fields,
+                    el(
+                      "p",
+                      { class: "hint" },
+                      "This shared record remains available if you later cancel the service. Your service is still a draft.",
+                    ),
+                    message,
+                  );
+                  const collect = (): FormValues =>
+                    Object.fromEntries([...controls].map(([key, read]) => [key, read()]));
+                  let confirmed: string | null = null;
+                  const commit = (allow: boolean): void => {
+                    if (!form.isConnected || current !== owner || ctx.repo() !== repo) return;
+                    const values = collect();
+                    if (allow && confirmed !== JSON.stringify(values)) {
+                      message.textContent = "The pending edit changed. Review and create again.";
+                      return;
+                    }
+                    try {
+                      const id = d.save(repo, null, values, { confirmSensitive: allow });
+                      const invoking = field();
+                      const none = invoking.options[0]?.value === "" ? invoking.options[0].text : null;
+                      invoking.replaceChildren(
+                        ...(none === null ? [] : [option("", none)]),
+                        ...d.list(repo).map((item) => option(String(item.id), item.name)),
+                      );
+                      const notice = element.querySelector<HTMLElement>(".notice");
+                      if (notice) notice.textContent = `${d.label} created. Service changes are still pending.`;
+                      complete(String(id));
+                      draftChanged();
+                    } catch (error) {
+                      message.textContent = describe(error);
+                      if (error instanceof SensitiveInputWarning) {
+                        confirmed = JSON.stringify(values);
+                        confirm.hidden = false;
+                      }
+                    }
+                  };
+                  const confirm = button("Save anyway", () => {
+                    commit(true);
+                  });
+                  confirm.hidden = true;
+                  form.addEventListener("input", () => {
+                    confirmed = null;
+                    confirm.hidden = true;
+                  });
+                  form.addEventListener("submit", (event) => {
+                    event.preventDefault();
+                    commit(false);
+                  });
+                  form.append(
+                    el("button", { type: "submit", class: "primary" }, "Create and use"),
+                    confirm,
+                    button("Cancel", back),
+                  );
+                  return form;
+                },
+              }),
         });
-        confirm.hidden = true;
-        form.addEventListener("input", () => {
-          confirmed = null;
-          confirm.hidden = true;
-        });
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          commit(false);
-        });
-        form.append(
-          el("button", { type: "submit", class: "primary" }, "Create and use"),
-          confirm,
-          button("Cancel", finish),
-        );
-        dialog.addEventListener("cancel", (event) => {
-          event.preventDefault();
-          finish();
-        });
-        dialog.append(form);
-        document.body.append(dialog);
-        dialog.showModal();
+      },
+      {
+        id: `${select.id}-choose`,
+        class: "reference-field",
+        "aria-label": `Choose ${label}`,
+        "aria-haspopup": "dialog",
+        "aria-describedby": select.getAttribute("aria-describedby") ?? "",
       },
     );
-    const inspect = button(
-      label === "Add consumer" ? "Inspect selected consuming organization" : `Inspect ${label}`,
+    const link = button(
+      "",
       () => {
-        if (select.value !== "") ctx.requestNavigate?.({ type, id: Number(select.value) }, "peek");
+        if (field().value) ctx.requestNavigate?.({ type, id: Number(field().value) }, "peek");
       },
+      { class: "reference-link", "aria-label": `Inspect ${label}` },
     );
-    select.before(search);
-    select.after(create, inspect);
+    const update = (): void => {
+      const value = field().selectedOptions[0];
+      trigger.textContent = value?.value ? value.text : `Choose ${label.toLowerCase()}`;
+      link.textContent = value?.value ? `View ${value.text}` : "";
+      link.hidden = !value?.value;
+    };
+    select.before(trigger);
+    select.after(link);
+    select.addEventListener("change", update);
+    select.addEventListener("reference-refresh", update);
+    update();
   }
 
   /** While a new service is unsaved, picking its network also picks that network's marking. */
@@ -745,7 +1034,14 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     });
   }
 
-  function deleteControl(type: EntityType, id: number, noun: string, message: HTMLElement): HTMLElement {
+  function deleteControl(
+    type: EntityType,
+    id: number,
+    noun: string,
+    message: HTMLElement,
+    afterDelete?: () => void,
+  ): HTMLElement {
+    const owner = ctx.repo();
     const box = el("span", { class: "delete" });
     const ask = (): void => {
       let plan;
@@ -771,8 +1067,11 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           "Confirm delete",
           () => {
             try {
-              ctx.repo().deleteWithPlan(type, id, plan.signature);
+              if (ctx.repo() !== owner)
+                throw new ValidationError("STALE", "record", "The dataset changed. Review deletion again.");
+              owner.deleteWithPlan(type, id, plan.signature);
               close();
+              afterDelete?.();
             } catch (error) {
               message.textContent = describe(error);
               if (error instanceof ValidationError && error.code === "STALE") ask();
@@ -791,25 +1090,6 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function renderRelations(): void {
-    if (recordedRelations && current?.id !== null && current) {
-      const rows = relatedEntities(ctx.repo().snapshot(), { type: current.type, id: current.id });
-      recordedRelations.replaceChildren(
-        el("h3", {}, "Recorded relationships"),
-        ...rows.map((row) =>
-          el(
-            "div",
-            { class: "related-record" },
-            el("p", {}, `${row.label}: ${row.detail}`),
-            button("Inspect", () => {
-              ctx.requestNavigate?.(row.target, "peek");
-            }),
-            button("Open related record", () => {
-              ctx.requestNavigate?.(row.target, "edit");
-            }),
-          ),
-        ),
-      );
-    }
     if (relations && current?.type === "scenario" && current.id !== null) {
       if (!scenarioBuilder) {
         scenarioBuilder = createScenarioChanges(ctx.repo(), current.id, draftChanged, (target) => {
@@ -839,6 +1119,67 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       if (restored && !(restored instanceof HTMLButtonElement && restored.disabled)) restored.focus();
       else if (fallbackId) element.querySelector<HTMLElement>(`#${fallbackId}`)?.focus();
       draftChanged();
+    };
+    const pageRows = (title: string, rows: readonly HTMLElement[]): HTMLElement => {
+      for (const row of rows) {
+        if (row.children.length > 2) {
+          const first = row.firstElementChild;
+          const actions = el(
+            "details",
+            { class: "connection-actions" },
+            el("summary", { "aria-label": `Connection actions for ${first?.textContent ?? "connection"}` }, "Actions"),
+          );
+          for (const child of [...row.children].slice(1)) actions.append(child);
+          row.append(actions);
+        }
+      }
+      const view = relationViews.get(title) ?? { query: "", page: 0 };
+      relationViews.set(title, view);
+      const human =
+        title === "dependencies"
+          ? "outgoing dependencies"
+          : title === "consumers"
+            ? "consuming organizations"
+            : "incoming services";
+      const query = el("input", { type: "search", id: `relation-search-${title}`, "aria-label": `Search ${human}` });
+      query.value = view.query;
+      query.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") event.preventDefault();
+      });
+      const list = el("ul", { class: "rows", "data-testid": title });
+      const count = el("p", { class: "hint", role: "status" });
+      const previous = button("Previous", () => {
+        view.page--;
+        render();
+      });
+      const next = button("Next", () => {
+        view.page++;
+        render();
+      });
+      previous.setAttribute("aria-label", `Previous ${title} page`);
+      next.setAttribute("aria-label", `Next ${title} page`);
+      function render(): void {
+        const matches = rows.filter((row) => row.textContent.toLowerCase().includes(view.query.trim().toLowerCase()));
+        view.page = Math.max(0, Math.min(view.page, Math.ceil(matches.length / 20) - 1));
+        list.replaceChildren(...matches.slice(view.page * 20, view.page * 20 + 20));
+        count.textContent = `${String(matches.length ? view.page * 20 + 1 : 0)}-${String(Math.min(matches.length, view.page * 20 + 20))} of ${String(matches.length)} relationships`;
+        previous.disabled = view.page === 0;
+        next.disabled = (view.page + 1) * 20 >= matches.length;
+      }
+      query.addEventListener("input", () => {
+        view.query = query.value;
+        view.page = 0;
+        render();
+      });
+      render();
+      return el(
+        "div",
+        { class: "draft-collection" },
+        query,
+        count,
+        list,
+        el("div", { class: "relationship-paging" }, previous, next),
+      );
     };
 
     // Support: one organization per tier; each change is its own write.
@@ -894,12 +1235,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ),
       );
     });
-    const consumerPick = el("select", { id: "add-consumer" });
+    const consumerPick = el("select", { id: "add-consumer" }, option("", "Choose a consuming organization"));
     for (const o of orgs) if (!consumerIds.includes(o.id)) consumerPick.append(option(String(o.id), o.name));
     if (relationIntent.consumer) consumerPick.value = relationIntent.consumer;
     consumerPick.addEventListener("change", () => {
       relationIntent.consumer = consumerPick.value;
-      relationIntent.touched = true;
+      relationIntent.touched = Boolean(relationIntent.consumer || relationIntent.provider || relationIntent.via);
+      addConsumer.disabled = consumerPick.value === "";
       draftChanged();
     });
     const addConsumer = button("Add consumer", () => {
@@ -911,7 +1253,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       changed("add-consumer");
     });
     addConsumer.id = "add-consumer-action";
-    addConsumer.disabled = consumerPick.options.length === 0;
+    addConsumer.disabled = consumerPick.value === "";
 
     // Dependencies: services this service relies on, optionally through a CDS.
     const deps = draft.dependencies;
@@ -964,13 +1306,17 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       return el(
         "li",
         {},
-        el("span", { class: "row-name" }, `${name}${via} (${networks.get(provider?.networkId ?? 0) ?? "?"})`),
-        button(
-          `Inspect ${name}`,
-          () => {
-            ctx.requestNavigate?.({ type: "service", id: dep.providerServiceId }, "peek");
-          },
-          { class: "subtle" },
+        el(
+          "div",
+          { class: "row-name" },
+          button(
+            `${name} (${networks.get(provider?.networkId ?? 0) ?? "?"})`,
+            () => {
+              ctx.requestNavigate?.({ type: "service", id: dep.providerServiceId }, "peek");
+            },
+            { class: "reference-link" },
+          ),
+          el("small", {}, via.replace(/^; /, "")),
         ),
         serviceId === null
           ? null
@@ -993,7 +1339,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       );
     });
     const taken = new Set(deps.map((dep) => dep.providerServiceId));
-    const providerPick = el("select", { id: "add-dependency" });
+    const providerPick = el("select", { id: "add-dependency" }, option("", "Choose a service"));
     for (const s of services) {
       if (s.id === serviceId || taken.has(s.id)) continue;
       providerPick.append(option(String(s.id), `${s.name} (${networks.get(s.networkId) ?? "?"})`));
@@ -1021,7 +1367,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     updateRoutes();
     providerPick.addEventListener("change", () => {
       relationIntent.provider = providerPick.value;
-      relationIntent.touched = true;
+      relationIntent.touched = Boolean(relationIntent.consumer || relationIntent.provider || relationIntent.via);
+      addDependency.disabled = providerPick.value === "";
       updateRoutes();
       draftChanged();
     });
@@ -1043,16 +1390,32 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       changed("add-dependency");
     });
     addDependency.id = "add-dependency-action";
-    addDependency.disabled = providerPick.options.length === 0;
+    addDependency.disabled = providerPick.value === "";
 
-    relations.replaceChildren(
-      el("h3", {}, "Support"),
+    const supportPanel = el(
+      "section",
+      {
+        "data-editor-section": "support",
+        id: "editor-support",
+        role: "tabpanel",
+        "aria-labelledby": "editor-tab-support",
+      },
+      el("h3", {}, "Support (optional)"),
       ...tiers,
+    );
+    const connectionsPanel = el(
+      "section",
+      {
+        "data-editor-section": "connections",
+        id: "editor-connections",
+        role: "tabpanel",
+        "aria-labelledby": "editor-tab-connections",
+      },
       el("h3", {}, "Consumed by organizations"),
-      el("ul", { class: "rows", "data-testid": "consumers" }, ...consumerRows),
+      pageRows("consumers", consumerRows),
       el("div", { class: "add-row" }, el("label", { for: "add-consumer" }, "Add consumer"), consumerPick, addConsumer),
       el("h3", {}, "Depends on"),
-      el("ul", { class: "rows", "data-testid": "dependencies" }, ...depRows),
+      pageRows("dependencies", depRows),
       el(
         "div",
         { class: "add-row" },
@@ -1064,27 +1427,31 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       ),
       message,
     );
+    relations.replaceChildren(supportPanel, connectionsPanel);
     for (const tier of TIERS) {
       const select = relations.querySelector<HTMLSelectElement>(`#support-${String(tier)}`);
       if (select) referenceControls(select, "organization", `Tier ${String(tier)} support`);
     }
     referenceControls(consumerPick, "organization", "Add consumer");
+    referenceControls(providerPick, "service", "Depends on service");
     const incoming = repo.listDependencies().filter((dep) => dep.providerServiceId === serviceId);
-    relations.append(
+    connectionsPanel.append(
       el("h3", {}, "Used by services"),
-      el(
-        "ul",
-        { "data-testid": "incoming-dependencies", class: "rows" },
-        ...incoming.map((dep) => {
+      pageRows(
+        "incoming-dependencies",
+        incoming.map((dep) => {
           const consumer = services.find((s) => s.id === dep.consumerServiceId);
           const label = `${consumer?.name ?? "Unavailable"} (${networks.get(consumer?.networkId ?? 0) ?? "?"})`;
           return el(
             "li",
             {},
-            el("span", {}, label),
-            button("Inspect", () => {
-              ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "peek");
-            }),
+            button(
+              label,
+              () => {
+                ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "peek");
+              },
+              { class: "reference-link" },
+            ),
             button("Edit incoming dependency", () => {
               ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "edit");
             }),
@@ -1097,10 +1464,25 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         }),
       ),
     );
+    showSection(activeSection);
   }
 
   function refresh(): void {
     if (!current) return;
+    if (!editing) {
+      const notice = element.querySelector<HTMLElement>(".notice")?.textContent ?? "";
+      const summary = element.querySelector<HTMLElement>(".record-summary");
+      const view = summary ? captureRecordSummaryView(summary) : undefined;
+      const scrollTop = element.scrollTop;
+      const restoreFocus = summary?.contains(document.activeElement) ?? false;
+      if (current.id !== null && descriptor(current.type).get(ctx.repo(), current.id) !== undefined) {
+        inspect(current.type, current.id, notice, view?.section, false, view);
+        element.scrollTop = scrollTop;
+        const next = element.querySelector<HTMLElement>(".record-summary");
+        if (next && view) restoreRecordSummaryView(next, view, { focus: restoreFocus });
+      } else close();
+      return;
+    }
     // The item was removed elsewhere (or the dataset replaced): nothing left to edit.
     if (current.id !== null && descriptor(current.type).get(ctx.repo(), current.id) === undefined) {
       if (hasPendingDraft()) reportExternalChange?.("deleted");
@@ -1123,13 +1505,40 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     if (descriptor(current.type).get(ctx.repo(), current.id) === undefined) {
       if (hasPendingDraft()) reportExternalChange?.("deleted");
       else close();
-    } else open(current.type, current.id);
+    } else if (editing) open(current.type, current.id);
+    else refresh();
   }
 
   placeholder();
   return {
     element,
     selection: () => current,
+    inspect,
+    createSimilar,
+    isEditing: () => editing,
+    viewContext: () => ({
+      editing,
+      section: editing
+        ? activeSection
+        : (element.querySelector<HTMLElement>(".record-summary")?.dataset["summarySection"] ?? "overview"),
+      scrollTop: element.scrollTop,
+      summary: captureRecordSummaryView(element.querySelector<HTMLElement>(".record-summary") ?? element),
+    }),
+    restoreViewContext: (view) => {
+      if (editing) showSection(view.section);
+      else if (current?.id !== null && current)
+        inspect(
+          current.type,
+          current.id,
+          "",
+          view.section === "details" ? "overview" : (view.section as SummarySection),
+          false,
+          view.summary,
+        );
+      element.scrollTop = view.scrollTop;
+      const summary = element.querySelector<HTMLElement>(".record-summary");
+      if (summary && view.summary) restoreRecordSummaryView(summary, view.summary, { focus: true });
+    },
     open: (type, id) => {
       open(type, id);
     },
@@ -1204,20 +1613,60 @@ function renderField(
       return el("div", { class: "field check" }, input, label, error);
     }
     case "checklist": {
-      const chosen = Array.isArray(value) ? value : [];
-      const boxes = (f.options?.(repo, editingId) ?? []).map((o) => {
-        const box = el("input", { type: "checkbox", id: `${id}-${o.value}`, value: o.value });
-        box.checked = chosen.includes(o.value);
-        return { box, row: el("div", { class: "check" }, box, el("label", { for: `${id}-${o.value}` }, o.label)) };
+      const chosen = new Set(Array.isArray(value) ? value : []);
+      const options = f.options?.(repo, editingId) ?? [];
+      let page = 0;
+      const search = el("input", { type: "search", "aria-label": `Search ${f.label.toLowerCase()}` });
+      search.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") event.preventDefault();
       });
-      controls.set(f.key, () => boxes.filter((b) => b.box.checked).map((b) => b.box.value));
-      return el(
+      const list = el("div");
+      const count = el("p", { class: "hint", role: "status" });
+      const previous = button("Previous choices", () => {
+        page--;
+        render();
+      });
+      const next = button("Next choices", () => {
+        page++;
+        render();
+      });
+      const root = el(
         "fieldset",
         { class: "field", "aria-describedby": `${id}-error` },
         el("legend", {}, f.label),
-        ...boxes.map((b) => b.row),
+        search,
+        count,
+        list,
+        el("div", { class: "actions" }, previous, next),
         error,
       );
+      function render(): void {
+        const matches = options.filter((item) => item.label.toLowerCase().includes(search.value.trim().toLowerCase()));
+        page = Math.max(0, Math.min(page, Math.ceil(matches.length / 20) - 1));
+        list.replaceChildren(
+          ...matches.slice(page * 20, page * 20 + 20).map((o) => {
+            const box = el("input", { type: "checkbox", id: `${id}-${o.value}`, value: o.value });
+            box.checked = chosen.has(o.value);
+            box.addEventListener("change", () => {
+              if (box.checked) chosen.add(o.value);
+              else chosen.delete(o.value);
+              box.dispatchEvent(new Event("input", { bubbles: true }));
+            });
+            return el("div", { class: "check" }, box, el("label", { for: box.id }, o.label));
+          }),
+        );
+        count.textContent = `${String(matches.length)} matching choices; ${String(chosen.size)} selected`;
+        previous.disabled = page === 0;
+        next.disabled = (page + 1) * 20 >= matches.length;
+      }
+      search.addEventListener("input", (event) => {
+        event.stopPropagation();
+        page = 0;
+        render();
+      });
+      controls.set(f.key, () => [...chosen]);
+      render();
+      return root;
     }
   }
 }

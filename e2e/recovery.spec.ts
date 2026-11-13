@@ -1,3 +1,4 @@
+import { openFileMenu, editSelected } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { openDataset } from "../src/db/dataset";
@@ -57,6 +58,7 @@ test("refuses external changes, retains work, and saves to a separate target", a
   await page.evaluate(() => {
     (window as unknown as Files).selected = "separate.sqlite";
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Save As", exact: true }).click();
   await expect(page.getByTestId("dataset-status")).toContainText("separate.sqlite | Saved");
 });
@@ -66,6 +68,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   await page.evaluate(() => {
     (window as unknown as Files).selected = "recovery.sqlite";
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Choose recovery file" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery copy updated");
   const priorWrites = await page.evaluate(() => (window as unknown as Files).writes["recovery.sqlite"] ?? 0);
@@ -83,7 +86,19 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   }
   await expect(page.getByTestId("dataset-status")).toContainText("Changes not saved to file");
   const retained = await files(page, "recovery.sqlite");
+  await editSelected(page);
   await page.getByTestId("editor").getByLabel("Name").fill("Unapplied text");
+  // Retry is now offered for an actual failed recovery, not as a permanent no-op.
+  await page.evaluate(() => {
+    (window as unknown as Files).denied = true;
+  });
+  page.once("dialog", (dialog) => void dialog.accept("SYNTHETIC"));
+  await openFileMenu(page);
+  await page.getByRole("button", { name: "Banner caveat", exact: true }).click();
+  await expect(page.getByTestId("recovery-status")).toContainText("Recovery failed");
+  await page.evaluate(() => {
+    (window as unknown as Files).denied = false;
+  });
   await page.getByRole("button", { name: "Retry recovery" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery copy updated");
   const db = await openDataset(new Uint8Array(await files(page, "recovery.sqlite")), { wasm });
@@ -99,6 +114,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
     w.files["recovered.sqlite"] = bytes;
     w.selected = "recovered.sqlite";
   }, retained);
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect(page.getByTestId("entity-list").getByText("Synthetic recovery network")).toBeVisible();
   await expect(page.getByTestId("draft-status")).toBeEmpty();
@@ -106,6 +122,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
 
 test("rejects file aliases and retains a failed recovery for retry", async ({ page }) => {
   await page.getByRole("button", { name: "Save file", exact: true }).click();
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Choose recovery file" }).click();
   await expect(page.getByTestId("dataset-message")).toContainText("separate from the dataset");
   await page.evaluate(() => {
@@ -113,6 +130,7 @@ test("rejects file aliases and retains a failed recovery for retry", async ({ pa
     w.selected = "recovery.sqlite";
     w.denied = true;
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Choose recovery file" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery failed");
   await expect(page.getByTestId("dataset-status")).toContainText("Saved");
@@ -121,8 +139,10 @@ test("rejects file aliases and retains a failed recovery for retry", async ({ pa
   });
   await page.getByRole("button", { name: "Retry recovery" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery copy updated");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Save As", exact: true }).click();
   await expect(page.getByTestId("dataset-message")).toContainText("separate from the recovery");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Stop recovery" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery is off");
   expect((await files(page, "recovery.sqlite")).length).toBeGreaterThan(0);
@@ -147,14 +167,16 @@ test("Stop recovery cancels a selection whose file read is still pending", async
         }),
     });
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Choose recovery file" }).click();
   await expect
     .poll(() => page.evaluate(() => typeof (window as unknown as { release?: () => void }).release))
     .toBe("function");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Stop recovery" }).click();
   await page.evaluate(() => {
     (window as unknown as { release: () => void }).release();
   });
-  await page.getByRole("button", { name: "Retry recovery" }).click();
+  await expect(page.getByRole("button", { name: "Retry recovery" })).toBeHidden();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery is off");
 });

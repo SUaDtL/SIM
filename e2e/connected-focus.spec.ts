@@ -1,3 +1,5 @@
+import { openFileMenu, showMap, editSelected } from "./helpers/usability";
+import { showFilters, showCaptureOptions, highlightSelected } from "./helpers/map-controls";
 import { expect, test, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFileSync } from "node:fs";
@@ -99,14 +101,17 @@ async function load(page: Page, withScenario: boolean | "unresolved" = false) {
   await page.goto(simUrl);
   const data = await fixture(withScenario);
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "focus.sqlite", mimeType: "application/x-sqlite3", buffer: data.bytes });
   await expect(page.getByTestId("dataset-status")).toHaveText("Synthetic connected focus | focus.sqlite | Saved");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  await showMap(page);
   return { ...data, errors, requests };
 }
 
-function readMap(page: Page) {
+async function readMap(page: Page) {
+  await showMap(page);
   return page.getByTestId("map-canvas").evaluate((container) => {
     const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     return {
@@ -164,6 +169,7 @@ for (const viewport of [
     const data = await load(page);
     const filter = page.getByTestId("map-area").getByLabel("Network", { exact: true });
     await select(page, data.ids.a);
+    await showFilters(page);
     await filter.selectOption({ label: "Network A" });
     await page.getByTestId("map-canvas").evaluate((container) => {
       const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
@@ -196,6 +202,7 @@ for (const viewport of [
     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
     await page.getByRole("button", { name: "Fit focus", exact: true }).click();
     const download = page.waitForEvent("download");
+    await showCaptureOptions(page);
     await page.getByRole("button", { name: "Export SVG", exact: true }).click();
     const svgFile = await download;
     await svgFile.saveAs(info.outputPath("network-focus.svg"));
@@ -206,7 +213,7 @@ for (const viewport of [
     expect(svg).toContain("SYNTHETIC");
     expect(svg).not.toContain("Other consumer");
     const pngDownload = page.waitForEvent("download");
-    await page.getByRole("button", { name: "Export PNG", exact: true }).click();
+    await page.getByRole("button", { name: "Capture", exact: true }).click();
     await (await pngDownload).saveAs(info.outputPath("network-focus.png"));
     await page.screenshot({ path: info.outputPath("network-focus-page.png"), fullPage: true });
     await page.getByRole("button", { name: "Back from focus", exact: true }).click();
@@ -260,6 +267,7 @@ test("directional focus expands explicitly without data writes or position chang
 test("both CDS segments open the same owning connection inspector without writing", async ({ page }) => {
   const data = await load(page);
   await select(page, data.ids.caller);
+  await highlightSelected(page);
   const descriptions: string[] = [];
   for (const suffix of ["in", "out"]) {
     const id = `dep-${data.ids.dependency}-${suffix}`;
@@ -307,6 +315,7 @@ test("projected focused routes remain read-only and retain full marking in To-Be
       await inspector.press("Escape");
       await expect(inspector).toHaveCount(0);
       const download = page.waitForEvent("download");
+      await showCaptureOptions(page);
       await page.getByRole("button", { name: "Export SVG", exact: true }).click();
       const artifact = `${kind}-focus-${String(viewport.width)}`;
       await (await download).saveAs(info.outputPath(`${artifact}.svg`));
@@ -317,7 +326,7 @@ test("projected focused routes remain read-only and retain full marking in To-Be
       expect(svg).toContain(kind === "to-be" ? "To-Be" : "Compare");
       expect(svg).not.toContain("Planned outside focus");
       const png = page.waitForEvent("download");
-      await page.getByRole("button", { name: "Export PNG", exact: true }).click();
+      await page.getByRole("button", { name: "Capture", exact: true }).click();
       await (await png).saveAs(info.outputPath(`${artifact}.png`));
       await page.screenshot({ path: info.outputPath(`${artifact}-page.png`), fullPage: true });
       await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
@@ -333,15 +342,19 @@ test("cancelled captures restore visible status and retain the active draft", as
   const data = await load(page);
   await select(page, data.ids.caller);
   const editor = page.getByTestId("editor");
+  await editSelected(page);
   await editor.getByLabel("Name", { exact: true }).fill("Unapplied caller");
   for (const kind of ["PNG", "SVG"]) {
-    await page.getByRole("button", { name: `Export ${kind}`, exact: true }).click();
+    if (kind === "SVG") await showCaptureOptions(page);
+    else await showMap(page);
+    await page.getByRole("button", { name: kind === "PNG" ? "Capture" : "Export SVG", exact: true }).click();
     await page
       .getByRole("dialog", { name: "Unapplied changes" })
       .getByRole("button", { name: "Cancel", exact: true })
       .click();
     await expect(page.getByTestId("map-export-status")).toHaveText(`${kind} export cancelled.`);
     await expect(page.getByTestId("map-area")).toHaveAttribute("aria-busy", "false");
+    await editSelected(page);
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Unapplied caller");
   }
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
@@ -371,6 +384,7 @@ test("projection layout handles newly planned nodes hidden by a strict inventory
   const data = await load(page, true);
   const area = page.getByTestId("map-area");
   const filter = area.getByLabel("Network", { exact: true });
+  await showFilters(page);
   await filter.selectOption({ label: "Network A" });
   const before = await readMap(page);
   expect(before.nodes.find((n) => n.id === data.ids.identity)?.visible).toBe(false);
@@ -397,13 +411,16 @@ test("capture current view keeps a dirty draft, while failed Apply and capture k
   const data = await load(page);
   await select(page, data.ids.caller);
   const editor = page.getByTestId("editor");
+  await editSelected(page);
   await editor.getByLabel("Name", { exact: true }).fill("Caller draft");
   const download = page.waitForEvent("download");
+  await showCaptureOptions(page);
   await page.getByRole("button", { name: "Export SVG", exact: true }).click();
   const decision = page.getByRole("dialog", { name: "Unapplied changes" });
   await decision.getByRole("button", { name: "Capture current view", exact: true }).click();
   const svg = readFileSync(await (await download).path(), "utf8");
   expect(svg).not.toContain("Caller draft");
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Caller draft");
   await expect(page.getByTestId("draft-status")).toContainText("Unapplied");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
@@ -413,7 +430,8 @@ test("capture current view keeps a dirty draft, while failed Apply and capture k
       throw new Error("synthetic capture failure after Apply");
     };
   });
-  await page.getByRole("button", { name: "Export PNG", exact: true }).click();
+  await showMap(page);
+  await page.getByRole("button", { name: "Capture", exact: true }).click();
   await decision.getByRole("button", { name: "Apply and capture", exact: true }).click();
   await expect(page.getByTestId("map-export-status")).toHaveText("Could not export PNG. Try again.");
   await expect(page.getByTestId("draft-status")).toBeEmpty();
@@ -423,6 +441,7 @@ test("capture current view keeps a dirty draft, while failed Apply and capture k
     (await savedSnapshot(page)).services.find((service) => `service-${String(service.id)}` === data.ids.caller)?.name,
   ).toBe("Caller draft");
   await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Caller");
   expect(
     (await savedSnapshot(page)).services.find((service) => `service-${String(service.id)}` === data.ids.caller)?.name,
@@ -430,15 +449,13 @@ test("capture current view keeps a dirty draft, while failed Apply and capture k
   expect(data.errors).toEqual([]);
 });
 
-test("keyboard editor focus keeps Apply reachable at laptop width and restores the map", async ({ page }) => {
+test("explicit keyboard editing keeps Apply reachable at laptop width and returns to the map", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 });
   const data = await load(page);
   await select(page, data.ids.caller);
-  const focusEditor = page.getByRole("button", { name: "Focus editor", exact: true });
-  await focusEditor.focus();
-  await focusEditor.press("Enter");
-  const restore = page.getByRole("button", { name: "Show full workspace", exact: true });
-  await expect(restore).toHaveAttribute("aria-pressed", "true");
+  const edit = page.getByTestId("editor").getByRole("button", { name: "Edit service", exact: true });
+  await edit.focus();
+  await edit.press("Enter");
   const apply = page.getByTestId("editor").getByRole("button", { name: "Apply changes", exact: true });
   await apply.focus();
   await expect(apply).toBeFocused();
@@ -449,12 +466,9 @@ test("keyboard editor focus keeps Apply reachable at laptop width and restores t
   expect(box.x + box.width).toBeLessThanOrEqual(1024);
   expect(box.y).toBeGreaterThanOrEqual(0);
   expect(box.y + box.height).toBeLessThanOrEqual(768);
-  await restore.focus();
-  await restore.press("Enter");
-  await expect(page.getByRole("button", { name: "Focus editor", exact: true })).toHaveAttribute(
-    "aria-pressed",
-    "false",
-  );
+  const cancel = page.getByTestId("editor").getByRole("button", { name: "Cancel", exact: true });
+  await cancel.focus();
+  await cancel.press("Enter");
   await expect(page.getByTestId("map-canvas")).toBeVisible();
   await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
   expect(data.errors).toEqual([]);
@@ -469,6 +483,7 @@ test("foundational summary counts the routes actually hidden after chain reveal"
     true,
   );
   await select(page, data.ids.caller);
+  await highlightSelected(page);
   state = await readMap(page);
   expect(state.edges.filter((edge) => edge.dependency === data.ids.dependency).every((edge) => edge.visible)).toBe(
     true,

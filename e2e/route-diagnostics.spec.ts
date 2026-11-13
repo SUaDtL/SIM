@@ -1,3 +1,5 @@
+import { openFileMenu, showInventory, editSelected, chooseReference } from "./helpers/usability";
+
 import { expect, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -22,18 +24,21 @@ test("incoming rehome and CDS membership refusals link to exact owners without l
   });
   await page.goto(url);
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "synthetic.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
   db.close();
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^Identity/ })
     .click();
   const editor = page.getByTestId("editor");
-  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Copper" });
+  await editSelected(page);
+  await chooseReference(page, "Network", "Copper");
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(editor.getByTestId("error-networkId")).toContainText("break the route");
   await editor.getByRole("button", { name: "Inspect consuming service Orders", exact: true }).click();
@@ -41,12 +46,15 @@ test("incoming rehome and CDS membership refusals link to exact owners without l
   await expect(owner).toContainText("Service: Orders");
   await owner.getByRole("button", { name: "Close", exact: true }).click();
   await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Copper");
-  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
+  await editSelected(page);
+  await chooseReference(page, "Network", "Blue");
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("cds");
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^Guard/ })
     .click();
+  await editSelected(page);
   await editor.getByLabel("Blue", { exact: true }).uncheck();
   await editor.getByLabel("Copper", { exact: true }).check();
   await editor.getByRole("button", { name: "Apply changes" }).click();

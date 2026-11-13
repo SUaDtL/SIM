@@ -8,6 +8,9 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Read-first record summaries, Inventory/Map workspaces, a wider tabbed aggregate editor and searchable reference pickers with inline creation.
+- Independent Create similar service drafts with explicit destination and optional support copying; bounded inventory and relationship collections with qualified identities.
+- File/About and contextual map controls, direct PNG Capture, draft return paths and narrow/zoomed form reflow.
 - Optional chosen-file recovery for applied changes, with separate status, retry and stop controls; native saves refuse an externally changed file.
 - Contextual creation of missing service references while preserving the parent draft, with atomic initial service relationships.
 - Typed partial Find, read-only reference peeks, recorded reverse relationships and Back with restored list and map context.
@@ -16,6 +19,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Read-summary refresh preserves Apply notices and does not interrupt file saving by advancing the draft token.
 - Sensitive-input confirmation binds all changed service fields and support notes to the exact current draft.
 - Rejected navigation leaves filters, selection, framing and drafts unchanged; stale navigation decisions cannot cross a dataset replacement.
 - Relationship refresh retains unadded choices and focus, foundational counts describe visible routes, and capture progress and errors remain visible.

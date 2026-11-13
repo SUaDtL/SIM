@@ -1,0 +1,48 @@
+{
+  "method": "Actual offline production file:// screenshots. Narrow/desktop Playwright screenshots; native CDP screenshots for real browser zoom. Default partition Preferences controls zoom; tests assert DPR, CSS viewport and visualViewport.scale=1. Short-height views permit vertical page scrolling and retain classification banners.",
+  "images": [
+    {
+      "file": "baseline-1366.png",
+      "sha256": "3c7dc562940e9bca296d6550a14fa44e00a26c5b479ce3e7f4b1a795fa5fda69",
+      "source_output": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-usability-baseline-20261113\\selected-service-1366.png",
+      "source_binding": "1cfa5c1df7519361b10136724a37959659923a9f",
+      "data": "fictional UNCLASSIFIED"
+    },
+    {
+      "file": "baseline-1024.png",
+      "sha256": "6cc671ab5b96982dc77e7ff573f4171f1e29bb423e16104ed86e6d143aaf784b",
+      "source_output": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-usability-baseline-20261113\\selected-service-1024.png",
+      "source_binding": "1cfa5c1df7519361b10136724a37959659923a9f",
+      "data": "fictional UNCLASSIFIED"
+    },
+    {
+      "file": "editor-1366.png",
+      "sha256": "2e41470b4fd9414001658a1607509b7335cb39f6eb17e15d4b046d57996ea504",
+      "source_output": "test-results\\usability-layout-T11-T12-l-aea1f-s-usable-at-1366-CSS-pixels-msedge\\width-1366-connections-actions.png",
+      "source_binding": "sim-CfParmuR.js/style-CWTpXwzn.css",
+      "data": "fictional UNCLASSIFIED"
+    },
+    {
+      "file": "validation-320.png",
+      "sha256": "b408ea6f5e6b779d55a96b39af7310685fecdb837b56b8ff2d6b6eb5d3e8ab2e",
+      "source_output": "test-results\\usability-layout-T11-T12-l-a4d01-ns-usable-at-320-CSS-pixels-msedge\\width-320-validation.png",
+      "source_binding": "sim-CfParmuR.js/style-CWTpXwzn.css",
+      "data": "fictional UNCLASSIFIED"
+    },
+    {
+      "file": "zoom400-footer.png",
+      "sha256": "6aee98d37ca8d79fce9f94b50e77b8b597db0d78f3d7ec08388020ecceaca49f",
+      "source_output": "test-results\\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\\browser-zoom-400-connections-bottom.png",
+      "source_binding": "sim-CfParmuR.js/style-CWTpXwzn.css",
+      "data": "fictional UNCLASSIFIED"
+    },
+    {
+      "file": "zoom400-picker.png",
+      "sha256": "7f887f19c37c93202b4488544daacb74243dfd30e1e6138df685ecceb0f37a8b",
+      "source_output": "test-results\\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\\browser-zoom-400-picker-result.png",
+      "source_binding": "sim-CfParmuR.js/style-CWTpXwzn.css",
+      "data": "fictional UNCLASSIFIED"
+    }
+  ],
+  "storage": "PNG files are retained locally and intentionally untracked. The commit gate cannot inspect binary text context without explicit override; no override used. Final images reproduce via e2e/usability-layout.spec.ts; original baseline captures remain at source_output paths."
+}

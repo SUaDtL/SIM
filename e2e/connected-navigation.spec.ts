@@ -3,6 +3,15 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
+import {
+  editSelected,
+  editorSection,
+  mapFilters,
+  openFileMenu,
+  showInventory,
+  showMap,
+  showSelectedRecord,
+} from "./helpers/usability";
 
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
@@ -51,7 +60,8 @@ async function loadFixture(page: Page): Promise<void> {
     delete app["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
+  await openFileMenu(page);
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
@@ -65,6 +75,7 @@ async function loadFixture(page: Page): Promise<void> {
 }
 
 async function findRecord(page: Page, query: string, result: string): Promise<void> {
+  await showMap(page);
   await page.getByLabel("Find on map", { exact: true }).fill(query);
   const choice = page.getByTestId("find-results").getByRole("button", { name: result, exact: true });
   await choice.focus();
@@ -84,6 +95,7 @@ function viewport(page: Page): Promise<{ zoom: number; pan: { x: number; y: numb
 
 test.beforeEach(async ({ page }) => {
   await loadFixture(page);
+  await showMap(page);
 });
 
 test("partial Find keeps duplicate services and cross-type names distinct with keyboard selection", async ({
@@ -99,14 +111,12 @@ test("partial Find keeps duplicate services and cross-type names distinct with k
   const blue = results.getByRole("button", { name: "Directory (Blue) · service", exact: true });
   await blue.focus();
   await blue.press("Enter");
-  await expect(page.getByTestId("editor").getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText(
-    "Blue",
-  );
+  await expect(page.getByTestId("editor").getByRole("button", { name: "Blue", exact: true })).toBeVisible();
   await search.fill("amber");
   await expect(results.getByRole("button", { name: "Amber · network", exact: true })).toBeVisible();
   await expect(results.getByRole("button", { name: "Amber · cds", exact: true })).toBeVisible();
   await results.getByRole("button", { name: "Amber · cds", exact: true }).click();
-  await expect(page.getByTestId("editor").getByRole("heading", { name: "Edit CDS", exact: true })).toBeVisible();
+  await expect(page.getByTestId("editor").getByRole("heading", { name: "CDS: Amber", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("cds");
   await search.fill("no matching record");
   await expect(results).toContainText("No matching records");
@@ -114,21 +124,28 @@ test("partial Find keeps duplicate services and cross-type names distinct with k
 
 test("reference peek preserves scalar and support draft, returns focus, and adds no history", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Orders pending");
+  await editorSection(page, "Support");
   await editor.getByLabel("Tier 1 support notes", { exact: true }).fill("Pending support text");
+  await editorSection(page, "Details");
   const inspect = editor.getByRole("button", { name: "Inspect Provided by", exact: true });
   await inspect.click();
   const dialog = page.getByRole("dialog", { name: "Inspect related record", exact: true });
   await expect(dialog.getByRole("heading", { name: "Organization: Operations", exact: true })).toBeVisible();
   await expect(page.getByRole("dialog", { name: "Unapplied changes", exact: true })).toHaveCount(0);
-  const related = dialog.getByRole("button", { name: /^Provides services: Orders/ });
+  await dialog
+    .getByLabel("Filter service relationships by role", { exact: true })
+    .selectOption({ label: "Provides services" });
+  const related = dialog.getByRole("button", { name: "Orders (Amber)", exact: true });
   await related.focus();
   await related.press("Enter");
   await expect(dialog.getByRole("heading", { name: "Service: Orders", exact: true })).toBeFocused();
   await dialog.getByRole("button", { name: "Close", exact: true }).click();
   await expect(inspect).toBeFocused();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders pending");
+  await editorSection(page, "Support");
   await expect(editor.getByLabel("Tier 1 support notes", { exact: true })).toHaveValue("Pending support text");
   await expect(page.getByTestId("draft-status")).toContainText("Unapplied changes");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
@@ -136,7 +153,9 @@ test("reference peek preserves scalar and support draft, returns focus, and adds
 
 test("accepted Back restores prior service, list filter and map framing without Undo", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await showInventory(page);
   await page.getByLabel("Filter", { exact: true }).fill("Ord");
+  await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Amber" });
   await page.getByTestId("map-canvas").evaluate((container) => {
     interface Cy {
@@ -147,12 +166,15 @@ test("accepted Back restores prior service, list filter and map framing without 
     cy.zoom(1.1);
     cy.pan({ x: 120, y: 90 });
   });
+  await showSelectedRecord(page);
   const previous = await viewport(page);
   await findRecord(page, "operations", "Operations · organization");
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("organization");
-  await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Operations");
+  await expect(
+    page.getByTestId("editor").getByRole("heading", { name: "Organization: Operations", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Back", exact: true }).click();
-  await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await expect(page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("service");
   await expect(page.getByLabel("Filter", { exact: true })).toHaveValue("Ord");
   await expect(page.locator("#map-filter-network")).toHaveValue("1");
@@ -162,12 +184,17 @@ test("accepted Back restores prior service, list filter and map framing without 
 
 test("Stay rejects a Find request before selection, filters, chain or framing change", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Orders pending");
+  await showInventory(page);
   await page.getByLabel("Filter", { exact: true }).fill("Ord");
+  await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Amber" });
   const previous = await viewport(page);
   const summary = await page.getByTestId("map-summary").textContent();
+  expect(summary).toContain("Highlighted");
   await findRecord(page, "dir", "Directory (Blue) · service");
   const decision = page.getByRole("dialog", { name: "Unapplied changes", exact: true });
   await expect(decision).toBeVisible();
@@ -185,6 +212,7 @@ test("Stay rejects a Find request before selection, filters, chain or framing ch
 test("Back Stay keeps the current dirty record and an accepted discard returns correctly", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
   await findRecord(page, "operations", "Operations · organization");
+  await editSelected(page);
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Operations pending");
   const previous = await viewport(page);
   await page.getByRole("button", { name: "Back", exact: true }).click();
@@ -195,7 +223,7 @@ test("Back Stay keeps the current dirty record and an accepted discard returns c
   expect(await viewport(page)).toEqual(previous);
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await decision.getByRole("button", { name: "Discard and continue", exact: true }).click();
-  await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await expect(page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("service");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
@@ -206,30 +234,36 @@ test("non-map references expose separate recorded reverse roles and application/
   await findRecord(page, "orders", "Orders (Amber) · service");
   const editor = page.getByTestId("editor");
   const dialog = page.getByRole("dialog", { name: "Inspect related record", exact: true });
-  await editor.getByRole("button", { name: "Inspect Provided by", exact: true }).click();
-  await expect(dialog.getByRole("button", { name: /^Provides services: Orders \(Amber\)/ })).toBeVisible();
-  await expect(dialog.getByRole("button", { name: /^Tier 1 support for: Orders \(Amber\)/ })).toBeVisible();
-  await expect(dialog.getByRole("button", { name: /^Consumes services: Directory \(Amber\)/ })).toBeVisible();
-  await dialog.getByRole("button", { name: /^Consumes services: Directory \(Amber\)/ }).click();
+  await editor.getByRole("button", { name: "Operations", exact: true }).click();
+  const roles = dialog.getByLabel("Filter service relationships by role", { exact: true });
+  await roles.selectOption({ label: "Provides services" });
+  await expect(dialog.getByRole("button", { name: "Orders (Amber)", exact: true })).toBeVisible();
+  await roles.selectOption({ label: "Tier 1 support for" });
+  await expect(dialog.getByRole("button", { name: "Orders (Amber)", exact: true })).toBeVisible();
+  await roles.selectOption({ label: "Consumes services" });
+  await expect(dialog.getByRole("button", { name: "Directory (Amber)", exact: true })).toBeVisible();
+  await dialog.getByRole("button", { name: "Directory (Amber)", exact: true }).click();
   await expect(dialog.getByRole("heading", { name: "Service: Directory", exact: true })).toBeVisible();
   await dialog.getByRole("button", { name: "Close", exact: true }).click();
-  for (const label of ["Application", "Category"]) {
-    await editor.getByRole("button", { name: `Inspect ${label}`, exact: true }).click();
-    await expect(dialog.getByRole("button", { name: /^Services: Orders \(Amber\)/ })).toBeVisible();
+  for (const name of ["Service suite", "Business tools"]) {
+    await editor.getByRole("button", { name, exact: true }).click();
+    await expect(dialog.getByRole("button", { name: "Orders (Amber)", exact: true })).toBeVisible();
     await dialog.getByRole("button", { name: "Close", exact: true }).click();
   }
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
 
 test("existing-network guidance and normalized unchanged Apply preserve the saved checkpoint", async ({ page }) => {
   const editor = page.getByTestId("editor");
-  await expect(editor.getByRole("button", { name: "Create another network", exact: true })).toBeVisible();
-  await expect(editor.getByRole("button", { name: "Create first network", exact: true })).toHaveCount(0);
+  await expect(editor).not.toContainText("Create first network");
+  await showInventory(page);
+  await expect(page.getByTestId("list-panel").getByRole("button", { name: "Add network", exact: true })).toBeVisible();
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await editSelected(page);
   await editor.getByLabel("Name", { exact: true }).fill(" Orders ");
   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
   await expect(page.getByTestId("draft-status")).toBeEmpty();
@@ -237,8 +271,10 @@ test("existing-network guidance and normalized unchanged Apply preserve the save
 
 test("Find Apply and continue commits once before revealing the accepted typed target", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Orders applied");
+  await showMap(page);
   await page.getByLabel("Find on map", { exact: true }).fill("dir");
   await page
     .getByTestId("find-results")
@@ -248,9 +284,10 @@ test("Find Apply and continue commits once before revealing the accepted typed t
     .getByRole("dialog", { name: "Unapplied changes", exact: true })
     .getByRole("button", { name: "Apply and continue", exact: true })
     .click();
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Directory");
-  await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Blue");
+  await expect(editor.getByRole("heading", { name: "Service: Directory", exact: true })).toBeVisible();
+  await expect(editor.getByRole("button", { name: "Blue", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("service");
+  await showInventory(page);
   await expect(page.getByTestId("entity-list").getByRole("button", { name: /Directory.*Blue/ })).toHaveAttribute(
     "aria-current",
     "true",

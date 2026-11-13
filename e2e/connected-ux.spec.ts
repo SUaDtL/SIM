@@ -1,3 +1,4 @@
+import { mapFilters, showInventory, showMap, showSelectedRecord } from "./helpers/usability";
 import { expect, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -5,7 +6,9 @@ const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.me
 
 test("UX0-003 Find Stay preserves the filter and pending form", async ({ page }) => {
   await page.goto(simUrl);
+  await page.getByText("About and demo", { exact: true }).click();
   await page.getByRole("button", { name: "Open demo", exact: true }).click();
+  await mapFilters(page);
   const network = page.locator("#map-filter-network");
   const choices = await network
     .locator("option")
@@ -13,17 +16,20 @@ test("UX0-003 Find Stay preserves the filter and pending form", async ({ page })
   const first = choices.find((x) => x.value !== "");
   expect(first).toBeDefined();
   await network.selectOption(first?.value ?? "");
+  await showInventory(page);
   await page.getByTestId("list-panel").getByRole("button", { name: "Add network", exact: true }).click();
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Unapplied synthetic network");
+  await showMap(page);
   const find = page.getByLabel("Find on map", { exact: true });
   const candidate = await page.locator("#map-find-options option").first().getAttribute("value");
   await find.fill(candidate ?? "");
-  await find.dispatchEvent("change");
+  await page.getByTestId("find-results").getByRole("button").first().click();
   await page
     .getByRole("dialog", { name: "Unapplied changes" })
     .getByRole("button", { name: "Stay", exact: true })
     .click();
   await expect(network).toHaveValue(first?.value ?? "");
+  await showSelectedRecord(page);
   await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue(
     "Unapplied synthetic network",
   );
@@ -31,7 +37,9 @@ test("UX0-003 Find Stay preserves the filter and pending form", async ({ page })
 
 test("UX2 partial Find offers explicit results and a useful no-results state", async ({ page }) => {
   await page.goto(simUrl);
+  await page.getByText("About and demo", { exact: true }).click();
   await page.getByRole("button", { name: "Open demo", exact: true }).click();
+  await showMap(page);
   await page.getByLabel("Find on map", { exact: true }).fill("identity");
   await expect(page.getByTestId("find-results").getByRole("button").first()).toBeVisible();
   await page.getByLabel("Find on map", { exact: true }).fill("No synthetic match 9387");

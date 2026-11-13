@@ -1,0 +1,99 @@
+{
+  "workspace": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM",
+  "isolated": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-picker-mutation-8c062a1d34",
+  "shared_dist_sha256_before": "0533252b9a0e0f513dc708036ce44013037b06495d3a39af75db7c3b84791bd9",
+  "sources": {
+    "src/ui/reference-picker.ts": "382ed872fd245ee6d2d6410ae702ededaf6426905d6a1717d39b19b6dd49a253",
+    "src/ui/editor-panel.ts": "2852d98dafdd7f02b4eeae90a24a0f09a0453ece4816c2d97d8c0018cc4e9041"
+  },
+  "mutations": [
+    {
+      "id": "owner-current",
+      "file": "src/ui/reference-picker.ts",
+      "line": 74,
+      "before": "    if (ctx.isCurrent?.() ?? true) return true;",
+      "after": "    if (true) return true; // MUTANT: ignore owner-current guard",
+      "sha256_before": "382ed872fd245ee6d2d6410ae702ededaf6426905d6a1717d39b19b6dd49a253",
+      "sha256_after": "261634038469de0022994854b7d3895798cf61db848e9081094a1ae8bbd99852",
+      "command": "node node_modules/@playwright/test/cli.js test e2e/reference-picker-component.spec.ts --project msedge --grep 'stale ownership and a completion after close' --output test-results/mutant-owner-current --reporter line",
+      "exit": 1,
+      "log": "mutant-owner-current.log",
+      "failure_oracle": "reference-picker-component.spec.ts:202 expected parent task changed; picker instead closed after selecting stale record",
+      "result": "killed"
+    },
+    {
+      "id": "closed-dialog",
+      "file": "src/ui/reference-picker.ts",
+      "line": 73,
+      "before": "    if (closed) return false;",
+      "after": "    // MUTANT: accept completion after dialog close",
+      "sha256_before": "382ed872fd245ee6d2d6410ae702ededaf6426905d6a1717d39b19b6dd49a253",
+      "sha256_after": "7ce164fa9fd2e34cce4029481f22acfca89bf9b71ce9c3bdc9d97fec05279bdc",
+      "command": "node node_modules/@playwright/test/cli.js test e2e/reference-picker-component.spec.ts --project msedge --grep 'stale ownership and a completion after close' --output test-results/mutant-closed-dialog --reporter line",
+      "exit": 1,
+      "log": "mutant-closed-dialog.log",
+      "failure_oracle": "reference-picker-component.spec.ts:215 selected expected [] but got [\"1\"] after delayed completion on closed dialog",
+      "result": "killed"
+    },
+    {
+      "id": "child-warning-withdrawal",
+      "file": "src/ui/editor-panel.ts",
+      "line": 963,
+      "before": "                  form.addEventListener(\"input\", () => {\n                    confirmed = null;\n                    confirm.hidden = true;\n                  });",
+      "after": "                  // MUTANT: do not withdraw child warning acknowledgement after input",
+      "sha256_before": "2852d98dafdd7f02b4eeae90a24a0f09a0453ece4816c2d97d8c0018cc4e9041",
+      "sha256_after": "15e799333b5a992c5063543382875ca86206b96133fb20e807c0aa15751430c4",
+      "command": "node node_modules/@playwright/test/cli.js test e2e/usability-picker.spec.ts --project msedge --grep \"inline child's exact host warning\" --output test-results/mutant-child-warning --reporter line",
+      "build_command": "npm run build",
+      "build_exit": 0,
+      "build_log": "mutant-child-warning-build.log",
+      "build_sha256": "2de3721c00128ac7b431f97afc33ccb537069cdba56ee5de6d48a948d55b71f0",
+      "exit": 1,
+      "log": "mutant-child-warning.log",
+      "failure_oracle": "usability-picker.spec.ts:203 Save anyway expected hidden after changed child payload but remained visible",
+      "result": "killed"
+    }
+  ],
+  "baseline": [
+    {
+      "command": "node node_modules/@playwright/test/cli.js test e2e/reference-picker-component.spec.ts --project msedge --grep 'stale ownership and a completion after close' --output test-results/baseline-picker --reporter line",
+      "exit": 0,
+      "log": "baseline-picker.log",
+      "result": "1 passed (1.8s)"
+    },
+    {
+      "command": "npm run build",
+      "exit": 0,
+      "log": "baseline-build.log",
+      "build_sha256": "3c49802c46b3ae8f3f37ac21717b0543da4daba357b0061e4bd48695fc801865"
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test e2e/usability-picker.spec.ts --project msedge --grep \"inline child's exact host warning\" --output test-results/baseline-warning --reporter line",
+      "exit": 0,
+      "log": "baseline-warning.log",
+      "result": "1 passed (1.9s)"
+    }
+  ],
+  "shared_dist_sha256_after": "3c49802c46b3ae8f3f37ac21717b0543da4daba357b0061e4bd48695fc801865",
+  "shared_sources_sha256_after": {
+    "src/ui/reference-picker.ts": "382ed872fd245ee6d2d6410ae702ededaf6426905d6a1717d39b19b6dd49a253",
+    "src/ui/editor-panel.ts": "2852d98dafdd7f02b4eeae90a24a0f09a0453ece4816c2d97d8c0018cc4e9041"
+  },
+  "shared_dist_unchanged": false,
+  "shared_sources_unchanged": true,
+  "restored": {
+    "picker_command": "node node_modules/@playwright/test/cli.js test e2e/reference-picker-component.spec.ts --project msedge --grep 'stale ownership and a completion after close' --output test-results/restored-picker --reporter line",
+    "picker_exit": 0,
+    "picker_log": "restored-picker.log",
+    "picker_result": "1 passed (1.7s)",
+    "build_command": "npm run build",
+    "build_exit": 0,
+    "build_log": "restored-build.log",
+    "build_sha256": "3c49802c46b3ae8f3f37ac21717b0543da4daba357b0061e4bd48695fc801865",
+    "warning_command": "node node_modules/@playwright/test/cli.js test e2e/usability-picker.spec.ts --project msedge --grep \"inline child's exact host warning\" --output test-results/restored-warning --reporter line",
+    "warning_exit": 0,
+    "warning_log": "restored-warning.log",
+    "warning_result": "1 passed (1.8s)"
+  },
+  "scope": "Three targeted mutants, Microsoft Edge only, isolated source snapshot with shared read-only dependency junction; no dependency install. Not exhaustive mutation coverage."
+}

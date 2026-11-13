@@ -1,3 +1,5 @@
+import { openFileMenu, showMap, showInventory, editSelected } from "./helpers/usability";
+import { showCaptureOptions, showAbout } from "./helpers/map-controls";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -27,7 +29,8 @@ async function load(page: Page): Promise<string[]> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
+  await showMap(page);
   return problems;
 }
 
@@ -71,6 +74,7 @@ async function fixture(): Promise<{ bytes: Uint8Array; metrics: string }> {
 
 async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved"): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -94,7 +98,8 @@ interface MapState {
 }
 
 /** Service labels and their classes, read through Cytoscape's registry on the map container. */
-function readMap(page: Page): Promise<MapState> {
+async function readMap(page: Page): Promise<MapState> {
+  await showMap(page);
   return page.getByTestId("map-canvas").evaluate((container) => {
     interface Ele {
       data(k: string): unknown;
@@ -174,10 +179,12 @@ test("signed baseline and planned services open a read-only projection, then Edi
   repo.addScenarioChange(scenario.id, { kind: "add", name: "Planned", networkId: network.id, marking: "CUI" });
 
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "signed.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
+  await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Plan" });
   await page.getByRole("button", { name: "Fit map" }).click();
   const canvas = page.getByTestId("map-canvas");
@@ -207,13 +214,13 @@ test("signed baseline and planned services open a read-only projection, then Edi
 
   const find = page.getByLabel("Find on map");
   await find.fill("Planned (NIPR)");
-  await find.press("Tab");
+  await find.press("Enter");
   await expect(editor.getByRole("heading", { name: "Planned" })).toBeVisible();
   await expect(editor).toContainText("Planned service added by this scenario.");
   await expect(editor.getByRole("button", { name: "Edit As-Is" })).toHaveCount(0);
 
   await find.fill("Signed baseline (NIPR)");
-  await find.press("Tab");
+  await find.press("Enter");
   await editor.getByRole("button", { name: "Edit As-Is" }).click();
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("as-is");
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Signed baseline");
@@ -235,10 +242,12 @@ test("an invalidated CDS route stays visibly unresolved in the map, summary and 
   repo.addScenarioChange(scenario.id, { kind: "rehome", serviceId: provider.id, networkId: c.id });
 
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "route.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
+  await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Move provider" });
   await expect(page.getByTestId("map-summary")).toContainText("1 unresolved former-CDS route");
   const find = page.getByLabel("Find on map");
@@ -257,6 +266,7 @@ test("an invalidated CDS route stays visibly unresolved in the map, summary and 
   expect(edges).toHaveLength(1);
   expect(edges[0]).toMatchObject({ kind: "unresolved", classes: expect.arrayContaining(["unresolved"]) });
   const download = page.waitForEvent("download");
+  await showCaptureOptions(page);
   await page.getByRole("button", { name: "Export SVG" }).click();
   const file = await download;
   expect(file.suggestedFilename()).toContain("To-Be");
@@ -268,12 +278,15 @@ test("an invalidated CDS route stays visibly unresolved in the map, summary and 
 
 test("authors scenario changes in the editor, one undo step each, with the banner following", async ({ page }) => {
   const problems = await load(page);
+  await showAbout(page);
   await page.getByRole("button", { name: "Open demo" }).click();
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Scenarios" });
   await page.getByRole("button", { name: "Add scenario" }).click();
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Plan");
   await editor.getByRole("button", { name: "Add scenario" }).click();
+  await editSelected(page);
   await expect(editor.getByText("No changes yet: this scenario matches As-Is.")).toBeVisible();
 
   await editor.getByLabel("Change", { exact: true }).selectOption({ label: "Add a service" });

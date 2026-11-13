@@ -5,7 +5,8 @@ import { button, el } from "./dom";
 import { createEditor } from "./editor-panel";
 import { createListPanel, type ListPanel, type Selection } from "./list-panel";
 import { descriptor } from "./forms";
-import { relatedEntities, type EntityTarget } from "./relations";
+import { type EntityTarget } from "./relations";
+import { createRecordSummary } from "./record-summary";
 import { dependencyKey, serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 
 export interface Workspace {
@@ -34,8 +35,14 @@ export function createWorkspace(
   let unsubscribe = (): void => undefined;
   let sessionId = 0;
   let draftToken = 0;
+  let surface: "inventory" | "map" = "inventory";
+  let inspectorParked = false;
+  let editorFocus: HTMLElement | null = null;
   type NavigationEntry = {
     selection: Selection | null;
+    editorView: ReturnType<typeof editor.viewContext>;
+    surface: "inventory" | "map";
+    inspectorParked: boolean;
     map: MapViewState;
     list: ReturnType<ListPanel["viewContext"]>;
     focus: HTMLElement | null;
@@ -43,9 +50,9 @@ export function createWorkspace(
     origin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null;
   };
   const navigationHistory: NavigationEntry[] = [];
+  const inspectionDialogs = new Set<HTMLDialogElement>();
   let pendingReturn: NavigationEntry | null = null;
   let navigationRequest = 0;
-  let mapNavigation = false;
   let inspectConnection: NonNullable<MapViewContext["inspectDependency"]> = () => undefined;
   let projectedOrigin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null = null;
   let restoringOrigin = false;
@@ -60,6 +67,9 @@ export function createWorkspace(
     const scope = [editor.element, list.element, map.element].find((region) => active && region.contains(active));
     return {
       selection: editor.selection(),
+      editorView: editor.viewContext(),
+      surface,
+      inspectorParked,
       map: map.captureView(),
       list: list.viewContext(),
       focus: active,
@@ -131,13 +141,19 @@ export function createWorkspace(
       (previous.selection.id === null ||
         descriptor(previous.selection.type).get(repo, previous.selection.id) !== undefined)
     ) {
-      editor.open(previous.selection.type, previous.selection.id);
+      if (previous.selection.id === null || previous.editorView.editing)
+        editor.open(previous.selection.type, previous.selection.id);
+      else editor.inspect(previous.selection.type, previous.selection.id);
+      editor.restoreViewContext(previous.editorView);
     } else {
       editor.close();
       navigationStatus.textContent = previous.selection
         ? "The previous record no longer exists."
         : "Returned to the workspace.";
     }
+    surface = previous.surface;
+    inspectorParked = previous.inspectorParked;
+    syncSurface();
     map.restoreView(previous.map);
     if (previous.origin) {
       restoringOrigin = true;
@@ -154,33 +170,36 @@ export function createWorkspace(
   function peek(target: EntityTarget): void {
     const focusBefore = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const dialog = el("dialog", { "aria-label": "Inspect related record" });
+    inspectionDialogs.add(dialog);
     const close = (): void => {
       dialog.close();
       dialog.remove();
       focusBefore?.focus();
+      inspectionDialogs.delete(dialog);
     };
+    const owner = repo;
+    const session = sessionId;
     function draw(next: EntityTarget): void {
-      const d = descriptor(next.type);
-      const record = d.get(repo, next.id);
-      if (record === undefined) {
-        dialog.replaceChildren(el("p", {}, "This record no longer exists."), button("Close", close));
+      if (repo !== owner || session !== sessionId) {
+        dialog.replaceChildren(
+          el("p", {}, "The dataset changed. Close this inspector and select a current record."),
+          button("Close", close),
+        );
         return;
       }
-      const values = d.values(repo, next.id);
-      dialog.replaceChildren(
-        el("h2", { tabindex: "-1" }, `${d.label}: ${String(values["name"] ?? "")}`),
-        ...d.fields.map((field) => el("p", {}, `${field.label}: ${String(values[field.key] ?? "")}`)),
-        ...relatedEntities(repo.snapshot(), next).map((row) =>
-          button(`${row.label}: ${row.detail}`, () => {
-            draw(row.target);
-          }),
-        ),
-        button("Open for editing", () => {
+      const summary = createRecordSummary({
+        repo: owner,
+        target: next,
+        onNavigate: draw,
+        onEdit: () => {
           close();
-          void open(next.type, next.id);
-        }),
-        button("Close", close),
-      );
+          if (repo === owner && session === sessionId) void open(next.type, next.id, true);
+        },
+        onDependency: (consumer, provider) => {
+          if (repo === owner && session === sessionId) inspectConnection(consumer, provider, owner.snapshot(), false);
+        },
+      });
+      dialog.replaceChildren(summary, button("Close", close));
       if (dialog.open) dialog.querySelector<HTMLElement>("h2")?.focus();
     }
     draw(target);
@@ -242,6 +261,23 @@ export function createWorkspace(
     });
   }
 
+  function applyActiveDraft(): boolean {
+    const applied = editor.applyActiveDraft();
+    if (!applied) {
+      inspectorParked = false;
+      syncSurface();
+      navigationStatus.textContent = "The draft could not be applied. Review the editor errors and try again.";
+      const target =
+        editor.element.querySelector<HTMLElement>('[aria-invalid="true"]') ??
+        editor.element.querySelector<HTMLElement>('[role="alert"]:not(:empty)');
+      if (target) {
+        if (!target.matches("button, input, select, textarea")) target.tabIndex = -1;
+        target.focus();
+      }
+    }
+    return applied;
+  }
+
   async function resolveActiveDraft(kind: "navigate" | "history" | "import" | "capture"): Promise<boolean> {
     if (!editor.hasPendingDraft()) return true;
     const owner = repo;
@@ -251,7 +287,7 @@ export function createWorkspace(
     if (repo !== owner || sessionId !== session || draftToken !== token) return false;
     if (choice === "stay") return false;
     if (choice === "apply") {
-      if (!editor.applyActiveDraft()) return false;
+      if (!applyActiveDraft()) return false;
       if (kind === "capture") await map.settlePendingPlacement();
       return true;
     }
@@ -259,34 +295,41 @@ export function createWorkspace(
     return true;
   }
 
-  async function open(type: Parameters<typeof editor.open>[0], id: number | null): Promise<void> {
-    if (editor.selection()?.type === type && editor.selection()?.id === id && !projectedOrigin) {
+  async function open(type: Parameters<typeof editor.open>[0], id: number | null, edit = false): Promise<void> {
+    if (
+      editor.selection()?.type === type &&
+      editor.selection()?.id === id &&
+      !projectedOrigin &&
+      (!edit || editor.isEditing())
+    ) {
       pendingReturn = null;
-      mapNavigation = false;
+      inspectorParked = false;
+      syncSurface();
       return;
     }
     if (!pendingReturn && !(await prepareNavigation())) return;
     if (id !== null && descriptor(type).get(repo, id) === undefined) {
       pendingReturn = null;
-      mapNavigation = false;
       navigationStatus.textContent = "That record no longer exists. Choose another result.";
       return;
     }
-    const mapAlreadyRevealed = mapNavigation;
-    mapNavigation = false;
     rememberReturn();
     projectedOrigin = null;
-    editor.open(type, id);
+    inspectorParked = false;
+    if (id === null || edit) editor.open(type, id);
+    else editor.inspect(type, id);
     navigationStatus.textContent = "";
     list.reveal(type);
-    if (!mapAlreadyRevealed && id !== null && ["service", "network", "cds"].includes(type))
-      map.reveal(type as "service" | "network" | "cds", id);
+    if (id !== null && ["service", "network", "cds"].includes(type))
+      map.select(type as "service" | "network" | "cds", id);
+    syncSurface();
   }
 
   const editor = createEditor({
     repo: () => repo,
     selectionChanged: () => {
       list.render();
+      syncSurface();
     },
     draftChanged: () => {
       draftToken++;
@@ -294,12 +337,37 @@ export function createWorkspace(
     },
     requestServiceOnNetwork: (networkId) => {
       void (async () => {
-        if (await resolveActiveDraft("navigate")) editor.openServiceOnNetwork(networkId);
+        if (await resolveActiveDraft("navigate")) {
+          inspectorParked = false;
+          editor.openServiceOnNetwork(networkId);
+        }
       })();
     },
     requestNavigate: (target, intent) => {
       if (intent === "peek") peek(target);
-      else void open(target.type, target.id);
+      else void open(target.type, target.id, true);
+    },
+    requestCancel: () => {
+      void (async () => {
+        const previous = editor.selection();
+        const owner = repo;
+        const session = sessionId;
+        if (!(await resolveActiveDraft("navigate")) || owner !== repo || session !== sessionId) return;
+        if (previous?.id !== null && previous && descriptor(previous.type).get(repo, previous.id) !== undefined)
+          editor.inspect(previous.type, previous.id);
+        else editor.close();
+        syncSurface();
+      })();
+    },
+    requestSimilar: (sourceId) => {
+      void (async () => {
+        const owner = repo;
+        const session = sessionId;
+        if (!(await resolveActiveDraft("navigate")) || owner !== repo || session !== sessionId) return;
+        inspectorParked = false;
+        editor.createSimilar(sourceId);
+        syncSurface();
+      })();
     },
     requestDependency: (consumer, provider) => {
       inspectConnection(consumer, provider, repo.snapshot(), false);
@@ -316,12 +384,10 @@ export function createWorkspace(
     snapshot: () => repo.snapshot(),
     resolveNavigation: async () => {
       const accepted = await prepareNavigation();
-      mapNavigation = accepted;
       return accepted;
     },
     navigationAborted: () => {
       pendingReturn = null;
-      mapNavigation = false;
     },
     projectionChanged: () => {
       if (projectedOrigin) {
@@ -353,10 +419,14 @@ export function createWorkspace(
       };
       const before = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       const dialog = el("dialog", { "aria-label": "Connection inspector" });
+      inspectionDialogs.add(dialog);
+      const owner = repo;
+      const session = sessionId;
       const close = (): void => {
         dialog.close();
         dialog.remove();
         before?.focus();
+        inspectionDialogs.delete(dialog);
       };
       dialog.append(
         el("h2", {}, "Recorded dependency"),
@@ -383,7 +453,16 @@ export function createWorkspace(
           ? el("p", {}, "Projected connection, read-only. Edit its originating scenario to change the projection.")
           : button("Edit consuming service", () => {
               close();
-              void open("service", consumer);
+              if (repo !== owner || session !== sessionId) return;
+              if (
+                !repo
+                  .listDependencies()
+                  .some((item) => item.consumerServiceId === consumer && item.providerServiceId === provider)
+              ) {
+                navigationStatus.textContent = "That connection no longer exists. Select a current connection.";
+                return;
+              }
+              void open("service", consumer, true);
             }),
         button("Close", close),
       );
@@ -425,7 +504,6 @@ export function createWorkspace(
           if (!map.inspectOrigin(node.data.origin)) editor.close();
           return;
         }
-        mapNavigation = false;
         if (!restoring) rememberReturn();
         projectedOrigin = node.data.origin;
         navigationStatus.textContent = "";
@@ -435,7 +513,8 @@ export function createWorkspace(
             void (async () => {
               if (!(await prepareNavigation())) return;
               map.showAsIs();
-              await open(entity, id);
+              await open(entity, id, true);
+              map.reveal(entity, id);
             })();
           },
           openScenario: (id) => {
@@ -446,29 +525,78 @@ export function createWorkspace(
     },
   });
   const element = el("main", { class: "workspace" }, list.element, map.element, editor.element);
-  const focusEditor = button("Focus editor", () => {
-    const focused = element.classList.toggle("editor-focused");
-    focusEditor.textContent = focused ? "Show full workspace" : "Focus editor";
-    focusEditor.setAttribute("aria-pressed", String(focused));
+  const inventoryButton = button("Inventory", () => {
+    inspectorParked = editor.selection() !== null || projectedOrigin !== null;
+    surface = "inventory";
+    syncSurface();
   });
+  const mapButton = button("Map", () => {
+    inspectorParked = editor.selection() !== null || projectedOrigin !== null;
+    surface = "map";
+    syncSurface();
+  });
+  const returnButton = button("Return to results", () => {
+    inspectorParked = true;
+    syncSurface();
+  });
+  const returnToEditor = button("Return to draft", () => {
+    inspectorParked = false;
+    syncSurface();
+    if (editorFocus?.isConnected) editorFocus.focus({ preventScroll: true });
+    else editor.element.querySelector<HTMLElement>("input:not([hidden]), button, h2")?.focus();
+  });
+  editor.element.addEventListener("focusin", (event) => {
+    if (event.target instanceof HTMLElement) editorFocus = event.target;
+  });
+  function syncSurface(): void {
+    list.element.hidden = surface !== "inventory";
+    map.element.hidden = surface !== "map";
+    inventoryButton.setAttribute("aria-pressed", String(surface === "inventory"));
+    mapButton.setAttribute("aria-pressed", String(surface === "map"));
+    const selected = (editor.selection() !== null || projectedOrigin !== null) && !inspectorParked;
+    element.classList.toggle("has-selection", selected);
+    element.classList.toggle("editing", editor.isEditing() && !inspectorParked);
+    element.dataset["surface"] = surface;
+    editor.element.hidden = !selected;
+    returnButton.hidden = !selected || editor.isEditing();
+    returnToEditor.hidden = !inspectorParked || (editor.selection() === null && projectedOrigin === null);
+    returnToEditor.textContent = editor.isEditing() ? "Return to draft" : "Show selected record";
+  }
   element.prepend(
     el(
       "nav",
-      { class: "workspace-navigation", "aria-label": "Record navigation" },
+      { class: "workspace-navigation", "aria-label": "Workspace" },
+      inventoryButton,
+      mapButton,
       backButton,
-      focusEditor,
+      returnButton,
+      returnToEditor,
       navigationStatus,
     ),
   );
+  element.addEventListener("keydown", (event) => {
+    if (event.key !== "F2" || editor.isEditing()) return;
+    const selection = editor.selection();
+    if (selection?.id !== null && selection) {
+      event.preventDefault();
+      void open(selection.type, selection.id, true);
+    }
+  });
 
   function setRepository(next: Repository): void {
+    for (const dialog of inspectionDialogs) {
+      dialog.close();
+      dialog.remove();
+    }
+    inspectionDialogs.clear();
     unsubscribe();
     repo = next;
     sessionId++;
     ++navigationRequest;
     pendingReturn = null;
-    mapNavigation = false;
     projectedOrigin = null;
+    inspectorParked = false;
+    editorFocus = null;
     navigationHistory.length = 0;
     backButton.disabled = true;
     unsubscribe = repo.subscribe(() => {
@@ -502,6 +630,7 @@ export function createWorkspace(
     editor.close();
     list.render();
     map.reset();
+    syncSurface();
   }
 
   setRepository(initial);
@@ -518,7 +647,7 @@ export function createWorkspace(
     },
     hasPendingDraft: () => editor.hasPendingDraft(),
     pendingDraftLabel: () => editor.pendingDraftLabel(),
-    applyActiveDraft: () => editor.applyActiveDraft(),
+    applyActiveDraft,
     discardActiveDraft: () => {
       editor.discardActiveDraft();
     },

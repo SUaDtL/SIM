@@ -6,6 +6,16 @@ import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { applyScenario } from "../src/scenario/scenario";
 import { wasm } from "../tests/helpers/sqlite";
+import {
+  chooseReference,
+  editSelected,
+  editorSection,
+  mapFilters,
+  openFileMenu,
+  showInventory,
+  showMap,
+  showSelectedRecord,
+} from "./helpers/usability";
 
 const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
@@ -57,7 +67,8 @@ async function load(page: Page) {
       delete app["showSaveFilePicker"];
     });
     await page.goto(url);
-    await expect(page.getByTestId("sqlite-version")).toBeVisible();
+    await expect(page.getByTestId("sqlite-version")).toBeAttached();
+    await openFileMenu(page);
     const chooser = page.waitForEvent("filechooser");
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (
@@ -68,6 +79,7 @@ async function load(page: Page) {
       buffer: Buffer.from(db.export()),
     });
     await expect(page.getByTestId("dataset-status")).toContainText("| Saved");
+    await showMap(page);
     return {
       snapshot,
       caller: orders.id,
@@ -83,6 +95,7 @@ async function load(page: Page) {
 }
 
 async function find(page: Page, text: string): Promise<void> {
+  await showMap(page);
   const search = page.getByLabel("Find on map", { exact: true });
   await search.fill(text);
   await search.press("Enter");
@@ -123,39 +136,47 @@ test("two Back hops restore each service and organization context plus the origi
   const ids = await load(page);
   await find(page, "Orders (Amber)");
   const editor = page.getByTestId("editor");
+  await showInventory(page);
   await page.getByLabel("Filter", { exact: true }).fill("Ord");
+  await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Amber" });
   await frame(page, 0.8, 85, 60);
+  await showSelectedRecord(page);
   const serviceContext = await context(page);
-  await editor.getByRole("button", { name: "Inspect Provided by", exact: true }).click();
+  await editor.getByRole("button", { name: "Operations", exact: true }).click();
   const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
-  await peek.getByRole("button", { name: "Open for editing", exact: true }).click();
+  await peek.getByRole("button", { name: "Edit organization", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Operations");
+  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await showInventory(page);
   await page.getByLabel("Filter", { exact: true }).fill("Oper");
+  await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Blue" });
   await frame(page, 0.7, 30, 90);
+  await showSelectedRecord(page);
   const orgContext = await context(page);
   const identityReference = editor
-    .getByTestId("recorded-relationships")
-    .locator(".related-record")
-    .filter({ hasText: "Provides services: Identity (Blue)" });
-  await identityReference.getByRole("button", { name: "Open related record", exact: true }).click();
+    .getByRole("region", { name: "Service relationships", exact: true })
+    .locator('.relationship-row[data-relationship-role="Provides services"]')
+    .filter({ hasText: "Identity (Blue)" });
+  await identityReference.getByRole("button", { name: "Identity (Blue)", exact: true }).click();
+  await peek.getByRole("button", { name: "Edit service", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Identity");
   const back = page.getByRole("button", { name: "Back", exact: true });
   await back.click();
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Operations");
+  await expect(editor.getByRole("heading", { name: "Organization: Operations", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("organization");
   await expect(page.getByLabel("Filter", { exact: true })).toHaveValue("Oper");
   await expect(page.locator("#map-filter-network")).toHaveValue(String(ids.blue));
   expect(await context(page)).toEqual(orgContext);
-  await expect(identityReference.getByRole("button", { name: "Open related record", exact: true })).toBeFocused();
+  await expect(identityReference.getByRole("button", { name: "Identity (Blue)", exact: true })).toBeFocused();
   await back.click();
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await expect(page.getByLabel("Show", { exact: true })).toHaveValue("service");
   await expect(page.getByLabel("Filter", { exact: true })).toHaveValue("Ord");
   await expect(page.locator("#map-filter-network")).toHaveValue(String(ids.amber));
   expect(await context(page)).toEqual(serviceContext);
-  await expect(editor.getByRole("button", { name: "Inspect Provided by", exact: true })).toBeFocused();
+  await expect(editor.getByRole("button", { name: "Operations", exact: true })).toBeFocused();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
 
@@ -164,12 +185,17 @@ test("Stay from an ordinary list click and physical map tap preserves the comple
 }) => {
   const ids = await load(page);
   await find(page, "Orders (Amber)");
+  await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Orders pending");
-  await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Operations" });
+  await editorSection(page, "Support");
+  await chooseReference(page, "Tier 1 support", "Operations");
   await editor.getByLabel("Tier 1 support notes", { exact: true }).fill("Pending note");
+  await editorSection(page, "Details");
+  await showMap(page);
   await page.getByTestId("map-canvas").evaluate((container) => {
     const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
+    cy.resize();
     cy.fit(cy.elements(), 60);
   });
   const before = await context(page);
@@ -185,19 +211,26 @@ test("Stay from an ordinary list click and physical map tap preserves the comple
     expect(await context(page)).toEqual(before);
     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
   };
+  await showInventory(page);
   const listChoice = page.getByTestId("entity-list").getByRole("button", { name: /^Identity Blue/ });
   await listChoice.click();
   const decision = page.getByRole("dialog", { name: "Unapplied changes", exact: true });
   await decision.getByRole("button", { name: "Stay", exact: true }).click();
   await assertPreserved();
   await expect(listChoice).toBeFocused();
+  await showMap(page);
   const canvas = page.getByTestId("map-canvas");
+  await canvas.scrollIntoViewIfNeeded();
   const point = await canvas.evaluate((container, id) => {
     const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     return cy.getElementById(`service-${String(id)}`).renderedPosition();
   }, ids.provider);
   const box = await canvas.boundingBox();
   if (!box) throw new Error("Map has no visible canvas.");
+  expect(point.x).toBeGreaterThan(0);
+  expect(point.x).toBeLessThan(box.width);
+  expect(point.y).toBeGreaterThan(0);
+  expect(point.y).toBeLessThan(box.height);
   await page.mouse.click(box.x + point.x, box.y + point.y);
   await expect(decision).toBeVisible();
   await decision.getByRole("button", { name: "Stay", exact: true }).click();

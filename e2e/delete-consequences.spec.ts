@@ -1,3 +1,11 @@
+import {
+  editSelected,
+  mapFilters,
+  openFileMenu,
+  showInventory,
+  showMap,
+  showSelectedRecord,
+} from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -49,8 +57,9 @@ async function load(page: Page): Promise<void> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -58,11 +67,19 @@ async function load(page: Page): Promise<void> {
 }
 
 async function select(page: Page, plural: string, name: string): Promise<void> {
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: plural });
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: new RegExp(`^${name}\\b`) })
     .click();
+  await editSelected(page);
+}
+
+async function moreActions(page: Page): Promise<void> {
+  const action = page.getByTestId("editor").getByText("More edit actions", { exact: true });
+  const menu = action.locator("..");
+  if (!(await menu.evaluate((node) => (node as HTMLDetailsElement).open))) await action.click();
 }
 
 const editor = (page: Page) => page.getByTestId("editor");
@@ -106,6 +123,7 @@ for (const item of cases) {
   test(`${item.noun} delete names its actual consequences and Undo restores them`, async ({ page }) => {
     await load(page);
     await select(page, item.plural, item.name);
+    await moreActions(page);
     await editor(page)
       .getByRole("button", { name: `Delete ${item.noun}` })
       .click();
@@ -114,6 +132,7 @@ for (const item of cases) {
     await expect(page.getByTestId("entity-list")).not.toContainText(item.name);
     await page.getByRole("button", { name: "Undo" }).click();
     await select(page, item.plural, item.name);
+    await moreActions(page);
     await editor(page)
       .getByRole("button", { name: `Delete ${item.noun}` })
       .click();
@@ -128,10 +147,12 @@ test("Cancel and blocked delete preserve a dirty draft; completed delete discard
   await select(page, "Services", "Orders");
   const name = editor(page).getByLabel("Name", { exact: true });
   await name.fill("Unapplied Orders");
+  await moreActions(page);
   await editor(page).getByRole("button", { name: "Delete service" }).click();
   await expect(editor(page)).toContainText("unapplied changes to this record will be discarded");
-  await editor(page).getByRole("button", { name: "Cancel" }).click();
+  await editor(page).locator(".delete").getByRole("button", { name: "Cancel", exact: true }).click();
   await expect(name).toHaveValue("Unapplied Orders");
+  await moreActions(page);
   await editor(page).getByRole("button", { name: "Delete service" }).click();
   await editor(page).getByRole("button", { name: "Confirm delete" }).click();
   await page.getByRole("button", { name: "Undo" }).click();
@@ -141,6 +162,7 @@ test("Cancel and blocked delete preserve a dirty draft; completed delete discard
   await select(page, "Networks", "NIPR");
   const networkName = editor(page).getByLabel("Name", { exact: true });
   await networkName.fill("Unapplied NIPR");
+  await moreActions(page);
   await editor(page).getByRole("button", { name: "Delete network" }).click();
   await expect(editor(page)).toContainText("services using this network block deletion");
   await editor(page).getByRole("button", { name: "Inspect blocking service Orders", exact: true }).click();
@@ -156,10 +178,12 @@ test("Cancel and blocked delete preserve a dirty draft; completed delete discard
 test("a changed deletion plan is rechecked before confirmation", async ({ page }) => {
   await load(page);
   await select(page, "Networks", "Spare");
+  await moreActions(page);
   await editor(page).getByRole("button", { name: "Delete network" }).click();
   await expect(editor(page)).toContainText("No related records will change.");
 
   const importDialog = page.getByRole("dialog", { name: "Import CSV" });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   await importDialog.getByLabel("CSV files").setInputFiles({
     name: "services.csv",
@@ -183,30 +207,48 @@ test("Find and map tap resolve a dirty editor while view-only actions keep its i
   await select(page, "Services", "Orders");
   const name = editor(page).getByLabel("Name", { exact: true });
   await name.fill("Pending Orders");
+  await mapFilters(page);
   await page.getByRole("group", { name: "Filter the map" }).getByLabel("Network").selectOption({ label: "NIPR" });
+  await showInventory(page);
   await page.getByRole("button", { name: "Hide list" }).click();
+  await showMap(page);
   await page.getByRole("button", { name: "Fit map" }).click();
+  await showSelectedRecord(page);
   await expect(name).toHaveValue("Pending Orders");
   await expect(page.getByRole("dialog", { name: "Unapplied changes" })).toHaveCount(0);
+  await showInventory(page);
   await page.getByRole("button", { name: "Show list" }).click();
+  await mapFilters(page);
   await page
     .getByRole("group", { name: "Filter the map" })
     .getByLabel("Network")
     .selectOption({ label: "All networks" });
 
+  await showMap(page);
   const find = page.getByLabel("Find on map");
+  await showMap(page);
   await find.fill("Identity (SIPR)");
-  await find.press("Tab");
+  await page
+    .getByTestId("find-results")
+    .getByRole("button", { name: "Identity (SIPR) · service", exact: true })
+    .click();
   const choice = page.getByRole("dialog", { name: "Unapplied changes" });
   await choice.getByRole("button", { name: "Stay" }).click();
+  await showSelectedRecord(page);
   await expect(name).toHaveValue("Pending Orders");
+  await showMap(page);
   await find.fill("Identity (SIPR)");
-  await find.press("Tab");
+  await page
+    .getByTestId("find-results")
+    .getByRole("button", { name: "Identity (SIPR) · service", exact: true })
+    .click();
   await choice.getByRole("button", { name: "Discard and continue" }).click();
+  await editSelected(page);
   await expect(editor(page).getByLabel("Name", { exact: true })).toHaveValue("Identity");
 
   await select(page, "Services", "Orders");
   await editor(page).getByLabel("Name", { exact: true }).fill("Applied Orders");
+  await showMap(page);
   await page.getByRole("button", { name: "Fit map" }).click();
   const canvas = page.getByTestId("map-canvas");
   const point = await canvas.evaluate((container) => {
@@ -228,6 +270,7 @@ test("Find and map tap resolve a dirty editor while view-only actions keep its i
   if (!box) throw new Error("Map canvas has no size.");
   await page.mouse.click(box.x + point.x, box.y + point.y);
   await choice.getByRole("button", { name: "Apply and continue" }).click();
+  await editSelected(page);
   await expect(editor(page).getByLabel("Name", { exact: true })).toHaveValue("Identity");
   await select(page, "Services", "Applied Orders");
   await expect(editor(page).getByLabel("Name", { exact: true })).toHaveValue("Applied Orders");

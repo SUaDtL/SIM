@@ -1,8 +1,40 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Locator } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
+
+import { editSelected, chooseReference, openFileMenu } from "./helpers/usability";
+
+async function sectionFor(page: Page, label: string): Promise<void> {
+  const section = /^Tier \d support/.test(label)
+    ? "Support"
+    : ["Add consumer", "Depends on service", "Via CDS"].includes(label)
+      ? "Connections"
+      : "Details";
+  const tab = page.getByTestId("editor").getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
+  if (await tab.count()) await tab.click();
+}
+async function pick(page: Page, label: string, name: string): Promise<void> {
+  await sectionFor(page, label);
+  const select = page.getByTestId("editor").getByLabel(label, { exact: true });
+  if (await select.getAttribute("data-reference")) await chooseReference(page, label, name);
+  else await select.selectOption({ label: name });
+}
+async function createReference(page: Page, label: string): Promise<Locator> {
+  await sectionFor(page, label);
+  await page
+    .getByTestId("editor")
+    .getByRole("button", { name: `Choose ${label}`, exact: true })
+    .click();
+  const child = page.getByTestId("record-picker");
+  await child.getByRole("button", { name: /^Create new / }).click();
+  return child;
+}
+async function discard(page: Page): Promise<void> {
+  await page.getByTestId("editor").getByText("More edit actions", { exact: true }).click();
+  await page.getByTestId("editor").getByRole("button", { name: "Discard changes", exact: true }).click();
+}
 
 const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
@@ -22,6 +54,7 @@ async function openConnectedFixture(page: Page): Promise<void> {
     repo.addDependency({ consumerServiceId: reporting.id, providerServiceId: orders.id });
     repo.addConsumption(customers.id, orders.id);
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (
       await chooser
@@ -46,7 +79,7 @@ test.beforeEach(async ({ page }) => {
     delete (window as unknown as Record<string, unknown>)["showSaveFilePicker"];
   });
   await page.goto(url);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("dataset-status")).toBeVisible();
   await openConnectedFixture(page);
 });
 
@@ -54,33 +87,41 @@ for (const dismissal of ["Cancel", "Escape"] as const) {
   test(`UX1-003 child ${dismissal} preserves the complete parent draft, scroll and invoking focus without history`, async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1024, height: 500 });
     const editor = page.getByTestId("editor");
+    await editSelected(page);
     await editor.getByLabel("Name", { exact: true }).fill("Pending Orders");
     await editor.getByLabel("Description", { exact: true }).fill("Keep this scalar draft");
     await editor.getByLabel("Marking", { exact: true }).selectOption("CUI");
-    await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Operations" });
+    await pick(page, "Tier 1 support", "Operations");
     await editor.getByLabel("Tier 1 support notes").fill("Keep this support draft");
-    await editor.getByLabel("Add consumer", { exact: true }).selectOption({ label: "Partners" });
+    await pick(page, "Add consumer", "Partners");
     await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
-    await editor.getByLabel("Depends on service", { exact: true }).selectOption({ label: "Archive (Amber)" });
+    await pick(page, "Depends on service", "Archive (Amber)");
     await editor.getByRole("button", { name: "Add dependency", exact: true }).click();
-    const create = editor.getByRole("button", { name: "Create organization for Provided by", exact: true });
+    await sectionFor(page, "Provided by");
+    const create = editor.getByRole("button", { name: "Choose Provided by", exact: true });
     await create.evaluate((node) => {
       node.scrollIntoView({ block: "center" });
     });
-    const initialScroll = await editor.evaluate((node) => node.scrollTop);
+    const initialScroll = await editor.getByTestId("editor-scroll").evaluate((node) => node.scrollTop);
     expect(initialScroll).toBeGreaterThan(0);
     const beforeConsumers = await editor.getByTestId("consumers").textContent();
     const beforeDependencies = await editor.getByTestId("dependencies").textContent();
     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
     await create.click();
-    const child = page.getByRole("dialog", { name: "Create organization", exact: true });
+    const child = page.getByTestId("record-picker");
+    await child.getByRole("button", { name: /^Create new / }).click();
     await child.getByLabel("Name", { exact: true }).fill("Cancelled Organization");
     if (dismissal === "Escape") await page.keyboard.press("Escape");
-    else await child.getByRole("button", { name: "Cancel", exact: true }).click();
+    else {
+      await child.getByTestId("inline-child").getByRole("button", { name: "Cancel", exact: true }).click();
+      await expect(child.getByTestId("inline-child")).toHaveCount(0);
+      await child.getByRole("button", { name: "Close picker", exact: true }).click();
+    }
     await expect(child).toHaveCount(0);
-    await expect(editor.getByLabel("Provided by", { exact: true })).toBeFocused();
-    expect(await editor.evaluate((node) => node.scrollTop)).toBe(initialScroll);
+    await expect(editor.getByRole("button", { name: "Choose Provided by", exact: true })).toBeFocused();
+    expect(await editor.getByTestId("editor-scroll").evaluate((node) => node.scrollTop)).toBe(initialScroll);
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Pending Orders");
     await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Keep this scalar draft");
     await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
@@ -98,7 +139,7 @@ for (const dismissal of ["Cancel", "Escape"] as const) {
     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
     await expect(page.getByRole("button", { name: "Redo", exact: true })).toBeDisabled();
     // Discarding restores every original relation, proving Cancel did not commit the parent either.
-    await editor.getByRole("button", { name: "Discard changes", exact: true }).click();
+    await discard(page);
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
     await expect(editor.getByTestId("consumers")).not.toContainText("Partners");
     await expect(editor.getByTestId("dependencies")).not.toContainText("Archive");
@@ -111,9 +152,9 @@ test("UX1-017 an edited child succeeds only after its fresh exact warning is rev
   page,
 }) => {
   const editor = page.getByTestId("editor");
+  await editSelected(page);
   await editor.getByLabel("Description", { exact: true }).fill("Keep unapplied parent text");
-  await editor.getByRole("button", { name: "Create organization for Provided by", exact: true }).click();
-  const child = page.getByRole("dialog", { name: "Create organization", exact: true });
+  const child = await createReference(page, "Provided by");
   await child.getByLabel("Name", { exact: true }).fill("first.example.test");
   await child.getByRole("button", { name: "Create and use", exact: true }).click();
   await expect(child.getByTestId("child-message")).toContainText("first.example.test");
@@ -134,10 +175,12 @@ test("UX1-017 an edited child succeeds only after its fresh exact warning is rev
   ).toHaveCount(0);
   await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Keep unapplied parent text");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeEnabled();
-  await editor.getByRole("button", { name: "Discard changes", exact: true }).click();
+  await discard(page);
   await expect(editor.getByLabel("Provided by", { exact: true })).toHaveValue("");
   await expect(
-    editor.getByLabel("Provided by", { exact: true }).getByRole("option", { name: "second.example.test", exact: true }),
+    editor
+      .getByLabel("Provided by", { exact: true })
+      .getByRole("option", { name: "second.example.test", exact: true, includeHidden: true }),
   ).toHaveCount(1);
 });
 
@@ -145,12 +188,13 @@ test("UX3-001 populated outgoing, incoming and organization relations have disti
   page,
 }) => {
   const editor = page.getByTestId("editor");
+  await editor.getByRole("tab", { name: /^Connections/ }).click();
   for (const heading of ["Depends on", "Used by services", "Consumed by organizations"]) {
     await expect(editor.getByRole("heading", { name: heading, exact: true })).toHaveCount(1);
   }
-  const outgoing = editor.getByTestId("dependencies");
-  const incoming = editor.getByTestId("incoming-dependencies");
-  const organizations = editor.getByTestId("consumers");
+  const outgoing = editor.getByRole("region", { name: "Depends on", exact: true });
+  const incoming = editor.getByRole("region", { name: "Used by services", exact: true });
+  const organizations = editor.getByRole("region", { name: "Consumed by organizations", exact: true });
   await expect(outgoing).toContainText("Identity");
   await expect(outgoing).not.toContainText("Reporting");
   await expect(incoming).toContainText("Reporting");

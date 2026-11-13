@@ -1,3 +1,5 @@
+import { openFileMenu, showInventory, editSelected } from "./helpers/usability";
+
 import { expect, type Page, test } from "@playwright/test";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -22,17 +24,20 @@ async function loadScenario(
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "scenario.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(db.export()) });
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Scenarios" });
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^Plan\b/ })
     .click();
+  await editSelected(page);
   await expect(page.getByRole("heading", { name: "Edit scenario" })).toBeVisible();
 }
 
@@ -40,6 +45,7 @@ test("unadded scenario intent is protected on navigation and can be discarded", 
   await loadScenario(page);
   await page.getByLabel("Change", { exact: true }).selectOption("add");
   await page.getByLabel("New service name").fill("Portal");
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page
     .getByTestId("entity-list")
@@ -49,17 +55,20 @@ test("unadded scenario intent is protected on navigation and can be discarded", 
   await expect(choice).toContainText("Unadded scenario change");
   await choice.getByRole("button", { name: "Stay" }).click();
   await expect(page.getByLabel("New service name")).toHaveValue("Portal");
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^NIPR\b/ })
     .click();
   await choice.getByRole("button", { name: "Discard and continue" }).click();
+  await editSelected(page);
   await expect(page.getByRole("heading", { name: "Edit network" })).toBeVisible();
 });
 
 test("an untouched builder stays clean and Add change preserves pending metadata", async ({ page }) => {
   await loadScenario(page);
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page
     .getByTestId("entity-list")
@@ -67,11 +76,13 @@ test("an untouched builder stays clean and Add change preserves pending metadata
     .click();
   await expect(page.getByRole("dialog", { name: "Unapplied changes" })).toHaveCount(0);
 
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Scenarios" });
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /^Plan\b/ })
     .click();
+  await editSelected(page);
   await page.getByTestId("editor").getByLabel("Description").fill("Pending planning note");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
   await page.getByLabel("New service name").fill("Portal");
@@ -103,6 +114,7 @@ test("Apply changes commits scenario metadata and builder as one undoable comman
   await page.getByLabel("Change", { exact: true }).selectOption("add");
   await page.getByLabel("New service name").fill("Portal");
   await page.getByTestId("editor").getByRole("button", { name: "Apply changes" }).click();
+  await editSelected(page);
   await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Revised plan");
   await expect(page.getByTestId("scenario-changes")).toContainText("Portal");
   await page.getByRole("button", { name: "Undo" }).click();
@@ -162,7 +174,7 @@ test("legacy scenario collision is diagnosed and its invalid change can be remov
     .click();
   const inspect = page.getByRole("dialog", { name: "Inspect related record" });
   await expect(inspect).toContainText("Service: Portal");
-  await expect(inspect.getByRole("button", { name: /Network: NIPR/ })).toBeVisible();
+  await expect(inspect.getByRole("button", { name: "NIPR", exact: true })).toBeVisible();
   await inspect.getByRole("button", { name: "Close", exact: true }).click();
   await expect(description).toHaveValue("Keep this scenario draft");
   await page.getByRole("button", { name: /Remove change: Re-home Portal/ }).click();
