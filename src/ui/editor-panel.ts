@@ -4,7 +4,7 @@ import type { Tier } from "../domain/types";
 import type { Snapshot } from "../domain/types";
 import type { GraphNode, MapEntity } from "../map/graph";
 import { dependencyKey, type Comparison, type ProjectedSnapshot } from "../scenario/scenario";
-import { button, el, option } from "./dom";
+import { button, el, focusPagingControl, option } from "./dom";
 import {
   descriptor,
   type EntityType,
@@ -1234,10 +1234,12 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const previous = button("Previous", () => {
         view.page--;
         render();
+        focusPagingControl(previous, next);
       });
       const next = button("Next", () => {
         view.page++;
         render();
+        focusPagingControl(next, previous);
       });
       previous.setAttribute("aria-label", `Previous ${title} page`);
       next.setAttribute("aria-label", `Next ${title} page`);
@@ -1716,10 +1718,12 @@ function renderField(
       const previous = button("Previous choices", () => {
         page--;
         render();
+        focusPagingControl(previous, next);
       });
       const next = button("Next choices", () => {
         page++;
         render();
+        focusPagingControl(next, previous);
       });
       const root = el(
         "fieldset",

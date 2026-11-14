@@ -1,4 +1,4 @@
-import { button, el, option } from "./dom";
+import { button, el, focusPagingControl, option } from "./dom";
 import type { EntityTarget } from "./relations";
 
 export interface RelationshipRow {
@@ -112,10 +112,12 @@ export function createRelationshipCollection(ctx: RelationshipCollectionOptions)
   const previous = button("Previous", () => {
     page--;
     render();
+    focusPagingControl(previous, next);
   });
   const next = button("Next", () => {
     page++;
     render();
+    focusPagingControl(next, previous);
   });
   previous.setAttribute("aria-label", `Previous ${ctx.title.toLowerCase()} page`);
   next.setAttribute("aria-label", `Next ${ctx.title.toLowerCase()} page`);

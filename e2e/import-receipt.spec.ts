@@ -48,6 +48,12 @@ test("all mixed-import diagnostics remain reviewable and downloadable after comm
   await expect(refused.locator("li")).toHaveCount(50);
   await expect(refused.getByText("Rows 1–50 of 55", { exact: true })).toBeVisible();
   await refused.getByRole("button", { name: "Next rows", exact: true }).click();
+  await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeDisabled();
+  await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeFocused();
+  await refused.getByRole("button", { name: "Previous rows", exact: true }).press("Enter");
+  await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeDisabled();
+  await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeFocused();
+  await refused.getByRole("button", { name: "Next rows", exact: true }).press("Enter");
   await expect(refused.locator("li")).toHaveCount(5);
   await expect(
     refused.getByText('networks.csv row 57: Kind must be internal or external, not "inside".'),

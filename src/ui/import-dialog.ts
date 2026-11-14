@@ -9,7 +9,7 @@ import {
   type RowNote,
 } from "../import/engine";
 import { readTemplate, TEMPLATES, type TemplateFile } from "../import/templates";
-import { button, el } from "./dom";
+import { button, el, focusPagingControl } from "./dom";
 import { isMarking } from "../db/markings";
 import {
   createImportReceipt,
@@ -64,10 +64,12 @@ function notes(list: readonly RowNote[], title: string): HTMLElement {
   const previous = button("Previous rows", () => {
     page--;
     render();
+    focusPagingControl(previous, next);
   });
   const next = button("Next rows", () => {
     page++;
     render();
+    focusPagingControl(next, previous);
   });
   const paging = el("div", { class: "actions" }, previous, next);
   paging.hidden = list.length <= MAX_LISTED;

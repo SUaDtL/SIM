@@ -89,13 +89,17 @@ test("relationship paging stays bounded and preserves the complete unapplied dra
   await expect(previous).toBeDisabled();
   const firstPage = await rows.locator(".reference-link").allTextContents();
   await next.click();
-  await expect(next).toBeFocused();
+  await expect(next).toBeDisabled();
+  await expect(previous).toBeEnabled();
+  await expect(previous).toBeFocused();
   await expect(rows).toHaveCount(5);
   await expect(next).toBeDisabled();
   const secondPage = await rows.locator(".reference-link").allTextContents();
   expect(new Set([...firstPage, ...secondPage]).size).toBe(25);
   await previous.click();
-  await expect(previous).toBeFocused();
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeEnabled();
+  await expect(next).toBeFocused();
   await expect(rows).toHaveCount(20);
   await expect(page.getByTestId("draft-status")).toContainText("Unapplied changes");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
@@ -117,4 +121,83 @@ test("a new service explains its Add action rather than applying an existing rec
   await expect(heading).toContainText("Use Add service");
   await expect(heading).not.toContainText("Use Apply changes");
   await expect(heading).toContainText("Save file also applies a valid draft.");
+});
+
+test("relationship paging keeps repeatable keyboard focus through middle and boundary pages", async ({ page }) => {
+  await openService(page, 45);
+  const group = page.getByTestId("dependencies").locator("..");
+  const rows = page.getByTestId("dependencies").locator(":scope > li");
+  const previous = group.getByRole("button", { name: "Previous dependencies page", exact: true });
+  const next = group.getByRole("button", { name: "Next dependencies page", exact: true });
+  await next.focus();
+  await next.press("Enter");
+  await expect(next).toBeEnabled();
+  await expect(next).toBeFocused();
+  await expect(rows).toHaveCount(20);
+  await next.press("Enter");
+  await expect(next).toBeDisabled();
+  await expect(previous).toBeFocused();
+  await expect(rows).toHaveCount(5);
+  await previous.press("Space");
+  await expect(previous).toBeEnabled();
+  await expect(previous).toBeFocused();
+  await expect(rows).toHaveCount(20);
+  await previous.press("Space");
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeFocused();
+  await expect(rows).toHaveCount(20);
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+});
+
+test("read-summary relationship paging transfers boundary focus without editing", async ({ page }) => {
+  await openService(page, 25);
+  const editor = page.getByTestId("editor");
+  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await editor.getByRole("tab", { name: "Connections", exact: true }).click();
+  const group = editor.getByRole("region", { name: "Depends on", exact: true });
+  const previous = group.getByRole("button", { name: "Previous depends on page", exact: true });
+  const next = group.getByRole("button", { name: "Next depends on page", exact: true });
+  await next.click();
+  await expect(next).toBeDisabled();
+  await expect(previous).toBeFocused();
+  await previous.press("Enter");
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeFocused();
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+});
+
+test("checklist paging transfers boundary focus and retains staged choices", async ({ page }) => {
+  const db = await createDataset("Synthetic checklist paging", wasm);
+  try {
+    const repo = new Repository(db);
+    const networks = Array.from({ length: 25 }, (_, index) =>
+      repo.createNetwork({
+        name: `Network ${String(index + 1).padStart(2, "0")}`,
+        kind: "internal",
+        marking: "UNCLASSIFIED",
+      }),
+    );
+    repo.createCds({ name: "Synthetic guard", networkIds: networks.slice(0, 2).map((network) => network.id) });
+    await openDatasetFile(page, db.export(), "synthetic-checklist.sqlite");
+  } finally {
+    db.close();
+  }
+  await page.getByLabel("Show", { exact: true }).selectOption("cds");
+  await page
+    .getByTestId("entity-list")
+    .getByRole("button", { name: /^Synthetic guard/ })
+    .click();
+  await editSelected(page);
+  const group = page.getByTestId("editor").getByRole("group", { name: "Joins networks", exact: true });
+  const previous = group.getByRole("button", { name: "Previous choices", exact: true });
+  const next = group.getByRole("button", { name: "Next choices", exact: true });
+  await next.click();
+  await expect(next).toBeDisabled();
+  await expect(previous).toBeFocused();
+  await group.getByRole("checkbox", { name: "Network 25", exact: true }).check();
+  await previous.click();
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeFocused();
+  await expect(group.getByRole("status")).toContainText("3 selected");
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
