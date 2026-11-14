@@ -243,8 +243,8 @@ test("finds a node by name, clearing a filter that hides it", async ({ page }) =
   await map.getByLabel("Find on map").press("Enter");
   await expect(editor(page).getByRole("heading", { name: "Service: Chat", exact: true })).toBeVisible();
   await showMap(page);
-  await page.locator("details.map-filter-panel").locator("summary").click();
   await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
+  await mapFilters(page);
   await expect(map.getByLabel("Network", { exact: true })).toHaveValue("");
   await expect(page.getByTestId("map-summary")).toContainText("Highlighted: the chain of Chat");
   await expect(map.getByLabel("Find on map")).toHaveValue("");

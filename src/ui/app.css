@@ -1449,6 +1449,21 @@ input[type="checkbox"] {
   line-height: 1.5;
   color: var(--muted);
 }
+.inline-menu-task {
+  display: block;
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-block: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.inline-menu-task > button {
+  margin: 8px 8px 0 0;
+}
+.inline-menu-task > p:first-child {
+  margin-top: 0;
+}
 .draft-collection > input {
   font-size: 13px;
 }

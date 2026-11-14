@@ -1,0 +1,10 @@
+{
+  "openMapMenus": 1,
+  "geometry": {
+    "overflow": false,
+    "taskOverflow": false,
+    "outsideMenu": true,
+    "visible": true
+  },
+  "errors": []
+}

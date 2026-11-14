@@ -1,0 +1,196 @@
+
+Running 7 tests using 1 worker
+
+(node:64304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\menu-dismissal.spec.ts:23:1 › map menus replace each other and dismiss on another action or the canvas (5.6s)
+(node:107356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\menu-dismissal.spec.ts:45:1 › document and map menus share dismissal without taking focus from the next control (5.6s)
+(node:51336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\menu-dismissal.spec.ts:64:1 › filter input stays usable while keyboard focus leaving a menu dismisses it (5.5s)
+(node:115396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [chrome] › e2e\menu-dismissal.spec.ts:86:1 › menu actions dismiss after activation while cancelled layout and SVG download still work (5.6s)
+(node:92644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\menu-dismissal.spec.ts:105:1 › dynamically rendered record and edit menus dismiss without losing a draft (5.6s)
+(node:117336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [chrome] › e2e\menu-dismissal.spec.ts:136:1 › connection menus replace each other and keep the chosen staged action (5.6s)
+(node:120192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [chrome] › e2e\menu-dismissal.spec.ts:162:1 › inline disclosures remain open while floating menus yield to modal tasks (565ms)
+
+
+  1) [chrome] › e2e\menu-dismissal.spec.ts:23:1 › map menus replace each other and dismiss on another action or the canvas
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  locator('details.map-filter-panel')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" locator('details.map-filter-panel') with timeout 5000ms
+      - waiting for locator('details.map-filter-panel')
+        14 × locator resolved to <details open="" class="map-filter-panel">…</details>
+           - unexpected value "attribute present"
+
+
+      30 |   await expect(filters).toHaveAttribute("open", "");
+      31 |   await layout.locator("summary").click();
+    > 32 |   await expect(filters).not.toHaveAttribute("open");
+         |                             ^
+      33 |   await expect(layout).toHaveAttribute("open", "");
+      34 |   await capture.locator("summary").click();
+      35 |   await expect(layout).not.toHaveAttribute("open");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:32:29
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-map-menus-r-79632-nother-action-or-the-canvas-chrome\error-context.md
+
+  2) [chrome] › e2e\menu-dismissal.spec.ts:45:1 › document and map menus share dismissal without taking focus from the next control
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  locator('details.file-menu:not(.about-menu)')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" locator('details.file-menu:not(.about-menu)') with timeout 5000ms
+      - waiting for locator('details.file-menu:not(.about-menu)')
+        14 × locator resolved to <details open="" class="file-menu">…</details>
+           - unexpected value "attribute present"
+
+
+      51 |   await openFileMenu(page);
+      52 |   await about.locator("summary").click();
+    > 53 |   await expect(file).not.toHaveAttribute("open");
+         |                          ^
+      54 |   await expect(about).toHaveAttribute("open", "");
+      55 |   await filters.locator("summary").click();
+      56 |   await expect(about).not.toHaveAttribute("open");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:53:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-document-an-10909-focus-from-the-next-control-chrome\error-context.md
+
+  3) [chrome] › e2e\menu-dismissal.spec.ts:64:1 › filter input stays usable while keyboard focus leaving a menu dismisses it
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  locator('details.map-filter-panel')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" locator('details.map-filter-panel') with timeout 5000ms
+      - waiting for locator('details.map-filter-panel')
+        14 × locator resolved to <details open="" class="map-filter-panel">…</details>
+           - unexpected value "attribute present"
+
+
+      80 |   await trigger.press("Enter");
+      81 |   await page.getByLabel("Find on map", { exact: true }).focus();
+    > 82 |   await expect(filters).not.toHaveAttribute("open");
+         |                             ^
+      83 |   await expect(page.getByLabel("Find on map", { exact: true })).toBeFocused();
+      84 | });
+      85 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:82:29
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-filter-inpu-f304d-leaving-a-menu-dismisses-it-chrome\error-context.md
+
+  4) [chrome] › e2e\menu-dismissal.spec.ts:86:1 › menu actions dismiss after activation while cancelled layout and SVG download still work
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  locator('details.map-layout-panel')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" locator('details.map-layout-panel') with timeout 5000ms
+      - waiting for locator('details.map-layout-panel')
+        14 × locator resolved to <details open="" class="map-layout-panel">…</details>
+           - unexpected value "attribute present"
+
+
+      91 |   page.once("dialog", (dialog) => void dialog.dismiss());
+      92 |   await page.getByRole("button", { name: "Re-layout", exact: true }).click();
+    > 93 |   await expect(layout).not.toHaveAttribute("open");
+         |                            ^
+      94 |   await expect(layout.locator("summary")).toBeFocused();
+      95 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+      96 |   const capture = page.locator("details.map-capture-panel");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:93:28
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-menu-action-5d17b-and-SVG-download-still-work-chrome\error-context.md
+
+  5) [chrome] › e2e\menu-dismissal.spec.ts:105:1 › dynamically rendered record and edit menus dismiss without losing a draft
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  getByTestId('editor').locator('details.record-secondary-actions')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" getByTestId('editor').locator('details.record-secondary-actions') with timeout 5000ms
+      - waiting for getByTestId('editor').locator('details.record-secondary-actions')
+        14 × locator resolved to <details open="" class="record-secondary-actions">…</details>
+           - unexpected value "attribute present"
+
+
+      113 |   await readMenu.locator("summary").click();
+      114 |   await editor.getByRole("heading", { name: "Service: Caller", exact: true }).click();
+    > 115 |   await expect(readMenu).not.toHaveAttribute("open");
+          |                              ^
+      116 |   await page
+      117 |     .getByTestId("entity-list")
+      118 |     .getByRole("button", { name: /^First provider / })
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:115:30
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-dynamically-97854-miss-without-losing-a-draft-chrome\error-context.md
+
+  6) [chrome] › e2e\menu-dismissal.spec.ts:136:1 › connection menus replace each other and keep the chosen staged action
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  getByTestId('editor').getByTestId('dependencies').locator('details.connection-actions').first()
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" getByTestId('editor').getByTestId('dependencies').locator('details.connection-actions').first() with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('dependencies').locator('details.connection-actions').first()
+        14 × locator resolved to <details open="" class="connection-actions">…</details>
+           - unexpected value "attribute present"
+
+
+      146 |   await menus.nth(0).locator("summary").click();
+      147 |   await menus.nth(1).locator("summary").click();
+    > 148 |   await expect(menus.nth(0)).not.toHaveAttribute("open");
+          |                                  ^
+      149 |   await menus.nth(1).locator("summary").press("Escape");
+      150 |   await expect(menus.nth(1)).not.toHaveAttribute("open");
+      151 |   await expect(menus.nth(1).locator("summary")).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:148:34
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\red-results\menu-dismissal-connection--b3b47-ep-the-chosen-staged-action-chrome\error-context.md
+
+  6 failed
+    [chrome] › e2e\menu-dismissal.spec.ts:23:1 › map menus replace each other and dismiss on another action or the canvas
+    [chrome] › e2e\menu-dismissal.spec.ts:45:1 › document and map menus share dismissal without taking focus from the next control
+    [chrome] › e2e\menu-dismissal.spec.ts:64:1 › filter input stays usable while keyboard focus leaving a menu dismisses it
+    [chrome] › e2e\menu-dismissal.spec.ts:86:1 › menu actions dismiss after activation while cancelled layout and SVG download still work
+    [chrome] › e2e\menu-dismissal.spec.ts:105:1 › dynamically rendered record and edit menus dismiss without losing a draft
+    [chrome] › e2e\menu-dismissal.spec.ts:136:1 › connection menus replace each other and keep the chosen staged action
+  1 passed (37.9s)

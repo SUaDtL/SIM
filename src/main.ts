@@ -35,6 +35,7 @@ import { createBanner } from "./ui/banner";
 import { openImportDialog } from "./ui/import-dialog";
 import type { ImportReceipt } from "./ui/import-receipt";
 import { openHelp } from "./ui/help";
+import { installMenuDismissal } from "./ui/menu-dismissal";
 import { createWorkspace, type Workspace } from "./ui/workspace";
 
 interface State {
@@ -528,16 +529,6 @@ function button(label: string, action: () => Promise<unknown>): HTMLButtonElemen
   return b;
 }
 
-function dismissDetails(panel: HTMLDetailsElement): void {
-  panel.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    event.preventDefault();
-    event.stopPropagation();
-    panel.open = false;
-    panel.querySelector("summary")?.focus();
-  });
-}
-
 async function boot(): Promise<void> {
   const app = document.getElementById("app");
   if (!app) throw new Error("missing #app root");
@@ -591,12 +582,6 @@ async function boot(): Promise<void> {
     stopRecoveryButton,
     button("Banner caveat", onCaveat),
   );
-  fileActions.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLElement && event.target.closest("button")) {
-      file.open = false;
-      fileTitle.focus();
-    }
-  });
   file.append(fileTitle, fileActions);
   const about = document.createElement("details");
   about.className = "file-menu about-menu";
@@ -618,15 +603,7 @@ async function boot(): Promise<void> {
     aboutTitle.focus();
   });
   aboutBody.append(version, aboutDescription, button("Open demo", onDemo), button("Licenses and notices", licenses));
-  aboutBody.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLElement && event.target.closest("button")) {
-      about.open = false;
-      aboutTitle.focus();
-    }
-  });
   about.append(aboutTitle, aboutBody);
-  dismissDetails(file);
-  dismissDetails(about);
   toolbar.append(
     file,
     button("Save file", () => onSave(false)),
@@ -653,6 +630,7 @@ async function boot(): Promise<void> {
   documentStatus.append(status, draftStatus, recoveryStatus, retryRecoveryButton, message);
   header.append(title, toolbar, documentStatus);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
+  installMenuDismissal(document);
   // Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) undo and redo dataset edits, except while typing in a field,
   // where the browser's own text undo applies.
   document.addEventListener("keydown", (event) => {

@@ -304,15 +304,6 @@ export function createMapView(ctx: MapViewContext): MapView {
   );
   const layoutPanel = el("details", { class: "map-layout-panel" }, el("summary", {}, "Layout"), relayout);
   const capturePanel = el("details", { class: "map-capture-panel" }, el("summary", {}, "Capture options"), exportSvg);
-  for (const panel of [filtersPanel, layoutPanel, capturePanel]) {
-    panel.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      event.stopPropagation();
-      panel.open = false;
-      panel.querySelector("summary")?.focus();
-    });
-  }
   const toolbar = el(
     "div",
     { class: "map-toolbar" },

@@ -1,0 +1,64 @@
+
+Running 2 tests using 1 worker
+
+(node:123636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\menu-dismissal.spec.ts:178:1 › route editing continues outside its closed action menu and Cancel restores the trigger (5.7s)
+(node:118188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\menu-dismissal.spec.ts:201:1 › edit-footer deletion exposes its confirmation outside the closed menu and keeps Cancel safe (5.7s)
+
+
+  1) [chrome] › e2e\menu-dismissal.spec.ts:178:1 › route editing continues outside its closed action menu and Cancel restores the trigger
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('editor').getByRole('combobox', { name: 'Route for First provider', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('editor').getByRole('combobox', { name: 'Route for First provider', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('combobox', { name: 'Route for First provider', exact: true })
+
+
+      189 |   await expect(menu).not.toHaveAttribute("open");
+      190 |   const route = editor.getByRole("combobox", { name: "Route for First provider", exact: true });
+    > 191 |   await expect(route).toBeVisible();
+          |                       ^
+      192 |   await expect(route).toBeFocused();
+      193 |   expect(await route.evaluate((node) => node.closest("details"))).toBeNull();
+      194 |   await editor.getByRole("button", { name: "Cancel route", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:191:23
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\task-red-results\menu-dismissal-route-editi-cdb0c-Cancel-restores-the-trigger-chrome\error-context.md
+
+  2) [chrome] › e2e\menu-dismissal.spec.ts:201:1 › edit-footer deletion exposes its confirmation outside the closed menu and keeps Cancel safe
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('editor').getByRole('button', { name: 'Confirm delete', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('editor').getByRole('button', { name: 'Confirm delete', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('button', { name: 'Confirm delete', exact: true })
+
+
+      215 |   await expect(menu).not.toHaveAttribute("open");
+      216 |   const confirm = editor.getByRole("button", { name: "Confirm delete", exact: true });
+    > 217 |   await expect(confirm).toBeVisible();
+          |                         ^
+      218 |   expect(await confirm.evaluate((node) => node.closest("details"))).toBeNull();
+      219 |   await editor.locator(".delete").getByRole("button", { name: "Cancel", exact: true }).click();
+      220 |   await expect(confirm).toHaveCount(0);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\menu-dismissal.spec.ts:217:25
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-menu-dismissal-20261114\task-red-results\menu-dismissal-edit-footer-1da62--menu-and-keeps-Cancel-safe-chrome\error-context.md
+
+  2 failed
+    [chrome] › e2e\menu-dismissal.spec.ts:178:1 › route editing continues outside its closed action menu and Cancel restores the trigger
+    [chrome] › e2e\menu-dismissal.spec.ts:201:1 › edit-footer deletion exposes its confirmation outside the closed menu and keeps Cancel safe

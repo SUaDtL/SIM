@@ -23,6 +23,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Dismiss floating menus when another menu opens, focus or a click moves elsewhere, an action is chosen or Escape is pressed; preserve filter editing, modal focus and inline disclosures.
 - Open populated inventories on Services with direct network scope, separated service context and per-type search/page/scroll memory; preserve keyboard visibility and complete browsing context through selection and Back.
 - Align action/menu/picker controls consistently and remove unused search and paging from empty relationship groups; distinguish creation, Apply and file saving in editor guidance.
 - Give the workspace a dark technical palette, quieter navigation, structured inventory rows and responsive two-column forms; preserve dark map backgrounds and label halos in capture and keep file feedback readable.

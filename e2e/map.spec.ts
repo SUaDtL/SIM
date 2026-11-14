@@ -776,6 +776,7 @@ test("keeps an export busy through repository refresh and recovers from a synchr
 
   await page.getByRole("button", { name: "Capture" }).click();
   await expect(page.getByRole("button", { name: "Capture" })).toBeDisabled();
+  await showCaptureOptions(page);
   await expect(page.getByRole("button", { name: "Export SVG" })).toBeDisabled();
   await expect(page.getByTestId("map-export-status")).toHaveText("Exporting PNG…");
   await expect(page.getByTestId("map-area")).toHaveAttribute("aria-busy", "true");

@@ -1072,6 +1072,28 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     });
   }
 
+  /** A menu launches a task; its live form belongs on the editor surface. */
+  function exposeMenuTask(control: HTMLElement, label: string): (() => void) | undefined {
+    const menu = control.closest<HTMLDetailsElement>("details.record-actions, details.connection-actions");
+    if (!menu) return undefined;
+    const next = control.nextSibling;
+    if (menu.classList.contains("record-actions")) element.querySelector(".editor-body")?.append(control);
+    else menu.after(control);
+    menu.open = false;
+    control.classList.add("inline-menu-task");
+    control.setAttribute("role", "group");
+    control.setAttribute("aria-label", label);
+    return () => {
+      control.classList.remove("inline-menu-task");
+      control.removeAttribute("role");
+      control.removeAttribute("aria-label");
+      control.removeAttribute("tabindex");
+      if (!menu.isConnected) return;
+      menu.insertBefore(control, next?.parentNode === menu ? next : null);
+      menu.querySelector("summary")?.focus();
+    };
+  }
+
   function deleteControl(
     type: EntityType,
     id: number,
@@ -1081,6 +1103,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   ): HTMLElement {
     const owner = ctx.repo();
     const box = el("span", { class: "delete" });
+    let restoreMenu: (() => void) | undefined;
     const ask = (): void => {
       let plan;
       try {
@@ -1089,6 +1112,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         message.textContent = describe(error);
         return;
       }
+      restoreMenu ??= exposeMenuTask(box, `Delete ${noun}`);
       box.replaceChildren(
         el("p", {}, `Delete ${noun}? This cannot be undone by cancelling, but Undo can restore a completed deletion.`),
         ...(hasPendingDraft()
@@ -1119,9 +1143,15 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ),
         button("Cancel", reset),
       );
+      if (restoreMenu) {
+        box.tabIndex = -1;
+        box.focus();
+      }
     };
     const reset = (): void => {
       box.replaceChildren(button(`Delete ${noun}`, ask, { class: "subtle" }));
+      restoreMenu?.();
+      restoreMenu = undefined;
     };
     reset();
     return box;
@@ -1317,6 +1347,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const editRoute = button(
         "Edit route",
         () => {
+          const restoreMenu = exposeMenuTask(route, `Edit route for ${name}`);
           const pick = el(
             "select",
             { "aria-label": `Route for ${name}` },
@@ -1347,7 +1378,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             }),
             button("Cancel route", () => {
               route.replaceChildren(editRoute);
-              editRoute.focus();
+              if (restoreMenu) restoreMenu();
+              else editRoute.focus();
             }),
           );
           pick.focus();
