@@ -54,7 +54,7 @@ type Fill = Record<string, string | boolean | string[]>;
 async function sectionFor(page: Page, label: string): Promise<void> {
   const section = /^Tier \d support/.test(label)
     ? "Support"
-    : ["Add consumer", "Depends on service", "Via CDS"].includes(label)
+    : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
       ? "Connections"
       : "Details";
   const tab = editor(page).getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
@@ -218,9 +218,9 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
   const e = editor(page);
   await pick(page, "Tier 1 support", "J7");
   await pick(page, "Tier 3 support", "J6");
-  await pick(page, "Add consumer", "J7");
+  await pick(page, "Consuming organization", "J7");
   await e.getByRole("button", { name: "Add consumer", exact: true }).click();
-  await pick(page, "Add consumer", "J6");
+  await pick(page, "Consuming organization", "J6");
   await e.getByRole("button", { name: "Add consumer", exact: true }).click();
   await e.getByRole("button", { name: "Remove consumer J6" }).click();
   await pick(page, "Depends on service", "Chat (SIPR)");
@@ -317,7 +317,7 @@ test("keeps typed text across relationship edits and marks the dataset unsaved",
 
   await select(page, "Services", "Email");
   await fill(page, { Name: "Typed but not saved" });
-  await pick(page, "Add consumer", "J7");
+  await pick(page, "Consuming organization", "J7");
   await editor(page).getByRole("button", { name: "Add consumer", exact: true }).click();
   await expect(editor(page).getByTestId("consumers").locator(".row-name")).toHaveText(["J7"]);
   await expect(editor(page).getByLabel("Name")).toHaveValue("Typed but not saved");

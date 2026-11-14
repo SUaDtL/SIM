@@ -17,6 +17,7 @@ test("UX0-003 Find Stay preserves the filter and pending form", async ({ page })
   expect(first).toBeDefined();
   await network.selectOption(first?.value ?? "");
   await showInventory(page);
+  await page.getByLabel("Show", { exact: true }).selectOption("network");
   await page.getByTestId("list-panel").getByRole("button", { name: "Add network", exact: true }).click();
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Unapplied synthetic network");
   await showMap(page);

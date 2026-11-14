@@ -628,7 +628,7 @@ export function createWorkspace(
       if (errors.length > 0) throw new AggregateError(errors, "The workspace could not fully refresh.");
     });
     editor.close();
-    list.render();
+    list.reset();
     map.reset();
     syncSurface();
   }

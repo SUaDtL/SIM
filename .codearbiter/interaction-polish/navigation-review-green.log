@@ -1,0 +1,15 @@
+
+Running 6 tests using 2 workers
+
+(node:59588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [msedge] › e2e\inventory-flow.spec.ts:117:1 › Find reveals an excluded typed service and Back restores the complete inventory scope (931ms)
+  ok 1 [chrome] › e2e\inventory-flow.spec.ts:117:1 › Find reveals an excluded typed service and Back restores the complete inventory scope (965ms)
+  ok 4 [chrome] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 1366px (689ms)
+  ok 3 [msedge] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 1366px (751ms)
+  ok 5 [chrome] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 320px (621ms)
+  ok 6 [msedge] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 320px (638ms)
+
+  6 passed (3.0s)

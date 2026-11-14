@@ -9,7 +9,7 @@ import { editSelected, chooseReference, openFileMenu } from "./helpers/usability
 async function sectionFor(page: Page, label: string): Promise<void> {
   const section = /^Tier \d support/.test(label)
     ? "Support"
-    : ["Add consumer", "Depends on service", "Via CDS"].includes(label)
+    : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
       ? "Connections"
       : "Details";
   const tab = page.getByTestId("editor").getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
@@ -95,7 +95,7 @@ for (const dismissal of ["Cancel", "Escape"] as const) {
     await editor.getByLabel("Marking", { exact: true }).selectOption("CUI");
     await pick(page, "Tier 1 support", "Operations");
     await editor.getByLabel("Tier 1 support notes").fill("Keep this support draft");
-    await pick(page, "Add consumer", "Partners");
+    await pick(page, "Consuming organization", "Partners");
     await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
     await pick(page, "Depends on service", "Archive (Amber)");
     await editor.getByRole("button", { name: "Add dependency", exact: true }).click();

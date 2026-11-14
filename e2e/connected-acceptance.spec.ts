@@ -20,7 +20,7 @@ async function section(page: Page, label: string): Promise<void> {
     page,
     label.startsWith("Tier ")
       ? "Support"
-      : ["Add consumer", "Depends on service", "Via CDS"].includes(label)
+      : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
         ? "Connections"
         : "Details",
   );
@@ -164,7 +164,7 @@ test("initial service relations commit together and created reference IDs surviv
     ["Application", "application", "New flow application"],
     ["Category", "category", "New flow category"],
     ["Tier 1 support", "organization", "New flow support"],
-    ["Add consumer", "organization", "New flow consumers"],
+    ["Consuming organization", "organization", "New flow consumers"],
   ] as const) {
     await section(page, action);
     await createReference(page, action);
@@ -173,7 +173,7 @@ test("initial service relations commit together and created reference IDs surviv
     await child.getByRole("button", { name: "Create and use", exact: true }).click();
   }
   const referenceIds = await Promise.all(
-    ["Provided by", "Application", "Category", "Tier 1 support", "Add consumer"].map((label) =>
+    ["Provided by", "Application", "Category", "Tier 1 support", "Consuming organization"].map((label) =>
       editor.getByLabel(label, { exact: true }).inputValue(),
     ),
   );
@@ -356,8 +356,8 @@ test("an invalid initial route rolls back the service and all staged relations w
   await chooseReference(page, "Tier 1 support", "Operations");
   await section(page, "Tier 1 support notes");
   await editor.getByLabel("Tier 1 support notes", { exact: true }).fill("Pending support note");
-  await section(page, "Add consumer");
-  await chooseReference(page, "Add consumer", "Customers");
+  await section(page, "Consuming organization");
+  await chooseReference(page, "Consuming organization", "Customers");
   await editorSection(page, "Connections");
   await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
   await section(page, "Depends on service");
@@ -434,8 +434,8 @@ test("one Apply Undo and Redo restores scalar support consumption and two qualif
   await chooseReference(page, "Tier 1 support", "Operations");
   await section(page, "Tier 1 support notes");
   await editor.getByLabel("Tier 1 support notes", { exact: true }).fill("Synthetic extended support");
-  await section(page, "Add consumer");
-  await chooseReference(page, "Add consumer", "Customers");
+  await section(page, "Consuming organization");
+  await chooseReference(page, "Consuming organization", "Customers");
   await editorSection(page, "Connections");
   await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
   await connectionAction(page, "Edit route to Identity");

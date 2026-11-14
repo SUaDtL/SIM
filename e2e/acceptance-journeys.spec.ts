@@ -92,7 +92,7 @@ test("J2: invalid field keeps staged relationships; valid Apply, Undo and Redo m
   await editorSection(page, "Support");
   await chooseReference(page, "Tier 1 support", "Operations");
   await editorSection(page, "Connections");
-  await chooseReference(page, "Add consumer", "Operations");
+  await chooseReference(page, "Consuming organization", "Operations");
   await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
   await chooseReference(page, "Depends on service", "Identity (SIPR)");
   await editor.getByLabel("Via CDS").selectOption({ label: "Guard" });

@@ -16,13 +16,22 @@ export interface ListPanelContext {
 export interface ListPanel {
   readonly element: HTMLElement;
   render(): void;
-  viewContext(): { type: EntityType; filter: string; collapsed: boolean; scroll: number; page: number };
+  reset(): void;
+  viewContext(): {
+    type: EntityType;
+    filter: string;
+    collapsed: boolean;
+    scroll: number;
+    page: number;
+    network: string;
+  };
   restoreContext(context: {
     type: EntityType;
     filter: string;
     collapsed: boolean;
     scroll: number;
     page?: number;
+    network?: string;
   }): void;
   reveal(type: EntityType): void;
 }
@@ -55,13 +64,14 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   let type: EntityType = "network";
   let collapsed = false;
   let page = 0;
+  const browse = new Map<EntityType, { filter: string; page: number; network: string; scroll: number }>();
 
   const typeSelect = el("select", { id: "list-type" });
   for (const t of ENTITY_TYPES) typeSelect.append(option(t, descriptor(t).plural));
   typeSelect.addEventListener("change", () => {
+    remember();
     type = typeSelect.value as EntityType;
-    page = 0;
-    render();
+    restoreBrowse();
   });
   const filter = el("input", {
     id: "list-filter",
@@ -71,6 +81,19 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   });
   filter.addEventListener("input", () => {
     page = 0;
+    element.scrollTop = 0;
+    render();
+  });
+  const network = el("select", { id: "inventory-network" });
+  const networkControl = el(
+    "div",
+    { class: "control inventory-network-control" },
+    el("label", { for: "inventory-network" }, "Network scope"),
+    network,
+  );
+  network.addEventListener("change", () => {
+    page = 0;
+    element.scrollTop = 0;
     render();
   });
   const addButton = button("", () => {
@@ -79,7 +102,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   addButton.className = "primary";
   const hint = el("p", { class: "hint", "data-testid": "add-hint" });
   const items = el("ul", { class: "entity-list", "data-testid": "entity-list" });
-  const empty = el("p", { class: "empty" });
+  const empty = el("div", { class: "empty" });
   const count = el("p", { class: "inventory-count", role: "status", "data-testid": "inventory-count" });
   const previous = button("Previous records", () => {
     page--;
@@ -93,28 +116,26 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   });
   const pagination = el("nav", { class: "inventory-pagination", "aria-label": "Inventory pages" }, previous, next);
 
-  const body = el(
+  const toolbar = el(
     "div",
-    { class: "list-body" },
-    el(
-      "div",
-      { class: "inventory-toolbar" },
-      el("div", { class: "control" }, el("label", { for: "list-type" }, "Show"), typeSelect),
-      el("div", { class: "control" }, el("label", { for: "list-filter" }, "Filter"), filter),
-      addButton,
-    ),
-    hint,
-    count,
-    items,
-    empty,
-    pagination,
+    { class: "inventory-toolbar" },
+    el("div", { class: "control" }, el("label", { for: "list-type" }, "Show"), typeSelect),
+    el("div", { class: "control" }, el("label", { for: "list-filter" }, "Filter"), filter),
+    networkControl,
+    addButton,
   );
+  const columns = el(
+    "div",
+    { class: "inventory-columns", "aria-hidden": "true" },
+    el("span", {}, "Service"),
+    el("span", {}, "Network"),
+    el("span", {}, "Provider"),
+    el("span", {}, "Marking"),
+  );
+  const body = el("div", { class: "list-body" }, items, empty, pagination);
   const toggle = button("Hide list", () => {
     collapsed = !collapsed;
-    body.hidden = collapsed;
-    toggle.textContent = collapsed ? "Show list" : "Hide list";
-    toggle.setAttribute("aria-expanded", String(!collapsed));
-    element.classList.toggle("collapsed", collapsed);
+    updateCollapsed();
   });
   toggle.className = "list-toggle";
   toggle.setAttribute("aria-expanded", "true");
@@ -124,20 +145,76 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   const element = el(
     "aside",
     { class: "list-panel", "data-testid": "list-panel", "aria-label": "Entities" },
-    el("div", { class: "inventory-heading" }, el("h2", {}, "Inventory"), toggle),
+    el(
+      "div",
+      { class: "inventory-controls" },
+      el("div", { class: "inventory-heading" }, el("h2", {}, "Inventory"), toggle),
+      toolbar,
+      hint,
+      count,
+      columns,
+    ),
     body,
   );
+
+  function remember(): void {
+    browse.set(type, { filter: filter.value, page, network: network.value, scroll: element.scrollTop });
+  }
+
+  function restoreBrowse(): void {
+    const state = browse.get(type);
+    typeSelect.value = type;
+    filter.value = state?.filter ?? "";
+    page = state?.page ?? 0;
+    refreshNetworks(state?.network ?? "");
+    render();
+    element.scrollTop = state?.scroll ?? 0;
+  }
+
+  function refreshNetworks(value: string): void {
+    network.replaceChildren(
+      option("", "All networks"),
+      ...ctx
+        .repo()
+        .listNetworks()
+        .map((n) => option(String(n.id), n.name)),
+    );
+    network.value = value;
+    if (network.selectedIndex < 0) network.value = "";
+  }
+
+  function updateCollapsed(): void {
+    body.hidden = collapsed;
+    toolbar.hidden = collapsed;
+    count.hidden = collapsed;
+    columns.hidden = collapsed || type !== "service";
+    hint.hidden = collapsed || !hint.textContent;
+    toggle.textContent = collapsed ? "Show list" : "Hide list";
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    element.classList.toggle("collapsed", collapsed);
+  }
 
   function currentItems() {
     const repo = ctx.repo();
     const organizations = new Map(repo.listOrganizations().map((organization) => [organization.id, organization.name]));
+    const networks = new Map(repo.listNetworks().map((n) => [n.id, n.name]));
     const services = new Map(type === "service" ? repo.listServices().map((service) => [service.id, service]) : []);
     return descriptor(type)
       .list(repo)
+      .filter(
+        (item) => type !== "service" || !network.value || String(services.get(item.id)?.networkId) === network.value,
+      )
       .map((item) => {
-        const provider = services.get(item.id)?.providerOrgId;
+        const service = services.get(item.id);
+        const provider = service?.providerOrgId;
         return {
           ...item,
+          network: service ? (networks.get(service.networkId) ?? "Missing network") : "",
+          provider:
+            provider !== undefined && provider !== null
+              ? (organizations.get(provider) ?? "Missing provider")
+              : "No provider",
+          marking: service?.marking ?? "",
           detail:
             provider !== undefined && provider !== null
               ? `${item.detail} · ${organizations.get(provider) ?? "Missing provider"}`
@@ -147,22 +224,38 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
   }
 
   function render(): void {
+    const scroll = element.scrollTop;
+    const focusedId = items.contains(document.activeElement) ? document.activeElement?.id : undefined;
+    refreshNetworks(network.value);
+    element.dataset["inventoryType"] = type;
+    networkControl.hidden = type !== "service";
     const d = descriptor(type);
     addButton.textContent = `Add ${nounOf(type)}`;
     const blocker = addBlocker(ctx.repo(), type);
     addButton.disabled = blocker !== null;
     hint.textContent = blocker ?? "";
-    hint.hidden = blocker === null;
+    hint.hidden = blocker === null || collapsed;
     const all = currentItems();
     const shown = inventoryPage(all, filter.value, page);
     page = shown.page;
     const selected = ctx.selection();
     items.replaceChildren(
       ...shown.rows.map((item) => {
-        const b = button("", () => {
-          ctx.select(type, item.id);
-        });
-        b.append(el("span", { class: "item-name" }, item.name), el("span", { class: "item-detail" }, item.detail));
+        const b = button(
+          "",
+          () => {
+            ctx.select(type, item.id);
+          },
+          { id: `inventory-${type}-${String(item.id)}` },
+        );
+        b.append(el("span", { class: "item-name" }, item.name));
+        if (type === "service")
+          b.append(
+            el("span", { class: "item-network" }, item.network),
+            el("span", { class: "item-provider" }, item.provider),
+            el("span", { class: "item-marking" }, item.marking),
+          );
+        else b.append(el("span", { class: "item-detail" }, item.detail));
         if (selected?.type === type && selected.id === item.id) b.setAttribute("aria-current", "true");
         return el("li", {}, b);
       }),
@@ -175,23 +268,42 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     next.disabled = page + 1 >= shown.pages;
     pagination.hidden = shown.pages <= 1;
     empty.replaceChildren();
-    if (all.length === 0 || shown.total === 0)
+    const noRecords = descriptor(type).list(ctx.repo()).length === 0;
+    if (shown.total === 0)
       empty.append(
-        el("h3", {}, all.length === 0 ? `No ${d.plural.toLowerCase()} yet` : "No matching records"),
-        el("p", {}, all.length === 0 ? `Use Add ${nounOf(type)} to begin.` : "Try another name or context."),
+        el("h3", {}, noRecords ? `No ${d.plural.toLowerCase()} yet` : "No matching records"),
+        el("p", {}, noRecords ? `Use Add ${nounOf(type)} to begin.` : "Try another name, network scope or context."),
       );
     empty.hidden = all.length > 0 && shown.total > 0;
+    updateCollapsed();
+    if (focusedId) document.getElementById(focusedId)?.focus({ preventScroll: true });
+    element.scrollTop = scroll;
   }
 
   return {
     element,
     render,
-    viewContext: () => ({ type, filter: filter.value, collapsed, scroll: element.scrollTop, page }),
+    reset: () => {
+      browse.clear();
+      type = ctx.repo().listServices().length > 0 ? "service" : "network";
+      collapsed = false;
+      restoreBrowse();
+    },
+    viewContext: () => ({
+      type,
+      filter: filter.value,
+      collapsed,
+      scroll: element.scrollTop,
+      page,
+      network: network.value,
+    }),
     restoreContext: (context) => {
+      remember();
       type = context.type;
       typeSelect.value = type;
       filter.value = context.filter;
       page = context.page ?? 0;
+      refreshNetworks(context.network ?? "");
       collapsed = context.collapsed;
       body.hidden = collapsed;
       element.classList.toggle("collapsed", collapsed);
@@ -201,17 +313,24 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
       element.scrollTop = context.scroll;
     },
     reveal: (next) => {
-      if (type !== next) filter.value = "";
-      type = next;
-      typeSelect.value = next;
+      if (type !== next) {
+        remember();
+        type = next;
+        restoreBrowse();
+      }
       const selected = ctx.selection();
-      const all = currentItems();
+      if (selected?.type !== next || selected.id === null) return;
+      let all = currentItems();
+      if (!all.some((item) => item.id === selected.id)) {
+        network.value = "";
+        all = currentItems();
+      }
       let matches = inventoryPage(all, filter.value, 0, Math.max(1, all.length)).rows;
-      let selectedIndex = selected?.type === next ? matches.findIndex((item) => item.id === selected.id) : -1;
-      if (selected?.id !== null && selectedIndex < 0) {
+      let selectedIndex = matches.findIndex((item) => item.id === selected.id);
+      if (selectedIndex < 0) {
         filter.value = "";
         matches = all;
-        selectedIndex = matches.findIndex((item) => item.id === selected?.id);
+        selectedIndex = matches.findIndex((item) => item.id === selected.id);
       }
       page = selectedIndex < 0 ? 0 : Math.floor(selectedIndex / 30);
       render();

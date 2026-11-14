@@ -830,7 +830,11 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         { class: "editor-heading" },
         el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`),
         el("p", { class: "editor-identity", "data-testid": "editor-identity" }),
-        el("p", { class: "hint" }, "One draft. Apply all sections together."),
+        el(
+          "p",
+          { class: "hint" },
+          `${id === null ? `Use Add ${noun} to create this record.` : "Use Apply changes for all sections."} Save file also applies a valid draft.`,
+        ),
       ),
       tabs,
       form,
@@ -1169,19 +1173,34 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       }
       const view = relationViews.get(title) ?? { query: "", page: 0 };
       relationViews.set(title, view);
+      if (rows.length === 0) view.query = "";
       const human =
         title === "dependencies"
           ? "outgoing dependencies"
           : title === "consumers"
             ? "consuming organizations"
             : "incoming services";
-      const query = el("input", { type: "search", id: `relation-search-${title}`, "aria-label": `Search ${human}` });
+      const query = el("input", {
+        type: "search",
+        id: `relation-search-${title}`,
+        "aria-label": `Search ${human}`,
+        placeholder: `Search ${human}`,
+      });
+      query.hidden = rows.length === 0;
       query.value = view.query;
       query.addEventListener("keydown", (event) => {
         if (event.key === "Enter") event.preventDefault();
       });
       const list = el("ul", { class: "rows", "data-testid": title });
       const count = el("p", { class: "hint", role: "status" });
+      const empty = el("p", { class: "draft-empty" });
+      const clear = button("Clear search", () => {
+        view.query = "";
+        view.page = 0;
+        query.value = "";
+        render();
+        query.focus();
+      });
       const previous = button("Previous", () => {
         view.page--;
         render();
@@ -1192,11 +1211,17 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       });
       previous.setAttribute("aria-label", `Previous ${title} page`);
       next.setAttribute("aria-label", `Next ${title} page`);
+      const paging = el("div", { class: "relationship-paging" }, previous, next);
       function render(): void {
         const matches = rows.filter((row) => row.textContent.toLowerCase().includes(view.query.trim().toLowerCase()));
         view.page = Math.max(0, Math.min(view.page, Math.ceil(matches.length / 20) - 1));
         list.replaceChildren(...matches.slice(view.page * 20, view.page * 20 + 20));
         count.textContent = `${String(matches.length ? view.page * 20 + 1 : 0)}-${String(Math.min(matches.length, view.page * 20 + 20))} of ${String(matches.length)} relationships`;
+        count.hidden = matches.length === 0;
+        empty.textContent = rows.length === 0 ? "None recorded." : "No matching relationships.";
+        empty.hidden = matches.length > 0;
+        clear.hidden = rows.length === 0 || matches.length > 0;
+        paging.hidden = matches.length <= 20;
         previous.disabled = view.page === 0;
         next.disabled = (view.page + 1) * 20 >= matches.length;
       }
@@ -1206,14 +1231,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         render();
       });
       render();
-      return el(
-        "div",
-        { class: "draft-collection" },
-        query,
-        count,
-        list,
-        el("div", { class: "relationship-paging" }, previous, next),
-      );
+      return el("div", { class: "draft-collection" }, query, count, list, empty, clear, paging);
     };
 
     // Support: one organization per tier; each change is its own write.
@@ -1447,7 +1465,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       },
       el("h3", {}, "Consumed by organizations"),
       pageRows("consumers", consumerRows),
-      el("div", { class: "add-row" }, el("label", { for: "add-consumer" }, "Add consumer"), consumerPick, addConsumer),
+      el(
+        "div",
+        { class: "add-row" },
+        el("label", { for: "add-consumer" }, "Consuming organization"),
+        consumerPick,
+        addConsumer,
+      ),
       el("h3", {}, "Depends on"),
       pageRows("dependencies", depRows),
       el(
@@ -1466,7 +1490,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const select = relations.querySelector<HTMLSelectElement>(`#support-${String(tier)}`);
       if (select) referenceControls(select, "organization", `Tier ${String(tier)} support`);
     }
-    referenceControls(consumerPick, "organization", "Add consumer");
+    referenceControls(consumerPick, "organization", "Consuming organization");
     referenceControls(providerPick, "service", "Depends on service");
     const incoming = repo.listDependencies().filter((dep) => dep.providerServiceId === serviceId);
     connectionsPanel.append(

@@ -145,6 +145,11 @@ textarea {
 }
 
 button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
   padding: 8px 13px;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -472,8 +477,10 @@ fieldset.field {
 
 .actions {
   display: flex;
-  justify-content: space-between;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .delete {
@@ -626,6 +633,10 @@ summary {
   overflow-wrap: anywhere;
 }
 summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   cursor: pointer;
   padding: 9px 12px;
   border: 1px solid var(--line);
@@ -686,6 +697,10 @@ textarea:focus-visible {
   gap: 6px;
   width: min(320px, calc(100vw - 32px));
 }
+.file-menu-actions > button {
+  justify-content: flex-start;
+  text-align: left;
+}
 .map-filter-panel > .map-tools {
   width: min(360px, calc(100vw - 32px));
   display: grid;
@@ -741,7 +756,8 @@ textarea:focus-visible {
 .list-panel {
   border: 0;
   background: var(--surface);
-  padding: 24px 28px;
+  padding: 16px 20px;
+  container-type: inline-size;
 }
 .list-body {
   min-width: 0;
@@ -750,8 +766,9 @@ textarea:focus-visible {
   border-bottom: 1px solid var(--line);
   border-radius: 0;
   margin: 0;
-  padding: 16px 20px;
-  gap: 8px 24px;
+  min-height: 48px;
+  padding: 10px 14px;
+  gap: 6px 18px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
@@ -820,16 +837,18 @@ textarea:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
 }
 .editor-footer p {
   margin: 0;
   color: var(--muted);
   font-size: 12px;
+  margin-right: auto;
 }
 .reference-field {
-  display: block;
+  display: flex;
+  justify-content: flex-start;
   width: 100%;
   text-align: left;
   padding: 10px 12px;
@@ -840,6 +859,7 @@ textarea:focus-visible {
   background: transparent;
   border-color: transparent;
   text-align: left;
+  justify-content: flex-start;
   padding: 4px 0;
 }
 .reference-link:hover,
@@ -970,6 +990,11 @@ dialog::backdrop {
   margin: 0;
 }
 .picker-option {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4px;
   width: 100%;
   text-align: left;
   padding: 12px;
@@ -1058,8 +1083,8 @@ summary::after {
   display: inline-block;
   width: 6px;
   height: 6px;
-  margin-left: 10px;
-  margin-bottom: 3px;
+  flex: 0 0 6px;
+  margin: 0;
   border: solid currentColor;
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg);
@@ -1121,9 +1146,55 @@ details[open] > summary::after {
 }
 .inventory-toolbar {
   display: grid;
-  grid-template-columns: minmax(120px, 180px) minmax(140px, 1fr) auto;
+  grid-template-columns: minmax(120px, 160px) minmax(160px, 1fr) minmax(140px, 190px) auto;
   align-items: end;
-  gap: 16px;
+  gap: 12px;
+}
+.inventory-toolbar:has(.inventory-network-control[hidden]) {
+  grid-template-columns: minmax(120px, 160px) minmax(160px, 1fr) auto;
+}
+.inventory-toolbar .control {
+  min-width: 0;
+}
+.inventory-controls {
+  padding-top: 8px;
+  background: var(--surface);
+}
+.inventory-controls .inventory-heading {
+  margin-bottom: 12px;
+}
+.inventory-controls .inventory-count {
+  margin: 10px 0;
+}
+.inventory-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+[data-inventory-type="service"] .inventory-columns,
+[data-inventory-type="service"] .entity-list button {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) minmax(0, 1fr) minmax(95px, 0.6fr);
+}
+.item-network,
+.item-provider {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.item-marking {
+  justify-self: start;
+  padding: 3px 6px;
+  border: 1px solid #405362;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: #bfcdd7;
 }
 .inventory-toolbar .control label {
   margin-bottom: 6px;
@@ -1297,7 +1368,7 @@ input[type="checkbox"] {
 }
 .record-summary-actions {
   margin: 16px 0 20px;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .record-summary .summary-tabs {
   padding: 0;
@@ -1307,8 +1378,8 @@ input[type="checkbox"] {
 .summary-fields {
   display: grid;
   grid-template-columns: minmax(80px, 110px) minmax(0, 1fr);
-  gap: 18px 12px;
-  align-items: start;
+  gap: 14px 12px;
+  align-items: center;
   margin: 0;
 }
 .summary-fields dt {
@@ -1324,6 +1395,7 @@ input[type="checkbox"] {
   color: var(--accent);
   padding: 0;
   min-height: 24px;
+  justify-content: flex-start;
 }
 .record-summary h3 {
   border-top: 0;
@@ -1363,12 +1435,19 @@ input[type="checkbox"] {
 .connection-actions[open] button {
   width: 100%;
   text-align: left;
+  justify-content: flex-start;
   font-size: 12px;
   background: transparent;
   border: 0;
 }
 .draft-collection {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+}
+.draft-empty {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
 }
 .draft-collection > input {
   font-size: 13px;
@@ -1378,9 +1457,9 @@ input[type="checkbox"] {
   font-size: 12px;
 }
 .add-row {
-  padding: 16px;
-  background: #1d2c39;
-  border-radius: 8px;
+  padding: 12px 0;
+  background: transparent;
+  border-radius: 0;
 }
 .add-row > button:not(.reference-field) {
   justify-self: start;
@@ -1473,6 +1552,52 @@ dialog h3 {
 .picker-child .field {
   margin: 16px 0;
 }
+@container (max-width: 650px) {
+  .inventory-toolbar,
+  .inventory-toolbar:has(.inventory-network-control[hidden]) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .inventory-toolbar .control:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .inventory-network-control {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .inventory-toolbar > button {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .inventory-columns {
+    display: none;
+  }
+  [data-inventory-type="service"] .entity-list button {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .entity-list .item-name {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .entity-list .item-marking {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .entity-list .item-network {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .entity-list .item-provider {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .item-network::before {
+    content: "Network: ";
+  }
+  .item-provider::before {
+    content: "Provider: ";
+  }
+}
 @media (max-width: 1100px) {
   .app-product {
     max-width: 125px;
@@ -1501,7 +1626,8 @@ dialog h3 {
   .list-panel {
     padding: 20px 16px;
   }
-  .inventory-toolbar {
+  .inventory-toolbar,
+  .inventory-toolbar:has(.inventory-network-control[hidden]) {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
   }

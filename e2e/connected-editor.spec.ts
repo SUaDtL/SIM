@@ -11,7 +11,7 @@ import { editSelected, chooseReference, openFileMenu } from "./helpers/usability
 async function sectionFor(page: Page, label: string): Promise<void> {
   const section = /^Tier \d support/.test(label)
     ? "Support"
-    : ["Add consumer", "Depends on service", "Via CDS"].includes(label)
+    : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
       ? "Connections"
       : "Details";
   const tab = page.getByTestId("editor").getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
@@ -181,7 +181,7 @@ test("new service stages app category support and consumption before first Add a
     ["Application", "Ordering"],
     ["Category", "Business"],
     ["Tier 1 support", "Helpdesk"],
-    ["Add consumer", "Customers"],
+    ["Consuming organization", "Customers"],
   ] as const) {
     const child = await createReference(page, label);
     await child.getByLabel("Name", { exact: true }).fill(name);
@@ -340,7 +340,7 @@ test("unadded consumer provider and CDS choices survive scalar edits and unrelat
     .click();
   const editor = page.getByTestId("editor");
   await editSelected(page);
-  await pick(page, "Add consumer", "Second team");
+  await pick(page, "Consuming organization", "Second team");
   await pick(page, "Depends on service", "Second provider (Blue)");
   await pick(page, "Via CDS", "Guard");
   await sectionFor(page, "Description");
@@ -348,7 +348,9 @@ test("unadded consumer provider and CDS choices survive scalar edits and unrelat
   await sectionFor(page, "Tier 1 support");
   await editor.getByRole("button", { name: "Choose Tier 1 support", exact: true }).focus();
   await pick(page, "Tier 1 support", "First team");
-  await expect(editor.getByLabel("Add consumer", { exact: true }).locator("option:checked")).toHaveText("Second team");
+  await expect(editor.getByLabel("Consuming organization", { exact: true }).locator("option:checked")).toHaveText(
+    "Second team",
+  );
   await expect(editor.getByLabel("Depends on service", { exact: true }).locator("option:checked")).toHaveText(
     "Second provider (Blue)",
   );

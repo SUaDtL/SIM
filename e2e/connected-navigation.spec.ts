@@ -258,6 +258,7 @@ test("existing-network guidance and normalized unchanged Apply preserve the save
   const editor = page.getByTestId("editor");
   await expect(editor).not.toContainText("Create first network");
   await showInventory(page);
+  await page.getByLabel("Show", { exact: true }).selectOption("network");
   await expect(page.getByTestId("list-panel").getByRole("button", { name: "Add network", exact: true })).toBeVisible();
   await findRecord(page, "orders", "Orders (Amber) · service");
   await editSelected(page);
