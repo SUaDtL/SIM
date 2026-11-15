@@ -18,6 +18,8 @@ export interface RelatedEntity {
   readonly label: string;
   readonly target: EntityTarget;
   readonly detail: string;
+  /** Exact endpoints and route for dependency inspection; never derive identity from labels. */
+  readonly dependency?: Dependency;
 }
 
 const key = (target: EntityTarget): string => `${target.type}:${String(target.id)}`;
@@ -72,20 +74,33 @@ export function searchEntities(snapshot: Snapshot, query: string): EntityMatch[]
 }
 
 /** Derive recorded forward/reverse roles without writing, inferring reachability or inheriting roles. */
-export function relatedEntities(snapshot: Snapshot, target: EntityTarget): RelatedEntity[] {
+export function relatedEntities(
+  snapshot: Snapshot,
+  target: EntityTarget,
+  options: {
+    readonly includeMissing?: boolean;
+    readonly dependencyDetail?: (dependency: Dependency) => string;
+  } = {},
+): RelatedEntity[] {
   const index = entityIndex(snapshot);
   if (!index.has(key(target))) return [];
   const rows: RelatedEntity[] = [];
   const seen = new Set<string>();
-  const add = (label: string, type: EntityType, id: number | null, context = ""): void => {
+  const add = (label: string, type: EntityType, id: number | null, context = "", dependency?: Dependency): void => {
     if (id === null) return;
     const entry = index.get(key({ type, id }));
-    if (!entry) return;
-    const detail = context || `${entry.label} · ${entry.detail}`;
-    const rowKey = JSON.stringify([label, type, id, detail]);
+    if (!entry && !options.includeMissing) return;
+    const detail = context || (entry ? `${entry.label} · ${entry.detail}` : `Missing ${type} #${String(id)}`);
+    const rowKey = JSON.stringify([
+      label,
+      type,
+      id,
+      detail,
+      ...(dependency ? [dependency.consumerServiceId, dependency.providerServiceId] : []),
+    ]);
     if (seen.has(rowKey)) return;
     seen.add(rowKey);
-    rows.push({ label, target: entry.target, detail });
+    rows.push({ label, target: entry?.target ?? { type, id }, detail, ...(dependency ? { dependency } : {}) });
   };
   const serviceName = (id: number): string =>
     index.get(key({ type: "service", id }))?.label ?? `Missing service #${String(id)}`;
@@ -93,8 +108,10 @@ export function relatedEntities(snapshot: Snapshot, target: EntityTarget): Relat
     if (dependency.viaCdsId === null) return "No CDS recorded";
     return `CDS: ${index.get(key({ type: "cds", id: dependency.viaCdsId }))?.label ?? `Missing CDS #${String(dependency.viaCdsId)}`}`;
   };
-  const describeDependency = (dependency: Dependency): string =>
-    `${serviceName(dependency.consumerServiceId)} → ${serviceName(dependency.providerServiceId)} · ${route(dependency)}`;
+  const describeDependency =
+    options.dependencyDetail ??
+    ((dependency: Dependency): string =>
+      `${serviceName(dependency.consumerServiceId)} → ${serviceName(dependency.providerServiceId)} · ${route(dependency)}`);
 
   switch (target.type) {
     case "service": {
@@ -112,10 +129,10 @@ export function relatedEntities(snapshot: Snapshot, target: EntityTarget): Relat
       }
       for (const dependency of snapshot.dependencies) {
         if (dependency.consumerServiceId === target.id) {
-          add("Depends on", "service", dependency.providerServiceId, describeDependency(dependency));
+          add("Depends on", "service", dependency.providerServiceId, describeDependency(dependency), dependency);
         }
         if (dependency.providerServiceId === target.id) {
-          add("Used by services", "service", dependency.consumerServiceId, describeDependency(dependency));
+          add("Used by services", "service", dependency.consumerServiceId, describeDependency(dependency), dependency);
         }
       }
       break;
@@ -153,7 +170,7 @@ export function relatedEntities(snapshot: Snapshot, target: EntityTarget): Relat
         const provider = services.get(dependency.providerServiceId);
         if (!consumer || !provider || consumer.networkId === provider.networkId) continue;
         if (consumer.networkId === target.id || provider.networkId === target.id) {
-          add("Boundary dependency", "service", consumer.id, describeDependency(dependency));
+          add("Boundary dependency", "service", consumer.id, describeDependency(dependency), dependency);
         }
       }
       break;
@@ -163,7 +180,7 @@ export function relatedEntities(snapshot: Snapshot, target: EntityTarget): Relat
       if (cds) for (const id of cds.networkIds) add("Joins network", "network", id);
       for (const dependency of snapshot.dependencies.filter((item) => item.viaCdsId === target.id)) {
         if (!index.has(key({ type: "service", id: dependency.providerServiceId }))) continue;
-        add("Routed dependency", "service", dependency.consumerServiceId, describeDependency(dependency));
+        add("Routed dependency", "service", dependency.consumerServiceId, describeDependency(dependency), dependency);
       }
       break;
     }

@@ -104,6 +104,14 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
     dependency.viaCdsId === null
       ? "No CDS recorded. Connectivity is not verified."
       : `Via CDS: ${qualified("cds", dependency.viaCdsId)}`;
+  // Retain unavailable service references as text, using this presenter's established route wording.
+  const related = relatedEntities(snapshot, target, {
+    includeMissing: target.type === "service",
+    dependencyDetail: (dependency) =>
+      target.type === "service"
+        ? route(dependency)
+        : `${qualified("service", dependency.consumerServiceId)} → ${qualified("service", dependency.providerServiceId)} · ${dependency.viaCdsId === null ? "No CDS recorded" : `CDS: ${qualified("cds", dependency.viaCdsId)}`}`,
+  });
   const row = (
     type: EntityType,
     id: number,
@@ -138,18 +146,20 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
         { label: "Description", value: service.description ?? "No description recorded." },
       );
       const dependencies = (incoming: boolean): RelationshipRow[] =>
-        snapshot.dependencies
-          .filter((item) => (incoming ? item.providerServiceId === service.id : item.consumerServiceId === service.id))
-          .map((item) =>
+        related.flatMap((item) => {
+          const dependency = item.dependency;
+          if (!dependency || item.label !== (incoming ? "Used by services" : "Depends on")) return [];
+          return [
             row(
               "service",
-              incoming ? item.consumerServiceId : item.providerServiceId,
-              incoming ? "Used by services" : "Depends on",
-              route(item),
-              `${String(item.consumerServiceId)}:${String(item.providerServiceId)}`,
-              { consumer: item.consumerServiceId, provider: item.providerServiceId },
+              item.target.id,
+              item.label,
+              item.detail,
+              `${String(dependency.consumerServiceId)}:${String(dependency.providerServiceId)}`,
+              { consumer: dependency.consumerServiceId, provider: dependency.providerServiceId },
             ),
-          );
+          ];
+        });
       groups.push(
         {
           title: "Depends on",
@@ -166,15 +176,15 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
         {
           title: "Consumed by organizations",
           section: "connections",
-          rows: snapshot.consumption
-            .filter((item) => item.serviceId === service.id)
+          rows: related
+            .filter((item) => item.label === "Consumed by organizations")
             .map((item) =>
               row(
                 "organization",
-                item.orgId,
+                item.target.id,
                 "Consumed by organizations",
                 "Recorded organizational consumption",
-                `consumer:${String(item.orgId)}`,
+                `consumer:${String(item.target.id)}`,
               ),
             ),
           emptyText: "No consuming organizations recorded.",
@@ -264,9 +274,9 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
     }
   }
   if (target.type !== "service") {
-    const related = relatedEntities(snapshot, target).filter((item) => item.label !== "Part of");
+    const relationships = related.filter((item) => item.label !== "Part of");
     if (target.type === "organization") {
-      const serviceRoles = related.filter((item) => item.target.type === "service");
+      const serviceRoles = relationships.filter((item) => item.target.type === "service");
       groups.push({
         title: "Service relationships",
         section: "connections",
@@ -284,54 +294,30 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
       });
     }
     const remaining =
-      target.type === "organization" ? related.filter((item) => item.target.type !== "service") : related;
-    const dependencyRole =
-      target.type === "network" ? "Boundary dependency" : target.type === "cds" ? "Routed dependency" : null;
-    for (const title of [...new Set(remaining.map((item) => item.label).filter((label) => label !== dependencyRole))]) {
+      target.type === "organization" ? relationships.filter((item) => item.target.type !== "service") : relationships;
+    for (const title of new Set(remaining.map((item) => item.label))) {
       groups.push({
         title,
         section: "connections",
         rows: remaining
           .filter((item) => item.label === title)
-          .map((item) =>
-            row(
+          .map((item) => {
+            const dependency = item.dependency;
+            return row(
               item.target.type,
               item.target.id,
               item.label,
               item.detail,
-              `${item.target.type}:${String(item.target.id)}:${title}`,
-            ),
-          ),
+              dependency
+                ? `dependency:${String(dependency.consumerServiceId)}:${String(dependency.providerServiceId)}`
+                : `${item.target.type}:${String(item.target.id)}:${title}`,
+              dependency
+                ? { consumer: dependency.consumerServiceId, provider: dependency.providerServiceId }
+                : undefined,
+            );
+          }),
         emptyText: "No relationships recorded.",
       });
-    }
-    if (dependencyRole) {
-      const services = new Map(snapshot.services.map((service) => [service.id, service]));
-      const dependencies = snapshot.dependencies.filter((dependency) => {
-        const consumer = services.get(dependency.consumerServiceId);
-        const provider = services.get(dependency.providerServiceId);
-        if (!consumer || !provider) return false;
-        return target.type === "cds"
-          ? dependency.viaCdsId === target.id
-          : consumer.networkId !== provider.networkId &&
-              (consumer.networkId === target.id || provider.networkId === target.id);
-      });
-      if (dependencies.length > 0)
-        groups.push({
-          title: dependencyRole,
-          section: "connections",
-          rows: dependencies.map((dependency) =>
-            row(
-              "service",
-              dependency.consumerServiceId,
-              dependencyRole,
-              `${qualified("service", dependency.consumerServiceId)} → ${qualified("service", dependency.providerServiceId)} · ${dependency.viaCdsId === null ? "No CDS recorded" : `CDS: ${qualified("cds", dependency.viaCdsId)}`}`,
-              `dependency:${String(dependency.consumerServiceId)}:${String(dependency.providerServiceId)}`,
-              { consumer: dependency.consumerServiceId, provider: dependency.providerServiceId },
-            ),
-          ),
-          emptyText: "No relationships recorded.",
-        });
     }
   }
   return { title: `${labels[target.type]}: ${record.name}`, context, fields, groups, editScope };

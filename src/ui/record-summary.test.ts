@@ -217,4 +217,36 @@ describe("read-first record summary", () => {
       data.db.close();
     }
   });
+
+  it("retains unavailable service relationship references without making them navigable", async () => {
+    const data = await fixture();
+    try {
+      const snapshot = data.repo.snapshot();
+      const damaged = {
+        ...snapshot,
+        services: snapshot.services.filter((service) => service.id !== data.identity.id),
+        organizations: [],
+      };
+      const model = recordSummaryModel(damaged, { type: "service", id: data.orders.id });
+      expect(model?.groups.find((group) => group.title === "Depends on")?.rows).toEqual([
+        {
+          key: `${String(data.orders.id)}:${String(data.identity.id)}`,
+          label: `Missing service #${String(data.identity.id)}`,
+          role: "Depends on",
+          detail: "Via CDS: Guard",
+          connection: { consumer: data.orders.id, provider: data.identity.id },
+        },
+      ]);
+      expect(model?.groups.find((group) => group.title === "Consumed by organizations")?.rows).toEqual([
+        {
+          key: `consumer:${String(data.org.id)}`,
+          label: `Missing organization #${String(data.org.id)}`,
+          role: "Consumed by organizations",
+          detail: "Recorded organizational consumption",
+        },
+      ]);
+    } finally {
+      data.db.close();
+    }
+  });
 });

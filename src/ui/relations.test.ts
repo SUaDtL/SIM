@@ -159,4 +159,57 @@ describe("explicit related entities", () => {
     expect(relatedEntities(snapshot, { type: "service", id: 99 })).toEqual([]);
     expect(relatedEntities(snapshot, { type: "application", id: 2 })).toEqual([]);
   });
+
+  it("retains exact dependency endpoints when equally named providers share a route", () => {
+    const snapshot = fixture();
+    const provider = snapshot.services[1];
+    if (!provider) throw new Error("Synthetic provider missing");
+    const withTwin = {
+      ...snapshot,
+      services: [...snapshot.services, { ...provider, id: 4 }],
+      dependencies: [...snapshot.dependencies, { consumerServiceId: 1, providerServiceId: 4, viaCdsId: 1 }],
+    };
+    for (const target of [
+      { type: "network", id: 1 },
+      { type: "cds", id: 1 },
+    ] as const) {
+      const dependencies = relatedEntities(withTwin, target).filter((row) => "dependency" in row);
+      expect(dependencies.map((row) => Reflect.get(row, "dependency"))).toEqual([
+        { consumerServiceId: 1, providerServiceId: 2, viaCdsId: 1 },
+        { consumerServiceId: 1, providerServiceId: 4, viaCdsId: 1 },
+      ]);
+    }
+  });
+
+  it("can retain missing service endpoints for a non-navigable summary without changing discovery defaults", () => {
+    const snapshot = fixture();
+    const stale = { ...snapshot, services: snapshot.services.filter((service) => service.id !== 2) };
+    const rows: unknown = Reflect.apply(relatedEntities, undefined, [
+      stale,
+      { type: "service", id: 1 },
+      { includeMissing: true },
+    ]);
+    expect(rows).toContainEqual(
+      expect.objectContaining({
+        label: "Depends on",
+        target: { type: "service", id: 2 },
+        dependency: { consumerServiceId: 1, providerServiceId: 2, viaCdsId: 1 },
+      }),
+    );
+    expect(relatedEntities(stale, { type: "service", id: 1 }).some((row) => row.label === "Depends on")).toBe(false);
+  });
+
+  it("projects dependency details with the caller's presentation while retaining typed ownership", () => {
+    const rows: unknown = Reflect.apply(relatedEntities, undefined, [
+      fixture(),
+      { type: "network", id: 1 },
+      { dependencyDetail: () => "Synthetic summary route" },
+    ]);
+    expect(rows).toContainEqual({
+      label: "Boundary dependency",
+      target: { type: "service", id: 1 },
+      detail: "Synthetic summary route",
+      dependency: { consumerServiceId: 1, providerServiceId: 2, viaCdsId: 1 },
+    });
+  });
 });
