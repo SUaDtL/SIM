@@ -387,6 +387,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   let focusReturn: MapViewState | null = null;
   let navigationIntent = 0;
   let navigationBusy = false;
+  let pendingVisibleNode: string | null = null;
 
   const focusStatus = el("p", { class: "map-feedback", "data-testid": "focus-status", role: "status" });
   const selectedLabel = el("span", { class: "map-selected-label" });
@@ -572,7 +573,15 @@ export function createMapView(ctx: MapViewContext): MapView {
         if (cy.zoom() < 0.8) cy.zoom(0.8);
         cy.center(target);
       }
+      pendingVisibleNode = node.data.id;
       openNode(node);
+      // Opening the inspector changes the canvas width. Read its accepted size before
+      // keeping this node visible; node positions and zoom belong to the existing view.
+      requestAnimationFrame(() => {
+        if (request !== navigationIntent || session !== ctx.captureSource().sessionId) return;
+        cy.resize();
+        keepAcceptedNodeVisible();
+      });
       findResults.replaceChildren();
       findBox.value = "";
       return true;
@@ -995,6 +1004,28 @@ export function createMapView(ctx: MapViewContext): MapView {
     needsFit = false;
     fitMap();
   }
+  function keepAcceptedNodeVisible(): void {
+    if (pendingVisibleNode !== selectedNode) pendingVisibleNode = null;
+    if (pendingVisibleNode === null || canvas.clientWidth === 0 || canvas.clientHeight === 0) return;
+    const node = cy.getElementById(pendingVisibleNode);
+    pendingVisibleNode = null;
+    if (node.empty() || !node.visible()) return;
+    const box = node.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
+    const position = node.renderedPosition();
+    const shift = (start: number, end: number, center: number, size: number) => {
+      const margin = Math.min(FIT_MARGIN, size / 4);
+      if (end - start > size - margin * 2) return Math.max(margin, Math.min(size - margin, center)) - center;
+      if (start < margin) return margin - start;
+      if (end > size - margin) return size - margin - end;
+      return 0;
+    };
+    const x = shift(box.x1, box.x2, position.x, cy.width());
+    const y = shift(box.y1, box.y2, position.y, cy.height());
+    if (x !== 0 || y !== 0) {
+      const pan = cy.pan();
+      cy.pan({ x: pan.x + x, y: pan.y + y });
+    }
+  }
   let zoomQueued = false;
   cy.on("zoom", () => {
     if (zoomQueued) return;
@@ -1014,6 +1045,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   new ResizeObserver(() => {
     cy.resize();
     fitWhenSized();
+    keepAcceptedNodeVisible();
   }).observe(canvas);
 
   // A core-level listener sees each tap once, on the innermost node (compound events bubble).
@@ -1212,6 +1244,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   /** Redraw for another view, keeping the viewport so As-Is and To-Be line up. */
   function switchView(): void {
+    pendingVisibleNode = null;
     chainRoot = null;
     selectedNode = null;
     cy.elements().remove();
@@ -1249,6 +1282,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   function reset(): void {
     ++navigationIntent;
+    pendingVisibleNode = null;
     focus = null;
     focusReturn = null;
     findResults.replaceChildren();
@@ -1288,6 +1322,8 @@ export function createMapView(ctx: MapViewContext): MapView {
     };
   }
   function restoreView(saved: MapViewState): void {
+    // Back restores an exact historical viewport even if a resize is still queued.
+    pendingVisibleNode = null;
     view = saved.view;
     switchView();
     filterNetwork.value = saved.filter.networkId === undefined ? "" : String(saved.filter.networkId);
@@ -1304,6 +1340,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     cy.pan(saved.pan);
   }
   function reveal(entity: MapEntity, id: number): void {
+    pendingVisibleNode = null;
     const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
     if (!node) return;
     if (focus === null && !cy.getElementById(node.data.id).visible()) {
@@ -1317,6 +1354,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   function select(entity: MapEntity, id: number): void {
     const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
     selectedNode = node?.data.id ?? null;
+    if (pendingVisibleNode !== selectedNode) pendingVisibleNode = null;
     applyView();
   }
   return {

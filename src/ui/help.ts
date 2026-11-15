@@ -3,10 +3,11 @@ import { button, el } from "./dom";
 /** Bundled task guidance. Opening help never resolves or changes an active draft. */
 export function openHelp(actions: { demo(): void; licenses(): void }): void {
   const origin = document.activeElement;
+  const heading = el("h2", { id: "help-title", tabindex: "-1", autofocus: "" }, "Using SIM");
   const dialog = el(
     "dialog",
     { class: "help-dialog", "aria-labelledby": "help-title" },
-    el("h2", { id: "help-title" }, "Using SIM"),
+    heading,
     el(
       "p",
       { class: "help-intro" },
@@ -52,7 +53,12 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
     el(
       "p",
       {},
-      "Add creates a record. Apply changes commits all sections of an existing record as one undo step. Discard changes restores its draft. Save file applies a valid active draft before saving dataset bytes. Invalid or unconfirmed input stops the save.",
+      "Add creates a record. For an existing service, Apply changes commits its details, connections and support together as one undo step. Discard changes restores its draft. Save file applies a valid active draft before saving dataset bytes. Invalid or unconfirmed input stops the save.",
+    ),
+    el(
+      "p",
+      {},
+      "In a scenario, Add change and Remove take effect immediately. Use Undo to reverse those commands. Apply changes saves the scenario name, description and any unadded change-builder choice together. Discard changes resets unapplied metadata and unadded change-builder choices. Cancel lets you choose how to handle that pending work. Neither reverses changes already added or removed.",
     ),
     el(
       "p",
@@ -122,4 +128,6 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
   );
   document.body.append(dialog);
   dialog.showModal();
+  heading.focus({ preventScroll: true });
+  dialog.scrollTop = 0;
 }

@@ -412,8 +412,10 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
       { class: "record-secondary-actions" },
       el("summary", {}, ctx.target.type === "service" ? "More service actions" : "More record actions"),
     );
-    if (ctx.onSimilar) more.append(button("Create similar service", ctx.onSimilar));
-    if (ctx.onDelete) more.append(button("Delete record", ctx.onDelete, { class: "danger" }));
+    const commands = el("div", { class: "record-command-list" });
+    if (ctx.onSimilar) commands.append(button("Create similar service", ctx.onSimilar));
+    if (ctx.onDelete) commands.append(button("Delete record", ctx.onDelete, { class: "danger" }));
+    more.append(commands);
     actions.append(more);
   }
   element.append(

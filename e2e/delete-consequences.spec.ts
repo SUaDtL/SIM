@@ -170,7 +170,10 @@ test("Cancel and blocked delete preserve a dirty draft; completed delete discard
   await expect(blockingOwner).toContainText("Service: Orders");
   await blockingOwner.getByRole("button", { name: "Close", exact: true }).click();
   await expect(networkName).toHaveValue("Unapplied NIPR");
-  await editor(page).getByRole("button", { name: "Confirm delete" }).click();
+  const blockedConfirm = editor(page).getByRole("button", { name: "Confirm delete" });
+  await expect(blockedConfirm).toBeDisabled();
+  // A synthetic hostile event bypasses the disabled UI to verify the repository still refuses it.
+  await blockedConfirm.dispatchEvent("click");
   await expect(editor(page).getByTestId("editor-message")).toContainText("still in use");
   await expect(networkName).toHaveValue("Unapplied NIPR");
 });

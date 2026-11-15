@@ -37,6 +37,8 @@ export interface EditorContext {
   requestDependency?(consumer: number, provider: number): void;
   requestCancel?(): void;
   requestSimilar?(sourceId: number): void;
+  /** Successful guarded deletion has closed the editor and any confirmation modal. */
+  recordDeleted?(type: EntityType, id: number): void;
 }
 
 interface EditorViewContext {
@@ -49,8 +51,8 @@ interface EditorViewContext {
 export interface EditorPanel {
   readonly element: HTMLElement;
   selection(): Selection | null;
-  open(type: EntityType, id: number | null): void;
-  inspect(type: EntityType, id: number): void;
+  open(type: EntityType, id: number | null, section?: "details" | "connections" | "support"): void;
+  inspect(type: EntityType, id: number, section?: SummarySection): void;
   createSimilar(sourceId: number): void;
   isEditing(): boolean;
   viewContext(): EditorViewContext;
@@ -113,10 +115,16 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     type: EntityType,
     id: number,
     notice = "",
-    section: SummarySection = "overview",
+    section?: SummarySection,
     notify = true,
     initialView?: RecordSummaryViewContext,
   ): void {
+    const focusRequested = section !== undefined || notice !== "";
+    const previousSection =
+      type === "service" && current?.type === "service" && !editing
+        ? captureRecordSummaryView(element.querySelector<HTMLElement>(".record-summary") ?? element)?.section
+        : undefined;
+    section ??= previousSection ?? "overview";
     activePicker?.close();
     activePicker = null;
     editing = false;
@@ -139,8 +147,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ctx.requestNavigate?.(target, "peek");
       },
       onEdit: (section) => {
-        open(type, id);
-        showSection(section === "overview" || !section ? "details" : section);
+        open(type, id, "", section === "overview" || !section ? "details" : section);
       },
       onDependency: (consumer, provider) => {
         ctx.requestDependency?.(consumer, provider);
@@ -184,10 +191,21 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           ctx.requestServiceOnNetwork?.(id);
         }),
       );
-    element.replaceChildren(summary, el("p", { role: "status", class: "notice" }, notice));
+    const completion = el("p", { role: "status", class: "notice" }, notice);
+    (summary.querySelector(".record-summary-heading") ?? summary).append(completion);
+    element.replaceChildren(summary);
     if (initialView) restoreRecordSummaryView(summary, initialView);
     ctx.selectionChanged();
     if (notify) draftChanged();
+    if (notify && focusRequested) focusSection();
+  }
+
+  function focusSection(): void {
+    element.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+  }
+
+  function readSection(): SummarySection {
+    return activeSection === "support" || activeSection === "connections" ? activeSection : "overview";
   }
 
   function createSimilar(sourceId: number): void {
@@ -308,7 +326,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   function discardActiveDraft(): void {
     if (!current) return;
     if (current.id !== null && descriptor(current.type).get(ctx.repo(), current.id) === undefined) close();
-    else open(current.type, current.id);
+    else open(current.type, current.id, "Unapplied changes discarded.", activeSection);
   }
 
   function inspectProjected(
@@ -494,12 +512,12 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     draftChanged();
   }
 
-  function open(type: EntityType, id: number | null, noticeText = ""): void {
+  function open(type: EntityType, id: number | null, noticeText = "", section = "details"): void {
     activePicker?.close();
     activePicker = null;
     editing = true;
     element.dataset["mode"] = "edit";
-    activeSection = "details";
+    activeSection = type === "service" ? section : "details";
     sectionErrors = new Set();
     relationViews.clear();
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
@@ -528,7 +546,12 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     const controls = new Map<string, () => FormValues[string]>();
     const fields = d.fields.map((f) => renderField(repo, f, values, id, errors, controls));
 
-    const message = el("p", { class: "message", "data-testid": "editor-message", role: "alert" });
+    const message = el("p", { class: "message", "data-testid": "editor-message", role: "alert", tabindex: "-1" });
+    const reveal = (target: HTMLElement): void => {
+      const feedback = target.closest<HTMLElement>('[data-testid="sensitive-warning"]') ?? target;
+      feedback.scrollIntoView({ block: "center" });
+      target.focus({ preventScroll: true });
+    };
     const diagnosticActions = el("div", { class: "actions", "data-testid": "editor-diagnostic-actions" });
     const conflictActions = el("div", { class: "actions", "data-testid": "editor-conflict-actions" });
     conflictActions.hidden = true;
@@ -627,9 +650,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           element.querySelector<HTMLElement>(`#field-${key ?? ""}-choose`) ??
           element.querySelector<HTMLElement>(`#field-${key ?? ""}`);
         control?.setAttribute("aria-invalid", "true");
-        control?.focus();
+        if (control) reveal(control);
       } else {
         message.textContent = text;
+        reveal(message);
       }
     };
 
@@ -697,6 +721,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               ...result.warning.findings.map((f) => el("li", {}, `${f.field}: ${f.matches.join(", ")}`)),
             );
             warning.hidden = false;
+            const confirm = warning.querySelector<HTMLButtonElement>("button");
+            if (confirm) reveal(confirm);
             return false;
           }
           inspect(
@@ -707,6 +733,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                 ? "Service added."
                 : "Service changes applied."
               : "No changes to apply.",
+            id === null ? "overview" : readSection(),
           );
           return true;
         }
@@ -722,6 +749,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             ...error.findings.map((f) => el("li", {}, `${f.field}: ${f.matches.join(", ")}`)),
           );
           warning.hidden = false;
+          const confirm = warning.querySelector<HTMLButtonElement>("button");
+          if (confirm) reveal(confirm);
         } else if (error instanceof ValidationError) {
           showError(error.field, error.message, error.targets);
         } else {
@@ -747,7 +776,6 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       message,
       diagnosticActions,
       conflictActions,
-      notice,
     );
     const form = el("form", { class: "entity-form", novalidate: "" }, body);
     const tabs = el("nav", { class: "editor-tabs", role: "tablist", "aria-label": "Service editing sections" });
@@ -821,7 +849,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         () => {
           if (ctx.requestCancel) ctx.requestCancel();
           else if (id === null) close();
-          else inspect(type, id);
+          else inspect(type, id, "", readSection());
         },
         { class: "subtle" },
       ),
@@ -843,10 +871,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         { class: "editor-heading" },
         el("h2", {}, `${id === null ? "New" : "Edit"} ${noun}`),
         el("p", { class: "editor-identity", "data-testid": "editor-identity" }),
+        notice,
         el(
           "p",
           { class: "hint" },
-          `${id === null ? `Use Add ${noun} to create this record.` : "Use Apply changes for all sections."} Save file also applies a valid draft.`,
+          type === "scenario" && id !== null
+            ? "Add change and Remove take effect immediately; use Undo to reverse them. Apply changes saves metadata and any unadded builder choice together. Cancel and Discard handle unapplied metadata and unadded choices; they do not reverse completed Add or Remove commands. Save file also applies a valid draft."
+            : `${id === null ? `Use Add ${noun} to create this record.` : "Use Apply changes for all sections."} Save file also applies a valid draft.`,
         ),
       ),
       tabs,
@@ -898,6 +929,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     showSection(activeSection);
     ctx.selectionChanged();
     draftChanged();
+    focusSection();
   }
 
   /** A compact selected-value field opens the common bounded picker. */
@@ -1132,7 +1164,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           ? [el("p", {}, "Your unapplied changes to this record will be discarded if deletion succeeds.")]
           : []),
         el("ul", {}, ...plan.details.map((detail) => el("li", {}, detail))),
-        ...(plan.blocked ? [el("p", { class: "field-error" }, plan.blocked)] : []),
+        ...(plan.blocked ? [el("p", { class: "field-error", id: "delete-blocked-reason" }, plan.blocked)] : []),
         ...plan.blockers.map((target) =>
           button(target.label, () => {
             ctx.requestNavigate?.({ type: target.type, id: target.id }, "peek");
@@ -1147,12 +1179,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               owner.deleteWithPlan(type, id, plan.signature);
               close();
               modal?.afterDelete();
+              ctx.recordDeleted?.(type, id);
             } catch (error) {
               message.textContent = describe(error);
               if (error instanceof ValidationError && error.code === "STALE") ask();
             }
           },
-          { class: "danger" },
+          { class: "danger", ...(plan.blocked ? { disabled: "", "aria-describedby": "delete-blocked-reason" } : {}) },
         ),
         button("Cancel", modal?.cancel ?? reset),
       );
@@ -1627,7 +1660,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   return {
     element,
     selection: () => current,
-    inspect,
+    inspect: (type, id, section) => {
+      inspect(type, id, "", section);
+    },
     createSimilar,
     isEditing: () => editing,
     viewContext: () => ({
@@ -1653,8 +1688,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const summary = element.querySelector<HTMLElement>(".record-summary");
       if (summary && view.summary) restoreRecordSummaryView(summary, view.summary, { focus: true });
     },
-    open: (type, id) => {
-      open(type, id);
+    open: (type, id, section) => {
+      open(type, id, "", section);
     },
     close,
     refresh,

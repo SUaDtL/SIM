@@ -190,7 +190,10 @@ test("deletes with an in-panel confirmation and refuses to delete a network in u
   await seed(page);
   await select(page, "Networks", "NIPR");
   await editAction(page, "Delete network");
-  await editor(page).getByRole("button", { name: "Confirm delete" }).click();
+  const blockedConfirm = editor(page).getByRole("button", { name: "Confirm delete" });
+  await expect(blockedConfirm).toBeDisabled();
+  // A synthetic event bypasses disabled UI to retain the repository-refusal oracle.
+  await blockedConfirm.dispatchEvent("click");
   await expect(editor(page).getByTestId("editor-message")).toContainText("still in use");
   await show(page, "Networks");
   expect(await values(list(page).locator(".item-name"))).toEqual(["NIPR", "SIPR"]);

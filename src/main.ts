@@ -161,8 +161,13 @@ function replace(db: Database, fileName: string | null, handle: FileHandle | nul
 
 type ReplacementChoice = "save" | "discard" | "stay";
 
+function fileActionOrigin(): HTMLElement | null {
+  return document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
+}
+
 function chooseReplacement(): Promise<ReplacementChoice> {
   return new Promise((resolve) => {
+    const origin = fileActionOrigin();
     const dialog = document.createElement("dialog");
     dialog.setAttribute("aria-label", "Unsaved changes");
     const heading = document.createElement("p");
@@ -176,6 +181,7 @@ function chooseReplacement(): Promise<ReplacementChoice> {
     const settle = (choice: ReplacementChoice): void => {
       dialog.close();
       dialog.remove();
+      if (origin?.isConnected) origin.focus();
       resolve(choice);
     };
     for (const [label, choice] of choices) {
@@ -301,6 +307,7 @@ async function onImport(): Promise<void> {
   if (!(await workspace.resolveActiveDraft("import"))) return;
   const owner = state;
   openImportDialog({
+    returnFocus: fileActionOrigin(),
     ...(owner.importReceipt ? { lastReceipt: owner.importReceipt } : {}),
     receiptSource: () => ({
       name: owner.name,
@@ -591,35 +598,41 @@ async function boot(): Promise<void> {
   aboutBody.className = "file-menu-actions";
   const aboutDescription = document.createElement("p");
   aboutDescription.textContent = "SIM runs offline. Your data stays in the local SQLite files you choose.";
-  const licenses = (): Promise<void> => {
+  let licenseOrigin: HTMLElement | null = null;
+  const licenses = (origin: HTMLElement = aboutTitle): Promise<void> => {
     const dialog = document.getElementById("sim-license-dialog");
-    if (dialog instanceof HTMLDialogElement) dialog.showModal();
-    else show("License notices are unavailable in this build.", "error");
+    if (dialog instanceof HTMLDialogElement) {
+      licenseOrigin = origin;
+      dialog.showModal();
+    } else show("License notices are unavailable in this build.", "error");
     return Promise.resolve();
   };
   document.getElementById("sim-license-close")?.addEventListener("click", () => {
     const dialog = document.getElementById("sim-license-dialog");
     if (dialog instanceof HTMLDialogElement) dialog.close();
-    aboutTitle.focus();
+  });
+  document.getElementById("sim-license-dialog")?.addEventListener("close", () => {
+    if (licenseOrigin?.isConnected) licenseOrigin.focus();
   });
   aboutBody.append(version, aboutDescription, button("Open demo", onDemo), button("Licenses and notices", licenses));
   about.append(aboutTitle, aboutBody);
+  const helpButton = button("Help", () => {
+    openHelp({
+      demo: () => {
+        void onDemo();
+      },
+      licenses: () => {
+        void licenses(helpButton);
+      },
+    });
+    return Promise.resolve();
+  });
   toolbar.append(
     file,
     button("Save file", () => onSave(false)),
     undoButton,
     redoButton,
-    button("Help", () => {
-      openHelp({
-        demo: () => {
-          void onDemo();
-        },
-        licenses: () => {
-          void licenses();
-        },
-      });
-      return Promise.resolve();
-    }),
+    helpButton,
     about,
   );
   const header = document.createElement("header");

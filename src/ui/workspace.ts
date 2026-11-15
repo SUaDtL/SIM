@@ -6,7 +6,13 @@ import { createEditor } from "./editor-panel";
 import { createListPanel, type ListPanel, type Selection } from "./list-panel";
 import { descriptor } from "./forms";
 import { type EntityTarget } from "./relations";
-import { createRecordSummary } from "./record-summary";
+import {
+  captureRecordSummaryView,
+  createRecordSummary,
+  restoreRecordSummaryView,
+  type RecordSummaryViewContext,
+  type SummarySection,
+} from "./record-summary";
 import { dependencyKey, serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 
 export interface Workspace {
@@ -63,7 +69,11 @@ export function createWorkspace(
   backButton.disabled = true;
 
   function captureNavigation(): NavigationEntry {
-    const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const menu = focused?.closest<HTMLDetailsElement>(
+      "details.record-secondary-actions, details.record-actions, details.connection-actions",
+    );
+    const active = menu?.querySelector<HTMLElement>("summary") ?? focused;
     const scope = [editor.element, list.element, map.element].find((region) => active && region.contains(active));
     return {
       selection: editor.selection(),
@@ -78,7 +88,7 @@ export function createWorkspace(
           ? {
               scope,
               index: [
-                ...scope.querySelectorAll<HTMLElement>("button, input, select, textarea, a[href], [tabindex]"),
+                ...scope.querySelectorAll<HTMLElement>("button, input, select, textarea, summary, a[href], [tabindex]"),
               ].indexOf(active),
               id: active.id,
               tag: active.tagName,
@@ -99,7 +109,7 @@ export function createWorkspace(
     const bookmark = entry.focusBookmark;
     if (!bookmark?.scope.isConnected) return;
     const controls = [
-      ...bookmark.scope.querySelectorAll<HTMLElement>("button, input, select, textarea, a[href], [tabindex]"),
+      ...bookmark.scope.querySelectorAll<HTMLElement>("button, input, select, textarea, summary, a[href], [tabindex]"),
     ];
     const target = bookmark.id ? controls.find((node) => node.id === bookmark.id) : controls[bookmark.index];
     if (target?.tagName === bookmark.tag && target.textContent === bookmark.text) {
@@ -179,7 +189,14 @@ export function createWorkspace(
     };
     const owner = repo;
     const session = sessionId;
-    function draw(next: EntityTarget): void {
+    const history: {
+      target: EntityTarget;
+      view: RecordSummaryViewContext | undefined;
+      scroll: number;
+      reference?: string;
+    }[] = [];
+    let currentTarget = target;
+    function draw(next: EntityTarget, previous?: (typeof history)[number]): void {
       if (repo !== owner || session !== sessionId) {
         dialog.replaceChildren(
           el("p", {}, "The dataset changed. Close this inspector and select a current record."),
@@ -190,17 +207,43 @@ export function createWorkspace(
       const summary = createRecordSummary({
         repo: owner,
         target: next,
-        onNavigate: draw,
-        onEdit: () => {
+        ...(previous?.view ? { initialView: previous.view } : {}),
+        onNavigate: (destination) => {
+          const current = dialog.querySelector<HTMLElement>(".record-summary");
+          const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+          const reference = active?.dataset["summaryReference"];
+          history.push({
+            target: currentTarget,
+            view: current ? captureRecordSummaryView(current) : undefined,
+            scroll: dialog.scrollTop,
+            ...(reference ? { reference } : {}),
+          });
+          if (history.length > 64) history.shift();
+          draw(destination);
+        },
+        onEdit: (section) => {
           close();
-          if (repo === owner && session === sessionId) void open(next.type, next.id, true);
+          if (repo === owner && session === sessionId) void open(next.type, next.id, true, editSection(section));
         },
         onDependency: (consumer, provider) => {
           if (repo === owner && session === sessionId) inspectConnection(consumer, provider, owner.snapshot(), false);
         },
       });
-      dialog.replaceChildren(summary, button("Close", close));
-      if (dialog.open) dialog.querySelector<HTMLElement>("h2")?.focus();
+      currentTarget = next;
+      const back = button("Back", () => {
+        const entry = history.pop();
+        if (entry) draw(entry.target, entry);
+      });
+      back.disabled = history.length === 0;
+      dialog.replaceChildren(summary, back, button("Close", close));
+      if (previous) {
+        if (previous.view) restoreRecordSummaryView(summary, previous.view, { focus: true });
+        dialog.scrollTop = previous.scroll;
+        if (previous.reference)
+          [...summary.querySelectorAll<HTMLElement>("[data-summary-reference]")]
+            .find((control) => control.dataset["summaryReference"] === previous.reference)
+            ?.focus({ preventScroll: true });
+      } else if (dialog.open) dialog.querySelector<HTMLElement>("h2")?.focus();
     }
     draw(target);
     dialog.addEventListener("cancel", (event) => {
@@ -295,7 +338,34 @@ export function createWorkspace(
     return true;
   }
 
-  async function open(type: Parameters<typeof editor.open>[0], id: number | null, edit = false): Promise<void> {
+  function editSection(section: string | undefined): "details" | "connections" | "support" {
+    return section === "connections" || section === "support" ? section : "details";
+  }
+
+  function readSection(section: string): SummarySection {
+    return section === "connections" || section === "support" ? section : "overview";
+  }
+
+  function focusResults(): void {
+    const target =
+      surface === "inventory"
+        ? (list.element.querySelector<HTMLElement>('[aria-current="true"]') ??
+          list.element.querySelector<HTMLElement>("#list-filter"))
+        : map.element.querySelector<HTMLElement>("#map-find");
+    target?.focus();
+  }
+
+  async function open(
+    type: Parameters<typeof editor.open>[0],
+    id: number | null,
+    edit = false,
+    section?: "details" | "connections" | "support",
+  ): Promise<void> {
+    const focused = pendingReturn?.focus ?? document.activeElement;
+    const fromFind = focused instanceof Element && focused.closest(".find-results") !== null;
+    const focusFoundRecord = (): void => {
+      if (fromFind) editor.element.querySelector<HTMLElement>(".record-summary h2")?.focus();
+    };
     if (
       editor.selection()?.type === type &&
       editor.selection()?.id === id &&
@@ -305,6 +375,8 @@ export function createWorkspace(
       pendingReturn = null;
       inspectorParked = false;
       syncSurface();
+      if (edit && section) editor.restoreViewContext({ ...editor.viewContext(), section });
+      focusFoundRecord();
       return;
     }
     if (!pendingReturn && !(await prepareNavigation())) return;
@@ -316,13 +388,14 @@ export function createWorkspace(
     rememberReturn();
     projectedOrigin = null;
     inspectorParked = false;
-    if (id === null || edit) editor.open(type, id);
+    if (id === null || edit) editor.open(type, id, section);
     else editor.inspect(type, id);
     navigationStatus.textContent = "";
     list.reveal(type);
     if (id !== null && ["service", "network", "cds"].includes(type))
       map.select(type as "service" | "network" | "cds", id);
     syncSurface();
+    focusFoundRecord();
   }
 
   async function openServiceOnNetwork(networkId: number): Promise<void> {
@@ -356,16 +429,29 @@ export function createWorkspace(
     },
     requestNavigate: (target, intent) => {
       if (intent === "peek") peek(target);
-      else void open(target.type, target.id, true);
+      else void open(target.type, target.id, true, target.type === "service" ? "connections" : undefined);
     },
     requestCancel: () => {
       void (async () => {
         const previous = editor.selection();
+        const section = readSection(editor.viewContext().section);
+        const origin = navigationHistory.at(-1);
         const owner = repo;
         const session = sessionId;
-        if (!(await resolveActiveDraft("navigate")) || owner !== repo || session !== sessionId) return;
+        const request = ++navigationRequest;
+        if (
+          !(await resolveActiveDraft("navigate")) ||
+          owner !== repo ||
+          session !== sessionId ||
+          request !== navigationRequest
+        )
+          return;
+        if (previous?.id === null && origin && navigationHistory.at(-1) === origin) {
+          await back();
+          return;
+        }
         if (previous?.id !== null && previous && descriptor(previous.type).get(repo, previous.id) !== undefined)
-          editor.inspect(previous.type, previous.id);
+          editor.inspect(previous.type, previous.id, section);
         else editor.close();
         syncSurface();
       })();
@@ -374,7 +460,9 @@ export function createWorkspace(
       void (async () => {
         const owner = repo;
         const session = sessionId;
-        if (!(await resolveActiveDraft("navigate")) || owner !== repo || session !== sessionId) return;
+        if (!(await prepareNavigation()) || owner !== repo || session !== sessionId) return;
+        rememberReturn();
+        projectedOrigin = null;
         inspectorParked = false;
         editor.createSimilar(sourceId);
         syncSurface();
@@ -382,6 +470,10 @@ export function createWorkspace(
     },
     requestDependency: (consumer, provider) => {
       inspectConnection(consumer, provider, repo.snapshot(), false);
+    },
+    recordDeleted: (type) => {
+      navigationStatus.textContent = `${descriptor(type).label} deleted. Undo can restore it.`;
+      focusResults();
     },
   });
   const list = createListPanel({
@@ -476,7 +568,7 @@ export function createWorkspace(
                 navigationStatus.textContent = "That connection no longer exists. Select a current connection.";
                 return;
               }
-              void open("service", consumer, true);
+              void open("service", consumer, true, "connections");
             }),
         button("Close", close),
       );
@@ -552,6 +644,7 @@ export function createWorkspace(
   const returnButton = button("Return to results", () => {
     inspectorParked = true;
     syncSurface();
+    focusResults();
   });
   const returnToEditor = button("Return to draft", () => {
     inspectorParked = false;
@@ -593,7 +686,7 @@ export function createWorkspace(
     const selection = editor.selection();
     if (selection?.id !== null && selection) {
       event.preventDefault();
-      void open(selection.type, selection.id, true);
+      void open(selection.type, selection.id, true, editSection(editor.viewContext().section));
     }
   });
 

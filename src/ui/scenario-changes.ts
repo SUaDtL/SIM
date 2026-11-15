@@ -214,7 +214,6 @@ export function createScenarioChanges(
     try {
       repo.addScenarioChange(scenarioId, input(), { confirmSensitive });
       clearPendingIntent();
-      refresh();
     } catch (error) {
       if (error instanceof SensitiveInputWarning) {
         showError(error, () => {
@@ -242,6 +241,11 @@ export function createScenarioChanges(
     }
     showFields();
     withdrawWarning();
+    // Repository listeners may refresh choices during the write. Consume only this builder's
+    // submitted intent, then baseline again after unavailable source choices have been removed.
+    initial = selected();
+    refresh();
+    initial = selected();
     onIntentChanged();
   }
 

@@ -24,6 +24,8 @@ import {
 const MAX_LISTED = 50;
 
 export interface ImportDialogContext {
+  /** Visible caller-owned control to resume after every dialog close path. */
+  readonly returnFocus?: HTMLElement | null;
   /** What the import would do, worked out on a throwaway copy of the dataset. */
   preview(files: readonly TemplateFile[], options: ImportOptions): Promise<ImportPreview>;
   /** Run exactly the reviewed import on its originating dataset, as one undo step. */
@@ -144,6 +146,7 @@ function receiptContent(receipt: ImportReceipt, download: () => void): HTMLEleme
  * import will add, skip and refuse, and Import / Cancel. Nothing is written until Import.
  */
 export function openImportDialog(ctx: ImportDialogContext): void {
+  const origin = ctx.returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
   let files: readonly ReadFile[] = [];
   let generation = 0;
   let prepared: PreparedImport | null = null;
@@ -154,7 +157,26 @@ export function openImportDialog(ctx: ImportDialogContext): void {
 
   const input = el("input", { type: "file", id: "import-files", multiple: "", accept: ".csv,text/csv" });
   const includeFlagged = el("input", { type: "checkbox", id: "import-flagged" });
-  const preview = el("div", { class: "import-preview", "aria-live": "polite" });
+  // Keep the explicit opt-in control connected while asynchronous preview generations change.
+  const previewHead = el("div");
+  const previewTail = el("div");
+  const flaggedSummary = el("p");
+  const flaggedNotes = el("div");
+  const flaggedWarning = el(
+    "div",
+    { class: "warning" },
+    flaggedSummary,
+    flaggedNotes,
+    el("label", { class: "check" }, includeFlagged, "Import these rows anyway"),
+  );
+  flaggedWarning.hidden = true;
+  const preview = el(
+    "div",
+    { class: "import-preview", "aria-live": "polite" },
+    previewHead,
+    flaggedWarning,
+    previewTail,
+  );
   const importButton = button("Import", commit, { class: "primary" });
   importButton.disabled = true;
   const lastReceipt = ctx.lastReceipt;
@@ -232,7 +254,9 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     if (!ctx.isCurrentSession()) {
       prepared = null;
       importButton.disabled = true;
-      preview.replaceChildren(el("p", { class: "field-error" }, "The dataset changed. Close and reopen Import CSV."));
+      previewHead.replaceChildren(
+        el("p", { class: "field-error" }, "The dataset changed. Close and reopen Import CSV."),
+      );
       return;
     }
     const selected = prepared;
@@ -248,7 +272,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         notice = error.message;
         void refresh();
       } else {
-        preview.append(el("p", { class: "field-error" }, "Could not import the reviewed rows. Try again."));
+        previewHead.append(el("p", { class: "field-error" }, "Could not import the reviewed rows. Try again."));
         importButton.disabled = false;
       }
       return;
@@ -274,6 +298,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     prepared = null;
     reviewedReceipt = null;
     importButton.disabled = true;
+    previewTail.replaceChildren();
     const chosen = files.flatMap((f) => (f.file ? [f.file] : []));
     const options = { includeFlagged: includeFlagged.checked };
     const fileList = el("ul", { class: "import-files" });
@@ -297,7 +322,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         },
         ctx.receiptSource(),
       );
-      preview.replaceChildren(
+      previewHead.replaceChildren(
         fileList,
         ...(files.length > 0
           ? [
@@ -309,7 +334,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       );
       return;
     }
-    preview.replaceChildren(
+    previewHead.replaceChildren(
       fileList,
       ...(notice ? [el("p", { class: "field-error" }, notice)] : []),
       el("p", { class: "hint" }, "Checking the rows..."),
@@ -319,12 +344,12 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       result = await ctx.preview(chosen, options);
     } catch {
       if (mine === generation && !closed)
-        preview.replaceChildren(fileList, el("p", { class: "field-error" }, "Could not check the rows."));
+        previewHead.replaceChildren(fileList, el("p", { class: "field-error" }, "Could not check the rows."));
       return;
     }
     if (mine !== generation || closed) return;
     if (!ctx.isCurrentSession()) {
-      preview.replaceChildren(
+      previewHead.replaceChildren(
         fileList,
         el("p", { class: "field-error" }, "The dataset changed. Close and reopen Import CSV."),
       );
@@ -356,30 +381,20 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         downloadReceipt(receipt, "sim-import-preview.csv");
       }),
     ];
-    if (result.report.flagged.length > 0) {
-      parts.push(
-        el(
-          "div",
-          { class: "warning" },
-          el(
-            "p",
-            {},
-            `${rows(result.report.flagged.length)} look like an IP address or host name, which SIM is not meant to hold. ` +
-              "They are left out unless you choose otherwise.",
-          ),
-          notes(result.report.flagged, "Host-like rows"),
-          el("label", { class: "check" }, includeFlagged, "Import these rows anyway"),
-        ),
-      );
-    }
+    flaggedWarning.hidden = result.report.flagged.length === 0;
+    flaggedSummary.textContent = `${rows(result.report.flagged.length)} look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.`;
+    flaggedNotes.replaceChildren(
+      ...(result.report.flagged.length > 0 ? [notes(result.report.flagged, "Host-like rows")] : []),
+    );
+    const trailing: Node[] = [];
     if (result.report.rejected.length > 0) {
-      parts.push(
+      trailing.push(
         el("h3", {}, `${rows(result.report.rejected.length)} will not be imported`),
         notes(result.report.rejected, "Rejected rows"),
       );
     }
     if (result.report.present.length > 0) {
-      parts.push(
+      trailing.push(
         el(
           "details",
           {},
@@ -388,7 +403,8 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         ),
       );
     }
-    preview.replaceChildren(...parts);
+    previewHead.replaceChildren(...parts);
+    previewTail.replaceChildren(...trailing);
     importButton.disabled = describeAdded(result.report.added) === "nothing";
   }
 
@@ -399,7 +415,9 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     importButton.disabled = true;
     notice = "";
     files = [];
-    preview.replaceChildren(el("p", { class: "hint" }, "Reading the files..."));
+    previewHead.replaceChildren(el("p", { class: "hint" }, "Reading the files..."));
+    previewTail.replaceChildren();
+    flaggedWarning.hidden = true;
     const picked = [...(input.files ?? [])];
     void Promise.all(picked.map(readFile)).then((read) => {
       if (mine !== generation || closed) return;
@@ -418,6 +436,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     prepared = null;
     reviewedReceipt = null;
     dialog.remove();
+    if (origin?.isConnected) origin.focus();
   });
 
   document.body.append(dialog);

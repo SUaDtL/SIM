@@ -23,6 +23,9 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Keep clicked map nodes visible as the inspector opens, retain Connections/Support while browsing services, and preserve section intent through editing, Apply, Discard and Cancel.
+- Anchor More service actions without moving controls; restore creation origins, add related-record Back, and keep keyboard focus meaningful after navigation, deletion, imports and dialog closure.
+- Reveal complete sensitive-input warnings, prevent phantom scenario intent, clarify immediate scenario commands, disable blocked deletion, and keep narrow Find and import opt-in usable by keyboard.
 - Seed Add service from the active network scope and marking; close map Find suggestions on outside interaction or Escape, and remove cancelled deletion dialogs while restoring trigger focus.
 - Search staged relationships by recorded names and context, with shared pagination and explicit action/form ownership; consolidate relationship projections, capture setup and shadowed CSS while preserving existing behavior.
 - Keep keyboard focus on an enabled pagination control at first/last-page boundaries in relationship lists, checklist choices and import diagnostics.
