@@ -1,0 +1,64 @@
+
+Running 2 tests using 1 worker
+
+(node:61884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished consumer choice until explicitly finished (5.7s)
+(node:62748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished dependency choice until explicitly finished (5.7s)
+
+
+  1) [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished consumer choice until explicitly finished
+
+    Error: expect(locator).toBeInViewport() failed
+
+    Locator: getByTestId('editor').getByTestId('connection-task-error')
+    Expected: in viewport
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeInViewport" getByTestId('editor').getByTestId('connection-task-error') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('connection-task-error')
+
+
+      105 |     await expect(editor.getByTestId("editor-message")).toContainText(/Finish adding or cancel/);
+      106 |     await expect(editor.getByRole("button", { name: `Add ${composer}`, exact: true })).toBeFocused();
+    > 107 |     await expect(editor.getByTestId("connection-task-error")).toBeInViewport({ ratio: 1 });
+          |                                                               ^
+      108 |     await page.screenshot({ path: info.outputPath("unfinished-composer-wide.png") });
+      109 |     await page.setViewportSize({ width: 320, height: 900 });
+      110 |     await editor.getByRole("button", { name: `Add ${composer}`, exact: true }).scrollIntoViewIfNeeded();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:107:63
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-cue-red-results\readiness-editor-R01-Apply-9de75-e-until-explicitly-finished-chrome\error-context.md
+
+  2) [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished dependency choice until explicitly finished
+
+    Error: expect(locator).toBeInViewport() failed
+
+    Locator: getByTestId('editor').getByTestId('connection-task-error')
+    Expected: in viewport
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeInViewport" getByTestId('editor').getByTestId('connection-task-error') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('connection-task-error')
+
+
+      105 |     await expect(editor.getByTestId("editor-message")).toContainText(/Finish adding or cancel/);
+      106 |     await expect(editor.getByRole("button", { name: `Add ${composer}`, exact: true })).toBeFocused();
+    > 107 |     await expect(editor.getByTestId("connection-task-error")).toBeInViewport({ ratio: 1 });
+          |                                                               ^
+      108 |     await page.screenshot({ path: info.outputPath("unfinished-composer-wide.png") });
+      109 |     await page.setViewportSize({ width: 320, height: 900 });
+      110 |     await editor.getByRole("button", { name: `Add ${composer}`, exact: true }).scrollIntoViewIfNeeded();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:107:63
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-cue-red-results\readiness-editor-R01-Apply-c7c8a-e-until-explicitly-finished-chrome\error-context.md
+
+  2 failed
+    [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished consumer choice until explicitly finished
+    [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished dependency choice until explicitly finished

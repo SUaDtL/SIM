@@ -109,5 +109,11 @@ test("opening readable legacy data reports its existing semantic issue", async (
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "legacy.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(page.getByTestId("dataset-status")).toContainText("Legacy");
-  await expect(page.getByTestId("dataset-message")).toContainText("organization cycle");
+  await expect(page.getByTestId("dataset-message")).toContainText("1 existing data issue");
+  await openFileMenu(page);
+  await page.getByRole("button", { name: "Review data issues", exact: true }).click();
+  const issues = page.getByRole("dialog", { name: "Data issues", exact: true });
+  await expect(issues).toContainText("ORG CYCLE");
+  await expect(issues).toContainText("parent cycle");
+  await expect(issues.getByRole("button", { name: "Review Ops", exact: true })).toBeVisible();
 });

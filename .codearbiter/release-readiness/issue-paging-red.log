@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+(node:59436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-shell.spec.ts:231:1 › R15 issue pagination preserves complete access and enabled keyboard focus at boundaries (5.6s)
+
+
+  1) [chrome] › e2e\readiness-shell.spec.ts:231:1 › R15 issue pagination preserves complete access and enabled keyboard focus at boundaries
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog', { name: 'Data issues', exact: true }).getByRole('button', { name: 'Previous issues', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog', { name: 'Data issues', exact: true }).getByRole('button', { name: 'Previous issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true }).getByRole('button', { name: 'Previous issues', exact: true })
+        14 × locator resolved to <button type="button">Previous issues</button>
+           - unexpected value "inactive"
+
+
+      240 |   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(4);
+      241 |   await expect(dialog).toContainText("Synthetic guard 24");
+    > 242 |   await expect(previous).toBeFocused();
+          |                          ^
+      243 |   await previous.press("Enter");
+      244 |   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(20);
+      245 |   await expect(next).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:242:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\issue-paging-red-results\readiness-shell-R15-issue--4ae22-eyboard-focus-at-boundaries-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-shell.spec.ts:231:1 › R15 issue pagination preserves complete access and enabled keyboard focus at boundaries

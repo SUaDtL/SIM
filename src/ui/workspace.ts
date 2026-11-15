@@ -1,6 +1,7 @@
 import type { Repository } from "../domain/repository";
+import type { Snapshot } from "../domain/types";
 import { downloadBlob, suggestedImageName } from "../file/dataset-file";
-import { createMapView, type MapViewState, type MapViewContext } from "../map/map-view";
+import { createMapView, type MapViewState } from "../map/map-view";
 import { button, el } from "./dom";
 import { createEditor } from "./editor-panel";
 import { createListPanel, type ListPanel, type Selection } from "./list-panel";
@@ -14,6 +15,7 @@ import {
   type SummarySection,
 } from "./record-summary";
 import { dependencyKey, serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
+import { describeChange } from "./scenario-changes";
 
 export interface Workspace {
   readonly element: HTMLElement;
@@ -29,6 +31,8 @@ export interface Workspace {
   sessionIdentity(): number;
   activeDraftToken(): number;
   settlePendingPlacement(): Promise<void>;
+  refreshView(): void;
+  inspectRecord(target: EntityTarget): Promise<void>;
 }
 
 /** The three-region layout: entity list (left), map area (center), editor (right). */
@@ -59,7 +63,14 @@ export function createWorkspace(
   const inspectionDialogs = new Set<HTMLDialogElement>();
   let pendingReturn: NavigationEntry | null = null;
   let navigationRequest = 0;
-  let inspectConnection: NonNullable<MapViewContext["inspectDependency"]> = () => undefined;
+  let inspectConnection: (
+    consumer: number,
+    provider: number,
+    snapshot: Snapshot,
+    readOnly: boolean,
+    stateLabel?: string,
+    scope?: "pending" | "recorded" | "projected",
+  ) => void = () => undefined;
   let projectedOrigin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null = null;
   let restoringOrigin = false;
   const navigationStatus = el("p", { role: "status", "data-testid": "navigation-status" });
@@ -177,7 +188,7 @@ export function createWorkspace(
     backButton.disabled = navigationHistory.length === 0;
   }
 
-  function peek(target: EntityTarget): void {
+  function peek(target: EntityTarget, snapshot?: Snapshot, context?: string): void {
     const focusBefore = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const dialog = el("dialog", { "aria-label": "Inspect related record" });
     inspectionDialogs.add(dialog);
@@ -204,31 +215,77 @@ export function createWorkspace(
         );
         return;
       }
-      const summary = createRecordSummary({
-        repo: owner,
-        target: next,
-        ...(previous?.view ? { initialView: previous.view } : {}),
-        onNavigate: (destination) => {
-          const current = dialog.querySelector<HTMLElement>(".record-summary");
-          const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-          const reference = active?.dataset["summaryReference"];
-          history.push({
-            target: currentTarget,
-            view: current ? captureRecordSummaryView(current) : undefined,
-            scroll: dialog.scrollTop,
-            ...(reference ? { reference } : {}),
-          });
-          if (history.length > 64) history.shift();
-          draw(destination);
-        },
-        onEdit: (section) => {
-          close();
-          if (repo === owner && session === sessionId) void open(next.type, next.id, true, editSection(section));
-        },
-        onDependency: (consumer, provider) => {
-          if (repo === owner && session === sessionId) inspectConnection(consumer, provider, owner.snapshot(), false);
-        },
-      });
+      const change =
+        next.type === "scenario" && next.changeId !== undefined
+          ? (snapshot ?? owner.snapshot()).scenarioChanges.find(
+              (item) => item.scenarioId === next.id && item.id === next.changeId,
+            )
+          : undefined;
+      const summary =
+        next.type === "scenario" && next.changeId !== undefined
+          ? el(
+              "section",
+              { class: "record-summary", "data-scenario-change-id": String(next.changeId) },
+              el("h2", { tabindex: "-1" }, "Scenario change"),
+              el(
+                "p",
+                {},
+                change
+                  ? describeChange(owner, change, owner.listScenarioChanges(next.id))
+                  : "This scenario change is no longer available.",
+              ),
+              el(
+                "p",
+                {},
+                "Remove and re-add this change in its scenario to revise it. Changes already added take effect immediately; Undo can reverse them.",
+              ),
+              ...(change
+                ? [
+                    button("Review in scenario editor", () => {
+                      close();
+                      void (async () => {
+                        if (owner !== repo || session !== sessionId) return;
+                        await open("scenario", next.id, true);
+                        if (
+                          owner === repo &&
+                          session === sessionId &&
+                          editor.selection()?.type === "scenario" &&
+                          editor.selection()?.id === next.id
+                        )
+                          editor.revealScenarioChange(change.id);
+                      })();
+                    }),
+                  ]
+                : []),
+            )
+          : createRecordSummary({
+              repo: owner,
+              target: next,
+              ...(snapshot ? { snapshot, readOnly: true } : {}),
+              ...(context ? { context } : {}),
+              ...(previous?.view ? { initialView: previous.view } : {}),
+              onNavigate: (destination) => {
+                const current = dialog.querySelector<HTMLElement>(".record-summary");
+                const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+                const reference = active?.dataset["summaryReference"];
+                history.push({
+                  target: currentTarget,
+                  view: current ? captureRecordSummaryView(current) : undefined,
+                  scroll: dialog.scrollTop,
+                  ...(reference ? { reference } : {}),
+                });
+                if (history.length > 64) history.shift();
+                draw(destination);
+              },
+              onEdit: (section) => {
+                close();
+                if (repo === owner && session === sessionId) void open(next.type, next.id, true, editSection(section));
+              },
+              onDependency: (consumer, provider) => {
+                if (repo === owner && session === sessionId)
+                  inspectConnection(consumer, provider, snapshot ?? owner.snapshot(), snapshot !== undefined, context);
+              },
+            });
       currentTarget = next;
       const back = button("Back", () => {
         const entry = history.pop();
@@ -313,7 +370,13 @@ export function createWorkspace(
       const target =
         editor.element.querySelector<HTMLElement>('[aria-invalid="true"]') ??
         editor.element.querySelector<HTMLElement>('[role="alert"]:not(:empty)');
-      if (target) {
+      const active = document.activeElement;
+      const completionFocused =
+        active instanceof HTMLElement &&
+        editor.element.contains(active) &&
+        active.matches("button, input, select, textarea") &&
+        active.getClientRects().length > 0;
+      if (target && !completionFocused) {
         if (!target.matches("button, input, select, textarea")) target.tabIndex = -1;
         target.focus();
       }
@@ -468,8 +531,16 @@ export function createWorkspace(
         syncSurface();
       })();
     },
-    requestDependency: (consumer, provider) => {
-      inspectConnection(consumer, provider, repo.snapshot(), false);
+    requestDependency: (consumer, provider, pending) => {
+      const source = pending?.snapshot ?? repo.snapshot();
+      inspectConnection(
+        consumer,
+        provider,
+        source,
+        pending !== undefined,
+        pending?.label,
+        pending?.scope ?? (pending ? "pending" : "recorded"),
+      );
     },
     recordDeleted: (type) => {
       navigationStatus.textContent = `${descriptor(type).label} deleted. Undo can restore it.`;
@@ -502,22 +573,55 @@ export function createWorkspace(
         navigationStatus.textContent = "Projection changed. Select a record in the current view.";
       }
     },
-    inspectDependency: (inspectConnection = (consumer, provider, projected, readOnly) => {
+    inspectDependency: (inspectConnection = (
+      consumer,
+      provider,
+      projected,
+      readOnly,
+      stateLabel?: string,
+      scope?: "pending" | "recorded" | "projected",
+    ) => {
       const row = projected.dependencies.find(
         (d) => d.consumerServiceId === consumer && d.providerServiceId === provider,
       );
-      if (!row) return;
+      if (!row) {
+        navigationStatus.textContent =
+          "That connection is no longer available in this view. Select a current connection.";
+        return;
+      }
       const provenance =
         "projection" in projected
           ? (projected as ProjectedSnapshot).projection.dependencyProvenance.get(dependencyKey(row))
           : undefined;
       const projection = "projection" in projected ? (projected as ProjectedSnapshot).projection : null;
+      const originChangeIds = new Set(provenance?.responsibleChangeIds ?? []);
+      if (projection) {
+        for (const endpoint of [consumer, provider]) {
+          const origin = serviceOrigin(projected, endpoint);
+          if (origin.kind === "planned") originChangeIds.add(origin.changeId);
+        }
+        const sourceIds = new Set(
+          (provenance?.sourceDependencies ?? []).flatMap((source) => [
+            source.consumerServiceId,
+            source.providerServiceId,
+          ]),
+        );
+        for (const change of projected.scenarioChanges) {
+          if (change.scenarioId === projection.scenarioId && change.kind !== "add" && sourceIds.has(change.serviceId))
+            originChangeIds.add(change.id);
+        }
+      }
       const scenario = projected.scenarios.find((item) => item.id === projection?.scenarioId);
       const originDescription = (id: number): string => {
         const origin = serviceOrigin(projected, id);
         return origin.kind === "planned"
-          ? `Planned in ${scenario?.name ?? "this scenario"}, change #${String(origin.changeId)}`
-          : `As-Is service #${String(origin.serviceId)}`;
+          ? `Planned in ${scenario?.name ?? "this scenario"}: ${(() => {
+              const change = projected.scenarioChanges.find((item) => item.id === origin.changeId);
+              return change
+                ? describeChange(repo, change, projected.scenarioChanges)
+                : "originating change unavailable";
+            })()}`
+          : `Recorded service: ${qualify(origin.serviceId)}`;
       };
       const qualify = (id: number): string => {
         const s = projected.services.find((item) => item.id === id);
@@ -535,9 +639,9 @@ export function createWorkspace(
         inspectionDialogs.delete(dialog);
       };
       dialog.append(
-        el("h2", {}, "Recorded dependency"),
+        el("h2", {}, stateLabel ?? "Recorded dependency"),
         el("p", {}, `${qualify(consumer)} → ${qualify(provider)}`),
-        ...(readOnly
+        ...(readOnly && projection
           ? [
               el(
                 "p",
@@ -555,8 +659,31 @@ export function createWorkspace(
               ? "No CDS recorded. This does not verify direct connectivity."
               : `Via CDS: ${projected.cds.find((item) => item.id === row.viaCdsId)?.name ?? "Unavailable"}`,
         ),
+        ...(projection
+          ? [...originChangeIds].flatMap((changeId) => {
+              const change = projected.scenarioChanges.find(
+                (item) => item.scenarioId === projection.scenarioId && item.id === changeId,
+              );
+              return change
+                ? [
+                    button(`Review: ${describeChange(owner, change, projected.scenarioChanges)}`, () => {
+                      if (repo === owner && session === sessionId)
+                        peek({ type: "scenario", id: projection.scenarioId, changeId });
+                    }),
+                  ]
+                : [];
+            })
+          : []),
         readOnly
-          ? el("p", {}, "Projected connection, read-only. Edit its originating scenario to change the projection.")
+          ? el(
+              "p",
+              {},
+              projection
+                ? "Projected connection, read-only. Edit its originating scenario to change the projection."
+                : scope === "pending"
+                  ? "Pending changes — not yet applied. This inspector shows the staged connection. Finish editing in the current service, then Apply changes to record it."
+                  : "Current As-Is connection, read-only. These are recorded baseline details, including applied changes not yet saved to file. This service is removed from the displayed proposal.",
+            )
           : button("Edit consuming service", () => {
               close();
               if (repo !== owner || session !== sessionId) return;
@@ -611,10 +738,25 @@ export function createWorkspace(
           return;
         }
         if (!restoring) rememberReturn();
+        inspectorParked = false;
         projectedOrigin = node.data.origin;
         navigationStatus.textContent = "";
         list.reveal(node.data.entity);
         editor.inspectProjected(node, view, projected, comparison, {
+          inspectRecord: (target) => {
+            if (target.type === "service") {
+              void (async () => {
+                if (!(await prepareNavigation())) return;
+                const origin = serviceOrigin(projected, target.id);
+                map.inspectOrigin(
+                  origin.kind === "planned"
+                    ? { kind: "planned", entity: "service", scenarioId: view.scenarioId, changeId: origin.changeId }
+                    : { kind: "baseline", entity: "service", entityId: origin.serviceId },
+                );
+              })();
+            } else
+              peek(target, projected, `${view.kind === "compare" ? "Compare" : "To-Be"} · read-only projected record`);
+          },
           editAsIs: (entity, id) => {
             void (async () => {
               if (!(await prepareNavigation())) return;
@@ -762,5 +904,15 @@ export function createWorkspace(
     sessionIdentity: () => sessionId,
     activeDraftToken: () => draftToken,
     settlePendingPlacement: () => map.settlePendingPlacement(),
+    refreshView: () => {
+      list.render();
+      editor.refresh();
+      map.refresh();
+      syncSurface();
+    },
+    inspectRecord: async (target) => {
+      if (target.type === "scenario" && target.changeId !== undefined) peek(target);
+      else await open(target.type, target.id);
+    },
   };
 }

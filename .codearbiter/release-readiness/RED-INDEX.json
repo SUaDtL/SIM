@@ -1,0 +1,178 @@
+[
+  {
+    "name": "shell-red.log",
+    "source_sha256": "793b711d1428e8fd34abf73e1a42eb424223dc30ad652e0b50ff97dfef24e3e5",
+    "source_bytes": 23168,
+    "committed_text_sha256": "45d4ac5d6e4256d2248ba3ac2f7f5da24bd2f997d5e590a6518181795af39deb",
+    "committed_text_bytes": 22889,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "rename-red.log",
+    "source_sha256": "adbbaec45ea9b79a6bfb84841c4d0d69e3ddd919b66dbda7b251373c86171c6a",
+    "source_bytes": 1146,
+    "committed_text_sha256": "948b90d47b5a702ba1b3181cc91401748d3906e05ac021abd9c73a9da41af4eb",
+    "committed_text_bytes": 1119,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "rename-red-corrected.log",
+    "source_sha256": "165f970e1b7a3c1da9983dca3b3ff35032f47e697bfb47fb1bad891a11eb3b71",
+    "source_bytes": 1305,
+    "committed_text_sha256": "ca83b312ace24fddbf21d9b756c45f4583eb41a9b0d3b848f45676906f3f39a4",
+    "committed_text_bytes": 1271,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-red.log",
+    "source_sha256": "196f757efb142350c2a3ea2936404feb192e49024a7bd58d5824eead38c40e88",
+    "source_bytes": 14322,
+    "committed_text_sha256": "a25fb37456f9f66bf15e558b5eb5ba3dc58015e57c7bfeaadeb3ac9e76a490de",
+    "committed_text_bytes": 14094,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-scroll-red.log",
+    "source_sha256": "35fe0033c188600d4ec8933de9348ac5c026fb5166fb761156e2c3d55457587c",
+    "source_bytes": 1623,
+    "committed_text_sha256": "b961d02e9176c39cea70211a02e116a514acc68545bf09bbb18f3ac23aad779b",
+    "committed_text_bytes": 1590,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "map-red.log",
+    "source_sha256": "060a3e4d052c95c07d1fcfbec02593dc09ddb3df6a1fb2326a14cea1318343a2",
+    "source_bytes": 10887,
+    "committed_text_sha256": "c1770b843eb1b54f860e0cd0d439aa37e8ab75fb92593a84c1f00a303b72f7eb",
+    "committed_text_bytes": 10716,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "scenario-red.log",
+    "source_sha256": "f4672ef515896ae3e249fd4f00481f239b94fbcb2bdf28fea1a9ec025cb52408",
+    "source_bytes": 12447,
+    "committed_text_sha256": "949eaf96f264474431042778a2eeb4ab3d0b186ef32f803dcfd1402e9b68eba1",
+    "committed_text_bytes": 12243,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-twins-red.log",
+    "source_sha256": "1945c89f8dc9f716294a4d9e96f90085aa07683a190d83ac24993263865aa9b2",
+    "source_bytes": 3255,
+    "committed_text_sha256": "1d13b13fa37e9d9ad2f973630ab8b0056495b0de56ab3c2f398cddea3d3318af",
+    "committed_text_bytes": 3194,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-inspector-red2.log",
+    "source_sha256": "038bcb6a9c1ae1fbfdff8b12d7cb030e0b0684d1b944e763811dadf61a698ebc",
+    "source_bytes": 1408,
+    "committed_text_sha256": "fb25c3b5a28a55a245d2b852cf8288b57900889cb12b29dc2014193e95ce9a61",
+    "committed_text_bytes": 1378,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-cue-red.log",
+    "source_sha256": "c99e659809636b31b7447d83c27118c92160847ffcf667ff7b4465666811c761",
+    "source_bytes": 4010,
+    "committed_text_sha256": "493fec0857ce4bcc24a88de009508da416f873a5535ad51c0760a532b760ff7a",
+    "committed_text_bytes": 3942,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-ghost-connection-red.log",
+    "source_sha256": "34e214801c67c3ff151f14839aeee7fa75bd656097d216c089532d498d6434ce",
+    "source_bytes": 2541,
+    "committed_text_sha256": "4aee6393acbeb64c47d02e48b025cb7e8811ba2d673b755289a86caba3b6f727",
+    "committed_text_bytes": 2502,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "map-isolated-red.log",
+    "source_sha256": "38adb5190ba0caa221012b72a0b94a72e9bb8e14cd1e299192ae27755494538b",
+    "source_bytes": 1738,
+    "committed_text_sha256": "b1adff9ceb59971c4673c0b2a9f1af4c6da7466a87bd06603d780df0405df0a7",
+    "committed_text_bytes": 1704,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "map-history-invalid-red.log",
+    "source_sha256": "71abb2a1af998ffcdcb22abff6ee94b96f18317dde237d6f96c8a40e60ea1acb",
+    "source_bytes": 1528,
+    "committed_text_sha256": "f5a4366148d3630cf23217b4e23944de3e9d050292f69e9b174baa83d6bb2e9e",
+    "committed_text_bytes": 1494,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "map-v03-disclosure-red.log",
+    "source_sha256": "334b2997111369929cc09adaac9234cf1246e6dfb2b18f618b378ad22397ecaa",
+    "source_bytes": 2481,
+    "committed_text_sha256": "1710966bfeed0ba5c71826f06c26ed98b8fc68ee923f45b94c12e3076e0895a7",
+    "committed_text_bytes": 2442,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "scenario-completion-red.log",
+    "source_sha256": "f29f27373278a5772c0bf39b22c26d50e0ff8f2a61ce674eb9325d6a9e47d328",
+    "source_bytes": 4210,
+    "committed_text_sha256": "5771e0d184faa23d294ac0e48f559dca0ef301c2b12d319665598753129c72d0",
+    "committed_text_bytes": 4138,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "import-handling-red.log",
+    "source_sha256": "5a8b8f9757667d31576480f6d13a64a067b817d4996f1248cd6787d143d039d0",
+    "source_bytes": 2104,
+    "committed_text_sha256": "9e1f00bfcd0d76f9634cbc9ce0bf2d18239b619a5e8a4a7782b8298386e22474",
+    "committed_text_bytes": 2067,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "issue-paging-red.log",
+    "source_sha256": "c0e98deae86463a7d5071cba8e914846f8e831a5c372008842b7f3e35adaead2",
+    "source_bytes": 2097,
+    "committed_text_sha256": "4a896eeec9ce90c99de4d982a59f229b570a3902bb832fd652e5e7b7de85bc7b",
+    "committed_text_bytes": 2058,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "connection-origin-red.log",
+    "source_sha256": "f704d2a91a9b39fd383d60a0d73e3c21ade7afed2972078eff88118332cc06ce",
+    "source_bytes": 1900,
+    "committed_text_sha256": "2083e9755fe33ae1001a45582698bbf09f62b0a9e01c57b66a3eaaa115436078",
+    "committed_text_bytes": 1868,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "connection-origin-red2.log",
+    "source_sha256": "9057a309d82221f9ca5e76271b155938628100ab5cc981a6ea3433fe705de4e8",
+    "source_bytes": 2209,
+    "committed_text_sha256": "f8e0588215880a2768819147014533af6a96a026885a42c796faeca6f33a4636",
+    "committed_text_bytes": 2170,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "planned-origin-red.log",
+    "source_sha256": "c4f93a7f72d251908665439932082fe798f4b05715f5954d087528524bce6719",
+    "source_bytes": 2401,
+    "committed_text_sha256": "cc4af2ca860dcb884f3aba356d79407417e17147443664e75a2bd981224ceb9e",
+    "committed_text_bytes": 2364,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "editor-hidden-route-red.log",
+    "source_sha256": "15b79a3663d9992bccb839041083b6659b22bc669eda02a7d45f68acc3ce5cba",
+    "source_bytes": 7014,
+    "committed_text_sha256": "a43186eae305cad8b6df554fa7b41e113824a496b3f49f6e0c821e18880a5c33",
+    "committed_text_bytes": 6884,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  },
+  {
+    "name": "provider-choice-red.log",
+    "source_sha256": "e28eb24164ae75bcdc853070357e4cbd1dc92d978606eab0e901d318d1b2b73d",
+    "source_bytes": 2155,
+    "committed_text_sha256": "8aa92b5f0d25d7033acf21bc83b31e1af08ffdfa6cc94072e063daed653af59b",
+    "committed_text_bytes": 2118,
+    "normalization": "ANSI escapes and trailing line whitespace removed; Git text line endings normalized to LF. Source digest refers to the retained original TEMP log."
+  }
+]

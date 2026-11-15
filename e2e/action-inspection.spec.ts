@@ -11,15 +11,15 @@ test("Help distinguishes immediate scenario commands from service drafts and sce
   await page.getByRole("button", { name: "Help", exact: true }).click();
   const help = page.getByRole("dialog", { name: "Using SIM", exact: true });
   await expect(help).toContainText(
-    "For an existing service, Apply changes commits its details, connections and support together as one undo step.",
+    "For an existing service, Apply changes records its details, connections and support together as one undo step.",
+  );
+  await expect(help).toContainText("Add change and Remove take effect immediately; Undo reverses them.");
+  await expect(help).toContainText(
+    "Apply changes records the scenario name, description and a fully specified unadded proposal.",
   );
   await expect(help).toContainText(
-    "Add change and Remove take effect immediately. Use Undo to reverse those commands.",
+    "Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.",
   );
-  await expect(help).toContainText(
-    "Apply changes saves the scenario name, description and any unadded change-builder choice together.",
-  );
-  await expect(help).toContainText("Neither reverses changes already added or removed.");
 });
 
 for (const width of [1366, 320]) {

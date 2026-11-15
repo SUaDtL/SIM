@@ -1091,6 +1091,12 @@ details[open] > summary::after {
   background: transparent;
   color: #9bacbc;
 }
+.file-menu-actions pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
 .workspace-navigation > button[aria-pressed="true"] {
   color: var(--accent);
 }

@@ -139,8 +139,14 @@ test("projected service summary counts incoming and outgoing dependencies separa
     .getByRole("button", { name: "Archive (Coral) · service · projected", exact: true })
     .click();
   const editor = page.getByTestId("editor");
-  await expect(editor).toContainText("0 outgoing dependencies");
-  await expect(editor).toContainText("Used by 1 service");
+  await editor.getByRole("tab", { name: "Connections", exact: true }).click();
+  const outgoing = editor.getByRole("region", { name: "Depends on", exact: true });
+  const incoming = editor.getByRole("region", { name: "Used by services", exact: true });
+  await expect(outgoing.locator(".relationship-row")).toHaveCount(0);
+  await expect(outgoing.getByText("No outgoing dependencies recorded.", { exact: true })).toBeVisible();
+  await expect(incoming.locator(".relationship-row")).toHaveCount(1);
+  await expect(incoming.locator(".relationship-count")).toContainText("of 1");
+  await expect(incoming.getByRole("button", { name: "Backup (Coral)", exact: true })).toBeVisible();
   await expect(editor.getByRole("button", { name: "Apply changes", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });

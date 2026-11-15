@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM release-readiness stabilization · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-RELEASE-READINESS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/release-readiness.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM release-readiness stabilization</h1><p class="deck">Resolve R01–R20 from the main55986ee2 audit and investigate V01–V04, preserving evidence limits and separate release authority.</p><div class="meta"><span>SPEC-RELEASE-READINESS</span><span>Revision 1 · schema 0.3.2</span><span>64 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INTENT-STABILIZATION -->
+<article class="record" id="INTENT-STABILIZATION" data-ca-symbol="INTENT-STABILIZATION" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INTENT-STABILIZATION">INTENT-STABILIZATION</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>sprint</div><div class="field"><span class="label">Outcome</span>Repair established defects, test integrated journeys and provide a reviewable candidate with explicit native/release/participant limits.</div><div class="field"><span class="label">Problem</span>The supplied audit identifies cross-boundary input loss, stale inspection and release-readiness defects after the prior UI repairs.</div></article>
+<!-- CA:END:INTENT-STABILIZATION -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-STABILIZATION -->
+<article class="record" id="SCOPE-STABILIZATION" data-ca-symbol="SCOPE-STABILIZATION" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Stabilize existing workflows on one follow-up branch and PR after merged PR25. Prepare local checkpoints and truthful release qualification.</div></article>
+<!-- CA:END:SCOPE-STABILIZATION -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:EXCL-PRODUCT -->
+<article class="record" id="EXCL-PRODUCT" data-ca-symbol="EXCL-PRODUCT" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#EXCL-PRODUCT">EXCL-PRODUCT</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>G01–G07 are separately tracked capability gaps, not silently added requirements. No merge/publication, schema expansion, runtime network/storage, dependency or framework change.</div></article>
+<!-- CA:END:EXCL-PRODUCT -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APPROACH-STABILIZATION -->
+<article class="record" id="APPROACH-STABILIZATION" data-ca-symbol="APPROACH-STABILIZATION" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APPROACH-STABILIZATION">APPROACH-STABILIZATION</a><h3>Approach</h3></div><div class="field"><span class="label">Choice</span>Reuse existing editor, repository, navigation, map and picker foundations; prevent unfinished-task loss with one coherent Apply boundary.</div><div class="field"><span class="label">Tradeoff</span>Prioritize data integrity and accurate inspection without a new workflow framework.</div></article>
+<!-- CA:END:APPROACH-STABILIZATION -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2><span class="missing">None recorded</span></section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:R01 -->
+<article class="record" id="R01" data-ca-symbol="R01" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R01">R01</a><h3>Apply accepts an unfinished dependency or consumer selection without including it</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R01 -->
+<article class="record" id="SCEN-R01" data-ca-symbol="SCEN-R01" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R01">SCEN-R01</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Edit an existing service. Choose a dependency or consuming organization. Before Add dependency/Add consumer, choose Apply changes, Save file, or Apply and continue.</div><div class="field"><span class="label">Then</span>Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R01 -->
+</div><div class="field"><span class="label">Statement</span>Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R01 -->
+<article class="record" id="VERIFY-R01" data-ca-symbol="VERIFY-R01" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R01">VERIFY-R01</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Exercise consumer and dependency selections separately, with valid/invalid route, name edit, Save file, Apply, Apply-and-continue and Capture. Reopen the saved dataset to verify content. Use Add first as the positive control.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R01 -->
+</div></article>
+<!-- CA:END:R01 -->
+
+<!-- CA:BEGIN:R02 -->
+<article class="record" id="R02" data-ca-symbol="R02" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R02">R02</a><h3>An open route editor is outside draft detection and Apply</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R02 -->
+<article class="record" id="SCEN-R02" data-ca-symbol="SCEN-R02" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R02">SCEN-R02</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>For an existing dependency, open Actions &gt; Edit route, select a different CDS, and use the parent Apply or navigate before Use route.</div><div class="field"><span class="label">Then</span>Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R02 -->
+</div><div class="field"><span class="label">Statement</span>Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R02 -->
+<article class="record" id="VERIFY-R02" data-ca-symbol="VERIFY-R02" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R02">VERIFY-R02</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Change the route without Use route, then test Apply, Save, Back, Cancel and another service. No input disappears through a successful completion.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R02 -->
+</div></article>
+<!-- CA:END:R02 -->
+
+<!-- CA:BEGIN:R03 -->
+<article class="record" id="R03" data-ca-symbol="R03" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R03">R03</a><h3>A pending connection can open saved details or do nothing</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R03 -->
+<article class="record" id="SCEN-R03" data-ca-symbol="SCEN-R03" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R03">SCEN-R03</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Add a dependency to an existing service but do not Apply. Inspect connection from the pending row. Separately stage a route change and inspect it.</div><div class="field"><span class="label">Then</span>Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R03 -->
+</div><div class="field"><span class="label">Statement</span>Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R03 -->
+<article class="record" id="VERIFY-R03" data-ca-symbol="VERIFY-R03" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R03">VERIFY-R03</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Pending addition, pending route edit, pending removal, applied row, and projected row each show accurate state; no action silently returns.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R03 -->
+</div></article>
+<!-- CA:END:R03 -->
+
+<!-- CA:BEGIN:R04 -->
+<article class="record" id="R04" data-ca-symbol="R04" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R04">R04</a><h3>Removing a focus subject hides the remaining map</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R04 -->
+<article class="record" id="SCEN-R04" data-ca-symbol="SCEN-R04" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R04">SCEN-R04</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Focus Depends on a service, then delete that service through Inventory; or switch to a To-Be view that retires it. Return to Map.</div><div class="field"><span class="label">Then</span>When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R04 -->
+</div><div class="field"><span class="label">Statement</span>When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R04 -->
+<article class="record" id="VERIFY-R04" data-ca-symbol="VERIFY-R04" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R04">VERIFY-R04</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Delete, retire, merge away, switch projection and Undo a focused subject. Remaining records stay reachable. Export reflects a valid scope.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R04 -->
+</div></article>
+<!-- CA:END:R04 -->
+
+<!-- CA:BEGIN:R05 -->
+<article class="record" id="R05" data-ca-symbol="R05" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R05">R05</a><h3>The published download is not the reviewed merged application</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R05 -->
+<article class="record" id="SCEN-R05" data-ca-symbol="SCEN-R05" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R05">SCEN-R05</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A new user downloads the published SIM HTML from Releases.</div><div class="field"><span class="label">Then</span>Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R05 -->
+</div><div class="field"><span class="label">Statement</span>Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R05 -->
+<article class="record" id="VERIFY-R05" data-ca-symbol="VERIFY-R05" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R05">VERIFY-R05</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>The exact downloaded artifact has the approved build identity and checksum. Run the user acceptance journeys against those bytes, not a dev server.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R05 -->
+</div></article>
+<!-- CA:END:R05 -->
+
+<!-- CA:BEGIN:R06 -->
+<article class="record" id="R06" data-ca-symbol="R06" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R06">R06</a><h3>An enterprise started in Untitled dataset has no rename path</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R06 -->
+<article class="record" id="SCEN-R06" data-ca-symbol="SCEN-R06" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R06">SCEN-R06</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Start entering a real enterprise in the initial document, save to a meaningful filename, then capture a briefing image.</div><div class="field"><span class="label">Then</span>Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R06 -->
+</div><div class="field"><span class="label">Statement</span>Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R06 -->
+<article class="record" id="VERIFY-R06" data-ca-symbol="VERIFY-R06" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R06">VERIFY-R06</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Rename a populated document, Save As, reopen, and export. References, history and classification remain intact.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R06 -->
+</div></article>
+<!-- CA:END:R06 -->
+
+<!-- CA:BEGIN:R07 -->
+<article class="record" id="R07" data-ca-symbol="R07" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R07">R07</a><h3>Unassigned provider is presented as No provider</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R07 -->
+<article class="record" id="SCEN-R07" data-ca-symbol="SCEN-R07" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R07">SCEN-R07</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Enter a discovered service whose responsible organization is not yet known.</div><div class="field"><span class="label">Then</span>Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R07 -->
+</div><div class="field"><span class="label">Statement</span>Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R07 -->
+<article class="record" id="VERIFY-R07" data-ca-symbol="VERIFY-R07" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R07">VERIFY-R07</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>A service with no provider is described as unrecorded in Inventory, summary, search and detached outputs.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R07 -->
+</div></article>
+<!-- CA:END:R07 -->
+
+<!-- CA:BEGIN:R08 -->
+<article class="record" id="R08" data-ca-symbol="R08" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R08">R08</a><h3>Shared creation copy says service while editing an organization</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R08 -->
+<article class="record" id="SCEN-R08" data-ca-symbol="SCEN-R08" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R08">SCEN-R08</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Edit an organization and create its missing parent organization from Part of.</div><div class="field"><span class="label">Then</span>Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R08 -->
+</div><div class="field"><span class="label">Statement</span>Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R08 -->
+<article class="record" id="VERIFY-R08" data-ca-symbol="VERIFY-R08" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R08">VERIFY-R08</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Create references from a service and a parent organization. Every message names the actual parent and the independently created child.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R08 -->
+</div></article>
+<!-- CA:END:R08 -->
+
+<!-- CA:BEGIN:R09 -->
+<article class="record" id="R09" data-ca-symbol="R09" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R09">R09</a><h3>Picker promises creation where creation is unavailable</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R09 -->
+<article class="record" id="SCEN-R09" data-ca-symbol="SCEN-R09" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R09">SCEN-R09</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Open an empty or no-match source-service/dependency picker that has no create callback.</div><div class="field"><span class="label">Then</span>Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R09 -->
+</div><div class="field"><span class="label">Statement</span>Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R09 -->
+<article class="record" id="VERIFY-R09" data-ca-symbol="VERIFY-R09" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R09">VERIFY-R09</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Empty and no-match states for every picker offer only actions that actually exist.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R09 -->
+</div></article>
+<!-- CA:END:R09 -->
+
+<!-- CA:BEGIN:R10 -->
+<article class="record" id="R10" data-ca-symbol="R10" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R10">R10</a><h3>Projected inspection is a developer-oriented second-class summary</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R10 -->
+<article class="record" id="SCEN-R10" data-ca-symbol="SCEN-R10" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R10">SCEN-R10</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Inspect the same service in As-Is and To-Be/Compare while explaining the proposed enterprise.</div><div class="field"><span class="label">Then</span>Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R10 -->
+</div><div class="field"><span class="label">Statement</span>Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R10 -->
+<article class="record" id="VERIFY-R10" data-ca-symbol="VERIFY-R10" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R10">VERIFY-R10</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>For moved, retired, merged and planned services, a reviewer can identify provider, purpose, support and each changed relationship without entering edit mode or interpreting numeric IDs.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R10 -->
+</div></article>
+<!-- CA:END:R10 -->
+
+<!-- CA:BEGIN:R11 -->
+<article class="record" id="R11" data-ca-symbol="R11" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R11">R11</a><h3>A scenario-change link does not identify a scenario change</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R11 -->
+<article class="record" id="SCEN-R11" data-ca-symbol="SCEN-R11" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R11">SCEN-R11</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Use Inspect originating scenario change N from an unresolved route or collision diagnostic.</div><div class="field"><span class="label">Then</span>Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R11 -->
+</div><div class="field"><span class="label">Statement</span>Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R11 -->
+<article class="record" id="VERIFY-R11" data-ca-symbol="VERIFY-R11" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R11">VERIFY-R11</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Multiple responsible changes in one scenario remain independently addressable. Clicking a change diagnostic reveals that exact change.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R11 -->
+</div></article>
+<!-- CA:END:R11 -->
+
+<!-- CA:BEGIN:R12 -->
+<article class="record" id="R12" data-ca-symbol="R12" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R12">R12</a><h3>Scenario authoring still uses unbounded, preselected control lists</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R12 -->
+<article class="record" id="SCEN-R12" data-ca-symbol="SCEN-R12" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R12">SCEN-R12</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Create a scenario over an enterprise with hundreds of services and many planned changes.</div><div class="field"><span class="label">Then</span>Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R12 -->
+</div><div class="field"><span class="label">Statement</span>Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R12 -->
+<article class="record" id="VERIFY-R12" data-ca-symbol="VERIFY-R12" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R12">VERIFY-R12</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Author and locate changes among 500 services, duplicate names and 100 changes without manual dropdown scanning; no arbitrary default becomes a change without deliberate submission.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R12 -->
+</div></article>
+<!-- CA:END:R12 -->
+
+<!-- CA:BEGIN:R13 -->
+<article class="record" id="R13" data-ca-symbol="R13" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R13">R13</a><h3>Startup failure has no user-facing boundary</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R13 -->
+<article class="record" id="SCEN-R13" data-ca-symbol="SCEN-R13" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R13">SCEN-R13</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Open a damaged/incompatible standalone file or encounter an SQLite/WASM initialization failure.</div><div class="field"><span class="label">Then</span>Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R13 -->
+</div><div class="field"><span class="label">Statement</span>Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R13 -->
+<article class="record" id="VERIFY-R13" data-ca-symbol="VERIFY-R13" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R13">VERIFY-R13</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Inject boot/WASM failure in the exact built offline HTML and verify a visible, accessible failure state and an actionable recovery instruction.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R13 -->
+</div></article>
+<!-- CA:END:R13 -->
+
+<!-- CA:BEGIN:R14 -->
+<article class="record" id="R14" data-ca-symbol="R14" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R14">R14</a><h3>The normal Save shortcut is not wired to dataset saving</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R14 -->
+<article class="record" id="SCEN-R14" data-ca-symbol="SCEN-R14" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R14">SCEN-R14</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Use Ctrl+S or Command+S while working with a local document.</div><div class="field"><span class="label">Then</span>Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R14 -->
+</div><div class="field"><span class="label">Statement</span>Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R14 -->
+<article class="record" id="VERIFY-R14" data-ca-symbol="VERIFY-R14" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R14">VERIFY-R14</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Test Ctrl+S/Command+S with clean, dirty, invalid, pending-composer and modal states using the distributed file in supported browsers.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R14 -->
+</div></article>
+<!-- CA:END:R14 -->
+
+<!-- CA:BEGIN:R15 -->
+<article class="record" id="R15" data-ca-symbol="R15" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R15">R15</a><h3>Legacy issues are truncated without a persistent repair surface</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R15 -->
+<article class="record" id="SCEN-R15" data-ca-symbol="SCEN-R15" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R15">SCEN-R15</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Open a structurally readable imported/legacy dataset with more than three semantic issues.</div><div class="field"><span class="label">Then</span>Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R15 -->
+</div><div class="field"><span class="label">Statement</span>Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R15 -->
+<article class="record" id="VERIFY-R15" data-ca-symbol="VERIFY-R15" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R15">VERIFY-R15</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Open a fixture with at least five issues; every issue remains discoverable after another edit and can be traced to its records.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R15 -->
+</div></article>
+<!-- CA:END:R15 -->
+
+<!-- CA:BEGIN:R16 -->
+<article class="record" id="R16" data-ca-symbol="R16" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R16">R16</a><h3>A successful-change error suggests reopening without first protecting work</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R16 -->
+<article class="record" id="SCEN-R16" data-ca-symbol="SCEN-R16" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R16">SCEN-R16</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A repository change succeeds but part of the presentation fails to refresh.</div><div class="field"><span class="label">Then</span>Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R16 -->
+</div><div class="field"><span class="label">Statement</span>Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R16 -->
+<article class="record" id="VERIFY-R16" data-ca-symbol="VERIFY-R16" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R16">VERIFY-R16</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Inject a subscriber/rendering failure after a successful mutation. Recovery instructions and actions preserve applied unsaved data.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R16 -->
+</div></article>
+<!-- CA:END:R16 -->
+
+<!-- CA:BEGIN:R17 -->
+<article class="record" id="R17" data-ca-symbol="R17" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R17">R17</a><h3>Navigation records the outer editor scroll, not the editing body</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R17 -->
+<article class="record" id="SCEN-R17" data-ca-symbol="SCEN-R17" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R17">SCEN-R17</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Scroll deeply within a service editor, navigate through a resolved edit, then use Back to restore the editing context.</div><div class="field"><span class="label">Then</span>Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R17 -->
+</div><div class="field"><span class="label">Statement</span>Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R17 -->
+<article class="record" id="VERIFY-R17" data-ca-symbol="VERIFY-R17" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R17">VERIFY-R17</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Record inner scrollTop and focused control before a deep-edit navigation. Back restores the correct section, inner scroll and meaningful focus without resurrecting discarded data.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R17 -->
+</div></article>
+<!-- CA:END:R17 -->
+
+<!-- CA:BEGIN:R18 -->
+<article class="record" id="R18" data-ca-symbol="R18" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R18">R18</a><h3>Help and entry documentation retain misleading or implementation-level language</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R18 -->
+<article class="record" id="SCEN-R18" data-ca-symbol="SCEN-R18" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R18">SCEN-R18</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A new solutions engineer follows the bundled instructions to begin a real assessment.</div><div class="field"><span class="label">Then</span>Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R18 -->
+</div><div class="field"><span class="label">Statement</span>Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R18 -->
+<article class="record" id="VERIFY-R18" data-ca-symbol="VERIFY-R18" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R18">VERIFY-R18</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>A first-time user can explain what Apply, Save, As-Is and To-Be mean and can begin a real named enterprise without following developer setup.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R18 -->
+</div></article>
+<!-- CA:END:R18 -->
+
+<!-- CA:BEGIN:R19 -->
+<article class="record" id="R19" data-ca-symbol="R19" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R19">R19</a><h3>A zero-result filter has no dedicated map empty state</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R19 -->
+<article class="record" id="SCEN-R19" data-ca-symbol="SCEN-R19" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R19">SCEN-R19</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Combine valid Network and Category filters that match no services in a populated dataset.</div><div class="field"><span class="label">Then</span>Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R19 -->
+</div><div class="field"><span class="label">Statement</span>Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R19 -->
+<article class="record" id="VERIFY-R19" data-ca-symbol="VERIFY-R19" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R19">VERIFY-R19</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>Each empty state names its cause, offers the appropriate action and preserves saved positions.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R19 -->
+</div></article>
+<!-- CA:END:R19 -->
+
+<!-- CA:BEGIN:R20 -->
+<article class="record" id="R20" data-ca-symbol="R20" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#R20">R20</a><h3>About exposes the database engine version but not the application build</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Release-readiness stabilization from the supplied audit.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-STABILIZATION">SCOPE-STABILIZATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-R20 -->
+<article class="record" id="SCEN-R20" data-ca-symbol="SCEN-R20" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-R20">SCEN-R20</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A user reports a problem from a copied standalone HTML file.</div><div class="field"><span class="label">Then</span>Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.</div><div class="field"><span class="label">When</span>Exercise the receiving offline built app.</div></article>
+<!-- CA:END:SCEN-R20 -->
+</div><div class="field"><span class="label">Statement</span>Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-R20 -->
+<article class="record" id="VERIFY-R20" data-ca-symbol="VERIFY-R20" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-R20">VERIFY-R20</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observe a production-layer failing regression before fixing confirmed defects.</div><div class="field"><span class="label">Oracle</span>The distributed artifact identifies itself accurately even offline, and the identity matches the release manifest/checksum.</div><div class="field"><span class="label">Planned target</span>Focused regressions, full npm run check, independent review and exact-head CI.</div></article>
+<!-- CA:END:VERIFY-R20 -->
+</div></article>
+<!-- CA:END:R20 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121</div><div class="field"><span class="label">Observed date</span>2026-11-15</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/**</li><li>e2e/**</li><li>vite.config.ts</li><li>README.md</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf<br>Model SHA-256: 0d56aaa23766fb1b4aff1588b2f81ac3ee3881a405241a21f19d3714e8106900</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-RELEASE-READINESS",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "0d56aaa23766fb1b4aff1588b2f81ac3ee3881a405241a21f19d3714e8106900",
+    "normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf",
+    "symbol_count": 64
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "choice": "Reuse existing editor, repository, navigation, map and picker foundations; prevent unfinished-task loss with one coherent Apply boundary.",
+      "id": "APPROACH-STABILIZATION",
+      "tradeoff": "Prioritize data integrity and accurate inspection without a new workflow framework."
+    },
+    "baseline": {
+      "commit": "55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121",
+      "observed_date": "2026-11-15",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "constraints": [],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision."
+        ],
+        "id": "R01",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Edit an existing service. Choose a dependency or consuming organization. Before Add dependency/Add consumer, choose Apply changes, Save file, or Apply and continue.",
+            "id": "SCEN-R01",
+            "then": "Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.",
+        "title": "Apply accepts an unfinished dependency or consumer selection without including it",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R01",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Exercise consumer and dependency selections separately, with valid/invalid route, name edit, Save file, Apply, Apply-and-continue and Capture. Reopen the saved dataset to verify content. Use Add first as the positive control.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it."
+        ],
+        "id": "R02",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "For an existing dependency, open Actions \u003e Edit route, select a different CDS, and use the parent Apply or navigate before Use route.",
+            "id": "SCEN-R02",
+            "then": "Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.",
+        "title": "An open route editor is outside draft detection and Apply",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R02",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Change the route without Use route, then test Apply, Save, Back, Cancel and another service. No input disappears through a successful completion.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row."
+        ],
+        "id": "R03",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Add a dependency to an existing service but do not Apply. Inspect connection from the pending row. Separately stage a route change and inspect it.",
+            "id": "SCEN-R03",
+            "then": "Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.",
+        "title": "A pending connection can open saved details or do nothing",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R03",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Pending addition, pending route edit, pending removal, applied row, and projected row each show accurate state; no action silently returns.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map."
+        ],
+        "id": "R04",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Focus Depends on a service, then delete that service through Inventory; or switch to a To-Be view that retires it. Return to Map.",
+            "id": "SCEN-R04",
+            "then": "When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.",
+        "title": "Removing a focus subject hides the remaining map",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R04",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Delete, retire, merge away, switch projection and Undo a focused subject. Remaining records stay reachable. Export reflects a valid scope.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance."
+        ],
+        "id": "R05",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A new user downloads the published SIM HTML from Releases.",
+            "id": "SCEN-R05",
+            "then": "Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Prepare a versioned identifiable candidate and release qualification procedure. Keep the old published release truthful. Publication and actual downloaded-release acceptance remain pending authorization and acceptance.",
+        "title": "The published download is not the reviewed merged application",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R05",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "The exact downloaded artifact has the approved build identity and checksum. Run the user acceptance journeys against those bytes, not a dev server.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear."
+        ],
+        "id": "R06",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Start entering a real enterprise in the initial document, save to a meaningful filename, then capture a briefing image.",
+            "id": "SCEN-R06",
+            "then": "Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.",
+        "title": "An enterprise started in Untitled dataset has no rename path",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R06",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Rename a populated document, Save As, reopen, and export. References, history and classification remain intact.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null."
+        ],
+        "id": "R07",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Enter a discovered service whose responsible organization is not yet known.",
+            "id": "SCEN-R07",
+            "then": "Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.",
+        "title": "Unassigned provider is presented as No provider",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R07",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "A service with no provider is described as unrecorded in Inventory, summary, search and detached outputs.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary."
+        ],
+        "id": "R08",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Edit an organization and create its missing parent organization from Part of.",
+            "id": "SCEN-R08",
+            "then": "Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.",
+        "title": "Shared creation copy says service while editing an organization",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R08",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Create references from a service and a parent organization. Every message names the actual parent and the independently created child.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation."
+        ],
+        "id": "R09",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Open an empty or no-match source-service/dependency picker that has no create callback.",
+            "id": "SCEN-R09",
+            "then": "Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.",
+        "title": "Picker promises creation where creation is unavailable",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R09",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Empty and no-match states for every picker offer only actions that actually exist.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics."
+        ],
+        "id": "R10",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Inspect the same service in As-Is and To-Be/Compare while explaining the proposed enterprise.",
+            "id": "SCEN-R10",
+            "then": "Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.",
+        "title": "Projected inspection is a developer-oriented second-class summary",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R10",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "For moved, retired, merged and planned services, a reviewer can identify provider, purpose, support and each changed relationship without entering edit mode or interpreting numeric IDs.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow."
+        ],
+        "id": "R11",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Use Inspect originating scenario change N from an unresolved route or collision diagnostic.",
+            "id": "SCEN-R11",
+            "then": "Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.",
+        "title": "A scenario-change link does not identify a scenario change",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R11",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Multiple responsible changes in one scenario remain independently addressable. Clicking a change diagnostic reveals that exact change.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard."
+        ],
+        "id": "R12",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Create a scenario over an enterprise with hundreds of services and many planned changes.",
+            "id": "SCEN-R12",
+            "then": "Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.",
+        "title": "Scenario authoring still uses unbounded, preselected control lists",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R12",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Author and locate changes among 500 services, duplicate names and 100 changes without manual dropdown scanning; no arbitrary default becomes a change without deliberate submission.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased."
+        ],
+        "id": "R13",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Open a damaged/incompatible standalone file or encounter an SQLite/WASM initialization failure.",
+            "id": "SCEN-R13",
+            "then": "Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.",
+        "title": "Startup failure has no user-facing boundary",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R13",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Inject boot/WASM failure in the exact built offline HTML and verify a visible, accessible failure state and an actionable recovery instruction.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported."
+        ],
+        "id": "R14",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Use Ctrl+S or Command+S while working with a local document.",
+            "id": "SCEN-R14",
+            "then": "Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.",
+        "title": "The normal Save shortcut is not wired to dataset saving",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R14",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Test Ctrl+S/Command+S with clean, dirty, invalid, pending-composer and modal states using the distributed file in supported browsers.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues."
+        ],
+        "id": "R15",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Open a structurally readable imported/legacy dataset with more than three semantic issues.",
+            "id": "SCEN-R15",
+            "then": "Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.",
+        "title": "Legacy issues are truncated without a persistent repair surface",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R15",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Open a fixture with at least five issues; every issue remains discoverable after another edit and can be traced to its records.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read."
+        ],
+        "id": "R16",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A repository change succeeds but part of the presentation fails to refresh.",
+            "id": "SCEN-R16",
+            "then": "Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.",
+        "title": "A successful-change error suggests reopening without first protecting work",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R16",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Inject a subscriber/rendering failure after a successful mutation. Recovery instructions and actions preserve applied unsaved data.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions."
+        ],
+        "id": "R17",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Scroll deeply within a service editor, navigate through a resolved edit, then use Back to restore the editing context.",
+            "id": "SCEN-R17",
+            "then": "Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.",
+        "title": "Navigation records the outer editor scroll, not the editing body",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R17",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Record inner scrollTop and focused control before a deep-edit navigation. Back restores the correct section, inner scroll and meaningful focus without resurrecting discarded data.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command."
+        ],
+        "id": "R18",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A new solutions engineer follows the bundled instructions to begin a real assessment.",
+            "id": "SCEN-R18",
+            "then": "Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.",
+        "title": "Help and entry documentation retain misleading or implementation-level language",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R18",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "A first-time user can explain what Apply, Save, As-Is and To-Be mean and can begin a real named enterprise without following developer setup.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes."
+        ],
+        "id": "R19",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Combine valid Network and Category filters that match no services in a populated dataset.",
+            "id": "SCEN-R19",
+            "then": "Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.",
+        "title": "A zero-result filter has no dedicated map empty state",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R19",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "Each empty state names its cause, offers the appropriate action and preserves saved positions.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Release-readiness stabilization from the supplied audit."
+        },
+        "guarantees": [
+          "Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default."
+        ],
+        "id": "R20",
+        "intent_refs": [
+          "SCOPE-STABILIZATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A user reports a problem from a copied standalone HTML file.",
+            "id": "SCEN-R20",
+            "then": "Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.",
+            "when": "Exercise the receiving offline built app."
+          }
+        ],
+        "statement": "Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.",
+        "title": "About exposes the database engine version but not the application build",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-R20",
+          "method": "automated_and_review",
+          "negative_control": "Observe a production-layer failing regression before fixing confirmed defects.",
+          "oracle": "The distributed artifact identifies itself accurately even offline, and the identity matches the release manifest/checksum.",
+          "planned_target": "Focused regressions, full npm run check, independent review and exact-head CI."
+        }
+      }
+    ],
+    "decisions": [],
+    "governs": [
+      "src/**",
+      "e2e/**",
+      "vite.config.ts",
+      "README.md"
+    ],
+    "intent": {
+      "caller": "sprint",
+      "id": "INTENT-STABILIZATION",
+      "outcome": "Repair established defects, test integrated journeys and provide a reviewable candidate with explicit native/release/participant limits.",
+      "problem": "The supplied audit identifies cross-boundary input loss, stale inspection and release-readiness defects after the prior UI repairs."
+    },
+    "non_goals": [
+      {
+        "id": "EXCL-PRODUCT",
+        "statement": "G01–G07 are separately tracked capability gaps, not silently added requirements. No merge/publication, schema expansion, runtime network/storage, dependency or framework change."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-STABILIZATION",
+        "statement": "Stabilize existing workflows on one follow-up branch and PR after merged PR25. Prepare local checkpoints and truthful release qualification."
+      }
+    ],
+    "sections": [],
+    "sources": [],
+    "summary": "Resolve R01–R20 from the main55986ee2 audit and investigate V01–V04, preserving evidence limits and separate release authority.",
+    "title": "SIM release-readiness stabilization"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/release-readiness.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 1,
+  "schema_version": "0.3.2",
+  "slug": "release-readiness"
+}
+</script>
+</body></html>

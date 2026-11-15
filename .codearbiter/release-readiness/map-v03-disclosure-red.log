@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+(node:67764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-map.spec.ts:185:1 › V03 seven-network geometry preserves the one recorded relationship even when a line crosses another container (5.5s)
+
+
+  1) [chrome] › e2e\readiness-map.spec.ts:185:1 › V03 seven-network geometry preserves the one recorded relationship even when a line crosses another container
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('map-legend')
+    Expected substring: "Crossing another network box does not imply transit"
+    Received string:    "Arrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verified"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('map-legend') with timeout 5000ms
+      - waiting for getByTestId('map-legend')
+        14 × locator resolved to <p class="map-legend" data-testid="map-legend">…</p>
+           - unexpected value "Arrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verified"
+
+
+      249 |     expect(geometry.edges[0]?.target).toBe(`service-${String(target.id)}`);
+      250 |     await expect(page.getByTestId("map-legend")).toContainText("Recorded dependencies; connectivity is not verified");
+    > 251 |     await expect(page.getByTestId("map-legend")).toContainText("Crossing another network box does not imply transit");
+          |                                                  ^
+      252 |     await page.screenshot({ path: info.outputPath("seven-network-route.png"), fullPage: true });
+      253 |     await writeFile(info.outputPath("seven-network-geometry.json"), JSON.stringify(geometry, null, 2));
+      254 |     expect(await savedSnapshot(page)).toEqual(snapshot);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:251:50
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-v03-disclosure-red-results\readiness-map-V03-seven-ne-18cf1-e-crosses-another-container-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-map.spec.ts:185:1 › V03 seven-network geometry preserves the one recorded relationship even when a line crosses another container

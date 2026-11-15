@@ -1,4 +1,6 @@
 import type { Database } from "sql.js";
+import { buildInformation } from "./build-info";
+import { LATEST_VERSION } from "./db/migrate";
 import {
   createDataset,
   DatasetError,
@@ -6,6 +8,7 @@ import {
   exportDataset,
   inspectDatasetSemantics,
   openDataset,
+  type DatasetIssue,
 } from "./db/dataset";
 import { configureSqliteWasm, dataUrlToBytes, sqliteVersion } from "./db/sqlite";
 import { DEMO_NAME, populateDemo } from "./demo/demo";
@@ -37,6 +40,9 @@ import type { ImportReceipt } from "./ui/import-receipt";
 import { openHelp } from "./ui/help";
 import { installMenuDismissal } from "./ui/menu-dismissal";
 import { createWorkspace, type Workspace } from "./ui/workspace";
+import { button as uiButton, el, focusPagingControl } from "./ui/dom";
+import { descriptor, type EntityType } from "./ui/forms";
+import type { EntityTarget } from "./ui/relations";
 
 interface State {
   db: Database;
@@ -72,6 +78,20 @@ let recoveryIntent = false;
 let recoveryRequest = 0;
 const undoButton = button("Undo", () => travel("undo"));
 const redoButton = button("Redo", () => travel("redo"));
+const refreshViewButton = button("Refresh view", () => {
+  try {
+    workspace.refreshView();
+    viewRefreshFailed = false;
+    show("View refreshed. Your applied changes and active draft were retained.");
+  } catch {
+    viewRefreshFailed = true;
+    show("");
+  }
+});
+refreshViewButton.hidden = true;
+const dataIssuesButton = button("Review data issues", () => {
+  openDataIssues();
+});
 const retryRecoveryButton = button("Retry recovery", () => state.recovery?.controller.flush() ?? Promise.resolve());
 const stopRecoveryButton = button("Stop recovery", () => {
   stopRecovery(state);
@@ -89,6 +109,7 @@ function showRecoveryStatus(text: string, failed = false): void {
 
 function render(): void {
   if (!workspaceReady) return;
+  state.name = state.repo.datasetName();
   const where = state.session.fileName() ?? "not saved yet";
   status.textContent = `${state.name} | ${where} | ${state.session.fileStatus()}`;
   draftStatus.textContent = workspace.hasPendingDraft() ? workspace.pendingDraftLabel() : "";
@@ -113,12 +134,143 @@ async function travel(direction: "undo" | "redo"): Promise<void> {
 }
 
 function show(text: string, severity: "neutral" | "error" = "neutral"): void {
+  refreshViewButton.hidden = !viewRefreshFailed;
   message.dataset["severity"] = viewRefreshFailed ? "error" : severity;
   message.textContent =
     text +
     (viewRefreshFailed
-      ? `${text ? " " : ""}The change succeeded, but part of the view did not refresh. Try selecting another item or reopening the file.`
+      ? `${text ? " " : ""}The change succeeded, but part of the view did not refresh. Use Refresh view first. If reopening is necessary, use Save As to protect your applied changes in a separate file before opening it. Unapplied form text is not in that file.`
       : "");
+}
+
+function issueTarget(issue: DatasetIssue): EntityTarget | null {
+  const id = Number(issue.rowId.split(":")[0]);
+  if (!Number.isSafeInteger(id)) return null;
+  if (issue.table === "scenario_change") {
+    const change = state.repo.snapshot().scenarioChanges.find((item) => item.id === id);
+    return change ? { type: "scenario", id: change.scenarioId, changeId: id } : null;
+  }
+  const type: EntityType | undefined =
+    issue.table === "service_dependency"
+      ? "service"
+      : issue.table === "cds"
+        ? "cds"
+        : issue.table === "organization"
+          ? "organization"
+          : undefined;
+  return type ? { type, id } : null;
+}
+
+/** A session-visible view of every current semantic issue; opening never repairs the file. */
+function openDataIssues(): void {
+  const owner = state;
+  const origin = fileActionOrigin();
+  const dialog = el("dialog", { "aria-label": "Data issues" });
+  const heading = el("h2", { tabindex: "-1" }, "Data issues");
+  const rows = el("ul", { class: "rows" });
+  const count = el("p", { role: "status" });
+  let page = 0;
+  const close = (): void => {
+    dialog.close();
+  };
+  const previous = uiButton("Previous issues", () => {
+    page--;
+    draw();
+    focusPagingControl(previous, next);
+  });
+  const next = uiButton("Next issues", () => {
+    page++;
+    draw();
+    focusPagingControl(next, previous);
+  });
+  function draw(): void {
+    if (state !== owner) {
+      close();
+      return;
+    }
+    const issues = inspectDatasetSemantics(owner.db).filter((issue) => issue.severity === "legacy");
+    page = Math.min(Math.max(page, 0), Math.max(0, Math.ceil(issues.length / 20) - 1));
+    rows.replaceChildren(
+      ...issues.slice(page * 20, page * 20 + 20).map((issue) => {
+        const target = issueTarget(issue);
+        const record = target
+          ? descriptor(target.type)
+              .list(owner.repo)
+              .find((item) => item.id === target.id)
+          : undefined;
+        const label = record?.name ?? "affected record";
+        return el(
+          "li",
+          { "data-testid": "data-issue-row" },
+          el("p", {}, `${issue.code.replaceAll("_", " ")} — ${label}: ${issue.witness}`),
+          ...(target
+            ? [
+                uiButton(`Review ${label}`, () => {
+                  close();
+                  if (state === owner) void workspace.inspectRecord(target);
+                }),
+              ]
+            : []),
+        );
+      }),
+    );
+    count.textContent = issues.length
+      ? `${String(issues.length)} current data issues. Showing ${String(page * 20 + 1)}–${String(Math.min((page + 1) * 20, issues.length))}.`
+      : "No current data issues.";
+    previous.disabled = page === 0;
+    next.disabled = (page + 1) * 20 >= issues.length;
+  }
+  dialog.append(
+    heading,
+    el(
+      "p",
+      {},
+      "These existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.",
+    ),
+    count,
+    rows,
+    el("div", { class: "actions" }, previous, next, uiButton("Close", close)),
+  );
+  const stop = owner.repo.subscribe(draw);
+  dialog.addEventListener(
+    "close",
+    () => {
+      stop();
+      dialog.remove();
+      origin?.focus();
+    },
+    { once: true },
+  );
+  document.body.append(dialog);
+  draw();
+  dialog.showModal();
+  heading.focus();
+}
+
+function onRename(): void {
+  const owner = state;
+  const value = window.prompt(
+    "Dataset title (the file name is chosen separately with Save As)",
+    owner.repo.datasetName(),
+  );
+  if (value === null) return;
+  try {
+    try {
+      owner.repo.renameDataset(value);
+    } catch (error) {
+      if (!(error instanceof SensitiveInputWarning)) throw error;
+      if (!window.confirm(error.message) || state !== owner) return;
+      owner.repo.renameDataset(value, { confirmSensitive: true });
+    }
+    show("Dataset renamed. Save file to retain the new title.");
+  } catch (error) {
+    show(
+      error instanceof ValidationError
+        ? error.message
+        : "Could not rename the dataset. Your current title is retained.",
+      "error",
+    );
+  }
 }
 
 /** Every successful write through the repository leaves the dataset with unsaved changes. */
@@ -348,16 +500,8 @@ async function onOpen(): Promise<void> {
     const issues = inspectDatasetSemantics(candidate).filter((issue) => issue.severity === "legacy");
     await installCandidate(candidate, request, picked.fileName, picked.handle, true);
     if (state.db === candidate && issues.length > 0) {
-      const labels: Record<string, string> = {
-        ORG_CYCLE: "organization cycle",
-        CDS_ARITY: "CDS network count",
-        CDS_ROUTE: "CDS route",
-        SCENARIO_TARGET: "scenario target",
-        SCENARIO_CHAIN: "scenario chain",
-      };
-      const preview = issues.slice(0, 3).map((issue) => `${labels[issue.code] ?? issue.code}: ${issue.witness}`);
       show(
-        `Opened with ${String(issues.length)} existing data issue${issues.length === 1 ? "" : "s"}. ${preview.join("; ")}${issues.length > 3 ? "; more issues remain" : ""}. Review and repair affected records; the file was not rewritten.`,
+        `Opened with ${String(issues.length)} existing data issue${issues.length === 1 ? "" : "s"}. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten.`,
       );
     }
   } catch (error) {
@@ -526,7 +670,7 @@ async function settleSavePlacement(owner: State): Promise<boolean> {
   return true;
 }
 
-function button(label: string, action: () => Promise<unknown>): HTMLButtonElement {
+function button(label: string, action: () => unknown): HTMLButtonElement {
   const b = document.createElement("button");
   b.type = "button";
   b.textContent = label;
@@ -585,6 +729,8 @@ async function boot(): Promise<void> {
     button("Open", onOpen),
     button("Import CSV", onImport),
     button("Save As", () => onSave(true)),
+    button("Rename dataset", onRename),
+    dataIssuesButton,
     button("Choose recovery file", onRecovery),
     stopRecoveryButton,
     button("Banner caveat", onCaveat),
@@ -614,7 +760,23 @@ async function boot(): Promise<void> {
   document.getElementById("sim-license-dialog")?.addEventListener("close", () => {
     if (licenseOrigin?.isConnected) licenseOrigin.focus();
   });
-  aboutBody.append(version, aboutDescription, button("Open demo", onDemo), button("Licenses and notices", licenses));
+  const supportInformation = `${buildInformation()}\nData format ${String(LATEST_VERSION)}\nSQLite ${sqliteVersion(db)}\nBrowser: ${navigator.userAgent}\nOffline single-file application. No inventory contents included.`;
+  const identity = el("pre", { "data-testid": "build-information", tabindex: "0" }, supportInformation);
+  aboutBody.append(
+    identity,
+    button("Copy support information", async () => {
+      try {
+        await navigator.clipboard.writeText(supportInformation);
+        show("Support information copied. No inventory contents included.");
+      } catch {
+        show("Clipboard is unavailable. Select and copy the support information in About.");
+      }
+    }),
+    version,
+    aboutDescription,
+    button("Open demo", onDemo),
+    button("Licenses and notices", licenses),
+  );
   about.append(aboutTitle, aboutBody);
   const helpButton = button("Help", () => {
     openHelp({
@@ -640,19 +802,25 @@ async function boot(): Promise<void> {
   const documentStatus = document.createElement("div");
   documentStatus.className = "document-status";
   status.setAttribute("role", "status");
-  documentStatus.append(status, draftStatus, recoveryStatus, retryRecoveryButton, message);
+  documentStatus.append(status, draftStatus, recoveryStatus, retryRecoveryButton, message, refreshViewButton);
   header.append(title, toolbar, documentStatus);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
+  app.removeAttribute("aria-busy");
   installMenuDismissal(document);
   // Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) undo and redo dataset edits, except while typing in a field,
   // where the browser's own text undo applies.
   document.addEventListener("keydown", (event) => {
     if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === "s" && !event.shiftKey) {
+      event.preventDefault();
+      if (!event.repeat && !document.querySelector("dialog[open]")) void onSave(false);
+      return;
+    }
     // A modal dialog (Import CSV) owns the keyboard; undoing behind it would change what it previews.
     if (document.querySelector("dialog[open]")) return;
     const target = event.target as HTMLElement | null;
     if (target?.closest("input, textarea, select, [contenteditable]")) return;
-    const key = event.key.toLowerCase();
     if (key === "z" && !event.shiftKey) void travel("undo");
     else if (key === "y" || (key === "z" && event.shiftKey)) void travel("redo");
     else return;
@@ -665,4 +833,22 @@ async function boot(): Promise<void> {
   render();
 }
 
-void boot();
+void boot().catch(() => {
+  const app = document.getElementById("app");
+  if (!app) return;
+  app.removeAttribute("aria-busy");
+  app.replaceChildren(
+    el(
+      "section",
+      { role: "alert", tabindex: "-1" },
+      el("h1", {}, "SIM could not start"),
+      el(
+        "p",
+        {},
+        "Your dataset files remain on disk. Open an intact SIM HTML file in Edge or Chrome and then reopen your dataset. Keep your original dataset files; do not overwrite them while troubleshooting.",
+      ),
+      el("pre", {}, buildInformation()),
+    ),
+  );
+  app.querySelector<HTMLElement>("[role=alert]")?.focus();
+});

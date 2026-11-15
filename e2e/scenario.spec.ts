@@ -1,3 +1,4 @@
+import { chooseReference } from "./helpers/usability";
 import { openFileMenu, showMap, showInventory, editSelected } from "./helpers/usability";
 import { showCaptureOptions, showAbout } from "./helpers/map-controls";
 import { expect, type Page, test } from "@playwright/test";
@@ -207,15 +208,15 @@ test("signed baseline and planned services open a read-only projection, then Edi
   if (!box) throw new Error("map canvas has no size");
   await page.mouse.click(box.x + point.x, box.y + point.y);
   const editor = page.getByTestId("editor");
-  await expect(editor.getByRole("heading", { name: "Signed baseline" })).toBeVisible();
-  await expect(editor).toContainText("To-Be projection: Plan");
-  await expect(editor).toContainText("Existing As-Is record in this projection.");
+  await expect(editor.getByRole("heading", { name: "Service: Signed baseline", exact: true })).toBeVisible();
+  await expect(editor).toContainText("To-Be: Plan");
+  await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toBeVisible();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveCount(0);
 
   const find = page.getByLabel("Find on map");
   await find.fill("Planned (NIPR)");
   await find.press("Enter");
-  await expect(editor.getByRole("heading", { name: "Planned" })).toBeVisible();
+  await expect(editor.getByRole("heading", { name: "Service: Planned", exact: true })).toBeVisible();
   await expect(editor).toContainText("Planned service added by this scenario.");
   await expect(editor.getByRole("button", { name: "Edit As-Is" })).toHaveCount(0);
 
@@ -287,11 +288,11 @@ test("authors scenario changes in the editor, one undo step each, with the banne
   await editor.getByLabel("Name", { exact: true }).fill("Plan");
   await editor.getByRole("button", { name: "Add scenario" }).click();
   await editSelected(page);
-  await expect(editor.getByText("No changes yet: this scenario matches As-Is.")).toBeVisible();
+  await expect(editor.getByText("No proposed changes yet.")).toBeVisible();
 
   await editor.getByLabel("Change", { exact: true }).selectOption({ label: "Add a service" });
   await editor.getByLabel("New service name").fill("Portal");
-  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Enterprise" });
+  await chooseReference(page, "scenario network", "Enterprise");
   await editor.getByLabel("Marking", { exact: true }).selectOption({ label: "SECRET" });
   await editor.getByRole("button", { name: "Add change" }).click();
   const rows = editor.getByTestId("scenario-changes");
@@ -299,15 +300,18 @@ test("authors scenario changes in the editor, one undo step each, with the banne
   await expect(page.getByTestId("banner-top")).toContainText("SECRET");
 
   await editor.getByLabel("Change", { exact: true }).selectOption({ label: "Merge a service into another" });
-  await editor.getByLabel("Service", { exact: true }).selectOption({ label: "Chat (Operations)" });
-  await editor.getByLabel("Into", { exact: true }).selectOption({ label: "Portal (Enterprise, added)" });
+  await chooseReference(page, "scenario source service", "Chat (Operations)");
+  await chooseReference(page, "scenario merge target", "Portal (Enterprise, added)");
   await editor.getByRole("button", { name: "Add change" }).click();
   await expect(rows).toContainText("Merge Chat (Operations) into Portal (Enterprise, added)");
 
   // A merged-away service cannot be retired as well.
   await editor.getByLabel("Change", { exact: true }).selectOption({ label: "Retire a service" });
   await expect(
-    editor.getByLabel("Service", { exact: true }).getByRole("option", { name: "Chat (Operations)" }),
+    editor
+      .getByLabel("Service", { exact: true })
+      .locator("option")
+      .filter({ hasText: /^Chat \(Operations\)$/ }),
   ).toHaveCount(0);
 
   await page.getByRole("button", { name: "Undo" }).click();

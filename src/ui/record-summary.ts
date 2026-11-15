@@ -71,9 +71,13 @@ const labels: Record<EntityType, string> = {
   scenario: "Scenario",
 };
 
-/** Baseline presenter. Projected inspection must use its origin-aware, read-only presenter. */
-export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): RecordSummaryModel | null {
-  if ("projection" in snapshot) return null;
+/** Projected callers must explicitly opt into read-only presentation and retain origin-aware navigation. */
+export function recordSummaryModel(
+  snapshot: Snapshot,
+  target: EntityTarget,
+  options: { readonly readOnly?: boolean; readonly context?: string } = {},
+): RecordSummaryModel | null {
+  if ("projection" in snapshot && !options.readOnly) return null;
   const records = {
     service: snapshot.services,
     network: snapshot.networks,
@@ -320,11 +324,20 @@ export function recordSummaryModel(snapshot: Snapshot, target: EntityTarget): Re
       });
     }
   }
-  return { title: `${labels[target.type]}: ${record.name}`, context, fields, groups, editScope };
+  return {
+    title: `${labels[target.type]}: ${record.name}`,
+    context: options.context ?? context,
+    fields,
+    groups,
+    editScope: options.readOnly ? null : editScope,
+  };
 }
 
 export interface RecordSummaryOptions {
   readonly repo: Repository;
+  readonly snapshot?: Snapshot;
+  readonly readOnly?: boolean;
+  readonly context?: string;
   readonly target: EntityTarget;
   readonly onNavigate: (target: EntityTarget) => void;
   readonly onEdit?: (section?: SummarySection) => void;
@@ -338,7 +351,7 @@ export interface RecordSummaryOptions {
 let sequence = 0;
 
 export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
-  const model = recordSummaryModel(ctx.repo.snapshot(), ctx.target);
+  const model = recordSummaryModel(ctx.snapshot ?? ctx.repo.snapshot(), ctx.target, ctx);
   if (!model)
     return el(
       "section",
@@ -396,7 +409,7 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
     ]),
   );
   const actions = el("div", { class: "record-summary-actions" });
-  if (ctx.onEdit)
+  if (ctx.onEdit && !ctx.readOnly)
     actions.append(
       button(
         "Edit",
@@ -406,7 +419,7 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
         { class: "primary", "data-summary-action": "edit", "aria-label": `Edit ${ctx.target.type}` },
       ),
     );
-  if (ctx.onSimilar || ctx.onDelete) {
+  if (!ctx.readOnly && (ctx.onSimilar || ctx.onDelete)) {
     const more = el(
       "details",
       { class: "record-secondary-actions" },

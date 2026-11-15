@@ -1,0 +1,30 @@
+
+Running 1 test using 1 worker
+
+(node:59340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-scenario.spec.ts:80:1 › R10 projected connection origins link to each exact responsible change (30.0s)
+
+
+  1) [chrome] › e2e\readiness-scenario.spec.ts:80:1 › R10 projected connection origins link to each exact responsible change
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Inspect connection', exact: true })
+
+
+      86 |   const editor=page.getByTestId("editor");
+      87 |   await editor.getByRole("tab",{name:"Connections",exact:true}).click();
+    > 88 |   await editor.getByRole("region",{name:"Depends on",exact:true}).getByRole("button",{name:"Inspect connection",exact:true}).click();
+         |                                                                                                                              ^
+      89 |   const inspector=page.getByRole("dialog",{name:"Connection inspector",exact:true});
+      90 |   await expect(inspector).not.toContainText("As-Is service #");
+      91 |   await expect(inspector.getByRole("button",{name:/^Review:/})).toHaveCount(2);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:88:126
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\connection-origin-red-results\readiness-scenario-R10-pro-8f4e5-ch-exact-responsible-change-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-scenario.spec.ts:80:1 › R10 projected connection origins link to each exact responsible change

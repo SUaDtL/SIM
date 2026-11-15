@@ -169,6 +169,8 @@ async function exerciseLayout(page: Page, info: TestInfo, label: string): Promis
   await expect(editor.getByRole("button", { name: "Choose Depends on service", exact: true })).toContainText(
     longName("incoming", 29),
   );
+  // Finish this connection task before exercising the independent field-validation boundary.
+  await editor.getByRole("button", { name: "Add dependency", exact: true }).click();
   await editorSection(page, "Details");
   await editor.getByLabel("Name", { exact: true }).fill("");
   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();

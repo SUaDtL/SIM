@@ -1,0 +1,28 @@
+
+Running 1 test using 1 worker
+
+(node:69996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-editor.spec.ts:397:1 › R16 inspector failure after apply does not claim the committed rename was rolled back (743ms)
+
+
+  1) [chrome] › e2e\readiness-editor.spec.ts:397:1 › R16 inspector failure after apply does not claim the committed rename was rolled back
+
+    Error: expect(received).toMatch(expected)
+
+    Expected pattern: /dataset remains open.*Save As/i
+    Received string:  "Something went wrong; nothing was changed."
+
+      423 |   });
+      424 |   expect(retained).toBe(true);
+    > 425 |   expect(message).toMatch(/dataset remains open.*Save As/i);
+          |                   ^
+      426 |   expect(message).not.toContain("nothing was changed");
+      427 | });
+      428 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:425:19
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-inspector-red2-results\readiness-editor-R16-inspe-98d59-tted-rename-was-rolled-back-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-editor.spec.ts:397:1 › R16 inspector failure after apply does not claim the committed rename was rolled back

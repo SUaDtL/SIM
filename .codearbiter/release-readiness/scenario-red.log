@@ -1,0 +1,192 @@
+
+Running 6 tests using 2 workers
+
+(node:52604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination (5.7s)
+  x  1 [msedge] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination (5.7s)
+(node:31628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected (5.6s)
+  x  4 [msedge] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected (5.6s)
+(node:47712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded (6.2s)
+  x  6 [msedge] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded (6.2s)
+
+
+  1) [msedge] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      48 |   const diagnostics = editor.getByTestId("scenario-diagnostics");
+      49 |   await expect(diagnostics).toContainText("1 dependency route is unresolved");
+    > 50 |   await expect(diagnostics.getByRole("button", { name: /^(?:Inspect originating scenario change|Review:)/ })).toHaveCount(2);
+         |                                                                                                               ^
+      51 |   await editor.getByLabel("Description", { exact: true }).fill("Retain independent planning notes");
+      52 |   for (const label of ["Merge Orders (Amber) into Platform (Blue)", "Re-home Identity (Blue) to Green"]) {
+      53 |     await diagnostics.getByRole("button", { name: `Review: ${label}`, exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:50:111
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R11-eac-9b2b6-readable-review-destination-msedge\error-context.md
+
+  2) [msedge] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('Change', { exact: true })
+    Expected: ""
+    Received: "merge"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Change', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Change', { exact: true })
+        14 × locator resolved to <select id="change-kind">…</select>
+           - unexpected value "merge"
+
+
+      62 | test("R12 a fresh scenario builder has no arbitrary operation or record selected", async ({ page }) => {
+      63 |   await loadScenario(page);
+    > 64 |   await expect(page.getByLabel("Change", { exact: true })).toHaveValue("");
+         |                                                            ^
+      65 |   await expect(page.getByTestId("editor-draft-summary")).toHaveText("No unapplied changes");
+      66 |   await page.getByRole("button", { name: "Add change", exact: true }).click();
+      67 |   await expect(page.getByTestId("change-message")).toContainText("Choose a change");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:64:60
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R12-a-f-fe689-peration-or-record-selected-msedge\error-context.md
+
+  3) [msedge] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('scenario-changes').locator('li')
+    Expected: 20
+    Received: 100
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('scenario-changes').locator('li') with timeout 5000ms
+      - waiting for getByTestId('scenario-changes').locator('li')
+        14 × locator resolved to 100 elements
+           - unexpected value "100"
+
+
+      73 |   await loadScenario(page, true);
+      74 |   const rows = page.getByTestId("scenario-changes");
+    > 75 |   await expect(rows.locator("li")).toHaveCount(20);
+         |                                    ^
+      76 |   await expect(page.getByTestId("scenario-change-count")).toContainText("1–20 of 100");
+      77 |   await page.getByRole("button", { name: "Next scenario changes page", exact: true }).click();
+      78 |   await expect(page.getByTestId("scenario-change-count")).toContainText("21–40 of 100");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:75:36
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R12-lar-ac214--are-searchable-and-bounded-msedge\error-context.md
+
+  4) [chrome] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('scenario-diagnostics').getByRole('button', { name: /^(?:Inspect originating scenario change|Review:)/ })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      48 |   const diagnostics = editor.getByTestId("scenario-diagnostics");
+      49 |   await expect(diagnostics).toContainText("1 dependency route is unresolved");
+    > 50 |   await expect(diagnostics.getByRole("button", { name: /^(?:Inspect originating scenario change|Review:)/ })).toHaveCount(2);
+         |                                                                                                               ^
+      51 |   await editor.getByLabel("Description", { exact: true }).fill("Retain independent planning notes");
+      52 |   for (const label of ["Merge Orders (Amber) into Platform (Blue)", "Re-home Identity (Blue) to Green"]) {
+      53 |     await diagnostics.getByRole("button", { name: `Review: ${label}`, exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:50:111
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R11-eac-9b2b6-readable-review-destination-chrome\error-context.md
+
+  5) [chrome] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('Change', { exact: true })
+    Expected: ""
+    Received: "merge"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Change', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Change', { exact: true })
+        14 × locator resolved to <select id="change-kind">…</select>
+           - unexpected value "merge"
+
+
+      62 | test("R12 a fresh scenario builder has no arbitrary operation or record selected", async ({ page }) => {
+      63 |   await loadScenario(page);
+    > 64 |   await expect(page.getByLabel("Change", { exact: true })).toHaveValue("");
+         |                                                            ^
+      65 |   await expect(page.getByTestId("editor-draft-summary")).toHaveText("No unapplied changes");
+      66 |   await page.getByRole("button", { name: "Add change", exact: true }).click();
+      67 |   await expect(page.getByTestId("change-message")).toContainText("Choose a change");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:64:60
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R12-a-f-fe689-peration-or-record-selected-chrome\error-context.md
+
+  6) [chrome] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('scenario-changes').locator('li')
+    Expected: 20
+    Received: 100
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('scenario-changes').locator('li') with timeout 5000ms
+      - waiting for getByTestId('scenario-changes').locator('li')
+        14 × locator resolved to 100 elements
+           - unexpected value "100"
+
+
+      73 |   await loadScenario(page, true);
+      74 |   const rows = page.getByTestId("scenario-changes");
+    > 75 |   await expect(rows.locator("li")).toHaveCount(20);
+         |                                    ^
+      76 |   await expect(page.getByTestId("scenario-change-count")).toContainText("1–20 of 100");
+      77 |   await page.getByRole("button", { name: "Next scenario changes page", exact: true }).click();
+      78 |   await expect(page.getByTestId("scenario-change-count")).toContainText("21–40 of 100");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:75:36
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-red-results\readiness-scenario-R12-lar-ac214--are-searchable-and-bounded-chrome\error-context.md
+
+  6 failed
+    [msedge] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination
+    [msedge] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected
+    [msedge] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+    [chrome] › e2e\readiness-scenario.spec.ts:45:1 › R11 each responsible scenario change has an exact readable review destination
+    [chrome] › e2e\readiness-scenario.spec.ts:62:1 › R12 a fresh scenario builder has no arbitrary operation or record selected
+    [chrome] › e2e\readiness-scenario.spec.ts:72:1 › R12 large scenario changes and qualified record choices are searchable and bounded

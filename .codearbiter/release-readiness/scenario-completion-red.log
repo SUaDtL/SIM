@@ -1,0 +1,68 @@
+
+Running 2 tests using 1 worker
+
+(node:42068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [msedge] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded (6.7s)
+(node:56516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded (6.5s)
+
+
+  1) [msedge] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('scenario-changes')
+    Expected substring: "Retire Shared name (Blue)"
+    Received string:    "Retire Service 099 (Blue)Remove"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('scenario-changes') with timeout 5000ms
+      - waiting for getByTestId('scenario-changes')
+        14 × locator resolved to <ul class="rows" data-testid="scenario-changes">…</ul>
+           - unexpected value "Retire Service 099 (Blue)Remove"
+
+
+      103 |   await expect(picker).toHaveCount(0);
+      104 |   await page.getByRole("button", { name: "Add change", exact: true }).click();
+    > 105 |   await expect(rows).toContainText("Retire Shared name (Blue)");
+          |                      ^
+      106 |   await expect(page.getByRole("searchbox", { name: "Search scenario changes", exact: true })).toHaveValue("");
+      107 |   await expect(rows.locator('li[aria-current="true"]')).toBeFocused();
+      108 |   await expect(page.getByTestId("editor").getByLabel("Description", { exact: true })).toHaveValue("Retain independent planning note");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:105:22
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-completion-red-results\readiness-scenario-R12-lar-ac214--are-searchable-and-bounded-msedge\error-context.md
+
+  2) [chrome] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('scenario-changes')
+    Expected substring: "Retire Shared name (Blue)"
+    Received string:    "Retire Service 099 (Blue)Remove"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('scenario-changes') with timeout 5000ms
+      - waiting for getByTestId('scenario-changes')
+        14 × locator resolved to <ul class="rows" data-testid="scenario-changes">…</ul>
+           - unexpected value "Retire Service 099 (Blue)Remove"
+
+
+      103 |   await expect(picker).toHaveCount(0);
+      104 |   await page.getByRole("button", { name: "Add change", exact: true }).click();
+    > 105 |   await expect(rows).toContainText("Retire Shared name (Blue)");
+          |                      ^
+      106 |   await expect(page.getByRole("searchbox", { name: "Search scenario changes", exact: true })).toHaveValue("");
+      107 |   await expect(rows.locator('li[aria-current="true"]')).toBeFocused();
+      108 |   await expect(page.getByTestId("editor").getByLabel("Description", { exact: true })).toHaveValue("Retain independent planning note");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:105:22
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\scenario-completion-red-results\readiness-scenario-R12-lar-ac214--are-searchable-and-bounded-chrome\error-context.md
+
+  2 failed
+    [msedge] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded
+    [chrome] › e2e\readiness-scenario.spec.ts:85:1 › R12 large scenario changes and qualified record choices are searchable and bounded

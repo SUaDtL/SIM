@@ -8,6 +8,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Dataset renaming with Undo, persistent paginated data-issue review, keyboard Save, offline build/support identity and an accessible startup failure shell.
 - Bundled offline workflow Help, persistent qualified editor identity, a live map legend and visible scope/hidden-dependency disclosure.
 - Complete paginated CSV reconciliation and session-local completed-import receipts with downloadable diagnostics, source/classification metadata and spreadsheet formula protection.
 - Complete project/runtime license and attribution texts embedded in the standalone HTML from the installed production dependency closure; missing or unqualified runtime license texts fail the build.
@@ -23,6 +24,9 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Retain unfinished connection and route tasks across Apply, Save, navigation, capture, relationship redraws and filtered or paged collections; inspect the actual pending state and preserve post-commit data on presentation failure.
+- Restore usable map scope and framing when focus subjects disappear; distinguish filtered empty views and preserve focus-return history without arrangement writes.
+- Present proposed services through structured read-only summaries with exact authored-change links, searchable deliberate scenario choices and honest provider-retention wording.
 - Keep clicked map nodes visible as the inspector opens, retain Connections/Support while browsing services, and preserve section intent through editing, Apply, Discard and Cancel.
 - Anchor More service actions without moving controls; restore creation origins, add related-record Back, and keep keyboard focus meaningful after navigation, deletion, imports and dialog closure.
 - Reveal complete sensitive-input warnings, prevent phantom scenario intent, clarify immediate scenario commands, disable blocked deletion, and keep narrow Find and import opt-in usable by keyboard.

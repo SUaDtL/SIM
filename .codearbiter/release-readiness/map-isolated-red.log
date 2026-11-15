@@ -1,0 +1,32 @@
+
+Running 1 test using 1 worker
+
+(node:67328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-map.spec.ts:120:1 › R04 removing an isolated focus subject restores the unfocused viewport so remaining services are on screen (897ms)
+
+
+  1) [chrome] › e2e\readiness-map.spec.ts:120:1 › R04 removing an isolated focus subject restores the unfocused viewport so remaining services are on screen
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 1.32418001525553
+    Received: 2.3553299492385786
+
+    Expected precision:    6
+    Expected difference: < 0.0000005
+    Received difference:   1.0311499339830485
+
+      143 |   await expect(page.getByTestId("focus-status")).toContainText("Focus ended");
+      144 |   const after = await mapState(page);
+    > 145 |   expect(after.zoom).toBeCloseTo(before.zoom, 6);
+          |                      ^
+      146 |   expect(after.pan.x).toBeCloseTo(before.pan.x, 6);
+      147 |   expect(after.pan.y).toBeCloseTo(before.pan.y, 6);
+      148 |   const callerInView = await page.getByTestId("map-canvas").evaluate((container, caller) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:145:22
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-isolated-red-results\readiness-map-R04-removing-07747-ning-services-are-on-screen-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-map.spec.ts:120:1 › R04 removing an isolated focus subject restores the unfocused viewport so remaining services are on screen

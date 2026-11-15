@@ -1,0 +1,161 @@
+
+Running 5 tests using 1 worker
+
+(node:52876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-map.spec.ts:65:1 › R04 deleting the focused service ends focus without hiding the remaining map or changing positions (5.7s)
+(node:59180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Retire caller projection exits unavailable focus and leaves current services reachable (5.6s)
+(node:35644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Merge caller projection exits unavailable focus and leaves current services reachable (5.6s)
+(node:29580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [chrome] › e2e\readiness-map.spec.ts:115:1 › R19 zero filter matches has a clear recovery action preserving viewport, arrangement and file state (5.5s)
+(node:65752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\readiness-map.spec.ts:133:1 › V02 workspace Back restores a focused view together with a working Back from focus checkpoint (5.7s)
+
+
+  1) [chrome] › e2e\readiness-map.spec.ts:65:1 › R04 deleting the focused service ends focus without hiding the remaining map or changing positions
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('focus-status')
+    Expected substring: "Focus ended"
+    Received string:    "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('focus-status') with timeout 5000ms
+      - waiting for getByTestId('focus-status')
+        14 × locator resolved to <p role="status" class="map-feedback" data-testid="focus-status">Focus target unavailable. Select a current servic…</p>
+           - unexpected value "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+
+
+      74 |   await page.getByRole("dialog", { name: "Delete service", exact: true }).getByRole("button", { name: "Confirm delete", exact: true }).click();
+      75 |   await showMap(page);
+    > 76 |   await expect(page.getByTestId("focus-status")).toContainText("Focus ended");
+         |                                                  ^
+      77 |   await expect(page.getByRole("button", { name: "Back from focus", exact: true })).toBeHidden();
+      78 |   const after = await mapState(page);
+      79 |   expect(after.visible).toContain(`service-${String(data.independent)}`);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:76:50
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-red-results\readiness-map-R04-deleting-83884-g-map-or-changing-positions-chrome\error-context.md
+
+  2) [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Retire caller projection exits unavailable focus and leaves current services reachable
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('focus-status')
+    Expected substring: "Focus ended"
+    Received string:    "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('focus-status') with timeout 5000ms
+      - waiting for getByTestId('focus-status')
+        14 × locator resolved to <p role="status" class="map-feedback" data-testid="focus-status">Focus target unavailable. Select a current servic…</p>
+           - unexpected value "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+
+
+      101 |     await page.getByRole("button", { name: "Depends on", exact: true }).click();
+      102 |     await page.getByTestId("map-area").getByLabel("View", { exact: true }).selectOption({ label: `To-Be: ${scenario}` });
+    > 103 |     await expect(page.getByTestId("focus-status")).toContainText("Focus ended");
+          |                                                    ^
+      104 |     const after = await mapState(page);
+      105 |     expect(after.visible).toContain(`service-${String(data.independent)}`);
+      106 |     expect(after.visible).not.toContain(`service-${String(data.caller)}`);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:103:52
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-red-results\readiness-map-R04-Retire-c-67360--current-services-reachable-chrome\error-context.md
+
+  3) [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Merge caller projection exits unavailable focus and leaves current services reachable
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('focus-status')
+    Expected substring: "Focus ended"
+    Received string:    "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('focus-status') with timeout 5000ms
+      - waiting for getByTestId('focus-status')
+        14 × locator resolved to <p role="status" class="map-feedback" data-testid="focus-status">Focus target unavailable. Select a current servic…</p>
+           - unexpected value "Focus target unavailable. Select a current service or network.. Strict inventory filters are suspended during focus; Back restores them."
+
+
+      101 |     await page.getByRole("button", { name: "Depends on", exact: true }).click();
+      102 |     await page.getByTestId("map-area").getByLabel("View", { exact: true }).selectOption({ label: `To-Be: ${scenario}` });
+    > 103 |     await expect(page.getByTestId("focus-status")).toContainText("Focus ended");
+          |                                                    ^
+      104 |     const after = await mapState(page);
+      105 |     expect(after.visible).toContain(`service-${String(data.independent)}`);
+      106 |     expect(after.visible).not.toContain(`service-${String(data.caller)}`);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:103:52
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-red-results\readiness-map-R04-Merge-ca-712ef--current-services-reachable-chrome\error-context.md
+
+  4) [chrome] › e2e\readiness-map.spec.ts:115:1 › R19 zero filter matches has a clear recovery action preserving viewport, arrangement and file state
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByTestId('map-empty')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('map-empty') with timeout 5000ms
+      - waiting for getByTestId('map-empty')
+        14 × locator resolved to <p hidden="" class="map-empty" data-testid="map-empty">Add a network to start the map.</p>
+           - unexpected value "hidden"
+
+
+      119 |   await page.getByTestId("map-area").getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
+      120 |   await page.getByTestId("map-area").getByLabel("Category", { exact: true }).selectOption({ label: "Mission" });
+    > 121 |   await expect(page.getByTestId("map-empty")).toBeVisible();
+          |                                               ^
+      122 |   await expect(page.getByTestId("map-empty")).toContainText("No records match");
+      123 |   expect((await mapState(page)).visible).toEqual([]);
+      124 |   await expect(page.getByRole("button", { name: "Capture", exact: true })).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:121:47
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-red-results\readiness-map-R19-zero-fil-5a91a--arrangement-and-file-state-chrome\error-context.md
+
+  5) [chrome] › e2e\readiness-map.spec.ts:133:1 › V02 workspace Back restores a focused view together with a working Back from focus checkpoint
+
+    Error: expect(locator).toBeEmpty() failed
+
+    Locator:  getByTestId('focus-status')
+    Expected: empty
+    Received: notEmpty
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeEmpty" getByTestId('focus-status') with timeout 5000ms
+      - waiting for getByTestId('focus-status')
+        14 × locator resolved to <p role="status" class="map-feedback" data-testid="focus-status">Depends on Caller: 1 dependency. Strict inventory…</p>
+           - unexpected value "notEmpty"
+
+
+      149 |   await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller");
+      150 |   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
+    > 151 |   await expect(page.getByTestId("focus-status")).toBeEmpty();
+          |                                                  ^
+      152 |   expect(await mapState(page)).toEqual(before);
+      153 | });
+      154 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:151:50
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-red-results\readiness-map-V02-workspac-9774b--Back-from-focus-checkpoint-chrome\error-context.md
+
+  5 failed
+    [chrome] › e2e\readiness-map.spec.ts:65:1 › R04 deleting the focused service ends focus without hiding the remaining map or changing positions
+    [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Retire caller projection exits unavailable focus and leaves current services reachable
+    [chrome] › e2e\readiness-map.spec.ts:97:3 › R04 Merge caller projection exits unavailable focus and leaves current services reachable
+    [chrome] › e2e\readiness-map.spec.ts:115:1 › R19 zero filter matches has a clear recovery action preserving viewport, arrangement and file state
+    [chrome] › e2e\readiness-map.spec.ts:133:1 › V02 workspace Back restores a focused view together with a working Back from focus checkpoint

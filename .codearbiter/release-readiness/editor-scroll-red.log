@@ -1,0 +1,31 @@
+
+Running 1 test using 1 worker
+
+(node:46564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation (5.7s)
+
+
+  1) [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 591
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      171 |   await expect(editor).toHaveAttribute("data-mode", "edit");
+      172 |   await expect(editor.getByRole("tab", { name: "Support", exact: true })).toHaveAttribute("aria-selected", "true");
+    > 173 |   await expect.poll(() => body.evaluate((node) => node.scrollTop)).toBe(before);
+          |                                                                    ^
+      174 |   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Alpha");
+      175 | });
+      176 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:173:68
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-scroll-red-results\readiness-editor-R17-Back--7873a-ter-deep-Support-navigation-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation

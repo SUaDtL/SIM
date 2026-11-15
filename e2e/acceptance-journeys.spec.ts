@@ -143,6 +143,7 @@ test("AC082: Save file refuses invalid scenario builder, then saves metadata and
   await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
 
   await editor.getByLabel("New service name").fill("Portal");
+  await chooseReference(page, "scenario network", "NIPR");
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   const saved = readFileSync(await (await download).path());
@@ -176,17 +177,21 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
   await page.getByRole("button", { name: "Fit map" }).click();
   const editor = page.getByTestId("editor");
   const find = page.getByLabel("Find on map");
-  for (const [query, status] of [
-    ["Base (NIPR)", "Existing As-Is record"],
-    ["Moved (SIPR)", "Comparison status: rehomed"],
-    ["Retired (NIPR)", "Comparison status: retired"],
-    ["Planned (SIPR)", "Planned service added"],
+  for (const [name, network, status] of [
+    ["Base", "NIPR", ""],
+    ["Moved", "SIPR", "Proposed move: NIPR → SIPR"],
+    ["Retired", "NIPR", "Retired in this proposal."],
+    ["Planned", "SIPR", "Planned service added"],
   ] as const) {
     await showMap(page);
-    await find.fill(query);
+    await find.fill(`${name} (${network})`);
     await find.press("Enter");
-    await expect(editor).toContainText(status);
-    await expect(editor).toContainText("Compare projection: Plan");
+    if (status) await expect(editor.getByText(status, { exact: name !== "Planned" })).toBeVisible();
+    await expect(editor.getByRole("heading", { name: `Service: ${name}`, exact: true })).toBeVisible();
+    await expect(editor.locator(".record-context")).toContainText("Compare: Plan");
+    await expect(editor.getByRole("button", { name: network, exact: true })).toBeVisible();
+    await expect(editor.getByRole("button", { name: "Apply changes", exact: true })).toHaveCount(0);
+    if (name !== "Planned") await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toBeVisible();
   }
   await expect(editor.getByRole("button", { name: "Edit As-Is" })).toHaveCount(0);
 
@@ -216,7 +221,7 @@ test("J7: projected Find and tap keep baseline, moved, retired and planned ident
   const box = await canvas.boundingBox();
   if (!box) throw new Error("Map canvas has no size.");
   await page.mouse.click(box.x + point.x, box.y + point.y);
-  await expect(editor).toContainText("Comparison status: rehomed");
+  await expect(editor.getByText("Proposed move: NIPR → SIPR", { exact: true })).toBeVisible();
   await editor.getByRole("button", { name: "Edit As-Is" }).click();
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("as-is");
   await editSelected(page);

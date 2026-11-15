@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM release-readiness plan · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-RELEASE-READINESS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/release-readiness.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM release-readiness plan</h1><p class="deck">Root integrates on codex/sim-release-readiness from main55986ee2. Three scoped authors own editor, map and scenario; root owns workspace/main/shell/shared UI/build/docs/native artifacts and all builds. One follow-up PR because25 merged. No source edits before named RED; no merge/release authority. G gaps separately tracked; V risks investigated with limitations. Native Windows behavior requires fresh supported observation, not inherited stubs.</p><div class="meta"><span>PLAN-RELEASE-READINESS</span><span>Revision 16 · schema 0.3.2</span><span>8 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-RELEASE-READINESS</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:TASK-EDITOR -->
+<article class="record" id="TASK-EDITOR" data-ca-symbol="TASK-EDITOR" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-EDITOR">TASK-EDITOR</a><h3>EDITOR readiness repair</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-EDITOR</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/release-readiness.html#R01">SPEC-RELEASE-READINESS#R01</a></li><li><a href="../specs/release-readiness.html#R02">SPEC-RELEASE-READINESS#R02</a></li><li><a href="../specs/release-readiness.html#R03">SPEC-RELEASE-READINESS#R03</a></li><li><a href="../specs/release-readiness.html#R08">SPEC-RELEASE-READINESS#R08</a></li><li><a href="../specs/release-readiness.html#R10">SPEC-RELEASE-READINESS#R10</a></li><li><a href="../specs/release-readiness.html#R17">SPEC-RELEASE-READINESS#R17</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned repair obligations are implemented; report actual checks and remaining external qualification separately.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-EDITOR</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>create</td><td><code>e2e/readiness-editor.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped repair on the follow-up branch.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current focused regressions and retained app behavior pass.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-15T20:34:30Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>e8a28796eae1300a176930717d83d762d6cff5754fbc55529e391c9068f2e230</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.</div><div class="field"><span class="label">Summary</span>Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-EDITOR -->
+
+<!-- CA:BEGIN:TASK-MAP -->
+<article class="record" id="TASK-MAP" data-ca-symbol="TASK-MAP" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-MAP">TASK-MAP</a><h3>MAP readiness repair</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-MAP</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/release-readiness.html#R04">SPEC-RELEASE-READINESS#R04</a></li><li><a href="../specs/release-readiness.html#R19">SPEC-RELEASE-READINESS#R19</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned repair obligations are implemented; report actual checks and remaining external qualification separately.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-MAP</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>src/map/focus.ts</code></td></tr><tr><td>create</td><td><code>e2e/readiness-map.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped repair on the follow-up branch.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current focused regressions and retained app behavior pass.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-15T20:34:31Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>b1b6220acfe17003e3aa57d2152b89715004d6d60639a10fe74e3faa05373e91</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.</div><div class="field"><span class="label">Summary</span>Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-MAP -->
+
+<!-- CA:BEGIN:TASK-SCENARIO -->
+<article class="record" id="TASK-SCENARIO" data-ca-symbol="TASK-SCENARIO" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-SCENARIO">TASK-SCENARIO</a><h3>SCENARIO readiness repair</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-SCENARIO</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/release-readiness.html#R11">SPEC-RELEASE-READINESS#R11</a></li><li><a href="../specs/release-readiness.html#R12">SPEC-RELEASE-READINESS#R12</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned repair obligations are implemented; report actual checks and remaining external qualification separately.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-SCENARIO</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/scenario-changes.ts</code></td></tr><tr><td>create</td><td><code>e2e/readiness-scenario.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped repair on the follow-up branch.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current focused regressions and retained app behavior pass.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-15T20:34:32Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>34ef588455fb7c99a144b5df29f2ecfb832945e7185d01bf565c8542a4ab1955</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.</div><div class="field"><span class="label">Summary</span>Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-SCENARIO -->
+
+<!-- CA:BEGIN:TASK-SHELL -->
+<article class="record" id="TASK-SHELL" data-ca-symbol="TASK-SHELL" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-SHELL">TASK-SHELL</a><h3>SHELL readiness repair</h3><span class="badge">REVIEW</span></div><div class="field"><span class="label">Checkpoint</span>CP-SHELL</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/release-readiness.html#R05">SPEC-RELEASE-READINESS#R05</a></li><li><a href="../specs/release-readiness.html#R06">SPEC-RELEASE-READINESS#R06</a></li><li><a href="../specs/release-readiness.html#R07">SPEC-RELEASE-READINESS#R07</a></li><li><a href="../specs/release-readiness.html#R09">SPEC-RELEASE-READINESS#R09</a></li><li><a href="../specs/release-readiness.html#R13">SPEC-RELEASE-READINESS#R13</a></li><li><a href="../specs/release-readiness.html#R14">SPEC-RELEASE-READINESS#R14</a></li><li><a href="../specs/release-readiness.html#R15">SPEC-RELEASE-READINESS#R15</a></li><li><a href="../specs/release-readiness.html#R16">SPEC-RELEASE-READINESS#R16</a></li><li><a href="../specs/release-readiness.html#R18">SPEC-RELEASE-READINESS#R18</a></li><li><a href="../specs/release-readiness.html#R20">SPEC-RELEASE-READINESS#R20</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned repair obligations are implemented; report actual checks and remaining external qualification separately.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-SHELL</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/reference-picker.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/list-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/help.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/record-summary.ts</code></td></tr><tr><td>modify</td><td><code>vite.config.ts</code></td></tr><tr><td>modify</td><td><code>sim.html</code></td></tr><tr><td>modify</td><td><code>README.md</code></td></tr><tr><td>create</td><td><code>e2e/readiness-shell.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped repair on the follow-up branch.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current focused regressions and retained app behavior pass.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Implementation reported complete; verification and review are not assessed by this progress update.</div><div class="field"><span class="label">State</span>REVIEW</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-15T20:34:33Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>a393f9ad3fb8057fbdb8183c215f24dea831b5225714c4d29719226201f3269a</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.</div><div class="field"><span class="label">Summary</span>Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-SHELL -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-EDITOR -->
+<article class="record" id="CP-EDITOR" data-ca-symbol="CP-EDITOR" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-EDITOR">CP-EDITOR</a><h3>EDITOR implemented</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Reported implementation complete; checks, review, PR and release separately established.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-EDITOR">TASK-EDITOR</a></li></ul></div></article>
+<!-- CA:END:CP-EDITOR -->
+
+<!-- CA:BEGIN:CP-MAP -->
+<article class="record" id="CP-MAP" data-ca-symbol="CP-MAP" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-MAP">CP-MAP</a><h3>MAP implemented</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Reported implementation complete; checks, review, PR and release separately established.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-MAP">TASK-MAP</a></li></ul></div></article>
+<!-- CA:END:CP-MAP -->
+
+<!-- CA:BEGIN:CP-SCENARIO -->
+<article class="record" id="CP-SCENARIO" data-ca-symbol="CP-SCENARIO" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-SCENARIO">CP-SCENARIO</a><h3>SCENARIO implemented</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Reported implementation complete; checks, review, PR and release separately established.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-SCENARIO">TASK-SCENARIO</a></li></ul></div></article>
+<!-- CA:END:CP-SCENARIO -->
+
+<!-- CA:BEGIN:CP-SHELL -->
+<article class="record" id="CP-SHELL" data-ca-symbol="CP-SHELL" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-SHELL">CP-SHELL</a><h3>SHELL implemented</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Reported implementation complete; checks, review, PR and release separately established.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-SHELL">TASK-SHELL</a></li></ul></div></article>
+<!-- CA:END:CP-SHELL -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121</div><div class="field"><span class="label">Observed date</span>2026-11-15</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: b94d8ba987ef4d0355f7cf05c3b19c00df37799d507be9e20bd5da70a921270e<br>Model SHA-256: 0fffdb72739b3f8b70bdeb022dfb7740133e45c967c68fd54e6e23cf86fc1f77</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-RELEASE-READINESS",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "TASK-EDITOR": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "f8b62f6f5dd0b575f5e417a8024eba0837742a0a67a5c32e3000b4916f8af077",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-15T20:34:30Z",
+          "recording_operation_id": "readiness-final-local-check-EDITOR",
+          "scoped_inputs_sha256": "e8a28796eae1300a176930717d83d762d6cff5754fbc55529e391c9068f2e230",
+          "source": ".codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.",
+          "source_normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf",
+          "summary": "Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.",
+          "task_subject_sha256": "1a8bfb26a7d02cc68ae9cfc71b51b8be7b8be548a12c6ef9f31e16dc835cd6de"
+        }
+      ],
+      "TASK-MAP": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "b896272586d462d36ae28272da1271c75d5e9aac317680b5adafb2ff1c99650c",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-15T20:34:31Z",
+          "recording_operation_id": "readiness-final-local-check-MAP",
+          "scoped_inputs_sha256": "b1b6220acfe17003e3aa57d2152b89715004d6d60639a10fe74e3faa05373e91",
+          "source": ".codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.",
+          "source_normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf",
+          "summary": "Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.",
+          "task_subject_sha256": "8032c6a7facf543ba91bb9cdda76324f870668fecc4de9b68254d37fe5769ba9"
+        }
+      ],
+      "TASK-SCENARIO": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "8d7e029bd666f1067b547c4d066ec61f1907fbc546fe1705bc91e2963b504a12",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-15T20:34:32Z",
+          "recording_operation_id": "readiness-final-local-check-SCENARIO",
+          "scoped_inputs_sha256": "34ef588455fb7c99a144b5df29f2ecfb832945e7185d01bf565c8542a4ab1955",
+          "source": ".codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.",
+          "source_normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf",
+          "summary": "Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.",
+          "task_subject_sha256": "6834c0b6a16042984ed45ae488f8bc4024ce8e7dd9241bb5e99d39d023c8c00e"
+        }
+      ],
+      "TASK-SHELL": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "4a13c2032301f773f403a7739b5b70468ff72e84a0b3357b70054c23f9a66504",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-15T20:34:33Z",
+          "recording_operation_id": "readiness-final-local-check-SHELL",
+          "scoped_inputs_sha256": "a393f9ad3fb8057fbdb8183c215f24dea831b5225714c4d29719226201f3269a",
+          "source": ".codearbiter/release-readiness/LOCAL-CHECK.log; SOURCE-SHA256.json; REVIEW.md. Local caller-reported evidence, not hosted CI or release approval.",
+          "source_normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf",
+          "summary": "Current local source passed typecheck/lint/format/build,393unit and726Chrome/Edge browser tests including200/400percentzoom. Independent coverage/safety follow-up funnelPASS, both initialMEDIUMs resolved. R05publication and V04native/human qualification remain open.",
+          "task_subject_sha256": "07c085b7de76931f5d4fca36473d6599e7396929913db02f1b877b80e4816edf"
+        }
+      ]
+    },
+    "tasks": {
+      "TASK-EDITOR": {
+        "evidence_refs": [],
+        "reason": "Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-MAP": {
+        "evidence_refs": [],
+        "reason": "Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-SCENARIO": {
+        "evidence_refs": [],
+        "reason": "Local app implementation and full checks complete; current independent review has no active findings. DONE is local progress, not publication or native/human acceptance. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-SHELL": {
+        "evidence_refs": [],
+        "reason": "Implementation reported complete; verification and review are not assessed by this progress update.",
+        "state": "REVIEW"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "0fffdb72739b3f8b70bdeb022dfb7740133e45c967c68fd54e6e23cf86fc1f77",
+    "normative_sha256": "b94d8ba987ef4d0355f7cf05c3b19c00df37799d507be9e20bd5da70a921270e",
+    "symbol_count": 8
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121",
+      "observed_date": "2026-11-15",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "Reported implementation complete; checks, review, PR and release separately established.",
+        "id": "CP-EDITOR",
+        "tasks": [
+          "TASK-EDITOR"
+        ],
+        "title": "EDITOR implemented"
+      },
+      {
+        "depends_on": [],
+        "exit": "Reported implementation complete; checks, review, PR and release separately established.",
+        "id": "CP-MAP",
+        "tasks": [
+          "TASK-MAP"
+        ],
+        "title": "MAP implemented"
+      },
+      {
+        "depends_on": [],
+        "exit": "Reported implementation complete; checks, review, PR and release separately established.",
+        "id": "CP-SCENARIO",
+        "tasks": [
+          "TASK-SCENARIO"
+        ],
+        "title": "SCENARIO implemented"
+      },
+      {
+        "depends_on": [],
+        "exit": "Reported implementation complete; checks, review, PR and release separately established.",
+        "id": "CP-SHELL",
+        "tasks": [
+          "TASK-SHELL"
+        ],
+        "title": "SHELL implemented"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [],
+    "spec_ref": {
+      "artifact_id": "SPEC-RELEASE-READINESS",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "62605b5665af9ab94bd0f8f5d56cf2beaeec692171b2659e280ecf4e19de7bbf"
+    },
+    "summary": "Root integrates on codex/sim-release-readiness from main55986ee2. Three scoped authors own editor, map and scenario; root owns workspace/main/shell/shared UI/build/docs/native artifacts and all builds. One follow-up PR because25 merged. No source edits before named RED; no merge/release authority. G gaps separately tracked; V risks investigated with limitations. Native Windows behavior requires fresh supported observation, not inherited stubs.",
+    "tasks": [
+      {
+        "checkpoint": "CP-EDITOR",
+        "criterion_refs": [
+          "SPEC-RELEASE-READINESS#R01",
+          "SPEC-RELEASE-READINESS#R02",
+          "SPEC-RELEASE-READINESS#R03",
+          "SPEC-RELEASE-READINESS#R08",
+          "SPEC-RELEASE-READINESS#R10",
+          "SPEC-RELEASE-READINESS#R17"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "All assigned repair obligations are implemented; report actual checks and remaining external qualification separately."
+        ],
+        "execution_scope": "CP-EDITOR",
+        "id": "TASK-EDITOR",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/readiness-editor.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped repair on the follow-up branch.",
+        "steps": [
+          "Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root."
+        ],
+        "title": "EDITOR readiness repair",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current focused regressions and retained app behavior pass.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-MAP",
+        "criterion_refs": [
+          "SPEC-RELEASE-READINESS#R04",
+          "SPEC-RELEASE-READINESS#R19"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "All assigned repair obligations are implemented; report actual checks and remaining external qualification separately."
+        ],
+        "execution_scope": "CP-MAP",
+        "id": "TASK-MAP",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/focus.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/readiness-map.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped repair on the follow-up branch.",
+        "steps": [
+          "Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root."
+        ],
+        "title": "MAP readiness repair",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current focused regressions and retained app behavior pass.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-SCENARIO",
+        "criterion_refs": [
+          "SPEC-RELEASE-READINESS#R11",
+          "SPEC-RELEASE-READINESS#R12"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "All assigned repair obligations are implemented; report actual checks and remaining external qualification separately."
+        ],
+        "execution_scope": "CP-SCENARIO",
+        "id": "TASK-SCENARIO",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/scenario-changes.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/readiness-scenario.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped repair on the follow-up branch.",
+        "steps": [
+          "Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root."
+        ],
+        "title": "SCENARIO readiness repair",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current focused regressions and retained app behavior pass.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-SHELL",
+        "criterion_refs": [
+          "SPEC-RELEASE-READINESS#R05",
+          "SPEC-RELEASE-READINESS#R06",
+          "SPEC-RELEASE-READINESS#R07",
+          "SPEC-RELEASE-READINESS#R09",
+          "SPEC-RELEASE-READINESS#R13",
+          "SPEC-RELEASE-READINESS#R14",
+          "SPEC-RELEASE-READINESS#R15",
+          "SPEC-RELEASE-READINESS#R16",
+          "SPEC-RELEASE-READINESS#R18",
+          "SPEC-RELEASE-READINESS#R20"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "All assigned repair obligations are implemented; report actual checks and remaining external qualification separately."
+        ],
+        "execution_scope": "CP-SHELL",
+        "id": "TASK-SHELL",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/reference-picker.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/list-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/help.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/record-summary.ts"
+          },
+          {
+            "action": "modify",
+            "path": "vite.config.ts"
+          },
+          {
+            "action": "modify",
+            "path": "sim.html"
+          },
+          {
+            "action": "modify",
+            "path": "README.md"
+          },
+          {
+            "action": "create",
+            "path": "e2e/readiness-shell.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped repair on the follow-up branch.",
+        "steps": [
+          "Confirm each defect at the receiving source; observe a named regression RED before repair. Implement scoped fixes and retain unchanged safeguards. Coordinate shared interfaces with root."
+        ],
+        "title": "SHELL readiness repair",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current focused regressions and retained app behavior pass.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "SIM release-readiness plan"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/release-readiness.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 16,
+  "schema_version": "0.3.2",
+  "slug": "release-readiness"
+}
+</script>
+</body></html>

@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+(node:43680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-scenario.spec.ts:165:1 › R12 provider empty choice explains Re-home retention and Add unrecorded ownership (5.7s)
+
+
+  1) [chrome] › e2e\readiness-scenario.spec.ts:165:1 › R12 provider empty choice explains Re-home retention and Add unrecorded ownership
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('record-picker').getByRole('button', { name: 'Keep existing provider', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('record-picker').getByRole('button', { name: 'Keep existing provider', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByRole('button', { name: 'Keep existing provider', exact: true })
+
+
+      180 |   await page.getByRole("button",{name:"Choose scenario provider",exact:true}).click();
+      181 |   const picker=page.getByTestId("record-picker");
+    > 182 |   await expect(picker.getByRole("button",{name:"Keep existing provider",exact:true})).toBeVisible();
+          |                                                                                       ^
+      183 |   await expect(picker.getByRole("button",{name:"No assignment",exact:true})).toHaveCount(0);
+      184 |   await picker.getByRole("button",{name:"Keep existing provider",exact:true}).click();
+      185 |   await page.getByRole("button",{name:"Add change",exact:true}).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-scenario.spec.ts:182:87
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\provider-choice-red-results\readiness-scenario-R12-pro-c55ab-nd-Add-unrecorded-ownership-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-scenario.spec.ts:165:1 › R12 provider empty choice explains Re-home retention and Add unrecorded ownership

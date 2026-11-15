@@ -1,3 +1,4 @@
+import { chooseReference } from "./helpers/usability";
 import { openFileMenu, showInventory, editSelected } from "./helpers/usability";
 
 import { expect, type Page, test } from "@playwright/test";
@@ -44,6 +45,7 @@ async function loadScenario(
 test("unadded scenario intent is protected on navigation and can be discarded", async ({ page }) => {
   await loadScenario(page);
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   await page.getByLabel("New service name").fill("Portal");
   await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
@@ -85,6 +87,7 @@ test("an untouched builder stays clean and Add change preserves pending metadata
   await editSelected(page);
   await page.getByTestId("editor").getByLabel("Description").fill("Pending planning note");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   await page.getByLabel("New service name").fill("Portal");
   await page.getByRole("button", { name: "Add change" }).click();
   await expect(page.getByTestId("scenario-changes")).toContainText("Portal");
@@ -95,6 +98,7 @@ test("an untouched builder stays clean and Add change preserves pending metadata
 test("scenario sensitive acknowledgement is withdrawn when its exact input changes", async ({ page }) => {
   await loadScenario(page);
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   const newName = page.getByLabel("New service name");
   await newName.fill("portal.example.mil");
   await page.getByRole("button", { name: "Add change" }).click();
@@ -112,6 +116,7 @@ test("Apply changes commits scenario metadata and builder as one undoable comman
   await loadScenario(page);
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Revised plan");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   await page.getByLabel("New service name").fill("Portal");
   await page.getByTestId("editor").getByRole("button", { name: "Apply changes" }).click();
   await editSelected(page);
@@ -127,6 +132,7 @@ test("invalid builder keeps both builder input and pending metadata without a pa
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Revised plan");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(page.getByTestId("change-message")).toContainText("required");
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Revised plan");
@@ -142,6 +148,7 @@ test("builder acknowledgement cannot apply stale scenario metadata", async ({ pa
   const description = editor.getByLabel("Description");
   await description.fill("First note");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
+  await chooseReference(page, "scenario network", "NIPR");
   await page.getByLabel("New service name").fill("portal.example.mil");
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(page.getByRole("button", { name: "Add anyway" })).toBeVisible();

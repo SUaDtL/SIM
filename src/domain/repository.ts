@@ -1233,6 +1233,19 @@ export class Repository {
     return datasetName(this.db);
   }
 
+  /** Rename document metadata through the same validated, undoable write path as inventory. */
+  renameDataset(value: string, options: WriteOptions = {}): void {
+    const name = cleanName(value, "dataset name");
+    checkSensitive({ "Dataset name": name }, options.confirmSensitive ?? false);
+    if (name === this.datasetName()) return;
+    this.write(() => {
+      this.db.run(
+        "INSERT INTO meta (key, value) VALUES ('name', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        [name],
+      );
+    }, "dataset");
+  }
+
   /** The dataset's banner caveat, e.g. "REL TO USA, FVEY" (Q-029), or null. */
   datasetCaveat(): string | null {
     const value = this.row("SELECT value FROM meta WHERE key = 'caveat'", [])?.["value"];

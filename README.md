@@ -7,15 +7,23 @@ straight from disk; your data lives in a local `.sqlite` file.
 
 ## Quick start
 
-```sh
-npm install
-npm run build      # produces dist/sim.html
-```
-
-Open `dist/sim.html` in Edge or Chrome by double-clicking it. No server or internet needed.
+Open the SIM HTML file supplied for your version in Edge or Chrome by double-clicking it.
+No server, installation or internet is needed. The published release and a development
+candidate can differ: check **About and demo** for the version, full source build and date,
+and verify the supplied SHA-256 before evaluating a candidate. A source merge does not update
+an existing release download. Follow the qualification status accompanying the exact file.
+Use **File → Rename dataset** to name the enterprise, then **Save file** (Ctrl+S or Command+S)
+to an approved, durable `.sqlite` location. Save As changes the file name separately.
 Open **Help** for a bundled first-map example, map vocabulary, and Apply/Save/recovery guidance.
 Help preserves your unfinished draft. **About and demo → Licenses and notices** contains the
 project terms and the full license/attribution texts for the bundled runtime dependencies.
+
+For developers building from source:
+
+```sh
+npm ci
+npm run build      # produces dist/sim.html
+```
 
 ## Add and connect services
 
@@ -38,12 +46,20 @@ outgoing dependencies from incoming **Used by** service counts.
 Host-like text requires confirmation of the exact current payload; editing it withdraws
 the old acknowledgement.
 
+Finish adding or explicitly cancel each open consumer, dependency or route task before
+Apply or Save. These operations retain unfinished input and focus its completion action.
+Inspecting a staged connection shows its pending state; it does not read back an older saved route.
+As-Is means the current recorded enterprise, including applied edits not yet saved to file.
+File status describes whether that current state has reached the chosen file.
+
 Outgoing dependencies describe what this service needs. Incoming dependencies belong to
 their consuming service; use **Edit incoming dependency** to navigate to that owner.
 Organizational consumption is separate. **Edit route** changes a staged dependency
 without removing it first. A cross-network connection may have no CDS; selecting a CDS
 requires it to join both endpoints' networks. Rehoming services validates the resulting
 incoming and outgoing routes. Existing legacy issues are retained until explicitly repaired.
+**File → Review data issues** keeps the complete paginated issue list available after other edits,
+with links to the affected records. Opening a file or reviewing its issues does not repair it.
 
 **Create similar service** starts an independent draft from the selected service;
 **Start from an existing service** offers the same choice within Add. Choose the destination

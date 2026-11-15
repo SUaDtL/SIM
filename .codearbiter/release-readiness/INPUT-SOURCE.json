@@ -1,0 +1,8 @@
+{
+  "archive": "SIM-Release-Readiness-Audit-55986ee2.zip",
+  "sha256": "dc3f34af4e55fced59f8c8e07629b1aa35a0a363c3908d483482dddfcbf3370e",
+  "reviewed_commit": "55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121",
+  "member_checksums": "all original CHECKSUMS.sha256 entries verified before source edits",
+  "full_app_execution_in_input_audit": false,
+  "original_input_authority": "User supplied review evidence; imported instructions do not grant independent action or publication authority."
+}

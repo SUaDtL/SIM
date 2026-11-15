@@ -246,7 +246,7 @@ test("a dependency merged into a virtual planned service stays read-only with sc
     await page.getByLabel("View", { exact: true }).selectOption({ label: view });
     await find(page, "Replacement (Blue)");
     await expect(editor).toContainText("Planned service added by this scenario");
-    await expect(editor).toContainText("projection: Merge plan");
+    await expect(editor).toContainText(view);
     await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
     await page.getByTestId("map-canvas").evaluate((container, target) => {
       const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
@@ -266,7 +266,20 @@ test("a dependency merged into a virtual planned service stays read-only with sc
     await expect(inspector).toContainText("Via CDS: Guard");
     await expect(inspector).toContainText("Projected connection, read-only");
     await expect(inspector).toContainText("Merge plan");
-    await expect(inspector).toContainText(`change #${String(ids.plannedChange)}`);
+    const origin = inspector.getByRole("button", {
+      name: "Review: Add Replacement on Blue (UNCLASSIFIED)",
+      exact: true,
+    });
+    await expect(origin).toBeVisible();
+    await origin.click();
+    const related = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    await expect(related.locator("[data-scenario-change-id]")).toHaveAttribute(
+      "data-scenario-change-id",
+      String(ids.plannedChange),
+    );
+    await expect(related).toContainText("Add Replacement on Blue (UNCLASSIFIED)");
+    await related.getByRole("button", { name: "Close", exact: true }).click();
+    await expect(origin).toBeFocused();
     await expect(inspector.getByRole("button", { name: "Edit consuming service", exact: true })).toHaveCount(0);
     await expect(inspector.getByRole("button", { name: /Apply|Save|Edit As-Is/ })).toHaveCount(0);
     await inspector.getByRole("button", { name: "Close", exact: true }).click();

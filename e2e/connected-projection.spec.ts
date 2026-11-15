@@ -1,3 +1,4 @@
+import { chooseReference } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -71,11 +72,13 @@ test("projected Find distinguishes a planned service from its same-named baselin
   await findRecord(page, "portal", "Portal (Blue) · service · projected");
   const editor = page.getByTestId("editor");
   await expect(editor).toContainText("Planned service added by this scenario");
-  await expect(editor).toContainText("Network: Blue");
+  await expect(editor.locator("dt").filter({ hasText: /^Network$/ })).toBeVisible();
+  await expect(editor.locator("dd").filter({ hasText: /^Blue$/ })).toBeVisible();
   await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveCount(0);
   await findRecord(page, "portal", "Portal (Amber) · service · projected");
-  await expect(editor).toContainText("Existing As-Is record in this projection");
+  await expect(editor).toContainText("Compare: Plan");
+  await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toBeVisible();
   await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
@@ -88,7 +91,7 @@ test("Edit As-Is reveals a rehomed service at its real baseline identity despite
   await page.locator("#map-filter-network").selectOption({ label: "Blue" });
   await findRecord(page, "moved", "Moved (Blue) · service · projected");
   const editor = page.getByTestId("editor");
-  await expect(editor).toContainText("Comparison status: rehomed");
+  await expect(editor).toContainText("Proposed move: Amber → Blue");
   await editor.getByRole("button", { name: "Edit As-Is", exact: true }).click();
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("as-is");
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Moved");
@@ -133,10 +136,11 @@ test("Back from a baseline record restores the planned origin and Compare contex
   await page.getByRole("button", { name: "Back", exact: true }).click();
   const editor = page.getByTestId("editor");
   await expect(page.getByLabel("View", { exact: true })).toHaveValue("compare:1");
-  await expect(editor.getByRole("heading", { name: "Portal", exact: true })).toBeVisible();
-  await expect(editor).toContainText("Compare projection: Plan");
+  await expect(editor.getByRole("heading", { name: "Service: Portal", exact: true })).toBeVisible();
+  await expect(editor).toContainText("Compare: Plan");
   await expect(editor).toContainText("Planned service added by this scenario");
-  await expect(editor).toContainText("Network: Blue");
+  await expect(editor.locator("dt").filter({ hasText: /^Network$/ })).toBeVisible();
+  await expect(editor.locator("dd").filter({ hasText: /^Blue$/ })).toBeVisible();
   await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
@@ -154,7 +158,7 @@ test("Undo removing a UI-created planned origin closes its inspector and removes
   await editSelected(page);
   await editor.getByLabel("Change", { exact: true }).selectOption("add");
   await editor.getByLabel("New service name", { exact: true }).fill("Temporary plan");
-  await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
+  await chooseReference(page, "scenario network", "Blue");
   await editor.getByRole("button", { name: "Add change", exact: true }).click();
   await expect(editor.getByTestId("scenario-changes")).toContainText("Temporary plan");
   await showMap(page);
