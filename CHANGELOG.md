@@ -24,6 +24,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Preserve readable network and CDS labels on wide maps and at low zoom without changing stored node positions.
 - Retain unfinished connection and route tasks across Apply, Save, navigation, capture, relationship redraws and filtered or paged collections; inspect the actual pending state and preserve post-commit data on presentation failure.
 - Restore usable map scope and framing when focus subjects disappear; distinguish filtered empty views and preserve focus-return history without arrangement writes.
 - Present proposed services through structured read-only summaries with exact authored-change links, searchable deliberate scenario choices and honest provider-retention wording.

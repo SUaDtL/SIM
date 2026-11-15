@@ -35,7 +35,7 @@ export const mapStyle: StylesheetJson = [
       "text-margin-y": -4,
       "font-size": 20,
       "font-weight": "bold",
-      // Labels grow when zoomed out (up to twice the size); keep names on one line.
+      // Labels grow when zoomed out to preserve their readable screen size.
       "text-max-width": "400px",
     },
   },

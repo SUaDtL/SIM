@@ -1023,7 +1023,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   function applyZoom(exporting = false): void {
     // An export renders at twice the size, so its labels need half the growth.
     const zoom = cy.zoom() * (exporting ? 2 : 1);
-    const grow = (base: number, min: number) => Math.min(base * 2, Math.max(base, min / zoom));
+    // A model-space growth cap becomes unreadable on wide maps. Preserve the
+    // screen-space minimum at every zoom; stored node positions stay unchanged.
+    const grow = (base: number, min: number) => Math.max(base, min / zoom);
     cy.batch(() => {
       cy.nodes(".service").toggleClass("quiet", !exporting && 16 * zoom < MIN_SERVICE_LABEL_PX);
       cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX));

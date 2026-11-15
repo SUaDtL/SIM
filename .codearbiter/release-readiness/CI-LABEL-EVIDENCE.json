@@ -1,0 +1,42 @@
+{
+  "source_epoch": "d86dd6df565da6ccf4b541e723140754c23797526fbf42f1ea994ed09e8fd01b",
+  "normalization": "Log/report presentation only: strip ANSI and trailing whitespace, normalize LF and final newline; original raw artifacts retained in TEMP.",
+  "artifacts": [
+    {
+      "source": "ci-label-full-check.log",
+      "original_sha256": "fca78ee6c7b6becdd60d72ef8fd8437933891d32df20585741fa26b4cc501dab",
+      "committed_file": "CI-LABEL-CHECK.log",
+      "committed_sha256": "89c974ab4db2dd4ca5f4b9f75d528640e8bb7fc4eacb965e5f15370602e7b3c4"
+    },
+    {
+      "source": "ci-label-red-qualified.log",
+      "original_sha256": "75dc446e664e4a2094d9d9e2bdb9ba91b5c8305356bf7b04bdf50fb707436ff8",
+      "committed_file": "CI-LABEL-RED.log",
+      "committed_sha256": "65431adee9edbecd51de97b2e3f71ab174fd6e7345bcbdd351955ae553e58c90"
+    },
+    {
+      "source": "ci-label-source.json",
+      "original_sha256": "adf8c0fe36cf0d51817c64f133f8eee33338ef43c0a89e2c6639952fd4681006",
+      "committed_file": "CI-LABEL-SOURCE.json",
+      "committed_sha256": "15927b20bdf9d3abd1b7baa5a99aa3b8dffe660d36adf30afa0d380d5a36053a"
+    },
+    {
+      "source": "ci-label-verdict.md",
+      "original_sha256": "914b78af9680ed46f481bb977c62527a26d9727aefe4764153fd32de1312a1ce",
+      "committed_file": "CI-LABEL-REVIEW.md",
+      "committed_sha256": "914b78af9680ed46f481bb977c62527a26d9727aefe4764153fd32de1312a1ce"
+    },
+    {
+      "source": "ci-label-triage.md",
+      "original_sha256": "d73ec2ef74b36a449b5c4a9c7e869411f91c49e6a20de8cb91f920f2ab1deab3",
+      "committed_file": "CI-LABEL-TRIAGE.md",
+      "committed_sha256": "0acd3af4a4129a88b51d3c52cff79d8c61b38431a8a2adaa11e236d411c7125c"
+    },
+    {
+      "source": "ci-label-coverage.md",
+      "original_sha256": "6ee32334f0ed094a8960c855fde35504b4f9737caaa30bba53f00b01542d38ad",
+      "committed_file": "CI-LABEL-COVERAGE.md",
+      "committed_sha256": "6ee32334f0ed094a8960c855fde35504b4f9737caaa30bba53f00b01542d38ad"
+    }
+  ]
+}

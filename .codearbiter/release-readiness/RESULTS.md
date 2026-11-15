@@ -16,6 +16,13 @@ The final independent coverage/safety review, triage and aggregate report PASS
 with no active findings. Two initial MEDIUM findings are retained as resolved.
 These are test counts, not distinct user actions or exhaustive state-space coverage.
 
+The first exact-head hosted run then found a low-zoom label-size defect in the
+existing layout check (725/726 browser cases passed). A deterministic regression
+failed for the defect before the font-growth cap was repaired. The updated full local
+gate passes **393 unit / 728 Chrome/Edge tests**. `CI-LABEL-FOLLOWUP.md` records
+the correction and its separate source/review evidence; the original 726-case
+logs and manifest below remain historical evidence for the earlier source.
+
 **R05 remains open:** publication and acceptance of a new versioned release are
 separate from these source repairs. The live v0.1.0 tag still resolves to
 `6c489bf1b6b0dd3f70470174625e404b1d21f5bb`. Its actual downloaded HTML matches
@@ -108,6 +115,9 @@ separately in the PR and Downloads handoff after it is observed.
 Local candidate: `C:\Users\brenn\Downloads\SIM-PR25-Checkpoints\09-release-readiness.html`.
 Steps: `TESTING-09.txt` beside it. This is a development/testing candidate; the
 directory retains earlier PR 25 checkpoints as history.
+Checkpoint 10 (`10-release-readiness.html`, `TESTING-10.txt`) supersedes 09 with
+the subsequent font-size correction; its exact build identity and hosted result
+are recorded in the Downloads handoff and PR 26.
 
 All 58 pre-existing dirty/untracked paths were protected: 57 remained byte-identical;
 the prior 16,870 bytes of the gate-events log remain an exact prefix, with only new
