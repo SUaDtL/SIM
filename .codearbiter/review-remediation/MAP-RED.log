@@ -1,0 +1,199 @@
+
+Running 8 tests using 2 workers
+
+(node:40200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus (5.6s)
+  x  2 [msedge] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus (5.6s)
+(node:50260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup (5.6s)
+(node:54776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [msedge] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup (5.7s)
+(node:53508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query (5.6s)
+(node:52452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [msedge] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query (5.6s)
+(node:46784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [chrome] â€º e2e\map-find-dismissal.spec.ts:75:1 â€º Find keeps its input and results one boundary for keyboard and pointer activation (603ms)
+  ok 8 [msedge] â€º e2e\map-find-dismissal.spec.ts:75:1 â€º Find keeps its input and results one boundary for keyboard and pointer activation (588ms)
+
+
+  1) [msedge] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      30 |   const fit = page.getByRole("button", { name: "Fit map", exact: true });
+      31 |   await fit.click();
+    > 32 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      33 |   await expect(search).toHaveValue("Synthetic");
+      34 |   await expect(fit).toBeFocused();
+      35 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:32:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Find-di-7535b--the-query-and-target-focus-msedge\error-context.md
+
+  2) [msedge] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      45 |   if (!bounds) throw new Error("Map canvas has no bounds");
+      46 |   await canvas.click({ position: { x: bounds.width - 12, y: bounds.height - 12 } });
+    > 47 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      48 |   await search.fill("Synthetic");
+      49 |   await expect(results.locator("li button")).toHaveCount(3);
+      50 |   const filters = page.locator("details.map-filter-panel");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:47:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Find-di-6c3c4-vas-press-and-another-popup-msedge\error-context.md
+
+  3) [msedge] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      62 |   await expect(results.locator("li button").first()).toBeFocused();
+      63 |   await page.keyboard.press("Escape");
+    > 64 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      65 |   await expect(search).toBeFocused();
+      66 |   await expect(search).toHaveValue("Synthetic");
+      67 |   await search.fill("Synthetic");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:64:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Escape--8db05--returns-focus-to-the-query-msedge\error-context.md
+
+  4) [chrome] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      30 |   const fit = page.getByRole("button", { name: "Fit map", exact: true });
+      31 |   await fit.click();
+    > 32 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      33 |   await expect(search).toHaveValue("Synthetic");
+      34 |   await expect(fit).toBeFocused();
+      35 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:32:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Find-di-7535b--the-query-and-target-focus-chrome\error-context.md
+
+  5) [chrome] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      45 |   if (!bounds) throw new Error("Map canvas has no bounds");
+      46 |   await canvas.click({ position: { x: bounds.width - 12, y: bounds.height - 12 } });
+    > 47 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      48 |   await search.fill("Synthetic");
+      49 |   await expect(results.locator("li button")).toHaveCount(3);
+      50 |   const filters = page.locator("details.map-filter-panel");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:47:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Find-di-6c3c4-vas-press-and-another-popup-chrome\error-context.md
+
+  6) [chrome] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('find-results').locator('li button')
+    Expected: 0
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('find-results').locator('li button') with timeout 5000ms
+      - waiting for getByTestId('find-results').locator('li button')
+        14 Ã— locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      62 |   await expect(results.locator("li button").first()).toBeFocused();
+      63 |   await page.keyboard.press("Escape");
+    > 64 |   await expect(results.locator("li button")).toHaveCount(0);
+         |                                              ^
+      65 |   await expect(search).toBeFocused();
+      66 |   await expect(search).toHaveValue("Synthetic");
+      67 |   await search.fill("Synthetic");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map-find-dismissal.spec.ts:64:46
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\map-find-red-results\map-find-dismissal-Escape--8db05--returns-focus-to-the-query-chrome\error-context.md
+
+  6 failed
+    [msedge] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus
+    [msedge] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup
+    [msedge] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query
+    [chrome] â€º e2e\map-find-dismissal.spec.ts:25:1 â€º Find dismisses on another action while retaining the query and target focus
+    [chrome] â€º e2e\map-find-dismissal.spec.ts:38:1 â€º Find dismisses on a genuine outside canvas press and another popup
+    [chrome] â€º e2e\map-find-dismissal.spec.ts:57:1 â€º Escape from Find results closes the transient surface and returns focus to the query
+  2 passed (20.7s)

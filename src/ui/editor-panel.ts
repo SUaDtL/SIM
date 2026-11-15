@@ -25,6 +25,7 @@ import {
   type SummarySection,
 } from "./record-summary";
 import { openReferencePicker } from "./reference-picker";
+import { collectionPage } from "./relationship-collection";
 
 export interface EditorContext {
   repo(): Repository;
@@ -152,17 +153,29 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           }
         : {}),
       onDelete: () => {
+        const trigger = element.querySelector<HTMLElement>("details.record-secondary-actions > summary");
         const dialog = el("dialog", { "aria-label": `Delete ${nounOf(type)}` });
         const message = el("p", { role: "alert" });
+        let cleaned = false;
+        const cleanup = (): void => {
+          if (cleaned) return;
+          cleaned = true;
+          dialog.remove();
+          if (trigger?.isConnected) trigger.focus();
+        };
         const finish = (): void => {
           dialog.close();
-          dialog.remove();
+          cleanup();
         };
-        const control = deleteControl(type, id, nounOf(type), message, finish);
+        const control = deleteControl(type, id, nounOf(type), message, { afterDelete: finish, cancel: finish });
         dialog.append(el("h2", {}, `Delete ${nounOf(type)}`), control, message, button("Close", finish));
+        dialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          finish();
+        });
+        dialog.addEventListener("close", cleanup, { once: true });
         document.body.append(dialog);
         dialog.showModal();
-        control.querySelector<HTMLButtonElement>("button")?.click();
       },
     });
     if (type === "network")
@@ -1099,7 +1112,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     id: number,
     noun: string,
     message: HTMLElement,
-    afterDelete?: () => void,
+    modal?: { afterDelete: () => void; cancel: () => void },
   ): HTMLElement {
     const owner = ctx.repo();
     const box = el("span", { class: "delete" });
@@ -1112,7 +1125,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         message.textContent = describe(error);
         return;
       }
-      restoreMenu ??= exposeMenuTask(box, `Delete ${noun}`);
+      if (!modal) restoreMenu ??= exposeMenuTask(box, `Delete ${noun}`);
       box.replaceChildren(
         el("p", {}, `Delete ${noun}? This cannot be undone by cancelling, but Undo can restore a completed deletion.`),
         ...(hasPendingDraft()
@@ -1133,7 +1146,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                 throw new ValidationError("STALE", "record", "The dataset changed. Review deletion again.");
               owner.deleteWithPlan(type, id, plan.signature);
               close();
-              afterDelete?.();
+              modal?.afterDelete();
             } catch (error) {
               message.textContent = describe(error);
               if (error instanceof ValidationError && error.code === "STALE") ask();
@@ -1141,7 +1154,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           },
           { class: "danger" },
         ),
-        button("Cancel", reset),
+        button("Cancel", modal?.cancel ?? reset),
       );
       if (restoreMenu) {
         box.tabIndex = -1;
@@ -1153,7 +1166,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       restoreMenu?.();
       restoreMenu = undefined;
     };
-    reset();
+    if (modal) ask();
+    else reset();
     return box;
   }
 
@@ -1188,19 +1202,16 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       else if (fallbackId) element.querySelector<HTMLElement>(`#${fallbackId}`)?.focus();
       draftChanged();
     };
-    const pageRows = (title: string, rows: readonly HTMLElement[]): HTMLElement => {
-      for (const row of rows) {
-        if (row.children.length > 2) {
-          const first = row.firstElementChild;
-          const actions = el(
-            "details",
-            { class: "connection-actions" },
-            el("summary", { "aria-label": `Connection actions for ${first?.textContent ?? "connection"}` }, "Actions"),
-          );
-          for (const child of [...row.children].slice(1)) actions.append(child);
-          row.append(actions);
-        }
-      }
+    const connectionActions = (label: string): HTMLDetailsElement =>
+      el(
+        "details",
+        { class: "connection-actions" },
+        el("summary", { "aria-label": `Connection actions for ${label}` }, "Actions"),
+      );
+    const pageRows = (
+      title: string,
+      rows: readonly { label: string; detail: string; element: HTMLElement }[],
+    ): HTMLElement => {
       const view = relationViews.get(title) ?? { query: "", page: 0 };
       relationViews.set(title, view);
       if (rows.length === 0) view.query = "";
@@ -1245,17 +1256,17 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       next.setAttribute("aria-label", `Next ${title} page`);
       const paging = el("div", { class: "relationship-paging" }, previous, next);
       function render(): void {
-        const matches = rows.filter((row) => row.textContent.toLowerCase().includes(view.query.trim().toLowerCase()));
-        view.page = Math.max(0, Math.min(view.page, Math.ceil(matches.length / 20) - 1));
-        list.replaceChildren(...matches.slice(view.page * 20, view.page * 20 + 20));
-        count.textContent = `${String(matches.length ? view.page * 20 + 1 : 0)}-${String(Math.min(matches.length, view.page * 20 + 20))} of ${String(matches.length)} relationships`;
-        count.hidden = matches.length === 0;
+        const result = collectionPage(rows, view.query, view.page);
+        view.page = result.page;
+        list.replaceChildren(...result.rows.map((row) => row.element));
+        count.textContent = `${String(result.first)}-${String(result.last)} of ${String(result.total)} relationships`;
+        count.hidden = result.total === 0;
         empty.textContent = rows.length === 0 ? "None recorded." : "No matching relationships.";
-        empty.hidden = matches.length > 0;
-        clear.hidden = rows.length === 0 || matches.length > 0;
-        paging.hidden = matches.length <= 20;
+        empty.hidden = result.total > 0;
+        clear.hidden = rows.length === 0 || result.total > 0;
+        paging.hidden = result.pages <= 1;
         previous.disabled = view.page === 0;
-        next.disabled = (view.page + 1) * 20 >= matches.length;
+        next.disabled = view.page + 1 >= result.pages;
       }
       query.addEventListener("input", () => {
         view.query = query.value;
@@ -1305,7 +1316,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     const consumerIds = draft.consumerOrgIds;
     const consumerRows = consumerIds.map((orgId) => {
       const name = orgName.get(orgId) ?? "?";
-      return el(
+      const row = el(
         "li",
         {},
         el("span", { class: "row-name" }, name),
@@ -1318,6 +1329,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           { "aria-label": `Remove consumer ${name}`, class: "subtle", id: `remove-consumer-${String(orgId)}` },
         ),
       );
+      return { label: name, detail: "", element: row };
     });
     const consumerPick = el("select", { id: "add-consumer" }, option("", "Choose a consuming organization"));
     for (const o of orgs) if (!consumerIds.includes(o.id)) consumerPick.append(option(String(o.id), o.name));
@@ -1345,11 +1357,20 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const name = serviceName.get(dep.providerServiceId) ?? "?";
       const provider = services.find((item) => item.id === dep.providerServiceId);
       const via = dep.viaCdsId === null ? "; No CDS recorded" : ` via ${cdsName.get(dep.viaCdsId) ?? "?"}`;
-      const route = el("span", { class: "route-edit" });
+      const networkName = networks.get(provider?.networkId ?? 0) ?? "?";
+      const label = `${name} (${networkName})`;
+      const actions = connectionActions(label);
+      const route = el("span", {
+        class: "route-edit inline-menu-task",
+        role: "group",
+        "aria-label": `Edit route for ${name}`,
+      });
+      route.hidden = true;
       const editRoute = button(
         "Edit route",
         () => {
-          const restoreMenu = exposeMenuTask(route, `Edit route for ${name}`);
+          actions.open = false;
+          route.hidden = false;
           const pick = el(
             "select",
             { "aria-label": `Route for ${name}` },
@@ -1379,37 +1400,35 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               changed("add-dependency");
             }),
             button("Cancel route", () => {
-              route.replaceChildren(editRoute);
-              if (restoreMenu) restoreMenu();
-              else editRoute.focus();
+              route.replaceChildren();
+              route.hidden = true;
+              actions.querySelector("summary")?.focus();
             }),
           );
           pick.focus();
         },
         { "aria-label": `Edit route to ${name}` },
       );
-      route.append(editRoute);
-      return el(
-        "li",
-        {},
-        el(
-          "div",
-          { class: "row-name" },
-          button(
-            `${name} (${networks.get(provider?.networkId ?? 0) ?? "?"})`,
-            () => {
-              ctx.requestNavigate?.({ type: "service", id: dep.providerServiceId }, "peek");
-            },
-            { class: "reference-link" },
-          ),
-          el("small", {}, via.replace(/^; /, "")),
+      const nameCell = el(
+        "div",
+        { class: "row-name" },
+        button(
+          label,
+          () => {
+            ctx.requestNavigate?.({ type: "service", id: dep.providerServiceId }, "peek");
+          },
+          { class: "reference-link" },
         ),
-        serviceId === null
-          ? null
-          : button(`Inspect connection to ${name} (${networks.get(provider?.networkId ?? 0) ?? "?"})`, () => {
-              ctx.requestDependency?.(serviceId, dep.providerServiceId);
-            }),
-        route,
+        el("small", {}, via.replace(/^; /, "")),
+      );
+      if (serviceId !== null)
+        actions.append(
+          button(`Inspect connection to ${label}`, () => {
+            ctx.requestDependency?.(serviceId, dep.providerServiceId);
+          }),
+        );
+      actions.append(
+        editRoute,
         button(
           "Remove",
           () => {
@@ -1423,6 +1442,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           },
         ),
       );
+      return { label: name, detail: `${networkName} ${via}`, element: el("li", {}, nameCell, actions, route) };
     });
     const taken = new Set(deps.map((dep) => dep.providerServiceId));
     const providerPick = el("select", { id: "add-dependency" }, option("", "Choose a service"));
@@ -1534,25 +1554,26 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         incoming.map((dep) => {
           const consumer = services.find((s) => s.id === dep.consumerServiceId);
           const label = `${consumer?.name ?? "Unavailable"} (${networks.get(consumer?.networkId ?? 0) ?? "?"})`;
-          return el(
-            "li",
-            {},
-            button(
-              label,
-              () => {
-                ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "peek");
-              },
-              { class: "reference-link" },
-            ),
+          const nameCell = button(
+            label,
+            () => {
+              ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "peek");
+            },
+            { class: "reference-link" },
+          );
+          const actions = connectionActions(label);
+          actions.append(
             button("Edit incoming dependency", () => {
               ctx.requestNavigate?.({ type: "service", id: dep.consumerServiceId }, "edit");
             }),
-            serviceId === null
-              ? null
-              : button(`Inspect incoming connection from ${label}`, () => {
-                  ctx.requestDependency?.(dep.consumerServiceId, serviceId);
-                }),
           );
+          if (serviceId !== null)
+            actions.append(
+              button(`Inspect incoming connection from ${label}`, () => {
+                ctx.requestDependency?.(dep.consumerServiceId, serviceId);
+              }),
+            );
+          return { label, detail: "", element: el("li", {}, nameCell, actions) };
         }),
       ),
     );

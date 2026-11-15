@@ -245,6 +245,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     findPage = 0;
     renderFindResults();
   });
+  findBox.addEventListener("focus", renderFindResults);
   findBox.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -252,11 +253,21 @@ export function createMapView(ctx: MapViewContext): MapView {
     }
     if (event.key === "ArrowDown") {
       event.preventDefault();
+      if (!findResults.hasChildNodes()) renderFindResults();
       findResults.querySelector<HTMLButtonElement>("li button")?.focus();
     }
-    if (event.key === "Escape") findResults.replaceChildren();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      findResults.replaceChildren();
+    }
   });
   findResults.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      findBox.focus();
+      findResults.replaceChildren();
+      return;
+    }
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     const controls = [...findResults.querySelectorAll<HTMLButtonElement>("li button")];
     const current = controls.indexOf(document.activeElement as HTMLButtonElement);
@@ -339,6 +350,16 @@ export function createMapView(ctx: MapViewContext): MapView {
     summary,
     exportStatus,
   );
+
+  // The search input and its results are one transient surface. Outside dismissal
+  // leaves the query intact and never steals focus from the next action.
+  const dismissOutsideFind = (event: Event) => {
+    const target = event.target;
+    if (target instanceof Node && !findBox.contains(target) && !findResults.contains(target))
+      findResults.replaceChildren();
+  };
+  element.ownerDocument.addEventListener("pointerdown", dismissOutsideFind, true);
+  element.ownerDocument.addEventListener("focusin", dismissOutsideFind);
 
   // "preset" keeps Cytoscape from running its default grid layout while the container is still detached.
   // chainRoot owns admitted selection. Native Cytoscape selection would happen before the
@@ -849,31 +870,50 @@ export function createMapView(ctx: MapViewContext): MapView {
     return { title: `${name} / ${viewName}`, details, legend };
   }
 
-  /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
-  async function exportView(): Promise<void> {
-    if (exporting || snapshot === null || cy.nodes().empty()) return;
+  function beginExport(format: "PNG" | "SVG"): boolean {
+    if (exporting || snapshot === null || cy.nodes().empty()) return false;
     exporting = true;
-    exportStatus.textContent = "Exporting PNG…";
+    exportStatus.textContent = `Exporting ${format}…`;
     element.setAttribute("aria-busy", "true");
     updateExportButtons();
+    return true;
+  }
+
+  // Keep this synchronous: source metadata and the renderer must freeze the same view.
+  function prepareExport() {
+    const source = ctx.captureSource();
+    const capturedName =
+      view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
+    const { marking, caveat } = ctx.snapshot();
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) throw new Error("no 2D canvas");
+    const measure = (text: string, font: string) => {
+      context.font = font;
+      return context.measureText(text).width;
+    };
+    const frame = layoutFrame(
+      cy.width() * 2,
+      captureContent(source.name, source.unsaved),
+      (text, size, bold) => measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
+      cy.height() * 2,
+    );
+    return { capturedName, marking, caveat, frame, measure };
+  }
+
+  function finishExport(format: "PNG" | "SVG"): void {
+    exporting = false;
+    element.setAttribute("aria-busy", "false");
+    if (exportStatus.textContent === `Exporting ${format}…`) exportStatus.textContent = `${format} export cancelled.`;
+    updateExportButtons();
+  }
+
+  /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
+  async function exportView(): Promise<void> {
+    if (!beginExport("PNG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
       if (cy.nodes().empty()) return;
-      const source = ctx.captureSource();
-      const capturedName =
-        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
-      const { marking, caveat } = ctx.snapshot();
-      const context = document.createElement("canvas").getContext("2d");
-      if (!context) throw new Error("no 2D canvas");
-      const frame = layoutFrame(
-        cy.width() * 2,
-        captureContent(source.name, source.unsaved),
-        (text, size, bold) => {
-          context.font = `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`;
-          return context.measureText(text).width;
-        },
-        cy.height() * 2,
-      );
+      const { capturedName, marking, caveat, frame } = prepareExport();
       let rendered: Promise<Blob>;
       try {
         applyZoom(true);
@@ -888,40 +928,17 @@ export function createMapView(ctx: MapViewContext): MapView {
     } catch {
       exportStatus.textContent = "Could not export PNG. Try again.";
     } finally {
-      exporting = false;
-      element.setAttribute("aria-busy", "false");
-      if (exportStatus.textContent === "Exporting PNG…") exportStatus.textContent = "PNG export cancelled.";
-      updateExportButtons();
+      finishExport("PNG");
     }
   }
 
   /** Freeze SVG scene and frame from the same current viewport without changing saved positions. */
   async function exportVector(): Promise<void> {
-    if (exporting || snapshot === null || cy.nodes().empty()) return;
-    exporting = true;
-    exportStatus.textContent = "Exporting SVG…";
-    element.setAttribute("aria-busy", "true");
-    updateExportButtons();
+    if (!beginExport("SVG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
       if (cy.nodes().empty()) return;
-      const source = ctx.captureSource();
-      const capturedName =
-        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
-      const { marking, caveat } = ctx.snapshot();
-      const context = document.createElement("canvas").getContext("2d");
-      if (!context) throw new Error("no 2D canvas");
-      const measure = (text: string, font: string) => {
-        context.font = font;
-        return context.measureText(text).width;
-      };
-      const frame = layoutFrame(
-        cy.width() * 2,
-        captureContent(source.name, source.unsaved),
-        (text, size, bold) =>
-          measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
-        cy.height() * 2,
-      );
+      const { capturedName, marking, caveat, frame, measure } = prepareExport();
       let scene: SvgScene;
       try {
         applyZoom(true);
@@ -935,10 +952,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     } catch {
       exportStatus.textContent = "Could not export SVG. Try again.";
     } finally {
-      exporting = false;
-      element.setAttribute("aria-busy", "false");
-      if (exportStatus.textContent === "Exporting SVG…") exportStatus.textContent = "SVG export cancelled.";
-      updateExportButtons();
+      finishExport("SVG");
     }
   }
 

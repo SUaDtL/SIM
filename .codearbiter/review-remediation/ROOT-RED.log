@@ -1,0 +1,254 @@
+
+Running 8 tests using 2 workers
+
+(node:58060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking (5.6s)
+  x  2 [msedge] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking (5.6s)
+(node:45716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger (5.7s)
+(node:56024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger (5.7s)
+(node:53768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger (5.6s)
+(node:45992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger (5.7s)
+(node:45612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [chrome] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions (5.6s)
+  x  8 [msedge] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions (5.7s)
+
+
+  1) [msedge] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByTestId('editor').locator('#field-networkId')
+    Expected: "2"
+    Received: "1"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByTestId('editor').locator('#field-networkId') with timeout 5000ms
+      - waiting for getByTestId('editor').locator('#field-networkId')
+        14 Ã— locator resolved to <select hidden="" id="field-networkId" data-reference="network" aria-describedby="field-networkId-error">â€¦</select>
+           - unexpected value "1"
+
+
+      25 |   await page.getByRole("button", { name: "Add service", exact: true }).click();
+      26 |   const editor = page.getByTestId("editor");
+    > 27 |   await expect(editor.locator("#field-networkId")).toHaveValue("2");
+         |                                                    ^
+      28 |   await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
+      29 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+      30 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:27:52
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-Add-se-8eb44-n-first-network-and-marking-msedge\error-context.md
+
+  2) [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('dialog[aria-label="Delete service"]')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('dialog[aria-label="Delete service"]') with timeout 5000ms
+      - waiting for locator('dialog[aria-label="Delete service"]')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      43 |       if (cancel === "Escape") await dialog.press("Escape");
+      44 |       else await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+    > 45 |       await expect(page.locator('dialog[aria-label="Delete service"]')).toHaveCount(0);
+         |                                                                         ^
+      46 |       await expect(trigger).toBeFocused();
+      47 |       await expect(trigger.locator("..")).not.toHaveAttribute("open");
+      48 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:45:73
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-read-s-9f996-estores-its-visible-trigger-msedge\error-context.md
+
+  3) [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('dialog[aria-label="Delete service"]')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('dialog[aria-label="Delete service"]') with timeout 5000ms
+      - waiting for locator('dialog[aria-label="Delete service"]')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      43 |       if (cancel === "Escape") await dialog.press("Escape");
+      44 |       else await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+    > 45 |       await expect(page.locator('dialog[aria-label="Delete service"]')).toHaveCount(0);
+         |                                                                         ^
+      46 |       await expect(trigger).toBeFocused();
+      47 |       await expect(trigger.locator("..")).not.toHaveAttribute("open");
+      48 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:45:73
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-read-s-a2d03-estores-its-visible-trigger-msedge\error-context.md
+
+  4) [msedge] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('editor').getByTestId('dependencies').locator('li')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('editor').getByTestId('dependencies').locator('li') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('dependencies').locator('li')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      59 |   const query = editor.getByRole("searchbox", { name: "Search outgoing dependencies", exact: true });
+      60 |   await query.fill("remove");
+    > 61 |   await expect(editor.getByTestId("dependencies").locator("li")).toHaveCount(0);
+         |                                                                  ^
+      62 |   await expect(editor.getByText("No matching relationships.", { exact: true })).toBeVisible();
+      63 |   await query.fill("First network");
+      64 |   await expect(editor.getByTestId("dependencies").locator("li")).toHaveCount(1);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:61:66
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-staged-b7740-context-rather-than-actions-msedge\error-context.md
+
+  5) [chrome] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByTestId('editor').locator('#field-networkId')
+    Expected: "2"
+    Received: "1"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByTestId('editor').locator('#field-networkId') with timeout 5000ms
+      - waiting for getByTestId('editor').locator('#field-networkId')
+        14 Ã— locator resolved to <select hidden="" id="field-networkId" data-reference="network" aria-describedby="field-networkId-error">â€¦</select>
+           - unexpected value "1"
+
+
+      25 |   await page.getByRole("button", { name: "Add service", exact: true }).click();
+      26 |   const editor = page.getByTestId("editor");
+    > 27 |   await expect(editor.locator("#field-networkId")).toHaveValue("2");
+         |                                                    ^
+      28 |   await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
+      29 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+      30 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:27:52
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-Add-se-8eb44-n-first-network-and-marking-chrome\error-context.md
+
+  6) [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('dialog[aria-label="Delete service"]')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('dialog[aria-label="Delete service"]') with timeout 5000ms
+      - waiting for locator('dialog[aria-label="Delete service"]')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      43 |       if (cancel === "Escape") await dialog.press("Escape");
+      44 |       else await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+    > 45 |       await expect(page.locator('dialog[aria-label="Delete service"]')).toHaveCount(0);
+         |                                                                         ^
+      46 |       await expect(trigger).toBeFocused();
+      47 |       await expect(trigger.locator("..")).not.toHaveAttribute("open");
+      48 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:45:73
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-read-s-9f996-estores-its-visible-trigger-chrome\error-context.md
+
+  7) [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('dialog[aria-label="Delete service"]')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('dialog[aria-label="Delete service"]') with timeout 5000ms
+      - waiting for locator('dialog[aria-label="Delete service"]')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      43 |       if (cancel === "Escape") await dialog.press("Escape");
+      44 |       else await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+    > 45 |       await expect(page.locator('dialog[aria-label="Delete service"]')).toHaveCount(0);
+         |                                                                         ^
+      46 |       await expect(trigger).toBeFocused();
+      47 |       await expect(trigger.locator("..")).not.toHaveAttribute("open");
+      48 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:45:73
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-read-s-a2d03-estores-its-visible-trigger-chrome\error-context.md
+
+  8) [chrome] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('editor').getByTestId('dependencies').locator('li')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('editor').getByTestId('dependencies').locator('li') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('dependencies').locator('li')
+        14 Ã— locator resolved to 1 element
+           - unexpected value "1"
+
+
+      59 |   const query = editor.getByRole("searchbox", { name: "Search outgoing dependencies", exact: true });
+      60 |   await query.fill("remove");
+    > 61 |   await expect(editor.getByTestId("dependencies").locator("li")).toHaveCount(0);
+         |                                                                  ^
+      62 |   await expect(editor.getByText("No matching relationships.", { exact: true })).toBeVisible();
+      63 |   await query.fill("First network");
+      64 |   await expect(editor.getByTestId("dependencies").locator("li")).toHaveCount(1);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\review-expectations.spec.ts:61:66
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-review-remediation-20261115\root-red-results\review-expectations-staged-b7740-context-rather-than-actions-chrome\error-context.md
+
+  8 failed
+    [msedge] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking
+    [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger
+    [msedge] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger
+    [msedge] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions
+    [chrome] â€º e2e\review-expectations.spec.ts:22:1 â€º Add service inherits the active non-first network and marking
+    [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Cancel removes each dialog and restores its visible trigger
+    [chrome] â€º e2e\review-expectations.spec.ts:33:3 â€º read-summary Delete Escape removes each dialog and restores its visible trigger
+    [chrome] â€º e2e\review-expectations.spec.ts:54:1 â€º staged relationship search indexes domain labels and context rather than actions

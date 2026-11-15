@@ -23,6 +23,8 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Seed Add service from the active network scope and marking; close map Find suggestions on outside interaction or Escape, and remove cancelled deletion dialogs while restoring trigger focus.
+- Search staged relationships by recorded names and context, with shared pagination and explicit action/form ownership; consolidate relationship projections, capture setup and shadowed CSS while preserving existing behavior.
 - Keep keyboard focus on an enabled pagination control at first/last-page boundaries in relationship lists, checklist choices and import diagnostics.
 - Dismiss floating menus when another menu opens, focus or a click moves elsewhere, an action is chosen or Escape is pressed; preserve filter editing, modal focus and inline disclosures.
 - Open populated inventories on Services with direct network scope, separated service context and per-type search/page/scroll memory; preserve keyboard visibility and complete browsing context through selection and Back.

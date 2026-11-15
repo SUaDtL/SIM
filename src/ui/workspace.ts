@@ -325,6 +325,22 @@ export function createWorkspace(
     syncSurface();
   }
 
+  async function openServiceOnNetwork(networkId: number): Promise<void> {
+    if (!(await prepareNavigation())) return;
+    if (!repo.getNetwork(networkId)) {
+      pendingReturn = null;
+      navigationStatus.textContent = "That network no longer exists. Choose another network.";
+      return;
+    }
+    rememberReturn();
+    projectedOrigin = null;
+    inspectorParked = false;
+    editor.openServiceOnNetwork(networkId);
+    navigationStatus.textContent = "";
+    list.reveal("service");
+    syncSurface();
+  }
+
   const editor = createEditor({
     repo: () => repo,
     selectionChanged: () => {
@@ -336,12 +352,7 @@ export function createWorkspace(
       onDraftChanged();
     },
     requestServiceOnNetwork: (networkId) => {
-      void (async () => {
-        if (await resolveActiveDraft("navigate")) {
-          inspectorParked = false;
-          editor.openServiceOnNetwork(networkId);
-        }
-      })();
+      void openServiceOnNetwork(networkId);
     },
     requestNavigate: (target, intent) => {
       if (intent === "peek") peek(target);
@@ -376,6 +387,9 @@ export function createWorkspace(
   const list = createListPanel({
     repo: () => repo,
     selection: () => editor.selection(),
+    requestServiceOnNetwork: (networkId) => {
+      void openServiceOnNetwork(networkId);
+    },
     select: (type, id) => {
       void open(type, id);
     },

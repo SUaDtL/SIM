@@ -11,6 +11,7 @@ export interface ListPanelContext {
   repo(): Repository;
   selection(): Selection | null;
   select(type: EntityType, id: number | null): void;
+  requestServiceOnNetwork?(networkId: number): void;
 }
 
 export interface ListPanel {
@@ -97,7 +98,9 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     render();
   });
   const addButton = button("", () => {
-    ctx.select(type, null);
+    const scoped = network.value ? ctx.repo().getNetwork(Number(network.value)) : undefined;
+    if (type === "service" && scoped && ctx.requestServiceOnNetwork) ctx.requestServiceOnNetwork(scoped.id);
+    else ctx.select(type, null);
   });
   addButton.className = "primary";
   const hint = el("p", { class: "hint", "data-testid": "add-hint" });
