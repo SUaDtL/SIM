@@ -38,7 +38,7 @@ test("ships the CON-006 Content Security Policy and boots under it with no viola
 
 test("the policy blocks network access from inside the page", async ({ page }) => {
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
 
   const result = await page.evaluate(async () => {
     try {

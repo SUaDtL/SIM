@@ -17,13 +17,15 @@ import {
   traceChain,
 } from "./graph";
 import { frameWithBanner, layoutFrame, type FrameContent } from "./export";
-import { mapStyle } from "./style";
+import { MAP_BACKGROUND, mapStyle } from "./style";
 import { svgDocument, type SvgScene } from "./svg";
 import { sceneFromMap } from "./svg-scene";
 import { applyScenario, type Comparison, compareScenario } from "../scenario/scenario";
 import { searchEntities } from "../ui/relations";
 import type { EntityType } from "../ui/forms";
 import { focusGraph, type FocusRequest } from "./focus";
+import { routeOffset } from "./route-offset";
+import "./market.css";
 
 cytoscape.use(fcose);
 
@@ -32,6 +34,7 @@ export interface MapViewState {
   readonly view: View;
   readonly filter: MapFilter;
   readonly chainRoot: string | null;
+  readonly selectedNode?: string | null;
   readonly foundational: boolean;
   readonly zoom: number;
   readonly pan: { x: number; y: number };
@@ -88,6 +91,8 @@ export interface MapView {
   captureView(): MapViewState;
   restoreView(state: MapViewState): void;
   reveal(entity: MapEntity, id: number): void;
+  /** Select a focus subject without changing the viewport or the current map question. */
+  select(entity: MapEntity, id: number): void;
 }
 
 // Readable on-screen label sizes, in pixels (WORK-018). Service labels smaller than this are
@@ -193,6 +198,15 @@ export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
   const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
+  const scope = el("p", { class: "map-scope", "data-testid": "map-scope", "aria-live": "polite" });
+  let scopeEntries: readonly string[] = [];
+  const legend = el(
+    "p",
+    { class: "map-legend", "data-testid": "map-legend" },
+    el("span", {}, "Arrows: consumer → provider"),
+    el("span", { class: "map-legend-crossing" }, "Red dashed: cross-network, no CDS recorded"),
+    el("span", {}, "Recorded dependencies; connectivity is not verified"),
+  );
   const exportStatus = el("p", { class: "map-feedback", "data-testid": "map-export-status", role: "status" });
   // As-Is, a To-Be scenario, or one map comparing a scenario with As-Is (WORK-013).
   const viewSelect = el("select", { id: "map-view" });
@@ -224,30 +238,44 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
   // Find a node by name: pick from the suggestions (or type a full name) and press Enter.
   const findOptions = el("datalist", { id: "map-find-options" });
-  const findBox = el("input", { id: "map-find", type: "search", list: "map-find-options", autocomplete: "off" });
-  let findEdited = false;
+  const findBox = el("input", { id: "map-find", type: "search", autocomplete: "off" });
+  let findPage = 0;
   const findResults = el("div", { "data-testid": "find-results", class: "find-results", "aria-live": "polite" });
   findBox.addEventListener("input", () => {
-    findEdited = true;
+    findPage = 0;
     renderFindResults();
   });
+  findBox.addEventListener("focus", renderFindResults);
   findBox.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      findEdited = false;
       void find(findBox.value);
     }
-    if (event.key === "Escape") findResults.replaceChildren();
-  });
-  findBox.addEventListener("change", () => {
-    findEdited = false;
-    void find(findBox.value);
-  });
-  findBox.addEventListener("blur", () => {
-    if (findEdited) {
-      findEdited = false;
-      void find(findBox.value);
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (!findResults.hasChildNodes()) renderFindResults();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
     }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      findResults.replaceChildren();
+    }
+  });
+  findResults.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      findBox.focus();
+      findResults.replaceChildren();
+      return;
+    }
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const controls = [...findResults.querySelectorAll<HTMLButtonElement>("li button")];
+    const current = controls.indexOf(document.activeElement as HTMLButtonElement);
+    if (current < 0) return;
+    event.preventDefault();
+    const index = current + (event.key === "ArrowDown" ? 1 : -1);
+    if (index < 0) findBox.focus();
+    else controls[Math.min(index, controls.length - 1)]?.focus();
   });
   // The label sits beside its list, not around it, so the list's name is just the label.
   const filterLabel = (text: string, select: HTMLSelectElement) =>
@@ -255,7 +283,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   const fit = button("Fit map", () => {
     fitMap();
   });
-  const exportPng = button("Export PNG", () => {
+  const exportPng = button("Capture", () => {
     void exportView();
   });
   const exportSvg = button("Export SVG", () => {
@@ -270,32 +298,46 @@ export function createMapView(ctx: MapViewContext): MapView {
     fitMap();
     persist("own");
   });
+  exportPng.title = "Capture the current map as PNG";
+  const filtersTitle = el("summary", {}, "Filters");
+  const filtersPanel = el(
+    "details",
+    { class: "map-filter-panel" },
+    filtersTitle,
+    el(
+      "div",
+      { class: "map-tools", role: "group", "aria-label": "Filter the map" },
+      filterLabel("Network", filterNetwork),
+      filterLabel("Category", filterCategory),
+      filterLabel("Organization", filterOrg),
+      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
+    ),
+  );
+  const layoutPanel = el("details", { class: "map-layout-panel" }, el("summary", {}, "Layout"), relayout);
+  const capturePanel = el("details", { class: "map-capture-panel" }, el("summary", {}, "Capture options"), exportSvg);
   const toolbar = el(
     "div",
     { class: "map-toolbar" },
     el(
       "div",
-      { class: "map-tools" },
+      { class: "map-tools map-primary-tools" },
       el("span", { class: "map-filter" }, el("label", { for: viewSelect.id }, "View"), viewSelect),
-      metrics,
-    ),
-    el(
-      "div",
-      { class: "map-tools", role: "group", "aria-label": "Filter the map" },
-      el("span", { class: "map-filter" }, el("label", { for: findBox.id }, "Find on map"), findBox, findOptions),
-      filterLabel("Network", filterNetwork),
-      filterLabel("Category", filterCategory),
-      filterLabel("Organization", filterOrg),
-    ),
-    el(
-      "div",
-      { class: "map-tools" },
-      el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
-      relayout,
+      el(
+        "span",
+        { class: "map-filter map-discovery" },
+        el("label", { for: findBox.id }, "Find on map"),
+        findBox,
+        findOptions,
+      ),
+      filtersPanel,
       fit,
+      layoutPanel,
       exportPng,
-      exportSvg,
+      capturePanel,
     ),
+    metrics,
+    scope,
+    legend,
   );
   const element = el(
     "section",
@@ -308,6 +350,16 @@ export function createMapView(ctx: MapViewContext): MapView {
     summary,
     exportStatus,
   );
+
+  // The search input and its results are one transient surface. Outside dismissal
+  // leaves the query intact and never steals focus from the next action.
+  const dismissOutsideFind = (event: Event) => {
+    const target = event.target;
+    if (target instanceof Node && !findBox.contains(target) && !findResults.contains(target))
+      findResults.replaceChildren();
+  };
+  element.ownerDocument.addEventListener("pointerdown", dismissOutsideFind, true);
+  element.ownerDocument.addEventListener("focusin", dismissOutsideFind);
 
   // "preset" keeps Cytoscape from running its default grid layout while the container is still detached.
   // chainRoot owns admitted selection. Native Cytoscape selection would happen before the
@@ -327,6 +379,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   let positions: readonly NodePosition[] = [];
   /** The node whose chain is highlighted (decomposition CAP-005), if any. */
   let chainRoot: string | null = null;
+  let selectedNode: string | null = null;
   let filter: MapFilter = {};
   let view: View = { kind: "as-is" };
   let comparison: Comparison | null = null;
@@ -334,38 +387,58 @@ export function createMapView(ctx: MapViewContext): MapView {
   let focusReturn: MapViewState | null = null;
   let navigationIntent = 0;
   let navigationBusy = false;
+  let pendingVisibleNode: string | null = null;
 
   const focusStatus = el("p", { class: "map-feedback", "data-testid": "focus-status", role: "status" });
-  const focusTools = el("div", { class: "map-tools", role: "group", "aria-label": "Focus map" });
+  const selectedLabel = el("span", { class: "map-selected-label" });
+  const focusTools = el(
+    "div",
+    { class: "map-tools map-selection-actions", role: "group", "aria-label": "Focus map" },
+    selectedLabel,
+  );
+  const focusButtons: { button: HTMLButtonElement; kind: FocusRequest["kind"] }[] = [];
   for (const [label, kind] of [
     ["Depends on", "depends-on"],
     ["Used by", "used-by"],
     ["Network connections", "network-connections"],
   ] as const) {
-    focusTools.append(
-      button(label, () => {
-        const selected = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
-        const subject =
-          kind === "network-connections"
-            ? selected?.data.entity === "network"
-              ? selected.data.id
-              : selected?.data.parent
-            : selected?.data.entity === "service"
-              ? selected.data.id
-              : undefined;
-        if (!subject) {
-          focusStatus.textContent =
-            kind === "network-connections" ? "Select a network or service first." : "Select a service first.";
-          return;
-        }
-        if (!focusReturn) focusReturn = captureView();
-        focus = { kind, subject, depth: 1 };
-        applyView();
-        fitMap();
-      }),
-    );
+    const control = button(label, () => {
+      const selected = selectedNode === null ? undefined : graph.nodes.find((n) => n.data.id === selectedNode);
+      const subject =
+        kind === "network-connections"
+          ? selected?.data.entity === "network"
+            ? selected.data.id
+            : selected?.data.parent
+          : selected?.data.entity === "service"
+            ? selected.data.id
+            : undefined;
+      if (!subject) {
+        focusStatus.textContent =
+          kind === "network-connections" ? "Select a network or service first." : "Select a service first.";
+        return;
+      }
+      if (!focusReturn) focusReturn = captureView();
+      focus = { kind, subject, depth: 1 };
+      chainRoot = null;
+      applyView();
+      fitMap();
+    });
+    focusButtons.push({ button: control, kind });
+    focusTools.append(control);
   }
-  focusTools.append(
+  const highlight = button("Highlight chain", () => {
+    if (selectedNode === null) return;
+    chainRoot = selectedNode;
+    applyView();
+  });
+  const clearHighlight = button("Clear highlight", () => {
+    chainRoot = null;
+    applyView();
+  });
+  focusTools.append(highlight, clearHighlight);
+  const focusActions = el(
+    "div",
+    { class: "map-tools map-focus-actions", role: "group", "aria-label": "Current focus" },
     button("Expand focus", () => {
       if (focus) {
         focus = { ...focus, depth: focus.depth + 1 };
@@ -379,10 +452,10 @@ export function createMapView(ctx: MapViewContext): MapView {
     button("Back from focus", () => {
       const prior = focusReturn;
       focusReturn = null;
-      if (prior) restoreView(prior);
+      if (prior) restoreView({ ...prior, selectedNode });
     }),
   );
-  toolbar.append(focusTools, focusStatus);
+  toolbar.append(focusTools, focusActions, focusStatus);
   type PlacementJob = {
     history: History;
     readonly origin: { readonly sessionId: number; readonly revision: number };
@@ -490,18 +563,25 @@ export function createMapView(ctx: MapViewContext): MapView {
         ctx.navigationAborted?.();
         return false;
       }
-      if (revealFiltered) focus = null;
-      if (target.hasClass("filtered")) {
+      if (revealFiltered && focus === null && target.hasClass("filtered")) {
         for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
         filter = {};
       }
-      chainRoot = node.data.id;
+      selectedNode = node.data.id;
       applyView();
-      if (revealFiltered) {
+      if (revealFiltered && focus === null) {
         if (cy.zoom() < 0.8) cy.zoom(0.8);
         cy.center(target);
       }
+      pendingVisibleNode = node.data.id;
       openNode(node);
+      // Opening the inspector changes the canvas width. Read its accepted size before
+      // keeping this node visible; node positions and zoom belong to the existing view.
+      requestAnimationFrame(() => {
+        if (request !== navigationIntent || session !== ctx.captureSource().sessionId) return;
+        cy.resize();
+        keepAcceptedNodeVisible();
+      });
       findResults.replaceChildren();
       findBox.value = "";
       return true;
@@ -538,8 +618,32 @@ export function createMapView(ctx: MapViewContext): MapView {
         }),
       ),
     );
-    findResults.replaceChildren(...controls);
-    if (controls.length === 0) findResults.textContent = "No matching records. Search names across record types.";
+    const pages = Math.max(1, Math.ceil(controls.length / 30));
+    findPage = Math.max(0, Math.min(findPage, pages - 1));
+    const rows = controls.slice(findPage * 30, (findPage + 1) * 30);
+    const previous = button("Previous search results", () => {
+      findPage--;
+      renderFindResults();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
+    });
+    const next = button("Next search results", () => {
+      findPage++;
+      renderFindResults();
+      findResults.querySelector<HTMLButtonElement>("li button")?.focus();
+    });
+    previous.disabled = findPage === 0;
+    next.disabled = findPage + 1 >= pages;
+    findResults.replaceChildren(
+      el(
+        "p",
+        { role: "status", class: "find-count" },
+        controls.length === 0
+          ? "No matching records. Search names across record types."
+          : `${String(findPage * 30 + 1)}–${String(findPage * 30 + rows.length)} of ${String(controls.length)} matching records`,
+      ),
+      el("ul", { class: "find-result-list" }, ...rows.map((control) => el("li", {}, control))),
+      ...(pages > 1 ? [el("nav", { "aria-label": "Search result pages" }, previous, next)] : []),
+    );
   }
 
   /** The id selected in a filter list, or undefined for "All". */
@@ -573,8 +677,28 @@ export function createMapView(ctx: MapViewContext): MapView {
    */
   function applyView(): void {
     if (chainRoot !== null && cy.getElementById(chainRoot).empty()) chainRoot = null;
+    if (selectedNode !== null && cy.getElementById(selectedNode).empty()) selectedNode = null;
+    const selected = selectedNode === null ? undefined : graph.nodes.find((node) => node.data.id === selectedNode);
+    selectedLabel.textContent = selected ? `Selected: ${findName(selected)}` : "";
+    for (const control of focusButtons) {
+      control.button.hidden =
+        control.kind === "network-connections"
+          ? selected?.data.entity !== "service" && selected?.data.entity !== "network"
+          : selected?.data.entity !== "service";
+    }
+    highlight.hidden = selected === undefined;
+    clearHighlight.hidden = chainRoot === null;
+    focusTools.hidden = selected === undefined && chainRoot === null;
+    focusActions.hidden = focus === null;
+    const activeFilters =
+      [filterNetwork, filterCategory, filterOrg].filter((select) => select.value !== "").length +
+      (showFoundational ? 1 : 0);
+    filtersTitle.textContent = activeFilters === 0 ? "Filters" : `Filters (${String(activeFilters)})`;
     const chain: Chain | null = chainRoot === null ? null : traceChain(graph, chainRoot);
     const membership = focus ? focusGraph(graph, focus) : null;
+    if (selected && membership && !membership.visible.has(selected.data.id)) {
+      selectedLabel.textContent = `Selected: ${findName(selected)} (outside current focus)`;
+    }
     const filtered = membership
       ? new Set(
           [...graph.nodes, ...graph.edges]
@@ -594,7 +718,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         e.toggleClass("hidden", e.hasClass("to-foundational") && !showFoundational && membership === null);
         e.toggleClass("remote-endpoint", membership?.remote.has(id) ?? false);
         e.toggleClass("chain", inChain);
-        e.toggleClass("chain-root", id === chainRoot);
+        e.toggleClass("chain-root", id === selectedNode);
         e.toggleClass("dimmed", chain !== null && !inChain);
         e.toggleClass("filtered", filtered.has(id));
         const status = comparison && e.isNode() ? comparison.status.get(e.data("entityId") as number) : undefined;
@@ -614,6 +738,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
+    applyRouteOffsets();
     const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
     foundationalLabel.textContent = `Show foundational links (${String(links)})`;
     const root = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
@@ -649,6 +774,65 @@ export function createMapView(ctx: MapViewContext): MapView {
       ...(chain && root ? { chain: { label: root.data.label.split("\n")[0] ?? "", ...chain } } : {}),
       ...(filtered.size > 0 ? { filtered } : {}),
     });
+    const total = new Set(graph.edges.map((edge) => edge.data.dependency)).size;
+    const qualifiers = [
+      `${String(hiddenFoundational)} foundational ${hiddenFoundational === 1 ? "dependency" : "dependencies"} hidden · ` +
+        `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
+      ...(focus ? [focusGraph(graph, focus).label] : []),
+      ...(
+        [
+          ["Network", filterNetwork],
+          ["Category", filterCategory],
+          ["Organization", filterOrg],
+        ] as const
+      ).flatMap(([label, select]) =>
+        select.value
+          ? [
+              `${label}${focus ? " filter suspended during focus" : ""}: ${select.selectedOptions[0]?.textContent ?? select.value}`,
+            ]
+          : [],
+      ),
+    ];
+    scopeEntries = qualifiers;
+    scope.textContent = qualifiers.join(" · ");
+  }
+
+  /** Route decoration changes display geometry only, never the snapshot or repository. */
+  function applyRouteOffsets(): void {
+    cy.edges().removeStyle("curve-style control-point-distances control-point-weights");
+    const leaves = cy.nodes().filter((node) => !node.isParent() && node.visible());
+    // Compound containers are intentionally crossed. Only their title/marking text is an obstacle.
+    const headings = cy
+      .nodes(".network")
+      .filter((node) => node.visible())
+      .map((node) => {
+        const box = node.boundingBox({
+          includeNodes: false,
+          includeEdges: false,
+          includeLabels: true,
+          includeOverlays: false,
+        });
+        return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
+      });
+    cy.edges()
+      .filter((edge) => edge.visible())
+      .forEach((edge) => {
+        const source = edge.source();
+        const target = edge.target();
+        const obstacles = [
+          ...leaves
+            .filter((node) => node.id() !== source.id() && node.id() !== target.id())
+            .map((node) => node.boundingBox({ includeLabels: true, includeOverlays: false })),
+          ...headings,
+        ];
+        const distance = routeOffset(source.position(), target.position(), obstacles);
+        if (distance !== 0)
+          edge.style({
+            "curve-style": "unbundled-bezier",
+            "control-point-distances": String(distance),
+            "control-point-weights": "0.5",
+          });
+      });
   }
 
   function updateExportButtons(): void {
@@ -659,20 +843,9 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   function captureContent(name: string, unsaved: boolean): FrameContent {
     const viewName = viewSelect.selectedOptions[0]?.textContent ?? "As-Is";
-    const activeFilters: [string, HTMLSelectElement][] = [
-      ["Network", filterNetwork],
-      ["Category", filterCategory],
-      ["Organization", filterOrg],
-    ];
     const details = [
-      ...(focus ? [focusGraph(graph, focus).label] : []),
-      ...activeFilters.flatMap(([label, select]) =>
-        select.value
-          ? [
-              `${label}${focus ? " filter suspended during focus" : ""}: ${select.selectedOptions[0]?.textContent ?? select.value}`,
-            ]
-          : [],
-      ),
+      ...scopeEntries,
+      "Current viewport: records outside the pan/zoom view are not captured",
       ...(chainRoot === null
         ? []
         : [
@@ -689,6 +862,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     const edges = visible.edges();
     const nodes = visible.nodes();
     const legend = [
+      "Recorded dependencies; connectivity is not verified",
       ...(edges.nonempty() ? ["Depends on: consumer → provider"] : []),
       ...(edges.filter(".via-cds").nonempty() ? ["Dependency routed via CDS"] : []),
       ...(edges.filter(".cross-domain").nonempty() ? ["Cross-network dependency, no CDS recorded"] : []),
@@ -705,30 +879,54 @@ export function createMapView(ctx: MapViewContext): MapView {
     return { title: `${name} / ${viewName}`, details, legend };
   }
 
-  /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
-  async function exportView(): Promise<void> {
-    if (exporting || snapshot === null || cy.nodes().empty()) return;
+  function beginExport(format: "PNG" | "SVG"): boolean {
+    if (exporting || snapshot === null || cy.nodes().empty()) return false;
     exporting = true;
-    exportStatus.textContent = "Exporting PNG…";
+    exportStatus.textContent = `Exporting ${format}…`;
     element.setAttribute("aria-busy", "true");
     updateExportButtons();
+    return true;
+  }
+
+  // Keep this synchronous: source metadata and the renderer must freeze the same view.
+  function prepareExport() {
+    const source = ctx.captureSource();
+    const capturedName =
+      view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
+    const { marking, caveat } = ctx.snapshot();
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) throw new Error("no 2D canvas");
+    const measure = (text: string, font: string) => {
+      context.font = font;
+      return context.measureText(text).width;
+    };
+    const frame = layoutFrame(
+      cy.width() * 2,
+      captureContent(source.name, source.unsaved),
+      (text, size, bold) => measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
+      cy.height() * 2,
+    );
+    return { capturedName, marking, caveat, frame, measure };
+  }
+
+  function finishExport(format: "PNG" | "SVG"): void {
+    exporting = false;
+    element.setAttribute("aria-busy", "false");
+    if (exportStatus.textContent === `Exporting ${format}…`) exportStatus.textContent = `${format} export cancelled.`;
+    updateExportButtons();
+  }
+
+  /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
+  async function exportView(): Promise<void> {
+    if (!beginExport("PNG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
       if (cy.nodes().empty()) return;
-      const source = ctx.captureSource();
-      const capturedName =
-        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
-      const { marking, caveat } = ctx.snapshot();
-      const context = document.createElement("canvas").getContext("2d");
-      if (!context) throw new Error("no 2D canvas");
-      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) => {
-        context.font = `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`;
-        return context.measureText(text).width;
-      });
+      const { capturedName, marking, caveat, frame } = prepareExport();
       let rendered: Promise<Blob>;
       try {
         applyZoom(true);
-        rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: "#ffffff", full: false, scale: 2 }));
+        rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: MAP_BACKGROUND, full: false, scale: 2 }));
       } finally {
         applyZoom();
       }
@@ -739,36 +937,17 @@ export function createMapView(ctx: MapViewContext): MapView {
     } catch {
       exportStatus.textContent = "Could not export PNG. Try again.";
     } finally {
-      exporting = false;
-      element.setAttribute("aria-busy", "false");
-      if (exportStatus.textContent === "Exporting PNG…") exportStatus.textContent = "PNG export cancelled.";
-      updateExportButtons();
+      finishExport("PNG");
     }
   }
 
   /** Freeze SVG scene and frame from the same current viewport without changing saved positions. */
   async function exportVector(): Promise<void> {
-    if (exporting || snapshot === null || cy.nodes().empty()) return;
-    exporting = true;
-    exportStatus.textContent = "Exporting SVG…";
-    element.setAttribute("aria-busy", "true");
-    updateExportButtons();
+    if (!beginExport("SVG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
       if (cy.nodes().empty()) return;
-      const source = ctx.captureSource();
-      const capturedName =
-        view.kind === "as-is" ? source.name : `${source.name} ${viewSelect.selectedOptions[0]?.textContent ?? ""}`;
-      const { marking, caveat } = ctx.snapshot();
-      const context = document.createElement("canvas").getContext("2d");
-      if (!context) throw new Error("no 2D canvas");
-      const measure = (text: string, font: string) => {
-        context.font = font;
-        return context.measureText(text).width;
-      };
-      const frame = layoutFrame(cy.width() * 2, captureContent(source.name, source.unsaved), (text, size, bold) =>
-        measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
-      );
+      const { capturedName, marking, caveat, frame, measure } = prepareExport();
       let scene: SvgScene;
       try {
         applyZoom(true);
@@ -782,10 +961,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     } catch {
       exportStatus.textContent = "Could not export SVG. Try again.";
     } finally {
-      exporting = false;
-      element.setAttribute("aria-busy", "false");
-      if (exportStatus.textContent === "Exporting SVG…") exportStatus.textContent = "SVG export cancelled.";
-      updateExportButtons();
+      finishExport("SVG");
     }
   }
 
@@ -828,6 +1004,28 @@ export function createMapView(ctx: MapViewContext): MapView {
     needsFit = false;
     fitMap();
   }
+  function keepAcceptedNodeVisible(): void {
+    if (pendingVisibleNode !== selectedNode) pendingVisibleNode = null;
+    if (pendingVisibleNode === null || canvas.clientWidth === 0 || canvas.clientHeight === 0) return;
+    const node = cy.getElementById(pendingVisibleNode);
+    pendingVisibleNode = null;
+    if (node.empty() || !node.visible()) return;
+    const box = node.renderedBoundingBox({ includeLabels: false, includeOverlays: false });
+    const position = node.renderedPosition();
+    const shift = (start: number, end: number, center: number, size: number) => {
+      const margin = Math.min(FIT_MARGIN, size / 4);
+      if (end - start > size - margin * 2) return Math.max(margin, Math.min(size - margin, center)) - center;
+      if (start < margin) return margin - start;
+      if (end > size - margin) return size - margin - end;
+      return 0;
+    };
+    const x = shift(box.x1, box.x2, position.x, cy.width());
+    const y = shift(box.y1, box.y2, position.y, cy.height());
+    if (x !== 0 || y !== 0) {
+      const pan = cy.pan();
+      cy.pan({ x: pan.x + x, y: pan.y + y });
+    }
+  }
   let zoomQueued = false;
   cy.on("zoom", () => {
     if (zoomQueued) return;
@@ -847,13 +1045,14 @@ export function createMapView(ctx: MapViewContext): MapView {
   new ResizeObserver(() => {
     cy.resize();
     fitWhenSized();
+    keepAcceptedNodeVisible();
   }).observe(canvas);
 
   // A core-level listener sees each tap once, on the innermost node (compound events bubble).
   cy.on("tap", (event) => {
     const target = event.target as Core | NodeSingular;
     if (target === cy) {
-      chainRoot = null;
+      selectedNode = null;
       applyView();
       return;
     }
@@ -871,6 +1070,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   });
   // Dragging a network drags its services; either way, save the new arrangement.
   cy.on("dragfree", "node", () => {
+    applyRouteOffsets();
     persist("own");
   });
 
@@ -1044,7 +1244,9 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   /** Redraw for another view, keeping the viewport so As-Is and To-Be line up. */
   function switchView(): void {
+    pendingVisibleNode = null;
     chainRoot = null;
+    selectedNode = null;
     cy.elements().remove();
     const fresh = sync();
     if (fresh.nonempty()) {
@@ -1080,6 +1282,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   function reset(): void {
     ++navigationIntent;
+    pendingVisibleNode = null;
     focus = null;
     focusReturn = null;
     findResults.replaceChildren();
@@ -1087,6 +1290,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     showFoundational = false;
     foundationalBox.checked = false;
     chainRoot = null;
+    selectedNode = null;
     for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
     cy.elements().remove();
     const fresh = sync();
@@ -1110,6 +1314,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       view: { ...view },
       filter: { ...filter },
       chainRoot,
+      selectedNode,
       foundational: showFoundational,
       zoom: cy.zoom(),
       pan: { ...cy.pan() },
@@ -1117,6 +1322,8 @@ export function createMapView(ctx: MapViewContext): MapView {
     };
   }
   function restoreView(saved: MapViewState): void {
+    // Back restores an exact historical viewport even if a resize is still queued.
+    pendingVisibleNode = null;
     view = saved.view;
     switchView();
     filterNetwork.value = saved.filter.networkId === undefined ? "" : String(saved.filter.networkId);
@@ -1124,6 +1331,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     filterOrg.value = saved.filter.orgId === undefined ? "" : String(saved.filter.orgId);
     filter = readFilter();
     chainRoot = saved.chainRoot;
+    selectedNode = saved.selectedNode === undefined ? saved.chainRoot : saved.selectedNode;
     focus = saved.focus;
     showFoundational = saved.foundational;
     foundationalBox.checked = showFoundational;
@@ -1132,16 +1340,33 @@ export function createMapView(ctx: MapViewContext): MapView {
     cy.pan(saved.pan);
   }
   function reveal(entity: MapEntity, id: number): void {
+    pendingVisibleNode = null;
     const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
     if (!node) return;
-    if (!cy.getElementById(node.data.id).visible()) {
+    if (focus === null && !cy.getElementById(node.data.id).visible()) {
       for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
       filter = {};
-      focus = null;
     }
-    chainRoot = node.data.id;
+    selectedNode = node.data.id;
     applyView();
-    cy.center(cy.getElementById(node.data.id));
+    if (focus === null) cy.center(cy.getElementById(node.data.id));
   }
-  return { element, refresh, reset, settlePendingPlacement, showAsIs, inspectOrigin, captureView, restoreView, reveal };
+  function select(entity: MapEntity, id: number): void {
+    const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
+    selectedNode = node?.data.id ?? null;
+    if (pendingVisibleNode !== selectedNode) pendingVisibleNode = null;
+    applyView();
+  }
+  return {
+    element,
+    refresh,
+    reset,
+    settlePendingPlacement,
+    showAsIs,
+    inspectOrigin,
+    captureView,
+    restoreView,
+    reveal,
+    select,
+  };
 }

@@ -1,3 +1,4 @@
+import { chooseReference, editSelected, editorSection, openFileMenu, showInventory } from "./helpers/usability";
 import { expect, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -14,28 +15,36 @@ test("an existing service keeps fields and relations in one pending edit", async
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Networks");
   await page.getByRole("button", { name: "Add network" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Amber");
   await page.getByRole("button", { name: "Add network" }).last().click();
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Organizations");
   await page.getByRole("button", { name: "Add organization" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Ops");
   await page.getByRole("button", { name: "Add organization" }).last().click();
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Services");
   await page.getByRole("button", { name: "Add service" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Mail");
   await page.getByRole("button", { name: "Add service" }).last().click();
+  await editSelected(page);
   await page.getByLabel("Name", { exact: true }).fill("Mail revised");
-  await page.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Ops" });
+  await editorSection(page, "Support");
+  await chooseReference(page, "Tier 1 support", "Ops");
   await page.getByLabel("Tier 1 support notes").fill("Day shift");
   await expect(page.getByTestId("draft-status")).toContainText("Unapplied changes");
   await page.getByRole("button", { name: "Apply changes" }).click();
   await expect(page.getByTestId("draft-status")).not.toContainText("Unapplied changes");
   await expect(page.getByTestId("editor")).toContainText("Ops");
+  await editorSection(page, "Support");
   await expect(page.getByLabel("Tier 1 support notes")).toHaveValue("Day shift");
   await page.getByRole("button", { name: "Undo" }).click();
+  await editorSection(page, "Details");
   await expect(page.getByLabel("Name", { exact: true })).toHaveValue("Mail");
+  await editorSection(page, "Support");
   await expect(page.getByLabel("Tier 1 support", { exact: true }).locator("option:checked")).toHaveText("(none)");
   await expect(page.getByLabel("Tier 1 support notes")).toBeDisabled();
 });
@@ -43,28 +52,32 @@ test("an existing service keeps fields and relations in one pending edit", async
 test("new service defaults stop following after a deliberate marking choice", async ({ page }) => {
   await page.context().setOffline(true);
   await page.goto(simUrl);
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Networks");
   for (const [name, marking] of [
     ["Amber", "CUI"],
     ["Blue", "SECRET"],
   ] as const) {
+    await showInventory(page);
     await page.getByRole("button", { name: "Add network" }).first().click();
     await page.getByLabel("Name", { exact: true }).fill(name);
     await page.getByLabel("Marking", { exact: true }).selectOption(marking);
     await page.getByRole("button", { name: "Add network" }).last().click();
   }
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Services");
   await page.getByRole("button", { name: "Add service" }).first().click();
-  await page.getByTestId("editor").getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
+  await chooseReference(page, "Network", "Blue");
   await expect(page.getByLabel("Marking", { exact: true })).toHaveValue("SECRET");
   await page.getByLabel("Marking", { exact: true }).selectOption("UNCLASSIFIED");
-  await page.getByTestId("editor").getByLabel("Network", { exact: true }).selectOption({ label: "Amber" });
+  await chooseReference(page, "Network", "Amber");
   await expect(page.getByLabel("Marking", { exact: true })).toHaveValue("UNCLASSIFIED");
 });
 
 test("a selected network opens the same service form with its context preselected", async ({ page }) => {
   await page.context().setOffline(true);
   await page.goto(simUrl);
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption("Networks");
   await page.getByRole("button", { name: "Add network" }).first().click();
   await page.getByTestId("editor").getByLabel("Name", { exact: true }).fill("Amber");
@@ -92,6 +105,7 @@ test("opening readable legacy data reports its existing semantic issue", async (
   });
   await page.goto(simUrl);
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "legacy.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(page.getByTestId("dataset-status")).toContainText("Legacy");

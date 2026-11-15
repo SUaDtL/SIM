@@ -1,3 +1,4 @@
+import { openFileMenu, showInventory, editSelected } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -24,7 +25,7 @@ async function load(page: Page): Promise<string[]> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   return problems;
 }
 
@@ -42,17 +43,20 @@ async function expectBanner(page: Page, text: string, marking: string): Promise<
 }
 
 async function addNetwork(page: Page, name: string, marking: string): Promise<void> {
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page.getByRole("button", { name: "Add network" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill(name);
   await editor(page).getByLabel("Marking", { exact: true }).selectOption({ label: marking });
   await editor(page).getByRole("button", { name: "Add network" }).click();
+  await editSelected(page);
   await expect(editor(page).getByRole("heading", { name: "Edit network" })).toBeVisible();
 }
 
 /** Answer the caveat prompt with `answer`, or cancel it with null. */
 async function setCaveat(page: Page, answer: string | null): Promise<void> {
   page.once("dialog", (d) => void (answer === null ? d.dismiss() : d.accept(answer)));
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Banner caveat" }).click();
 }
 
@@ -67,6 +71,7 @@ test("shows the highest marking at the top and bottom and follows edits both way
   await addNetwork(page, "SIPR", "SECRET");
   await expectBanner(page, "SECRET", "SECRET");
 
+  await editor(page).getByText("More edit actions", { exact: true }).click();
   await editor(page).getByRole("button", { name: "Delete network" }).click();
   await editor(page).getByRole("button", { name: "Confirm delete" }).click();
   await expectBanner(page, "CUI", "CUI");
@@ -105,6 +110,7 @@ test("adds a caveat after the marking, keeps it through save and reopen, and cle
   const path = info.outputPath("caveat.sqlite");
   await (await saved).saveAs(path);
   page.once("dialog", (d) => void d.accept("Other"));
+  await openFileMenu(page);
   await page.getByRole("button", { name: "New" }).click();
   await page
     .getByRole("dialog", { name: "Unsaved changes" })
@@ -113,6 +119,7 @@ test("adds a caveat after the marking, keeps it through save and reopen, and cle
   await expectBanner(page, "UNCLASSIFIED", "UNCLASSIFIED");
 
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -130,6 +137,7 @@ test("shows TOP SECRET with dark text on orange", async ({ page }) => {
   const db = await createDataset("Banner fixture", wasm);
   new Repository(db).createNetwork({ name: "JWICS", kind: "internal", marking: "TOP SECRET" });
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -142,6 +150,7 @@ test("shows TOP SECRET with dark text on orange", async ({ page }) => {
 
 test("opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a demo", async ({ page }) => {
   const problems = await load(page);
+  await page.getByText("About and demo", { exact: true }).click();
   await page.getByRole("button", { name: "Open demo" }).click();
   await expect(status(page)).toHaveText("Demo enterprise (fictional) | not saved yet | Changes not saved to file");
   await expectBanner(page, "UNCLASSIFIED//DEMO - FICTIONAL DATA", "UNCLASSIFIED");
@@ -151,6 +160,7 @@ test("opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a
   // With an edit made, opening the demo again asks first.
   await addNetwork(page, "Extra", "UNCLASSIFIED");
   page.once("dialog", (d) => void d.dismiss());
+  await page.getByText("About and demo", { exact: true }).click();
   await page.getByRole("button", { name: "Open demo" }).click();
   await expect(page.getByTestId("map-summary")).toContainText("8 networks");
   expect(problems).toEqual([]);

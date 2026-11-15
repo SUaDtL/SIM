@@ -8,6 +8,13 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Bundled offline workflow Help, persistent qualified editor identity, a live map legend and visible scope/hidden-dependency disclosure.
+- Complete paginated CSV reconciliation and session-local completed-import receipts with downloadable diagnostics, source/classification metadata and spreadsheet formula protection.
+- Complete project/runtime license and attribution texts embedded in the standalone HTML from the installed production dependency closure; missing or unqualified runtime license texts fail the build.
+- Display-only edge avoidance and proportional PNG/SVG framing for presentation-sized annotation readability, with explicit recorded-dependency uncertainty and capture scope.
+- Read-first record summaries, Inventory/Map workspaces, a wider tabbed aggregate editor and searchable reference pickers with inline creation.
+- Independent Create similar service drafts with explicit destination and optional support copying; bounded inventory and relationship collections with qualified identities.
+- File/About and contextual map controls, direct PNG Capture, draft return paths and narrow/zoomed form reflow.
 - Optional chosen-file recovery for applied changes, with separate status, retry and stop controls; native saves refuse an externally changed file.
 - Contextual creation of missing service references while preserving the parent draft, with atomic initial service relationships.
 - Typed partial Find, read-only reference peeks, recorded reverse relationships and Back with restored list and map context.
@@ -16,6 +23,17 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Keep clicked map nodes visible as the inspector opens, retain Connections/Support while browsing services, and preserve section intent through editing, Apply, Discard and Cancel.
+- Anchor More service actions without moving controls; restore creation origins, add related-record Back, and keep keyboard focus meaningful after navigation, deletion, imports and dialog closure.
+- Reveal complete sensitive-input warnings, prevent phantom scenario intent, clarify immediate scenario commands, disable blocked deletion, and keep narrow Find and import opt-in usable by keyboard.
+- Seed Add service from the active network scope and marking; close map Find suggestions on outside interaction or Escape, and remove cancelled deletion dialogs while restoring trigger focus.
+- Search staged relationships by recorded names and context, with shared pagination and explicit action/form ownership; consolidate relationship projections, capture setup and shadowed CSS while preserving existing behavior.
+- Keep keyboard focus on an enabled pagination control at first/last-page boundaries in relationship lists, checklist choices and import diagnostics.
+- Dismiss floating menus when another menu opens, focus or a click moves elsewhere, an action is chosen or Escape is pressed; preserve filter editing, modal focus and inline disclosures.
+- Open populated inventories on Services with direct network scope, separated service context and per-type search/page/scroll memory; preserve keyboard visibility and complete browsing context through selection and Back.
+- Align action/menu/picker controls consistently and remove unused search and paging from empty relationship groups; distinguish creation, Apply and file saving in editor guidance.
+- Give the workspace a dark technical palette, quieter navigation, structured inventory rows and responsive two-column forms; preserve dark map backgrounds and label halos in capture and keep file feedback readable.
+- Read-summary refresh preserves Apply notices and does not interrupt file saving by advancing the draft token.
 - Sensitive-input confirmation binds all changed service fields and support notes to the exact current draft.
 - Rejected navigation leaves filters, selection, framing and drafts unchanged; stale navigation decisions cannot cross a dataset replacement.
 - Relationship refresh retains unadded choices and focus, foundational counts describe visible routes, and capture progress and errors remain visible.

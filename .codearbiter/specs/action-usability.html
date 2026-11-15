@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM comprehensive action usability · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-ACTION-USABILITY</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/action-usability.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM comprehensive action usability</h1><p class="deck">Audit every user-facing action, emphasizing actual node clicks, Connections, Support and More service actions; repair confirmed problems on the same PR25.</p><div class="meta"><span>SPEC-ACTION-USABILITY</span><span>Revision 1 · schema 0.3.2</span><span>25 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INTENT-REMEDIATION -->
+<article class="record" id="INTENT-REMEDIATION" data-ca-symbol="INTENT-REMEDIATION" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INTENT-REMEDIATION">INTENT-REMEDIATION</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>sprint</div><div class="field"><span class="label">Outcome</span>A source-mapped full action audit with confirmed issues repaired and actual browser usability evidence.</div><div class="field"><span class="label">Problem</span>Current passing mechanical checks did not establish usable complete action journeys; user reports node/Connections/Support/More friction.</div></article>
+<!-- CA:END:INTENT-REMEDIATION -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-REMEDIATION -->
+<article class="record" id="SCOPE-REMEDIATION" data-ca-symbol="SCOPE-REMEDIATION" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>User-facing app actions and their normal, error, cancellation, keyboard, return and focus paths; same branch and PR25.</div></article>
+<!-- CA:END:SCOPE-REMEDIATION -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:EXCL-PLATFORM -->
+<article class="record" id="EXCL-PLATFORM" data-ca-symbol="EXCL-PLATFORM" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#EXCL-PLATFORM">EXCL-PLATFORM</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No merge/release, new dependency, framework or schema, runtime network/storage, altered repository transaction or classification policy.</div></article>
+<!-- CA:END:EXCL-PLATFORM -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APPROACH-REMEDIATION -->
+<article class="record" id="APPROACH-REMEDIATION" data-ca-symbol="APPROACH-REMEDIATION" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APPROACH-REMEDIATION">APPROACH-REMEDIATION</a><h3>Approach</h3></div><div class="field"><span class="label">Choice</span>Audit source entry points and actual browser journeys first; use small repairs within existing DOM, repository, navigation and capture foundations, with guarded return context and visible focus.</div><div class="field"><span class="label">Tradeoff</span>Preserve current foundations and all stale-operation, classification, transaction, capture and responsive safeguards.</div></article>
+<!-- CA:END:APPROACH-REMEDIATION -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2><span class="missing">None recorded</span></section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:ACT-01 -->
+<article class="record" id="ACT-01" data-ca-symbol="ACT-01" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-01">ACT-01</a><h3>Every user-facing action accounted</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-01 -->
+<article class="record" id="SCEN-ACT-01" data-ca-symbol="SCEN-ACT-01" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-01">SCEN-ACT-01</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-01 -->
+</div><div class="field"><span class="label">Statement</span>Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-01 -->
+<article class="record" id="VERIFY-ACT-01" data-ca-symbol="VERIFY-ACT-01" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-01">VERIFY-ACT-01</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-01 -->
+</div></article>
+<!-- CA:END:ACT-01 -->
+
+<!-- CA:BEGIN:ACT-02 -->
+<article class="record" id="ACT-02" data-ca-symbol="ACT-02" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-02">ACT-02</a><h3>Visible node selection</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-02 -->
+<article class="record" id="SCEN-ACT-02" data-ca-symbol="SCEN-ACT-02" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-02">SCEN-ACT-02</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-02 -->
+</div><div class="field"><span class="label">Statement</span>Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-02 -->
+<article class="record" id="VERIFY-ACT-02" data-ca-symbol="VERIFY-ACT-02" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-02">VERIFY-ACT-02</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-02 -->
+</div></article>
+<!-- CA:END:ACT-02 -->
+
+<!-- CA:BEGIN:ACT-03 -->
+<article class="record" id="ACT-03" data-ca-symbol="ACT-03" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-03">ACT-03</a><h3>Connected record and support inspection</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-03 -->
+<article class="record" id="SCEN-ACT-03" data-ca-symbol="SCEN-ACT-03" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-03">SCEN-ACT-03</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-03 -->
+</div><div class="field"><span class="label">Statement</span>Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-03 -->
+<article class="record" id="VERIFY-ACT-03" data-ca-symbol="VERIFY-ACT-03" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-03">VERIFY-ACT-03</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-03 -->
+</div></article>
+<!-- CA:END:ACT-03 -->
+
+<!-- CA:BEGIN:ACT-04 -->
+<article class="record" id="ACT-04" data-ca-symbol="ACT-04" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-04">ACT-04</a><h3>Stable contextual actions</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-04 -->
+<article class="record" id="SCEN-ACT-04" data-ca-symbol="SCEN-ACT-04" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-04">SCEN-ACT-04</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-04 -->
+</div><div class="field"><span class="label">Statement</span>More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-04 -->
+<article class="record" id="VERIFY-ACT-04" data-ca-symbol="VERIFY-ACT-04" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-04">VERIFY-ACT-04</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-04 -->
+</div></article>
+<!-- CA:END:ACT-04 -->
+
+<!-- CA:BEGIN:ACT-05 -->
+<article class="record" id="ACT-05" data-ca-symbol="ACT-05" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-05">ACT-05</a><h3>Editor and picker usability</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-05 -->
+<article class="record" id="SCEN-ACT-05" data-ca-symbol="SCEN-ACT-05" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-05">SCEN-ACT-05</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-05 -->
+</div><div class="field"><span class="label">Statement</span>Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-05 -->
+<article class="record" id="VERIFY-ACT-05" data-ca-symbol="VERIFY-ACT-05" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-05">VERIFY-ACT-05</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-05 -->
+</div></article>
+<!-- CA:END:ACT-05 -->
+
+<!-- CA:BEGIN:ACT-06 -->
+<article class="record" id="ACT-06" data-ca-symbol="ACT-06" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-06">ACT-06</a><h3>Document and map workflow usability</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-06 -->
+<article class="record" id="SCEN-ACT-06" data-ca-symbol="SCEN-ACT-06" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-06">SCEN-ACT-06</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-06 -->
+</div><div class="field"><span class="label">Statement</span>Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-06 -->
+<article class="record" id="VERIFY-ACT-06" data-ca-symbol="VERIFY-ACT-06" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-06">VERIFY-ACT-06</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-06 -->
+</div></article>
+<!-- CA:END:ACT-06 -->
+
+<!-- CA:BEGIN:ACT-07 -->
+<article class="record" id="ACT-07" data-ca-symbol="ACT-07" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#ACT-07">ACT-07</a><h3>Reviewable local and PR candidate</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>User explicitly requested a comprehensive action usability pass with emphasis on node inspection.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-REMEDIATION">SCOPE-REMEDIATION</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-ACT-07 -->
+<article class="record" id="SCEN-ACT-07" data-ca-symbol="SCEN-ACT-07" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-ACT-07">SCEN-ACT-07</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>The existing fictional offline inventory and current capture/navigation contracts.</div><div class="field"><span class="label">Then</span>Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.</div><div class="field"><span class="label">When</span>Exercise the reviewed surface.</div></article>
+<!-- CA:END:SCEN-ACT-07 -->
+</div><div class="field"><span class="label">Statement</span>Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-ACT-07 -->
+<article class="record" id="VERIFY-ACT-07" data-ca-symbol="VERIFY-ACT-07" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-ACT-07">VERIFY-ACT-07</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.</div><div class="field"><span class="label">Oracle</span>Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.</div><div class="field"><span class="label">Planned target</span>Focused regression/parity tests and full npm run check.</div></article>
+<!-- CA:END:VERIFY-ACT-07 -->
+</div></article>
+<!-- CA:END:ACT-07 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>7fe6f8f49377e52144012d9c1c8c90f3c1adc087</div><div class="field"><span class="label">Observed date</span>2026-11-15</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/ui/**</li><li>src/map/map-view.ts</li><li>e2e/**</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: e7c59bfb4016e926605094a9d2c2d1e1c481cb4e962a81af0ed990d68a4f2a1e<br>Model SHA-256: 38014206e2f4537b81a167b56092887fb6957c29d78e2b767e1764d5618df649</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-ACTION-USABILITY",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "38014206e2f4537b81a167b56092887fb6957c29d78e2b767e1764d5618df649",
+    "normative_sha256": "e7c59bfb4016e926605094a9d2c2d1e1c481cb4e962a81af0ed990d68a4f2a1e",
+    "symbol_count": 25
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "choice": "Audit source entry points and actual browser journeys first; use small repairs within existing DOM, repository, navigation and capture foundations, with guarded return context and visible focus.",
+      "id": "APPROACH-REMEDIATION",
+      "tradeoff": "Preserve current foundations and all stale-operation, classification, transaction, capture and responsive safeguards."
+    },
+    "baseline": {
+      "commit": "7fe6f8f49377e52144012d9c1c8c90f3c1adc087",
+      "observed_date": "2026-11-15",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "constraints": [],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately."
+        ],
+        "id": "ACT-01",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-01",
+            "then": "Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.",
+        "title": "Every user-facing action accounted",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-01",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Maintain a source-mapped action ledger across node/record inspection, all entity editors and pickers, scenarios, document/file/recovery/import/export/help controls; record actual observations, negative/cancel paths and untested native boundaries separately.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics."
+        ],
+        "id": "ACT-02",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-02",
+            "then": "Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.",
+        "title": "Visible node selection",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-02",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Actual canvas node clicks keep the accepted selected node visible when its inspector resizes the viewport, preserving zoom, saved positions, draft refusal and Back semantics.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context."
+        ],
+        "id": "ACT-03",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-03",
+            "then": "Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.",
+        "title": "Connected record and support inspection",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-03",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Connections/Support identity and connection actions have clear destinations and return paths. Preserve chosen inspection section during successive service inspection, with sensible resets and complete Back/dialog context.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus."
+        ],
+        "id": "ACT-04",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-04",
+            "then": "More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.",
+        "title": "Stable contextual actions",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-04",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "More actions has distinct reachable commands without displacing current controls. Create/cancel, similar service, edit/apply/discard/delete and modal cancellation preserve correct source context, drafts and visible focus.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior."
+        ],
+        "id": "ACT-05",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-05",
+            "then": "Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.",
+        "title": "Editor and picker usability",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-05",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Exercise all editor relationship/support/form/reference/scenario commands. Repair confirmed usability defects with explicit validation, retained work, keyboard access and consistent cancellation/return behavior.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations."
+        ],
+        "id": "ACT-06",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-06",
+            "then": "Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.",
+        "title": "Document and map workflow usability",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-06",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Exercise file/recovery/history/import/capture/filter/focus/help/license actions, repair confirmed app-level usability issues, and distinguish stub proof from blocked native OS observations.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "User explicitly requested a comprehensive action usability pass with emphasis on node inspection."
+        },
+        "guarantees": [
+          "Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits."
+        ],
+        "id": "ACT-07",
+        "intent_refs": [
+          "SCOPE-REMEDIATION"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "The existing fictional offline inventory and current capture/navigation contracts.",
+            "id": "SCEN-ACT-07",
+            "then": "Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.",
+            "when": "Exercise the reviewed surface."
+          }
+        ],
+        "statement": "Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.",
+        "title": "Reviewable local and PR candidate",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-ACT-07",
+          "method": "automated_and_review",
+          "negative_control": "Observed baseline reproduction for defects; passing unchanged pre-existing tests for refactors.",
+          "oracle": "Reproduce each repaired defect RED before production edits; retain relevant existing assertions; run full npm run check, independent review and same-PR exact-head CI; deliver refreshed local testing steps and truthful coverage limits.",
+          "planned_target": "Focused regression/parity tests and full npm run check."
+        }
+      }
+    ],
+    "decisions": [],
+    "governs": [
+      "src/ui/**",
+      "src/map/map-view.ts",
+      "e2e/**"
+    ],
+    "intent": {
+      "caller": "sprint",
+      "id": "INTENT-REMEDIATION",
+      "outcome": "A source-mapped full action audit with confirmed issues repaired and actual browser usability evidence.",
+      "problem": "Current passing mechanical checks did not establish usable complete action journeys; user reports node/Connections/Support/More friction."
+    },
+    "non_goals": [
+      {
+        "id": "EXCL-PLATFORM",
+        "statement": "No merge/release, new dependency, framework or schema, runtime network/storage, altered repository transaction or classification policy."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-REMEDIATION",
+        "statement": "User-facing app actions and their normal, error, cancellation, keyboard, return and focus paths; same branch and PR25."
+      }
+    ],
+    "sections": [],
+    "sources": [],
+    "summary": "Audit every user-facing action, emphasizing actual node clicks, Connections, Support and More service actions; repair confirmed problems on the same PR25.",
+    "title": "SIM comprehensive action usability"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/action-usability.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 1,
+  "schema_version": "0.3.2",
+  "slug": "action-usability"
+}
+</script>
+</body></html>

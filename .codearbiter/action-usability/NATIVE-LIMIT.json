@@ -1,0 +1,8 @@
+{
+  "result": "stopped_before_picker",
+  "method": "installed computer-use @oai/sky; new Chrome window, then get_window_state",
+  "error": "Computer Use has been stopped for this turn because it could not determine the current browser URL on Windows with enough confidence to enforce policy.",
+  "native_picker_observed": false,
+  "further_native_input": "none",
+  "baseline_source_commit": "7fe6f8f49377e52144012d9c1c8c90f3c1adc087"
+}

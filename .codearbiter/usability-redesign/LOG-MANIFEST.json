@@ -1,0 +1,60 @@
+{
+  "normalization": "UTF-8, LF line endings, trailing line whitespace removed; output text/observed assertions unchanged. Raw transcripts retained at original TEMP locations during the run.",
+  "logs": [
+    {
+      "path": "FULL-CHECK.log",
+      "raw_sha256": "6260abd8c45a766f2f17a9f2a4f729bec342351762a5a76711de4fb796fb7de1",
+      "normalized_sha256": "4a36e6ff1964929d471e28fc2f6470eb61d340a9cc18d1ea0da2756446dfd600"
+    },
+    {
+      "path": "mutations/baseline-build.log",
+      "raw_sha256": "562852a83dcd5a7abd9e1820bbbeb4705e261b5f6e768080e43e1245ae7836bc",
+      "normalized_sha256": "e73d2743e8df69a786a387de89ea17feab58d5703c4de4229b2819044507c7f9"
+    },
+    {
+      "path": "mutations/baseline-picker.log",
+      "raw_sha256": "b33f536032b98ba78953034505109c5ca86b7c1628dd703d2ad8ae39166259f5",
+      "normalized_sha256": "4f2b56fbf9f081877344503e920c61198a93d8c5e8e4a594d084d2ce05990028"
+    },
+    {
+      "path": "mutations/baseline-warning.log",
+      "raw_sha256": "00d435814af62642d45d5ce2e258aa8c7668151af1acf2b9f65b29de8adddbfb",
+      "normalized_sha256": "47cb132724c419e01f1ebe9a213200d79d1baebfdc688d52db8839eaefc30263"
+    },
+    {
+      "path": "mutations/mutant-child-warning-build.log",
+      "raw_sha256": "b8a914e72014e7e073b6650a08b589b6c83e5826f92aec1d4aec04cd1881a0f2",
+      "normalized_sha256": "f99bf7263e16b21a16163314658253205941f5ce6f46d73a780e1870457a90c9"
+    },
+    {
+      "path": "mutations/mutant-child-warning.log",
+      "raw_sha256": "0a18697475f9115ab6f5433364fc54e3e8cb720c8ea85bc3d02b373ed9eb857f",
+      "normalized_sha256": "3d99ee5c8cfae34ae6239a02b18d2c816ab01a36dfee61f56fe55cac225e97f8"
+    },
+    {
+      "path": "mutations/mutant-closed-dialog.log",
+      "raw_sha256": "654467daf323baa90a348240a943e2c9402c223cd21b620cb848739ccfbd57a2",
+      "normalized_sha256": "b03e6d4f7de7ef4c803f3aa3cf089e2df2abf71e3cbd442a1e0352cfae5713b6"
+    },
+    {
+      "path": "mutations/mutant-owner-current.log",
+      "raw_sha256": "eeb09d69dfa884fc853dc66ef5f6543e8168601e3e245518adc73ec0b0249f1f",
+      "normalized_sha256": "4dfc6a4d3d0584c0d1d3dd7c1fb076994152e308cd6acbe71d45579d39f3e96c"
+    },
+    {
+      "path": "mutations/restored-build.log",
+      "raw_sha256": "9f7d43b1fffe3fd8ea1b002ccd650396aa85c3d1877c7c1c114e5ec5ebdb21ae",
+      "normalized_sha256": "8ab4d6e409657ec518b9aeda9818ec00ff672548e9bda1be67f538bb1ef218ce"
+    },
+    {
+      "path": "mutations/restored-picker.log",
+      "raw_sha256": "365c98ee6b5c8343f321cc6a690847bd65db3c04323228f4bc7621465e29d4c9",
+      "normalized_sha256": "778115f4031e523894a2b0db7f79712c69aac105909378d6eb27b18bb7852df8"
+    },
+    {
+      "path": "mutations/restored-warning.log",
+      "raw_sha256": "0bbace57d5521e205e90f6dc39c2b99730dd8b9b114e807f59e0bd00687431cb",
+      "normalized_sha256": "0094bfbd1017d1a0d607271e1266412633f2a07bd0805033656b6da24e2ed6cf"
+    }
+  ]
+}

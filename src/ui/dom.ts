@@ -29,3 +29,9 @@ export function option(value: string, label: string, selected = false): HTMLOpti
   o.selected = selected;
   return o;
 }
+
+/** Preserve paging focus when the activated control becomes disabled at a boundary. */
+export function focusPagingControl(preferred: HTMLButtonElement, alternative: HTMLButtonElement): void {
+  if (!preferred.disabled) preferred.focus();
+  else if (!alternative.disabled) alternative.focus();
+}

@@ -1,0 +1,68 @@
+
+Running 2 tests using 2 workers
+
+(node:124016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (5.5s)
+  x  1 [msedge] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (5.5s)
+
+
+  1) [msedge] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true })
+        14 × locator resolved to <button type="button">Previous rows</button>
+           - unexpected value "inactive"
+
+
+      50 |   await refused.getByRole("button", { name: "Next rows", exact: true }).click();
+      51 |   await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeDisabled();
+    > 52 |   await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeFocused();
+         |                                                                                     ^
+      53 |   await refused.getByRole("button", { name: "Previous rows", exact: true }).press("Enter");
+      54 |   await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeDisabled();
+      55 |   await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\import-receipt.spec.ts:52:85
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\csv-red-results\import-receipt-all-mixed-i-0fa62-d-downloadable-after-commit-msedge\error-context.md
+
+  2) [chrome] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV' }).getByRole('group', { name: 'Rejected rows' }).getByRole('button', { name: 'Previous rows', exact: true })
+        14 × locator resolved to <button type="button">Previous rows</button>
+           - unexpected value "inactive"
+
+
+      50 |   await refused.getByRole("button", { name: "Next rows", exact: true }).click();
+      51 |   await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeDisabled();
+    > 52 |   await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeFocused();
+         |                                                                                     ^
+      53 |   await refused.getByRole("button", { name: "Previous rows", exact: true }).press("Enter");
+      54 |   await expect(refused.getByRole("button", { name: "Previous rows", exact: true })).toBeDisabled();
+      55 |   await expect(refused.getByRole("button", { name: "Next rows", exact: true })).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\import-receipt.spec.ts:52:85
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\csv-red-results\import-receipt-all-mixed-i-0fa62-d-downloadable-after-commit-chrome\error-context.md
+
+  2 failed
+    [msedge] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit
+    [chrome] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit

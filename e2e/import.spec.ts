@@ -1,3 +1,4 @@
+import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -29,7 +30,7 @@ async function load(page: Page): Promise<string[]> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   return problems;
 }
 
@@ -58,6 +59,7 @@ const undo = (page: Page) => page.getByRole("button", { name: "Undo" });
 const message = (page: Page) => page.getByTestId("dataset-message");
 
 async function choose(page: Page, files: CsvFile[]): Promise<void> {
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   await dialog(page).getByLabel("CSV files").setInputFiles(files);
 }
@@ -257,6 +259,7 @@ test("undo inside the dialog does nothing, and one undo after an import removes 
 
 test("downloads a template with a byte-order mark, its columns and an example row", async ({ page }) => {
   await load(page);
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Import CSV" }).click();
   await dialog(page).getByText("Download templates").click();
   const [download] = await Promise.all([

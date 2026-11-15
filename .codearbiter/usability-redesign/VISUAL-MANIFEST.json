@@ -1,0 +1,58 @@
+{
+  "source_manifest": "VISUAL-SOURCE-SHA256.json",
+  "storage": "local-only PNGs, binary gate respected",
+  "palette_choice": "User: Dark technical workspace",
+  "feedback_contrast": 11.146139740664387,
+  "images": [
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\editor.png",
+      "sha256": "dcbfb8a38b266b7d82ad5d01389ae436e02d04bc0a3e5b23e941782118de7d44",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\empty.png",
+      "sha256": "eae5745120c99eb892b354ebe24c83a1886fbff2cf55a0a4f9dc134940a93ea4",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\feedback.png",
+      "sha256": "92e069a9dd293208372cacacdb43a6e4da8b02b2dd51b471a11dee9949a9dc4a",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\inventory.png",
+      "sha256": "fe22c2a053dd89e8fbcdd35575b91cc339ce3bb23346780fa6216f638ad91208",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\map.png",
+      "sha256": "ff714426b6182a922ba6f3cd724f274aec4081181f1cedcdcf66fbe66cc40140",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\picker.png",
+      "sha256": "2642548f2142594c38320501ae681725ae8dbc477f28489ae589d2cba7f85b5d",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-visual-refinement\\summary.png",
+      "sha256": "49bed3e82facab57d1afd75a6717d0c0a0f491adc63d8ac493a8266217e62ae9",
+      "kind": "synthetic demo actual production screenshot; reduced motion preview context"
+    },
+    {
+      "path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\test-results\\usability-layout-T11-T12-l-a4d01-ns-usable-at-320-CSS-pixels-chrome\\width-320-validation.png",
+      "sha256": "e129b4f03ced6cfca0ff866d3471f444c5b30b142c0880b7a0cf95b9f59b7b88",
+      "kind": "full-check production layout screenshot"
+    },
+    {
+      "path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\test-results\\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\\browser-zoom-400-connections-bottom.png",
+      "sha256": "e4d142d8ae5ec22a146d955ddf737c64ca794602b3f2cad6766b9faf3b49d8d8",
+      "kind": "full-check production layout screenshot"
+    },
+    {
+      "path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\test-results\\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\\browser-zoom-400-picker-result.png",
+      "sha256": "3035fa9bf8fe89261f07f69d86d8e561807920a243a22b600d6d3f0962ff7245",
+      "kind": "full-check production layout screenshot"
+    }
+  ]
+}

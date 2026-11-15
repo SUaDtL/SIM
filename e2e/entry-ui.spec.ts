@@ -5,6 +5,8 @@ import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
+import { editSelected, chooseReference, openFileMenu, showMap, showInventory } from "./helpers/usability";
+
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 interface Watch {
@@ -32,7 +34,7 @@ async function load(page: Page): Promise<Watch> {
     });
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("dataset-status")).toBeVisible();
   return watch;
 }
 
@@ -41,22 +43,46 @@ const list = (page: Page) => page.getByTestId("entity-list");
 const status = (page: Page) => page.getByTestId("dataset-status");
 
 async function show(page: Page, plural: string): Promise<void> {
+  // Inventory parks an unfinished editor in the current UI; it does not discard it.
+  await page.getByRole("button", { name: "Inventory", exact: true }).click();
   await page.getByLabel("Show", { exact: true }).selectOption({ label: plural });
 }
 
 type Fill = Record<string, string | boolean | string[]>;
 
 /** Fill editor fields by label: strings fill text or pick a select option by label; booleans and arrays tick boxes. */
+async function sectionFor(page: Page, label: string): Promise<void> {
+  const section = /^Tier \d support/.test(label)
+    ? "Support"
+    : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
+      ? "Connections"
+      : "Details";
+  const tab = editor(page).getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
+  if (await tab.count()) await tab.click();
+}
+async function pick(page: Page, label: string, name: string): Promise<void> {
+  await sectionFor(page, label);
+  const field = editor(page).getByLabel(label, { exact: true });
+  if (await field.getAttribute("data-reference")) await chooseReference(page, label, name);
+  else await field.selectOption({ label: name });
+}
+async function editAction(page: Page, name: string): Promise<void> {
+  const action = editor(page).getByRole("button", { name, exact: true });
+  if (!(await action.isVisible())) await editor(page).getByText("More edit actions", { exact: true }).click();
+  await action.click();
+}
 async function fill(page: Page, values: Fill): Promise<void> {
+  await editSelected(page);
   const e = editor(page);
   for (const [label, value] of Object.entries(values)) {
+    await sectionFor(page, label);
     if (Array.isArray(value)) {
       for (const name of value) await e.getByRole("checkbox", { name, exact: true }).check();
     } else if (typeof value === "boolean") {
       await e.getByLabel(label, { exact: true }).setChecked(value);
     } else {
       const field = e.getByLabel(label, { exact: true });
-      if ((await field.evaluate((el) => el.tagName)) === "SELECT") await field.selectOption({ label: value });
+      if ((await field.evaluate((el) => el.tagName)) === "SELECT") await pick(page, label, value);
       else await field.fill(value);
     }
   }
@@ -69,14 +95,18 @@ async function add(page: Page, plural: string, label: string, values: Fill): Pro
   await editor(page)
     .getByRole("button", { name: `Add ${label}` })
     .click();
+  await editSelected(page);
   await expect(editor(page).getByRole("heading", { name: `Edit ${label}` })).toBeVisible();
 }
 
 async function select(page: Page, plural: string, name: string): Promise<void> {
   await show(page, plural);
+  if (await page.getByRole("dialog", { name: "Unapplied changes", exact: true }).isVisible()) return;
   await list(page)
     .getByRole("button", { name: new RegExp(`^${name}\\b`) })
     .click();
+  const choice = page.getByRole("dialog", { name: "Unapplied changes", exact: true });
+  if (!(await choice.isVisible())) await editSelected(page);
 }
 
 async function seed(page: Page): Promise<void> {
@@ -106,11 +136,13 @@ async function seed(page: Page): Promise<void> {
 
 const values = (l: Locator) => l.evaluateAll((els) => els.map((el) => el.textContent.trim()));
 
-test("shows the list panel, map area and editor, and collapses the list", async ({ page }) => {
+test("switches inventory and map, hides the empty inspector and collapses the list", async ({ page }) => {
   const watch = await load(page);
   await expect(page.getByTestId("list-panel")).toBeVisible();
-  await expect(page.getByTestId("map-area")).toContainText("Map");
-  await expect(editor(page)).toContainText("Select an item or add one");
+  await expect(editor(page)).toBeHidden();
+  await showMap(page);
+  await expect(page.getByTestId("map-area")).toBeVisible();
+  await showInventory(page);
 
   await page.getByRole("button", { name: "Hide list" }).click();
   await expect(page.getByLabel("Show", { exact: true })).toBeHidden();
@@ -157,19 +189,22 @@ test("deletes with an in-panel confirmation and refuses to delete a network in u
   await load(page);
   await seed(page);
   await select(page, "Networks", "NIPR");
-  await editor(page).getByRole("button", { name: "Delete network" }).click();
-  await editor(page).getByRole("button", { name: "Confirm delete" }).click();
+  await editAction(page, "Delete network");
+  const blockedConfirm = editor(page).getByRole("button", { name: "Confirm delete" });
+  await expect(blockedConfirm).toBeDisabled();
+  // A synthetic event bypasses disabled UI to retain the repository-refusal oracle.
+  await blockedConfirm.dispatchEvent("click");
   await expect(editor(page).getByTestId("editor-message")).toContainText("still in use");
   await show(page, "Networks");
   expect(await values(list(page).locator(".item-name"))).toEqual(["NIPR", "SIPR"]);
 
   await select(page, "Categories", "Cyber");
-  await editor(page).getByRole("button", { name: "Delete category" }).click();
-  await editor(page).getByRole("button", { name: "Cancel" }).click();
-  await editor(page).getByRole("button", { name: "Delete category" }).click();
+  await editAction(page, "Delete category");
+  await editor(page).locator(".delete").getByRole("button", { name: "Cancel", exact: true }).click();
+  await editAction(page, "Delete category");
   await editor(page).getByRole("button", { name: "Confirm delete" }).click();
   expect(await values(list(page).locator(".item-name"))).toEqual([]);
-  await expect(editor(page)).toContainText("Select an item or add one");
+  await expect(editor(page)).toBeHidden();
 });
 
 test("edits support tiers, consumers and dependencies on a service", async ({ page }) => {
@@ -184,19 +219,19 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
 
   await select(page, "Services", "Email");
   const e = editor(page);
-  await e.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "J7" });
-  await e.getByLabel("Tier 3 support", { exact: true }).selectOption({ label: "J6" });
-  await e.getByLabel("Add consumer").selectOption({ label: "J7" });
-  await e.getByRole("button", { name: "Add consumer" }).click();
-  await e.getByLabel("Add consumer").selectOption({ label: "J6" });
-  await e.getByRole("button", { name: "Add consumer" }).click();
+  await pick(page, "Tier 1 support", "J7");
+  await pick(page, "Tier 3 support", "J6");
+  await pick(page, "Consuming organization", "J7");
+  await e.getByRole("button", { name: "Add consumer", exact: true }).click();
+  await pick(page, "Consuming organization", "J6");
+  await e.getByRole("button", { name: "Add consumer", exact: true }).click();
   await e.getByRole("button", { name: "Remove consumer J6" }).click();
-  await e.getByLabel("Depends on service").selectOption({ label: "Chat (SIPR)" });
-  await e.getByLabel("Via CDS").selectOption({ label: "Guard" });
-  await e.getByRole("button", { name: "Add dependency" }).click();
+  await pick(page, "Depends on service", "Chat (SIPR)");
+  await pick(page, "Via CDS", "Guard");
+  await e.getByRole("button", { name: "Add dependency", exact: true }).click();
 
   expect(await values(e.getByTestId("consumers").locator(".row-name"))).toEqual(["J7"]);
-  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard (SIPR)"]);
+  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat (SIPR) via Guard"]);
   await expect(e.getByRole("button", { name: "Apply changes" })).toBeEnabled();
 
   // Navigation first offers to keep the complete draft.
@@ -204,22 +239,33 @@ test("edits support tiers, consumers and dependencies on a service", async ({ pa
   const choice = page.getByRole("dialog", { name: "Unapplied changes" });
   await choice.getByRole("button", { name: "Stay" }).click();
   await expect(e.getByLabel("Name", { exact: true })).toHaveValue("Email");
-  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard (SIPR)"]);
+  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat (SIPR) via Guard"]);
 
   // Apply & continue commits fields and relationships together before selection changes.
   await select(page, "Services", "Chat");
   await choice.getByRole("button", { name: "Apply and continue" }).click();
+  await select(page, "Services", "Chat");
   await expect(e.getByLabel("Name", { exact: true })).toHaveValue("Chat");
   await select(page, "Services", "Email");
   await expect(e.getByLabel("Tier 1 support", { exact: true }).locator("option:checked")).toHaveText("J7");
   await expect(e.getByLabel("Tier 2 support", { exact: true }).locator("option:checked")).toHaveText("(none)");
   await expect(e.getByLabel("Tier 3 support", { exact: true }).locator("option:checked")).toHaveText("J6");
-  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat via Guard (SIPR)"]);
+  expect(await values(e.getByTestId("dependencies").locator(".row-name"))).toEqual(["Chat (SIPR) via Guard"]);
 
-  await e.getByRole("button", { name: "Remove dependency on Chat" }).click();
+  await sectionFor(page, "Depends on service");
+  const removeDependency = e.getByRole("button", { name: "Remove dependency on Chat", exact: true });
+  if (!(await removeDependency.isVisible()))
+    await e
+      .locator("details.connection-actions")
+      .filter({
+        has: page.getByRole("button", { name: "Remove dependency on Chat", exact: true, includeHidden: true }),
+      })
+      .locator("summary")
+      .click();
+  await removeDependency.click();
   await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveCount(0);
-  await e.getByRole("button", { name: "Discard changes" }).click();
-  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat via Guard (SIPR)"]);
+  await editAction(page, "Discard changes");
+  await expect(e.getByTestId("dependencies").locator(".row-name")).toHaveText(["Chat (SIPR) via Guard"]);
 });
 
 test("a new service takes its network's marking and success is not shown as an error", async ({ page }) => {
@@ -229,14 +275,15 @@ test("a new service takes its network's marking and success is not shown as an e
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const e = editor(page);
   await expect(e.getByLabel("Marking")).toHaveValue("CUI");
-  await e.getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  await pick(page, "Network", "SIPR");
   await expect(e.getByLabel("Marking")).toHaveValue("SECRET");
   await fill(page, { Name: "Video" });
   await e.getByRole("button", { name: "Add service" }).click();
-  await expect(e.getByRole("status")).toHaveText("Service added.");
+  await expect(e.locator(".notice")).toHaveText("Service added.");
+  await editSelected(page);
   await expect(e.getByTestId("editor-message")).toBeEmpty();
   // Editing an existing service never changes its marking behind the user's back.
-  await e.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
+  await pick(page, "Network", "NIPR");
   await expect(e.getByLabel("Marking")).toHaveValue("SECRET");
 });
 
@@ -273,8 +320,8 @@ test("keeps typed text across relationship edits and marks the dataset unsaved",
 
   await select(page, "Services", "Email");
   await fill(page, { Name: "Typed but not saved" });
-  await editor(page).getByLabel("Add consumer").selectOption({ label: "J7" });
-  await editor(page).getByRole("button", { name: "Add consumer" }).click();
+  await pick(page, "Consuming organization", "J7");
+  await editor(page).getByRole("button", { name: "Add consumer", exact: true }).click();
   await expect(editor(page).getByTestId("consumers").locator(".row-name")).toHaveText(["J7"]);
   await expect(editor(page).getByLabel("Name")).toHaveValue("Typed but not saved");
   await expect(editor(page).getByRole("button", { name: "Apply changes" })).toBeEnabled();
@@ -284,7 +331,7 @@ test("saves entered data, opens another file without errors and reopens the save
   const watch = await load(page);
   await seed(page);
   await select(page, "Services", "Email");
-  await editor(page).getByLabel("Tier 2 support", { exact: true }).selectOption({ label: "J7" });
+  await pick(page, "Tier 2 support", "J7");
 
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
@@ -297,16 +344,18 @@ test("saves entered data, opens another file without errors and reopens the save
   expect(repo.listSupport().map((s) => s.tier)).toEqual([2]);
 
   page.once("dialog", (d) => void d.accept("Other"));
-  await page.getByRole("button", { name: "New" }).click();
+  await openFileMenu(page);
+  await page.getByRole("button", { name: "New", exact: true }).click();
   await page
     .getByRole("dialog", { name: "Unsaved changes" })
     .getByRole("button", { name: "Discard all and continue" })
     .click();
-  await expect(editor(page)).toContainText("Select an item or add one");
+  await expect(editor(page)).toBeHidden();
   await show(page, "Services");
   await expect(list(page).locator(".item-name")).toHaveCount(0);
 
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "entered.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(status(page)).toContainText("entered.sqlite | Saved");
@@ -340,16 +389,18 @@ test("a new service named Identity or DNS starts out foundational unless the use
   await expect(list(page)).toContainText("Identity");
 
   // Editing an existing service never changes the box.
+  await editSelected(page);
   await box.uncheck();
   await name.fill("DNS");
   await expect(box).not.toBeChecked();
 
   // Once the user sets the box on a new service, the name no longer changes it.
-  await page.getByRole("button", { name: "Add service", exact: true }).click();
+  await e.getByRole("button", { name: "Cancel", exact: true }).click();
   await page
     .getByRole("dialog", { name: "Unapplied changes" })
     .getByRole("button", { name: "Discard and continue" })
     .click();
+  await page.getByRole("button", { name: "Add service", exact: true }).click();
   await box.check();
   await box.uncheck();
   await name.fill("DNS");

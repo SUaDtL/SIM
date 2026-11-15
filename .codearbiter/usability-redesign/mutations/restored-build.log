@@ -1,0 +1,16 @@
+
+> sim@0.1.0 build
+> vite build
+
+vite v8.3.7 building client environment for production...
+transforming...
+✓ 51 modules transformed.
+rendering chunks...
+[plugin vite:singlefile]
+
+[plugin vite:singlefile] Inlining: sim-CfParmuR.js
+[plugin vite:singlefile] Inlining: style-CWTpXwzn.css
+computing gzip size...
+dist/sim.html  1,749.73 kB │ gzip: 683.78 kB
+
+✓ built in 285ms

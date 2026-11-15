@@ -1,0 +1,247 @@
+{
+  "format": "sim.usability-acceptance/v1",
+  "source_pin": "1cfa5c1df7519361b10136724a37959659923a9f",
+  "status": "implementation complete; automated production checks passed; human qualification explicitly pending",
+  "tasks": [
+    {
+      "id": "T01",
+      "title": "Inline missing prerequisites",
+      "expected": "Start with absent network/provider; create within unfinished service; cancel once; no lost input or partial child",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-picker.spec.ts",
+        "e2e/connected-editor.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T02",
+      "title": "Exact identity at scale",
+      "expected": "Choose correct Identity on target network among 500 services",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-picker.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T03",
+      "title": "Read before edit",
+      "expected": "Inspect service without entering draft or provoking loss prompt",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability.spec.ts",
+        "e2e/usability-records.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T04",
+      "title": "Aggregate change",
+      "expected": "Edit details/support/route in one draft; invalid complete refusal; one Apply and Undo",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/acceptance-journeys.spec.ts",
+        "e2e/connected-editor-acceptance.spec.ts",
+        "e2e/usability-validation.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T05",
+      "title": "Child and parent boundaries",
+      "expected": "Cancel parent after explicitly creating child; parent unchanged; child reusable; user understands",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-picker.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T06",
+      "title": "Independent reuse",
+      "expected": "Create similar on another network; new ID; source unchanged; correct shared refs; no silent route copy",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-records.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T07",
+      "title": "Large reverse collection",
+      "expected": "Find correct service among many organizational roles through clear collection controls",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-records.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T08",
+      "title": "Navigation return",
+      "expected": "Related record and Back preserve filter/scroll/focus; shared edit scope clear",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-records.spec.ts",
+        "e2e/connected-navigation-acceptance.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T09",
+      "title": "Focus and capture",
+      "expected": "Focused topology retains routes; Back restores; capture matches subject/view/marking",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability.spec.ts",
+        "e2e/connected-focus.spec.ts",
+        "e2e/usability-shell.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T10",
+      "title": "Keyboard picker",
+      "expected": "Explicit selection; no blur commit; child cancel and focus return",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-picker.spec.ts",
+        "e2e/reference-picker-component.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T11",
+      "title": "Laptop density",
+      "expected": "30 outgoing and incoming relationships; long names; no overlap/form horizontal scroll; footer remains visible",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-layout.spec.ts",
+        "visuals/MANIFEST.json"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T12",
+      "title": "Reflow and zoom",
+      "expected": "320 CSS-pixel forms and actual 200%/400% zoom; no loss of control functionality",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-layout.spec.ts",
+        "visuals/MANIFEST.json"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T13",
+      "title": "Persistence regression",
+      "expected": "Save, reopen, conflict, recovery and error behavior retained",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/dataset-file.spec.ts",
+        "e2e/recovery.spec.ts",
+        "e2e/session-import-journeys.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T14",
+      "title": "Projection identity",
+      "expected": "To-Be/Compare origin retained; no accidental baseline writes",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/connected-projection.spec.ts",
+        "e2e/scenario.spec.ts",
+        "e2e/connected-navigation-acceptance.spec.ts"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    },
+    {
+      "id": "T15",
+      "title": "Complete action and state coverage",
+      "expected": "Every supported operation relocated deliberately; empties/errors/long labels work",
+      "status": "automated-pass",
+      "candidate_commit": null,
+      "evidence": [
+        "VISUAL-CHECK.log",
+        "FULL-CHECK.log",
+        "e2e/usability-records.spec.ts",
+        "e2e/usability-shell.spec.ts",
+        "e2e/editor-external-deletion.spec.ts",
+        "IMPLEMENTATION.md"
+      ],
+      "candidate_binding": "VISUAL-SOURCE-SHA256.json",
+      "human_observation": "pending representative-user evaluation; automated result only"
+    }
+  ],
+  "branch": "codex/sim-usability-redesign",
+  "candidate_source_manifest": "VISUAL-SOURCE-SHA256.json",
+  "candidate_build_sha256": "881ea8f68eeeb72388a43be5345d9b8f92e613de447eedfe29afe5cd520d1de6",
+  "human_evaluation": {
+    "status": "not-run",
+    "feedback": "User first-service checkpoint: No blocker; continue.",
+    "limits": [
+      "No representative uncoached comparative task study or timings",
+      "No screen-reader certification",
+      "Current file API tests use stubs; prior user Chrome native save success belongs to merged increment"
+    ],
+    "visual_feedback": "User rejected initial aesthetic and explicitly selected Dark technical workspace. Revised dark aesthetic awaits user feedback."
+  }
+}

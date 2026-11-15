@@ -1,3 +1,4 @@
+import { chooseReference, editSelected, mapFilters, openFileMenu, showInventory, showMap } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
@@ -23,7 +24,7 @@ async function load(page: Page): Promise<string[]> {
     delete w["showSaveFilePicker"];
   });
   await page.goto(simUrl);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
   return problems;
 }
 
@@ -34,10 +35,12 @@ const undo = (page: Page) => page.getByRole("button", { name: "Undo" });
 const redo = (page: Page) => page.getByRole("button", { name: "Redo" });
 
 async function addNetwork(page: Page, name: string): Promise<void> {
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page.getByRole("button", { name: "Add network" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill(name);
   await editor(page).getByRole("button", { name: "Add network" }).click();
+  await editSelected(page);
   await expect(editor(page).getByRole("heading", { name: "Edit network" })).toBeVisible();
 }
 
@@ -61,6 +64,7 @@ async function arrangedFile(): Promise<Buffer> {
 
 async function open(page: Page, bytes: Buffer): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "history.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(status(page)).toHaveText(/^History fixture \| history\.sqlite \| /);
@@ -91,6 +95,14 @@ const near = (a: Points, b: Points) =>
   );
 
 async function dragService(page: Page, label: string, by: { x: number; y: number }): Promise<void> {
+  await showMap(page);
+  const canvas = page.getByTestId("map-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.evaluate((container) => {
+    const cy = (container as unknown as { _cyreg: { cy: { resize(): void; fit(): void } } })._cyreg.cy;
+    cy.resize();
+    cy.fit();
+  });
   const at = await page.getByTestId("map-canvas").evaluate((container, name) => {
     interface Node {
       data(k: string): unknown;
@@ -122,6 +134,7 @@ test("undoes and redoes edits with buttons and keys, and rebuilds the open form"
 
   await undo(page).click();
   await expect(list(page).locator(".item-name")).toHaveText(["NIPR"]);
+  await editSelected(page);
   await expect(editor(page).getByLabel("Name", { exact: true })).toHaveValue("NIPR");
 
   // Ctrl+Z inside a text field is the field's own undo, not the dataset's.
@@ -163,16 +176,18 @@ test("undoes a drag, a Re-layout and an added service by putting the map back", 
   await expect.poll(async () => near(await positions(page), dragged)).toBe(true);
 
   page.once("dialog", (d) => void d.accept());
+  await page.locator("details.map-layout-panel").locator("summary").click();
   await page.getByRole("button", { name: "Re-layout" }).click();
   await expect.poll(async () => near(await positions(page), dragged)).toBe(false);
   await undo(page).click();
   await expect.poll(async () => near(await positions(page), dragged)).toBe(true);
 
   // Adding a service is one step, its placement included.
+  await showInventory(page);
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Services" });
   await page.getByRole("button", { name: "Add service" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill("Wiki");
-  await editor(page).getByLabel("Network", { exact: true }).selectOption({ label: "SIPR" });
+  await chooseReference(page, "Network", "SIPR");
   await editor(page).getByRole("button", { name: "Add service" }).click();
   await expect.poll(async () => Object.keys(await positions(page))).toContain("Wiki");
   await undo(page).click();
@@ -199,11 +214,13 @@ test("asks before New, Open or closing would discard edits, and not for an untou
     expect(d.message()).toBe("Name for the new dataset");
     void d.accept("Other");
   });
+  await openFileMenu(page);
   await page.getByRole("button", { name: "New" }).click();
   await page.getByRole("dialog", { name: "Unsaved changes" }).getByRole("button", { name: "Stay" }).click();
   await expect(status(page)).toContainText("History fixture");
 
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (await chooser).setFiles({ name: "history.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await page.getByRole("dialog", { name: "Unsaved changes" }).getByRole("button", { name: "Stay" }).click();
@@ -220,10 +237,14 @@ test("finds a node by name, clearing a filter that hides it", async ({ page }) =
   const problems = await load(page);
   await open(page, await arrangedFile());
   const map = page.getByTestId("map-area");
+  await mapFilters(page);
   await map.getByLabel("Network", { exact: true }).selectOption({ label: "NIPR" });
   await map.getByLabel("Find on map").fill("chat (sipr)");
   await map.getByLabel("Find on map").press("Enter");
-  await expect(editor(page).getByLabel("Name", { exact: true })).toHaveValue("Chat");
+  await expect(editor(page).getByRole("heading", { name: "Service: Chat", exact: true })).toBeVisible();
+  await showMap(page);
+  await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
+  await mapFilters(page);
   await expect(map.getByLabel("Network", { exact: true })).toHaveValue("");
   await expect(page.getByTestId("map-summary")).toContainText("Highlighted: the chain of Chat");
   await expect(map.getByLabel("Find on map")).toHaveValue("");

@@ -1,0 +1,215 @@
+{
+  "errors": [],
+  "geometry": [
+    {
+      "width": 1366,
+      "doc": 1366,
+      "toolbar": {
+        "x": 20,
+        "y": 232.484375,
+        "width": 1326,
+        "height": 64.390625,
+        "top": 232.484375,
+        "right": 1346,
+        "bottom": 296.875,
+        "left": 20
+      },
+      "rows": [
+        {
+          "text": "BackupEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 368.203125,
+            "width": 1324,
+            "height": 48,
+            "top": 368.203125,
+            "right": 1345,
+            "bottom": 416.203125,
+            "left": 21
+          }
+        },
+        {
+          "text": "CalendarEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 416.203125,
+            "width": 1324,
+            "height": 48,
+            "top": 416.203125,
+            "right": 1345,
+            "bottom": 464.203125,
+            "left": 21
+          }
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "doc": 1024,
+      "toolbar": {
+        "x": 20,
+        "y": 232.484375,
+        "width": 984,
+        "height": 64.390625,
+        "top": 232.484375,
+        "right": 1004,
+        "bottom": 296.875,
+        "left": 20
+      },
+      "rows": [
+        {
+          "text": "BackupEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 368.203125,
+            "width": 982,
+            "height": 48,
+            "top": 368.203125,
+            "right": 1003,
+            "bottom": 416.203125,
+            "left": 21
+          }
+        },
+        {
+          "text": "CalendarEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 416.203125,
+            "width": 982,
+            "height": 48,
+            "top": 416.203125,
+            "right": 1003,
+            "bottom": 464.203125,
+            "left": 21
+          }
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "doc": 768,
+      "toolbar": {
+        "x": 20,
+        "y": 232.484375,
+        "width": 728,
+        "height": 64.390625,
+        "top": 232.484375,
+        "right": 748,
+        "bottom": 296.875,
+        "left": 20
+      },
+      "rows": [
+        {
+          "text": "BackupEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 368.203125,
+            "width": 726,
+            "height": 48,
+            "top": 368.203125,
+            "right": 747,
+            "bottom": 416.203125,
+            "left": 21
+          }
+        },
+        {
+          "text": "CalendarEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 21,
+            "y": 416.203125,
+            "width": 726,
+            "height": 48,
+            "top": 416.203125,
+            "right": 747,
+            "bottom": 464.203125,
+            "left": 21
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "doc": 390,
+      "toolbar": {
+        "x": 16,
+        "y": 335.375,
+        "width": 358,
+        "height": 216.171875,
+        "top": 335.375,
+        "right": 374,
+        "bottom": 551.546875,
+        "left": 16
+      },
+      "rows": [
+        {
+          "text": "BackupEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 17,
+            "y": 589.9375,
+            "width": 356,
+            "height": 91.78125,
+            "top": 589.9375,
+            "right": 373,
+            "bottom": 681.71875,
+            "left": 17
+          }
+        },
+        {
+          "text": "CalendarEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 17,
+            "y": 681.71875,
+            "width": 356,
+            "height": 91.78125,
+            "top": 681.71875,
+            "right": 373,
+            "bottom": 773.5,
+            "left": 17
+          }
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "doc": 320,
+      "toolbar": {
+        "x": 16,
+        "y": 352.765625,
+        "width": 288,
+        "height": 216.171875,
+        "top": 352.765625,
+        "right": 304,
+        "bottom": 568.9375,
+        "left": 16
+      },
+      "rows": [
+        {
+          "text": "BackupEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 17,
+            "y": 607.328125,
+            "width": 286,
+            "height": 91.78125,
+            "top": 607.328125,
+            "right": 303,
+            "bottom": 699.109375,
+            "left": 17
+          }
+        },
+        {
+          "text": "CalendarEnterpriseIT DirectorateUNCLASSIFIED",
+          "box": {
+            "x": 17,
+            "y": 699.109375,
+            "width": 286,
+            "height": 91.78125,
+            "top": 699.109375,
+            "right": 303,
+            "bottom": 790.890625,
+            "left": 17
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+
+Running 10 tests using 2 workers
+
+(node:124388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chrome] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (693ms)
+  ok  2 [msedge] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (696ms)
+  x   3 [chrome] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (5.8s)
+  x   4 [msedge] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (5.7s)
+(node:124728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:122168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [chrome] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (5.8s)
+  x   6 [msedge] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (5.7s)
+(node:122944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:121572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   7 [chrome] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (5.8s)
+(node:58632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [msedge] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (6.2s)
+(node:21584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   9 [chrome] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (5.6s)
+  x  10 [msedge] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (5.6s)
+
+
+  1) [msedge] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+        14 × locator resolved to <button type="button" aria-label="Previous dependencies page">Previous</button>
+           - unexpected value "inactive"
+
+
+      92 |   await expect(next).toBeDisabled();
+      93 |   await expect(previous).toBeEnabled();
+    > 94 |   await expect(previous).toBeFocused();
+         |                          ^
+      95 |   await expect(rows).toHaveCount(5);
+      96 |   await expect(next).toBeDisabled();
+      97 |   const secondPage = await rows.locator(".reference-link").allTextContents();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:94:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-relationship-5bbd3-he-complete-unapplied-draft-msedge\error-context.md
+
+  2) [msedge] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+        14 × locator resolved to <button type="button" aria-label="Previous dependencies page">Previous</button>
+           - unexpected value "inactive"
+
+
+      137 |   await next.press("Enter");
+      138 |   await expect(next).toBeDisabled();
+    > 139 |   await expect(previous).toBeFocused();
+          |                          ^
+      140 |   await expect(rows).toHaveCount(5);
+      141 |   await previous.press("Space");
+      142 |   await expect(previous).toBeEnabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:139:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-relationship-d24f9-h-middle-and-boundary-pages-msedge\error-context.md
+
+  3) [msedge] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true })
+        14 × locator resolved to <button type="button" data-collection-control="previous" aria-label="Previous depends on page" data-summary-control="Depends on:previous">Previous</button>
+           - unexpected value "inactive"
+
+
+      160 |   await next.click();
+      161 |   await expect(next).toBeDisabled();
+    > 162 |   await expect(previous).toBeFocused();
+          |                          ^
+      163 |   await previous.press("Enter");
+      164 |   await expect(previous).toBeDisabled();
+      165 |   await expect(next).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:162:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-read-summary-274d8-ndary-focus-without-editing-msedge\error-context.md
+
+  4) [msedge] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true })
+        14 × locator resolved to <button type="button">Previous choices</button>
+           - unexpected value "inactive"
+
+
+      194 |   await next.click();
+      195 |   await expect(next).toBeDisabled();
+    > 196 |   await expect(previous).toBeFocused();
+          |                          ^
+      197 |   await group.getByRole("checkbox", { name: "Network 25", exact: true }).check();
+      198 |   await previous.click();
+      199 |   await expect(previous).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:196:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-checklist-pa-8afbc--and-retains-staged-choices-msedge\error-context.md
+
+  5) [chrome] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+        14 × locator resolved to <button type="button" aria-label="Previous dependencies page">Previous</button>
+           - unexpected value "inactive"
+
+
+      92 |   await expect(next).toBeDisabled();
+      93 |   await expect(previous).toBeEnabled();
+    > 94 |   await expect(previous).toBeFocused();
+         |                          ^
+      95 |   await expect(rows).toHaveCount(5);
+      96 |   await expect(next).toBeDisabled();
+      97 |   const secondPage = await rows.locator(".reference-link").allTextContents();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:94:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-relationship-5bbd3-he-complete-unapplied-draft-chrome\error-context.md
+
+  6) [chrome] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('dependencies').locator('..').getByRole('button', { name: 'Previous dependencies page', exact: true })
+        14 × locator resolved to <button type="button" aria-label="Previous dependencies page">Previous</button>
+           - unexpected value "inactive"
+
+
+      137 |   await next.press("Enter");
+      138 |   await expect(next).toBeDisabled();
+    > 139 |   await expect(previous).toBeFocused();
+          |                          ^
+      140 |   await expect(rows).toHaveCount(5);
+      141 |   await previous.press("Space");
+      142 |   await expect(previous).toBeEnabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:139:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-relationship-d24f9-h-middle-and-boundary-pages-chrome\error-context.md
+
+  7) [chrome] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('region', { name: 'Depends on', exact: true }).getByRole('button', { name: 'Previous depends on page', exact: true })
+        14 × locator resolved to <button type="button" data-collection-control="previous" aria-label="Previous depends on page" data-summary-control="Depends on:previous">Previous</button>
+           - unexpected value "inactive"
+
+
+      160 |   await next.click();
+      161 |   await expect(next).toBeDisabled();
+    > 162 |   await expect(previous).toBeFocused();
+          |                          ^
+      163 |   await previous.press("Enter");
+      164 |   await expect(previous).toBeDisabled();
+      165 |   await expect(next).toBeFocused();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:162:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-read-summary-274d8-ndary-focus-without-editing-chrome\error-context.md
+
+  8) [chrome] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('editor').getByRole('group', { name: 'Joins networks', exact: true }).getByRole('button', { name: 'Previous choices', exact: true })
+        14 × locator resolved to <button type="button">Previous choices</button>
+           - unexpected value "inactive"
+
+
+      194 |   await next.click();
+      195 |   await expect(next).toBeDisabled();
+    > 196 |   await expect(previous).toBeFocused();
+          |                          ^
+      197 |   await group.getByRole("checkbox", { name: "Network 25", exact: true }).check();
+      198 |   await previous.click();
+      199 |   await expect(previous).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\editor-rhythm.spec.ts:196:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-paging-focus-20261114\twin-red-results\editor-rhythm-checklist-pa-8afbc--and-retains-staged-choices-chrome\error-context.md
+
+  8 failed
+    [msedge] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft
+    [msedge] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages
+    [msedge] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing
+    [msedge] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices
+    [chrome] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft
+    [chrome] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages
+    [chrome] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing
+    [chrome] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices
+  2 passed (26.8s)

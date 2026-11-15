@@ -1,0 +1,2798 @@
+{
+  "scope": "ACT-COV-01 Find family plus ACT16 viewport, ACT17 readability and accepted Find completion focus",
+  "status": "Bounded browser-action PASS; not participant acceptance or numeric coverage",
+  "runtimeSha256": "18b1d4a09ff1b6f62eee0985f276525a48f23d8916d884d1dd0f8d794bb8288e",
+  "sourceHead": "7fe6f8f49377e52144012d9c1c8c90f3c1adc087 with reviewed working changes",
+  "mapSourceSha256": "1cc3b9cbcfb36ecb93d5d74f48abf11e3d624a44c1cb3b24970cace2376002a8",
+  "testSha256": "e9100979b81acb358b584c3cab722697f610715ef9f439d9595a4b6b7b40665f",
+  "sourceIds": [
+    "SOURCE-25",
+    "SOURCE-26",
+    "SOURCE-27",
+    "SOURCE-41",
+    "SOURCE-42",
+    "SOURCE-43",
+    "SOURCE-44"
+  ],
+  "hosts": [
+    "chrome",
+    "msedge"
+  ],
+  "viewportWidths": [
+    1366,
+    320
+  ],
+  "method": "Offline built file, synthetic fixture, Playwright pointer/keyboard, focus and rendered geometry readback, retained screenshots visually inspected",
+  "limits": [
+    "Programmatic pan/zoom is an explicit viewport test precondition; actual canvas activation is a pointer click",
+    "Results were activated through actual pointer and keyboard Enter; Next keyboard setup focuses its button, Previous reachability is five real Tab presses from first last-page result",
+    "No native chooser/picker, native color dialog, physical browser close/reload, assistive device, or human participant qualification",
+    "This scoped result does not certify hosted CI, merge, publication, or full-app current checks"
+  ],
+  "observations": [
+    {
+      "action": "exact-input-enter",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Orders",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-chrome\\find-exact-input-enter.json"
+    },
+    {
+      "action": "graph-keyboard-amber-service",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-chrome\\find-graph-keyboard-amber-service.json"
+    },
+    {
+      "action": "graph-pointer-blue-service",
+      "sourceIds": [
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-chrome\\find-graph-pointer-blue-service.json"
+    },
+    {
+      "action": "non-map-keyboard-organization",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-42"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Organization: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Organization: Beacon",
+      "inventoryType": "organization",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-chrome\\find-non-map-keyboard-organization.json"
+    },
+    {
+      "action": "non-map-pointer-category",
+      "sourceIds": [
+        "SOURCE-42"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Category: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Category: Beacon",
+      "inventoryType": "category",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-chrome\\find-non-map-pointer-category.json"
+    },
+    {
+      "action": "exact-input-enter",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Orders",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-msedge\\find-exact-input-enter.json"
+    },
+    {
+      "action": "graph-keyboard-amber-service",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-msedge\\find-graph-keyboard-amber-service.json"
+    },
+    {
+      "action": "graph-pointer-blue-service",
+      "sourceIds": [
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-msedge\\find-graph-pointer-blue-service.json"
+    },
+    {
+      "action": "non-map-keyboard-organization",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-42"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Organization: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Organization: Beacon",
+      "inventoryType": "organization",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-msedge\\find-non-map-keyboard-organization.json"
+    },
+    {
+      "action": "non-map-pointer-category",
+      "sourceIds": [
+        "SOURCE-42"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Category: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Category: Beacon",
+      "inventoryType": "category",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-16219-ets-by-pointer-and-keyboard-msedge\\find-non-map-pointer-category.json"
+    },
+    {
+      "action": "input-resets-page",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "Catalog 35",
+      "rows": [
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "1–1 of 1 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 247.34375,
+        "height": 128.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-chrome\\find-input-resets-page.json"
+    },
+    {
+      "action": "next-keyboard-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-chrome\\find-next-keyboard-last-page.json"
+    },
+    {
+      "action": "next-pointer-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-chrome\\find-next-pointer-last-page.json"
+    },
+    {
+      "action": "previous-keyboard-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-chrome\\find-previous-keyboard-first-page.json"
+    },
+    {
+      "action": "previous-pointer-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-chrome\\find-previous-pointer-first-page.json"
+    },
+    {
+      "action": "input-resets-page",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "Catalog 35",
+      "rows": [
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "1–1 of 1 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 247.34375,
+        "height": 128.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-msedge\\find-input-resets-page.json"
+    },
+    {
+      "action": "next-keyboard-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-msedge\\find-next-keyboard-last-page.json"
+    },
+    {
+      "action": "next-pointer-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-msedge\\find-next-pointer-last-page.json"
+    },
+    {
+      "action": "previous-keyboard-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-msedge\\find-previous-keyboard-first-page.json"
+    },
+    {
+      "action": "previous-pointer-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 243.90625
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-9ed35-s-and-keyboard-reachability-msedge\\find-previous-pointer-first-page.json"
+    },
+    {
+      "action": "blank-query",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-blank-query.json"
+    },
+    {
+      "action": "empty-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "unmatched synthetic record",
+      "rows": [],
+      "resultStatus": "No matching records. Search names across record types.",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 94.59375
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-empty-results.json"
+    },
+    {
+      "action": "input-escape",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-input-escape.json"
+    },
+    {
+      "action": "input-results-inside-and-arrow-boundaries",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-input-results-inside-and-arrow-boundaries.json"
+    },
+    {
+      "action": "outside-action-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Fit map"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-outside-action-dismissal.json"
+    },
+    {
+      "action": "outside-canvas-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n    UNCLASSIFIEDSIM Service Integration MapFileNewOpenImport CSVSave AsChoose recovery fileStop recoveryBanner caveatSave fileUndoRedoHelpAbout and demoSQLite 3.54.1SIM runs offline. Your data stays in the local SQLite files you choose.Open demoLicenses and noticesSynthetic Find action ledger | synthetic-find-actions.sqlite | SavedRecovery is off for this dataset.Retry recoveryInventoryMapBackReturn to resultsShow selected recordInventoryHide listShowNetworksServicesOrganizationsApplicationsCategoriesCDSScenariosFilterNetwork scopeAll networksAmberBlueAdd service1–3 of 3 servicesServiceNetworkProviderMarkingDirectoryAmberNo providerUNCLASSIFIEDOrdersAmberBeaconUNCLASSIFIEDDirectoryBlueNo providerUNCLASSIFIEDPrevious recordsNext recordsMapViewAs-IsFind on mapFiltersNetworkAll networksAmberBlueCategoryAll categoriesBeaconOrganizationAll organizationsBeaconCatalog 01Catalog 02Catalog 03Catalog 04Catalog 05Catalog 06Catalog 07Catalog 08Catalog 09Catalog 10Catalog 11Catalog 12Catalog 13Catalog 14Catalog 15Catalog 16Catalog 17Catalog 18Catalog 19Catalog 20Catalog 21Catalog 22Catalog 23Catalog 24Catalog 25Catalog 26Catalog 27Catalog 28Catalog 29Catalog 30Catalog 31Catalog 32Catalog 33Catalog 34Catalog 35Show foundational links (0)Fit mapLayoutRe-layoutCaptureCapture optionsExport SVG0 foundational dependencies hidden · 0 of 0 recorded dependencies in scopeArrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verifiedDepends onUsed byNetwork connectionsHighlight chainClear highlightExpand focusFit focusBack from focusAdd a network to start the map.2 networks, 3 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.Select an item or add one.Create another networkUNCLASSIFIED\n  Licenses and noticesSIM and its bundled runtime components include the following license and attribution texts. No connection is needed to read them.Close licensesProject license: sim@0.1.0 (Apache-2.0)LICENSE                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright 2026 SUaDtL\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\nBundled package: cose-base@2.2.0 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 - present, iVis@Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape-fcose@2.2.0 (MIT)LICENSECopyright (c) 2018 - present, iVis-at-Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape@3.34.4 (MIT)LICENSECopyright (c) 2016-2026, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.license-update.mjsimport fs from 'fs';\nimport path from 'path';\n\nimport { fileURLToPath } from 'url';\nimport { dirname } from 'path';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\n\nconst year = (new Date()).getFullYear();\n\nconst license = `Copyright (c) 2016-${year}, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.`;\n\nfs.writeFileSync(path.join(__dirname, 'LICENSE'), license);\nBundled package: layout-base@2.0.1 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 iVis@Bilkent\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: sql.js@1.16.0 (MIT)AUTHORSOphir LOJKINE <pere.jobs@gmail.com> (https://github.com/lovasoa)\n@kripken\n@hankinsoft\n@firien\n@dinedal\n@taytay\n@kaizhu256\n@brodybits\nLICENSEMIT license\n===========\n\nCopyright (c) 2017 sql.js authors (see AUTHORS)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n\n\n# Some portions of the Makefile taken from:\nCopyright 2017 Ryusei Yamaguchi\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-outside-canvas-dismissal.json"
+    },
+    {
+      "action": "partial-enter-refuses-ambiguity",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-partial-enter-refuses-ambiguity.json"
+    },
+    {
+      "action": "populated-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-populated-results.json"
+    },
+    {
+      "action": "result-escape",
+      "sourceIds": [
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-chrome\\find-result-escape.json"
+    },
+    {
+      "action": "blank-query",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-blank-query.json"
+    },
+    {
+      "action": "empty-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "unmatched synthetic record",
+      "rows": [],
+      "resultStatus": "No matching records. Search names across record types.",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 296,
+        "height": 94.59375
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-empty-results.json"
+    },
+    {
+      "action": "input-escape",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-input-escape.json"
+    },
+    {
+      "action": "input-results-inside-and-arrow-boundaries",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-input-results-inside-and-arrow-boundaries.json"
+    },
+    {
+      "action": "outside-action-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Fit map"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-outside-action-dismissal.json"
+    },
+    {
+      "action": "outside-canvas-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n    UNCLASSIFIEDSIM Service Integration MapFileNewOpenImport CSVSave AsChoose recovery fileStop recoveryBanner caveatSave fileUndoRedoHelpAbout and demoSQLite 3.54.1SIM runs offline. Your data stays in the local SQLite files you choose.Open demoLicenses and noticesSynthetic Find action ledger | synthetic-find-actions.sqlite | SavedRecovery is off for this dataset.Retry recoveryInventoryMapBackReturn to resultsShow selected recordInventoryHide listShowNetworksServicesOrganizationsApplicationsCategoriesCDSScenariosFilterNetwork scopeAll networksAmberBlueAdd service1–3 of 3 servicesServiceNetworkProviderMarkingDirectoryAmberNo providerUNCLASSIFIEDOrdersAmberBeaconUNCLASSIFIEDDirectoryBlueNo providerUNCLASSIFIEDPrevious recordsNext recordsMapViewAs-IsFind on mapFiltersNetworkAll networksAmberBlueCategoryAll categoriesBeaconOrganizationAll organizationsBeaconCatalog 01Catalog 02Catalog 03Catalog 04Catalog 05Catalog 06Catalog 07Catalog 08Catalog 09Catalog 10Catalog 11Catalog 12Catalog 13Catalog 14Catalog 15Catalog 16Catalog 17Catalog 18Catalog 19Catalog 20Catalog 21Catalog 22Catalog 23Catalog 24Catalog 25Catalog 26Catalog 27Catalog 28Catalog 29Catalog 30Catalog 31Catalog 32Catalog 33Catalog 34Catalog 35Show foundational links (0)Fit mapLayoutRe-layoutCaptureCapture optionsExport SVG0 foundational dependencies hidden · 0 of 0 recorded dependencies in scopeArrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verifiedDepends onUsed byNetwork connectionsHighlight chainClear highlightExpand focusFit focusBack from focusAdd a network to start the map.2 networks, 3 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.Select an item or add one.Create another networkUNCLASSIFIED\n  Licenses and noticesSIM and its bundled runtime components include the following license and attribution texts. No connection is needed to read them.Close licensesProject license: sim@0.1.0 (Apache-2.0)LICENSE                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright 2026 SUaDtL\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\nBundled package: cose-base@2.2.0 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 - present, iVis@Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape-fcose@2.2.0 (MIT)LICENSECopyright (c) 2018 - present, iVis-at-Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape@3.34.4 (MIT)LICENSECopyright (c) 2016-2026, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.license-update.mjsimport fs from 'fs';\nimport path from 'path';\n\nimport { fileURLToPath } from 'url';\nimport { dirname } from 'path';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\n\nconst year = (new Date()).getFullYear();\n\nconst license = `Copyright (c) 2016-${year}, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.`;\n\nfs.writeFileSync(path.join(__dirname, 'LICENSE'), license);\nBundled package: layout-base@2.0.1 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 iVis@Bilkent\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: sql.js@1.16.0 (MIT)AUTHORSOphir LOJKINE <pere.jobs@gmail.com> (https://github.com/lovasoa)\n@kripken\n@hankinsoft\n@firien\n@dinedal\n@taytay\n@kaizhu256\n@brodybits\nLICENSEMIT license\n===========\n\nCopyright (c) 2017 sql.js authors (see AUTHORS)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n\n\n# Some portions of the Makefile taken from:\nCopyright 2017 Ryusei Yamaguchi\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-outside-canvas-dismissal.json"
+    },
+    {
+      "action": "partial-enter-refuses-ambiguity",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-partial-enter-refuses-ambiguity.json"
+    },
+    {
+      "action": "populated-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 633.25,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-populated-results.json"
+    },
+    {
+      "action": "result-escape",
+      "sourceIds": [
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-a3a86-al-preserve-reachable-focus-msedge\\find-result-escape.json"
+    },
+    {
+      "action": "blank-query",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-blank-query.json"
+    },
+    {
+      "action": "empty-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "unmatched synthetic record",
+      "rows": [],
+      "resultStatus": "No matching records. Search names across record types.",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 374.40625,
+        "height": 74.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-empty-results.json"
+    },
+    {
+      "action": "input-escape",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-input-escape.json"
+    },
+    {
+      "action": "input-results-inside-and-arrow-boundaries",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-input-results-inside-and-arrow-boundaries.json"
+    },
+    {
+      "action": "outside-action-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Fit map"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-outside-action-dismissal.json"
+    },
+    {
+      "action": "outside-canvas-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n    UNCLASSIFIEDSIM Service Integration MapFileNewOpenImport CSVSave AsChoose recovery fileStop recoveryBanner caveatSave fileUndoRedoHelpAbout and demoSQLite 3.54.1SIM runs offline. Your data stays in the local SQLite files you choose.Open demoLicenses and noticesSynthetic Find action ledger | synthetic-find-actions.sqlite | SavedRecovery is off for this dataset.Retry recoveryInventoryMapBackReturn to resultsShow selected recordInventoryHide listShowNetworksServicesOrganizationsApplicationsCategoriesCDSScenariosFilterNetwork scopeAll networksAmberBlueAdd service1–3 of 3 servicesServiceNetworkProviderMarkingDirectoryAmberNo providerUNCLASSIFIEDOrdersAmberBeaconUNCLASSIFIEDDirectoryBlueNo providerUNCLASSIFIEDPrevious recordsNext recordsMapViewAs-IsFind on mapFiltersNetworkAll networksAmberBlueCategoryAll categoriesBeaconOrganizationAll organizationsBeaconCatalog 01Catalog 02Catalog 03Catalog 04Catalog 05Catalog 06Catalog 07Catalog 08Catalog 09Catalog 10Catalog 11Catalog 12Catalog 13Catalog 14Catalog 15Catalog 16Catalog 17Catalog 18Catalog 19Catalog 20Catalog 21Catalog 22Catalog 23Catalog 24Catalog 25Catalog 26Catalog 27Catalog 28Catalog 29Catalog 30Catalog 31Catalog 32Catalog 33Catalog 34Catalog 35Show foundational links (0)Fit mapLayoutRe-layoutCaptureCapture optionsExport SVG0 foundational dependencies hidden · 0 of 0 recorded dependencies in scopeArrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verifiedDepends onUsed byNetwork connectionsHighlight chainClear highlightExpand focusFit focusBack from focusAdd a network to start the map.2 networks, 3 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.Select an item or add one.Create another networkUNCLASSIFIED\n  Licenses and noticesSIM and its bundled runtime components include the following license and attribution texts. No connection is needed to read them.Close licensesProject license: sim@0.1.0 (Apache-2.0)LICENSE                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright 2026 SUaDtL\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\nBundled package: cose-base@2.2.0 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 - present, iVis@Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape-fcose@2.2.0 (MIT)LICENSECopyright (c) 2018 - present, iVis-at-Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape@3.34.4 (MIT)LICENSECopyright (c) 2016-2026, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.license-update.mjsimport fs from 'fs';\nimport path from 'path';\n\nimport { fileURLToPath } from 'url';\nimport { dirname } from 'path';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\n\nconst year = (new Date()).getFullYear();\n\nconst license = `Copyright (c) 2016-${year}, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.`;\n\nfs.writeFileSync(path.join(__dirname, 'LICENSE'), license);\nBundled package: layout-base@2.0.1 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 iVis@Bilkent\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: sql.js@1.16.0 (MIT)AUTHORSOphir LOJKINE <pere.jobs@gmail.com> (https://github.com/lovasoa)\n@kripken\n@hankinsoft\n@firien\n@dinedal\n@taytay\n@kaizhu256\n@brodybits\nLICENSEMIT license\n===========\n\nCopyright (c) 2017 sql.js authors (see AUTHORS)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n\n\n# Some portions of the Makefile taken from:\nCopyright 2017 Ryusei Yamaguchi\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-outside-canvas-dismissal.json"
+    },
+    {
+      "action": "partial-enter-refuses-ambiguity",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-partial-enter-refuses-ambiguity.json"
+    },
+    {
+      "action": "populated-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-populated-results.json"
+    },
+    {
+      "action": "result-escape",
+      "sourceIds": [
+        "SOURCE-27"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-chrome\\find-result-escape.json"
+    },
+    {
+      "action": "blank-query",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-blank-query.json"
+    },
+    {
+      "action": "empty-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "unmatched synthetic record",
+      "rows": [],
+      "resultStatus": "No matching records. Search names across record types.",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 374.40625,
+        "height": 74.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-empty-results.json"
+    },
+    {
+      "action": "input-escape",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-input-escape.json"
+    },
+    {
+      "action": "input-results-inside-and-arrow-boundaries",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-input-results-inside-and-arrow-boundaries.json"
+    },
+    {
+      "action": "outside-action-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Fit map"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-outside-action-dismissal.json"
+    },
+    {
+      "action": "outside-canvas-dismissal",
+      "sourceIds": [
+        "SOURCE-25",
+        "SOURCE-26",
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n    UNCLASSIFIEDSIM Service Integration MapFileNewOpenImport CSVSave AsChoose recovery fileStop recoveryBanner caveatSave fileUndoRedoHelpAbout and demoSQLite 3.54.1SIM runs offline. Your data stays in the local SQLite files you choose.Open demoLicenses and noticesSynthetic Find action ledger | synthetic-find-actions.sqlite | SavedRecovery is off for this dataset.Retry recoveryInventoryMapBackReturn to resultsShow selected recordInventoryHide listShowNetworksServicesOrganizationsApplicationsCategoriesCDSScenariosFilterNetwork scopeAll networksAmberBlueAdd service1–3 of 3 servicesServiceNetworkProviderMarkingDirectoryAmberNo providerUNCLASSIFIEDOrdersAmberBeaconUNCLASSIFIEDDirectoryBlueNo providerUNCLASSIFIEDPrevious recordsNext recordsMapViewAs-IsFind on mapFiltersNetworkAll networksAmberBlueCategoryAll categoriesBeaconOrganizationAll organizationsBeaconCatalog 01Catalog 02Catalog 03Catalog 04Catalog 05Catalog 06Catalog 07Catalog 08Catalog 09Catalog 10Catalog 11Catalog 12Catalog 13Catalog 14Catalog 15Catalog 16Catalog 17Catalog 18Catalog 19Catalog 20Catalog 21Catalog 22Catalog 23Catalog 24Catalog 25Catalog 26Catalog 27Catalog 28Catalog 29Catalog 30Catalog 31Catalog 32Catalog 33Catalog 34Catalog 35Show foundational links (0)Fit mapLayoutRe-layoutCaptureCapture optionsExport SVG0 foundational dependencies hidden · 0 of 0 recorded dependencies in scopeArrows: consumer → providerRed dashed: cross-network, no CDS recordedRecorded dependencies; connectivity is not verifiedDepends onUsed byNetwork connectionsHighlight chainClear highlightExpand focusFit focusBack from focusAdd a network to start the map.2 networks, 3 services, 0 CDS. 0 dependencies: 0 local, 0 via a CDS, 0 cross-domain without a CDS, 0 to an external network.Select an item or add one.Create another networkUNCLASSIFIED\n  Licenses and noticesSIM and its bundled runtime components include the following license and attribution texts. No connection is needed to read them.Close licensesProject license: sim@0.1.0 (Apache-2.0)LICENSE                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright 2026 SUaDtL\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\nBundled package: cose-base@2.2.0 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 - present, iVis@Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape-fcose@2.2.0 (MIT)LICENSECopyright (c) 2018 - present, iVis-at-Bilkent.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: cytoscape@3.34.4 (MIT)LICENSECopyright (c) 2016-2026, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.license-update.mjsimport fs from 'fs';\nimport path from 'path';\n\nimport { fileURLToPath } from 'url';\nimport { dirname } from 'path';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);\n\nconst year = (new Date()).getFullYear();\n\nconst license = `Copyright (c) 2016-${year}, The Cytoscape Consortium.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.`;\n\nfs.writeFileSync(path.join(__dirname, 'LICENSE'), license);\nBundled package: layout-base@2.0.1 (MIT)LICENSEMIT License\n\nCopyright (c) 2019 iVis@Bilkent\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\nBundled package: sql.js@1.16.0 (MIT)AUTHORSOphir LOJKINE <pere.jobs@gmail.com> (https://github.com/lovasoa)\n@kripken\n@hankinsoft\n@firien\n@dinedal\n@taytay\n@kaizhu256\n@brodybits\nLICENSEMIT license\n===========\n\nCopyright (c) 2017 sql.js authors (see AUTHORS)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n\n\n# Some portions of the Makefile taken from:\nCopyright 2017 Ryusei Yamaguchi\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-outside-canvas-dismissal.json"
+    },
+    {
+      "action": "partial-enter-refuses-ambiguity",
+      "sourceIds": [
+        "SOURCE-26"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-partial-enter-refuses-ambiguity.json"
+    },
+    {
+      "action": "populated-results",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [
+        "Directory (Amber) · service",
+        "Directory (Blue) · service"
+      ],
+      "resultStatus": "1–2 of 2 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 258.046875,
+        "height": 168.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-populated-results.json"
+    },
+    {
+      "action": "result-escape",
+      "sourceIds": [
+        "SOURCE-27"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "dir",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-aceda-al-preserve-reachable-focus-msedge\\find-result-escape.json"
+    },
+    {
+      "action": "input-resets-page",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "Catalog 35",
+      "rows": [
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "1–1 of 1 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 247.34375,
+        "height": 128.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-chrome\\find-input-resets-page.json"
+    },
+    {
+      "action": "next-keyboard-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 328.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-chrome\\find-next-keyboard-last-page.json"
+    },
+    {
+      "action": "next-pointer-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 328.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-chrome\\find-next-pointer-last-page.json"
+    },
+    {
+      "action": "previous-keyboard-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 500
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-chrome\\find-previous-keyboard-first-page.json"
+    },
+    {
+      "action": "previous-pointer-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 500
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-chrome\\find-previous-pointer-first-page.json"
+    },
+    {
+      "action": "input-resets-page",
+      "sourceIds": [
+        "SOURCE-25"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "Catalog 35",
+      "rows": [
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "1–1 of 1 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 247.34375,
+        "height": 128.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-msedge\\find-input-resets-page.json"
+    },
+    {
+      "action": "next-keyboard-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 328.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-msedge\\find-next-keyboard-last-page.json"
+    },
+    {
+      "action": "next-pointer-last-page",
+      "sourceIds": [
+        "SOURCE-44"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 31 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 31 · organization",
+        "Catalog 32 · organization",
+        "Catalog 33 · organization",
+        "Catalog 34 · organization",
+        "Catalog 35 · organization"
+      ],
+      "resultStatus": "31–35 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 328.296875
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-msedge\\find-next-pointer-last-page.json"
+    },
+    {
+      "action": "previous-keyboard-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 500
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-msedge\\find-previous-keyboard-first-page.json"
+    },
+    {
+      "action": "previous-pointer-first-page",
+      "sourceIds": [
+        "SOURCE-43"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Catalog 01 · organization"
+      },
+      "query": "Catalog",
+      "rows": [
+        "Catalog 01 · organization",
+        "Catalog 02 · organization",
+        "Catalog 03 · organization",
+        "Catalog 04 · organization",
+        "Catalog 05 · organization",
+        "Catalog 06 · organization",
+        "Catalog 07 · organization",
+        "Catalog 08 · organization",
+        "Catalog 09 · organization",
+        "Catalog 10 · organization",
+        "Catalog 11 · organization",
+        "Catalog 12 · organization",
+        "Catalog 13 · organization",
+        "Catalog 14 · organization",
+        "Catalog 15 · organization",
+        "Catalog 16 · organization",
+        "Catalog 17 · organization",
+        "Catalog 18 · organization",
+        "Catalog 19 · organization",
+        "Catalog 20 · organization",
+        "Catalog 21 · organization",
+        "Catalog 22 · organization",
+        "Catalog 23 · organization",
+        "Catalog 24 · organization",
+        "Catalog 25 · organization",
+        "Catalog 26 · organization",
+        "Catalog 27 · organization",
+        "Catalog 28 · organization",
+        "Catalog 29 · organization",
+        "Catalog 30 · organization"
+      ],
+      "resultStatus": "1–30 of 35 matching records",
+      "resultBounds": {
+        "x": 12,
+        "y": 326.015625,
+        "width": 345.71875,
+        "height": 500
+      },
+      "editor": null,
+      "inventoryType": "service",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-dca73-s-and-keyboard-reachability-msedge\\find-previous-pointer-first-page.json"
+    },
+    {
+      "action": "exact-input-enter",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Orders",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-chrome\\find-exact-input-enter.json"
+    },
+    {
+      "action": "graph-keyboard-amber-service",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-chrome\\find-graph-keyboard-amber-service.json"
+    },
+    {
+      "action": "graph-pointer-blue-service",
+      "sourceIds": [
+        "SOURCE-41"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-chrome\\find-graph-pointer-blue-service.json"
+    },
+    {
+      "action": "non-map-keyboard-organization",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-42"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Organization: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Organization: Beacon",
+      "inventoryType": "organization",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-chrome\\find-non-map-keyboard-organization.json"
+    },
+    {
+      "action": "non-map-pointer-category",
+      "sourceIds": [
+        "SOURCE-42"
+      ],
+      "host": "chrome",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Category: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Category: Beacon",
+      "inventoryType": "category",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-chrome\\find-non-map-pointer-category.json"
+    },
+    {
+      "action": "exact-input-enter",
+      "sourceIds": [
+        "SOURCE-26",
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "INPUT",
+        "id": "map-find",
+        "text": ""
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Orders",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-msedge\\find-exact-input-enter.json"
+    },
+    {
+      "action": "graph-keyboard-amber-service",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-msedge\\find-graph-keyboard-amber-service.json"
+    },
+    {
+      "action": "graph-pointer-blue-service",
+      "sourceIds": [
+        "SOURCE-41"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Service: Directory"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Service: Directory",
+      "inventoryType": "service",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-msedge\\find-graph-pointer-blue-service.json"
+    },
+    {
+      "action": "non-map-keyboard-organization",
+      "sourceIds": [
+        "SOURCE-27",
+        "SOURCE-42"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Organization: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Organization: Beacon",
+      "inventoryType": "organization",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-msedge\\find-non-map-keyboard-organization.json"
+    },
+    {
+      "action": "non-map-pointer-category",
+      "sourceIds": [
+        "SOURCE-42"
+      ],
+      "host": "msedge",
+      "status": "PASS",
+      "focus": {
+        "tag": "H2",
+        "id": "",
+        "text": "Category: Beacon"
+      },
+      "query": "",
+      "rows": [],
+      "resultStatus": null,
+      "resultBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "editor": "Category: Beacon",
+      "inventoryType": "category",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-f5a18-ets-by-pointer-and-keyboard-msedge\\find-non-map-pointer-category.json"
+    }
+  ],
+  "readability": [
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-2ca9f-remains-within-the-viewport-chrome\\find-query-geometry.json",
+      "geometry": {
+        "x": 194.59375,
+        "right": 496.75,
+        "width": 302.15625,
+        "viewport": 1366
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-2ca9f-remains-within-the-viewport-msedge\\find-query-geometry.json",
+      "geometry": {
+        "x": 194.59375,
+        "right": 496.75,
+        "width": 302.15625,
+        "viewport": 1366
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-6d62c-remains-within-the-viewport-chrome\\find-query-geometry.json",
+      "geometry": {
+        "x": 16,
+        "right": 304,
+        "width": 288,
+        "viewport": 320
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Find-actual-act-6d62c-remains-within-the-viewport-msedge\\find-query-geometry.json",
+      "geometry": {
+        "x": 16,
+        "right": 304,
+        "width": 288,
+        "viewport": 320
+      }
+    }
+  ],
+  "viewportReadbacks": [
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Accepted-canvas-16a14-ng-draft-and-exact-viewport-chrome\\refused-edge-and-draft.json",
+      "observation": {
+        "host": "chrome",
+        "previous": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "refused": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "draft": "Orders pending"
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Accepted-canvas-16a14-ng-draft-and-exact-viewport-msedge\\refused-edge-and-draft.json",
+      "observation": {
+        "host": "msedge",
+        "previous": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "refused": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "draft": "Orders pending"
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Accepted-canvas-2fde5--the-exact-earlier-viewport-chrome\\accepted-edge-and-back.json",
+      "observation": {
+        "host": "chrome",
+        "before": {
+          "world": {
+            "x": 500,
+            "y": 0
+          },
+          "rendered": {
+            "x": 1120,
+            "y": 180
+          },
+          "right": 1138.4250000000002,
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1
+        },
+        "previous": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "after": {
+          "pan": {
+            "x": 372.1999999999998,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 966
+        },
+        "right": 941.9999999999999,
+        "world": {
+          "x": 500,
+          "y": 0
+        },
+        "restored": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        }
+      }
+    },
+    {
+      "evidencePath": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-action-usability-20261115\\map-green-build3-results\\action-map-Accepted-canvas-2fde5--the-exact-earlier-viewport-msedge\\accepted-edge-and-back.json",
+      "observation": {
+        "host": "msedge",
+        "before": {
+          "world": {
+            "x": 500,
+            "y": 0
+          },
+          "rendered": {
+            "x": 1120,
+            "y": 180
+          },
+          "right": 1138.4250000000002,
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1
+        },
+        "previous": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        },
+        "after": {
+          "pan": {
+            "x": 372.1999999999998,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 966
+        },
+        "right": 941.9999999999999,
+        "world": {
+          "x": 500,
+          "y": 0
+        },
+        "restored": {
+          "pan": {
+            "x": 570,
+            "y": 180
+          },
+          "zoom": 1.1,
+          "width": 1366
+        }
+      }
+    }
+  ]
+}

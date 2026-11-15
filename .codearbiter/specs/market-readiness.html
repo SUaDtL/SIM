@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM market readiness remediation · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-MARKET-READINESS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/market-readiness.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM market readiness remediation</h1><p class="deck">Implement checkpoint MR01-MR13 on the existing PR25 branch with local testing checkpoints.</p><div class="meta"><span>SPEC-MARKET-READINESS</span><span>Revision 3 · schema 0.3.2</span><span>44 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INTENT-MARKET -->
+<article class="record" id="INTENT-MARKET" data-ca-symbol="INTENT-MARKET" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INTENT-MARKET">INTENT-MARKET</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>feature</div><div class="field"><span class="label">Outcome</span>Resolve thirteen findings while preserving offline single-file and atomic repository/session contracts.</div><div class="field"><span class="label">Problem</span>Market checkpoint identified distribution, handling, interpretation and reconciliation gaps.</div></article>
+<!-- CA:END:INTENT-MARKET -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-MARKET -->
+<article class="record" id="SCOPE-MARKET" data-ca-symbol="SCOPE-MARKET" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-MARKET">SCOPE-MARKET</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>User authorized all twelve queued medium findings and runtime notice blocker in PR25.</div></article>
+<!-- CA:END:SCOPE-MARKET -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:EXCL-RELEASE -->
+<article class="record" id="EXCL-RELEASE" data-ca-symbol="EXCL-RELEASE" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#EXCL-RELEASE">EXCL-RELEASE</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No merge, publication, recruitment, schema/dependency addition, browser persistence or network runtime.</div></article>
+<!-- CA:END:EXCL-RELEASE -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APPROACH-MARKET -->
+<article class="record" id="APPROACH-MARKET" data-ca-symbol="APPROACH-MARKET" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APPROACH-MARKET">APPROACH-MARKET</a><h3>Approach</h3></div><div class="field"><span class="label">Choice</span>Incremental existing DOM/session/map presenters; embedded generated notices, in-memory paginated import receipt, render-only bezier route offsets and proportional capture annotations.</div><div class="field"><span class="label">Tradeoff</span>Reuse existing models and file ownership; no replacement framework, inferred links, storage or schema. Native dialogs/human study remain separate qualification.</div></article>
+<!-- CA:END:APPROACH-MARKET -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2><span class="missing">None recorded</span></section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:MR01 -->
+<article class="record" id="MR01" data-ca-symbol="MR01" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR01">MR01</a><h3>Standalone notices</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR01 -->
+<article class="record" id="SCEN-MR01" data-ca-symbol="SCEN-MR01" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR01">SCEN-MR01</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>An installed production closure and a standalone build</div><div class="field"><span class="label">Then</span>Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.</div><div class="field"><span class="label">When</span>Build and open notices offline</div></article>
+<!-- CA:END:SCEN-MR01 -->
+</div><div class="field"><span class="label">Statement</span>Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR01 -->
+<article class="record" id="VERIFY-MR01" data-ca-symbol="VERIFY-MR01" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR01">VERIFY-MR01</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Missing/empty/unsupported dependency license fixture refuses generation; original artifact lacked required texts</div><div class="field"><span class="label">Oracle</span>Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.</div><div class="field"><span class="label">Planned target</span>tests/unit/runtime-notices.test.ts; tests/unit/build-output.test.ts; e2e/file-size.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR01 -->
+</div></article>
+<!-- CA:END:MR01 -->
+
+<!-- CA:BEGIN:MR02 -->
+<article class="record" id="MR02" data-ca-symbol="MR02" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR02">MR02</a><h3>Embedded onboarding</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR02 -->
+<article class="record" id="SCEN-MR02" data-ca-symbol="SCEN-MR02" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR02">SCEN-MR02</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A first-use workspace with unfinished synthetic form text</div><div class="field"><span class="label">Then</span>New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.</div><div class="field"><span class="label">When</span>Open and dismiss Help</div></article>
+<!-- CA:END:SCEN-MR02 -->
+</div><div class="field"><span class="label">Statement</span>New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR02 -->
+<article class="record" id="VERIFY-MR02" data-ca-symbol="VERIFY-MR02" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR02">VERIFY-MR02</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original build has no Help; new Help must leave the pending draft and invoking focus intact</div><div class="field"><span class="label">Oracle</span>New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.</div><div class="field"><span class="label">Planned target</span>e2e/market-workspace.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR02 -->
+</div></article>
+<!-- CA:END:MR02 -->
+
+<!-- CA:BEGIN:MR03 -->
+<article class="record" id="MR03" data-ca-symbol="MR03" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR03">MR03</a><h3>Live map interpretation</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR03 -->
+<article class="record" id="SCEN-MR03" data-ca-symbol="SCEN-MR03" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR03">SCEN-MR03</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Recorded consumer/provider and cross-network links</div><div class="field"><span class="label">Then</span>Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.</div><div class="field"><span class="label">When</span>Open Map</div></article>
+<!-- CA:END:SCEN-MR03 -->
+</div><div class="field"><span class="label">Statement</span>Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR03 -->
+<article class="record" id="VERIFY-MR03" data-ca-symbol="VERIFY-MR03" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR03">VERIFY-MR03</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original build lacks a visible direction/uncertainty legend</div><div class="field"><span class="label">Oracle</span>Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.</div><div class="field"><span class="label">Planned target</span>e2e/market-map.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR03 -->
+</div></article>
+<!-- CA:END:MR03 -->
+
+<!-- CA:BEGIN:MR04 -->
+<article class="record" id="MR04" data-ca-symbol="MR04" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR04">MR04</a><h3>Import reconciliation</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR04 -->
+<article class="record" id="SCEN-MR04" data-ca-symbol="SCEN-MR04" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR04">SCEN-MR04</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>One valid row,55 rejected rows, an unreadable file and higher marked input</div><div class="field"><span class="label">Then</span>All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.</div><div class="field"><span class="label">When</span>Preview, page, download, commit, reopen and cancel a corrected preview</div></article>
+<!-- CA:END:SCEN-MR04 -->
+</div><div class="field"><span class="label">Statement</span>All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR04 -->
+<article class="record" id="VERIFY-MR04" data-ca-symbol="VERIFY-MR04" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR04">VERIFY-MR04</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original fifty-note list loses access; reject stale sessions and formula-active CSV cells; rejected marked rows cannot downgrade diagnostics</div><div class="field"><span class="label">Oracle</span>All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.</div><div class="field"><span class="label">Planned target</span>src/ui/import-receipt.test.ts; e2e/import-receipt.spec.ts; existing e2e/import.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR04 -->
+</div></article>
+<!-- CA:END:MR04 -->
+
+<!-- CA:BEGIN:MR05 -->
+<article class="record" id="MR05" data-ca-symbol="MR05" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR05">MR05</a><h3>Scope disclosure</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR05 -->
+<article class="record" id="SCEN-MR05" data-ca-symbol="SCEN-MR05" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR05">SCEN-MR05</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A foundational link and active/suspended filter in a focused view</div><div class="field"><span class="label">Then</span>Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.</div><div class="field"><span class="label">When</span>Inspect scope and capture SVG</div></article>
+<!-- CA:END:SCEN-MR05 -->
+</div><div class="field"><span class="label">Statement</span>Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR05 -->
+<article class="record" id="VERIFY-MR05" data-ca-symbol="VERIFY-MR05" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR05">VERIFY-MR05</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original capture omits hidden scope; repeated focus text and joined filter qualifier failed exact existing assertions</div><div class="field"><span class="label">Oracle</span>Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.</div><div class="field"><span class="label">Planned target</span>e2e/market-map.spec.ts; e2e/connected-focus.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR05 -->
+</div></article>
+<!-- CA:END:MR05 -->
+
+<!-- CA:BEGIN:MR06 -->
+<article class="record" id="MR06" data-ca-symbol="MR06" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR06">MR06</a><h3>Export certainty</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR06 -->
+<article class="record" id="SCEN-MR06" data-ca-symbol="SCEN-MR06" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR06">SCEN-MR06</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A recorded route whose connectivity has not been established</div><div class="field"><span class="label">Then</span>Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.</div><div class="field"><span class="label">When</span>Capture current map as PNG or SVG</div></article>
+<!-- CA:END:SCEN-MR06 -->
+</div><div class="field"><span class="label">Statement</span>Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR06 -->
+<article class="record" id="VERIFY-MR06" data-ca-symbol="VERIFY-MR06" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR06">VERIFY-MR06</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original detached export omits the explicit connectivity certainty boundary</div><div class="field"><span class="label">Oracle</span>Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.</div><div class="field"><span class="label">Planned target</span>e2e/market-map.spec.ts; e2e/connected-focus.spec.ts; e2e/map.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR06 -->
+</div></article>
+<!-- CA:END:MR06 -->
+
+<!-- CA:BEGIN:MR07 -->
+<article class="record" id="MR07" data-ca-symbol="MR07" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR07">MR07</a><h3>Route readability</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR07 -->
+<article class="record" id="SCEN-MR07" data-ca-symbol="SCEN-MR07" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR07">SCEN-MR07</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Collinear saved nodes with unrelated service/CDS bodies and a network heading</div><div class="field"><span class="label">Then</span>Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.</div><div class="field"><span class="label">When</span>Render and capture the explicit external dependency</div></article>
+<!-- CA:END:SCEN-MR07 -->
+</div><div class="field"><span class="label">Statement</span>Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR07 -->
+<article class="record" id="VERIFY-MR07" data-ca-symbol="VERIFY-MR07" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR07">VERIFY-MR07</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original chord intersects unrelated obstacles; bounded impossible-enclosure case must terminate without changing endpoints/positions</div><div class="field"><span class="label">Oracle</span>Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.</div><div class="field"><span class="label">Planned target</span>src/map/route-offset.test.ts; e2e/market-map.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR07 -->
+</div></article>
+<!-- CA:END:MR07 -->
+
+<!-- CA:BEGIN:MR08 -->
+<article class="record" id="MR08" data-ca-symbol="MR08" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR08">MR08</a><h3>Projected relationship counts</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR08 -->
+<article class="record" id="SCEN-MR08" data-ca-symbol="SCEN-MR08" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR08">SCEN-MR08</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Projected Archive has one incoming and no outgoing dependency</div><div class="field"><span class="label">Then</span>Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.</div><div class="field"><span class="label">When</span>Inspect the projected service</div></article>
+<!-- CA:END:SCEN-MR08 -->
+</div><div class="field"><span class="label">Statement</span>Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR08 -->
+<article class="record" id="VERIFY-MR08" data-ca-symbol="VERIFY-MR08" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR08">VERIFY-MR08</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original zero dependencies wording hides its incoming count; inspector remains read-only</div><div class="field"><span class="label">Oracle</span>Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.</div><div class="field"><span class="label">Planned target</span>e2e/market-workspace.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR08 -->
+</div></article>
+<!-- CA:END:MR08 -->
+
+<!-- CA:BEGIN:MR09 -->
+<article class="record" id="MR09" data-ca-symbol="MR09" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR09">MR09</a><h3>Sensitive dataset name</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR09 -->
+<article class="record" id="SCEN-MR09" data-ca-symbol="SCEN-MR09" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR09">SCEN-MR09</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A current draft and synthetic.example.invalid as a new name</div><div class="field"><span class="label">Then</span>New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.</div><div class="field"><span class="label">When</span>Reject or explicitly accept the listed warning</div></article>
+<!-- CA:END:SCEN-MR09 -->
+</div><div class="field"><span class="label">Statement</span>New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR09 -->
+<article class="record" id="VERIFY-MR09" data-ca-symbol="VERIFY-MR09" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR09">VERIFY-MR09</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original name bypasses acknowledgement; reject must retain current draft, accept must persist exactly reviewed name</div><div class="field"><span class="label">Oracle</span>New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.</div><div class="field"><span class="label">Planned target</span>e2e/market-workspace.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR09 -->
+</div></article>
+<!-- CA:END:MR09 -->
+
+<!-- CA:BEGIN:MR10 -->
+<article class="record" id="MR10" data-ca-symbol="MR10" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR10">MR10</a><h3>Pre-read size bound</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR10 -->
+<article class="record" id="SCEN-MR10" data-ca-symbol="SCEN-MR10" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR10">SCEN-MR10</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Metadata-only oversized native/fallback candidates and enlarged save baselines</div><div class="field"><span class="label">Then</span>Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.</div><div class="field"><span class="label">When</span>Open or prepare a file write</div></article>
+<!-- CA:END:SCEN-MR10 -->
+</div><div class="field"><span class="label">Statement</span>Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR10 -->
+<article class="record" id="VERIFY-MR10" data-ca-symbol="VERIFY-MR10" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR10">VERIFY-MR10</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Read spies must remain untouched on over-limit metadata; equality boundary remains accepted and parser byte cap retained</div><div class="field"><span class="label">Oracle</span>Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.</div><div class="field"><span class="label">Planned target</span>src/file/dataset-file-size.test.ts; e2e/file-size.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR10 -->
+</div></article>
+<!-- CA:END:MR10 -->
+
+<!-- CA:BEGIN:MR11 -->
+<article class="record" id="MR11" data-ca-symbol="MR11" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR11">MR11</a><h3>PNG graph oracle</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR11 -->
+<article class="record" id="SCEN-MR11" data-ca-symbol="SCEN-MR11" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR11">SCEN-MR11</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>A real rendered graph PNG with correct bands</div><div class="field"><span class="label">Then</span>A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.</div><div class="field"><span class="label">When</span>Compare real content against a blank-dark-map fault fixture</div></article>
+<!-- CA:END:SCEN-MR11 -->
+</div><div class="field"><span class="label">Statement</span>A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR11 -->
+<article class="record" id="VERIFY-MR11" data-ca-symbol="VERIFY-MR11" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR11">VERIFY-MR11</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Old nonwhite predicate counts blank map pixels; new guard must reject that blank map while retaining captions/bands</div><div class="field"><span class="label">Oracle</span>A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.</div><div class="field"><span class="label">Planned target</span>e2e/map.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR11 -->
+</div></article>
+<!-- CA:END:MR11 -->
+
+<!-- CA:BEGIN:MR12 -->
+<article class="record" id="MR12" data-ca-symbol="MR12" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR12">MR12</a><h3>Qualified edit identity</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR12 -->
+<article class="record" id="SCEN-MR12" data-ca-symbol="SCEN-MR12" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR12">SCEN-MR12</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Backup on Coral, an edit draft and independent-copy source</div><div class="field"><span class="label">Then</span>Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.</div><div class="field"><span class="label">When</span>Visit all editor tabs and change copy destination to Amber</div></article>
+<!-- CA:END:SCEN-MR12 -->
+</div><div class="field"><span class="label">Statement</span>Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR12 -->
+<article class="record" id="VERIFY-MR12" data-ca-symbol="VERIFY-MR12" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR12">VERIFY-MR12</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original Support tab loses identity; copy must retain original source and explicit destination without history writes</div><div class="field"><span class="label">Oracle</span>Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.</div><div class="field"><span class="label">Planned target</span>e2e/market-workspace.spec.ts</div></article>
+<!-- CA:END:VERIFY-MR12 -->
+</div></article>
+<!-- CA:END:MR12 -->
+
+<!-- CA:BEGIN:MR13 -->
+<article class="record" id="MR13" data-ca-symbol="MR13" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#MR13">MR13</a><h3>Presentation readability</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-MARKET">SCOPE-MARKET</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SCEN-MR13 -->
+<article class="record" id="SCEN-MR13" data-ca-symbol="SCEN-MR13" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SCEN-MR13">SCEN-MR13</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Wide/tall captured viewports with title, scope, legend and marking bands</div><div class="field"><span class="label">Then</span>PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.</div><div class="field"><span class="label">When</span>Fit PNG/SVG framing into a1280x720 presentation reference</div></article>
+<!-- CA:END:SCEN-MR13 -->
+</div><div class="field"><span class="label">Statement</span>PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VERIFY-MR13 -->
+<article class="record" id="VERIFY-MR13" data-ca-symbol="VERIFY-MR13" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VERIFY-MR13">VERIFY-MR13</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original fixed legend scales below target; geometry tests include tall wrapping cases and actual exported render inspection</div><div class="field"><span class="label">Oracle</span>PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.</div><div class="field"><span class="label">Planned target</span>src/map/export.test.ts; e2e/market-map.spec.ts; retained actual Chrome/Edge export observations</div></article>
+<!-- CA:END:VERIFY-MR13 -->
+</div></article>
+<!-- CA:END:MR13 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2>
+<!-- CA:BEGIN:SEC-SMARTS -->
+<article class="record" id="SEC-SMARTS" data-ca-symbol="SEC-SMARTS" data-ca-kind="sections"><div class="record-head"><a class="id" href="#SEC-SMARTS">SEC-SMARTS</a><h3>SMARTS design rationale</h3></div><div class="field"><span class="label">Blocks</span><div class="block"><p>SMARTS: no material unresolved solution choice under the fixed offline single-file, repository-only writes and saved-position constraints. Embed generated runtime notices in the one deliverable; use shared detector and size bound; paginate diagnostics in memory and download complete safe receipts; keep geometry changes render-only with bounded obstacle avoidance and proportional annotations. Scalable: bounded lists/routes at the declared roughly100-service estate. Maintainable: existing DOM, repository and capture interfaces reused. Available: offline controls and fail-closed missing notices. Reliable: original bytes, draft, endpoints and session ownership retained. Testable: regression-first source-specific tests and actual export inspection. Securable: existing CSP, size/sensitive checks, classification and safe text/CSV remain operative. Real participant and physical file durability evidence remain unknown and do not certify release. Implementation methods are reversible and within the user-authorized thirteen findings.</p></div></div></article>
+<!-- CA:END:SEC-SMARTS -->
+</section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>4516994b1846d84066a844187c115bd7f3e2653d</div><div class="field"><span class="label">Observed date</span>2026-11-13</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/**</li><li>e2e/**</li><li>tests/unit/**</li><li>vite.config.ts</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 5b042e86a9e8d32d4ae6305cb7f47907993928185466ea6c0f1d27fa4689823e<br>Model SHA-256: 40617c835aef0cee4a7c3427fcc24e9c6d7a8b1a1d22575f7cd98dad13bae037</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-MARKET-READINESS",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "40617c835aef0cee4a7c3427fcc24e9c6d7a8b1a1d22575f7cd98dad13bae037",
+    "normative_sha256": "5b042e86a9e8d32d4ae6305cb7f47907993928185466ea6c0f1d27fa4689823e",
+    "symbol_count": 44
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "choice": "Incremental existing DOM/session/map presenters; embedded generated notices, in-memory paginated import receipt, render-only bezier route offsets and proportional capture annotations.",
+      "id": "APPROACH-MARKET",
+      "tradeoff": "Reuse existing models and file ownership; no replacement framework, inferred links, storage or schema. Native dialogs/human study remain separate qualification."
+    },
+    "baseline": {
+      "commit": "4516994b1846d84066a844187c115bd7f3e2653d",
+      "observed_date": "2026-11-13",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "constraints": [],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network."
+        ],
+        "id": "MR01",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "An installed production closure and a standalone build",
+            "id": "SCEN-MR01",
+            "then": "Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.",
+            "when": "Build and open notices offline"
+          }
+        ],
+        "statement": "Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.",
+        "title": "Standalone notices",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR01",
+          "method": "automated_and_review",
+          "negative_control": "Missing/empty/unsupported dependency license fixture refuses generation; original artifact lacked required texts",
+          "oracle": "Build embeds project license and complete required notices for the actual installed runtime dependency closure, accessible offline in the one HTML. Missing runtime license text fails build. Production artifact tests verify exact carriage without allowing runtime network.",
+          "planned_target": "tests/unit/runtime-notices.test.ts; tests/unit/build-output.test.ts; e2e/file-size.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct."
+        ],
+        "id": "MR02",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A first-use workspace with unfinished synthetic form text",
+            "id": "SCEN-MR02",
+            "then": "New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.",
+            "when": "Open and dismiss Help"
+          }
+        ],
+        "statement": "New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.",
+        "title": "Embedded onboarding",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR02",
+          "method": "automated_and_review",
+          "negative_control": "Original build has no Help; new Help must leave the pending draft and invoking focus intact",
+          "oracle": "New and demo users can reach concise offline Help that explains purpose, network/service/explicit dependency/Map/Save workflow, glossary, applied versus saved and optional recovery limits. Expert actions remain direct.",
+          "planned_target": "e2e/market-workspace.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity."
+        ],
+        "id": "MR03",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Recorded consumer/provider and cross-network links",
+            "id": "SCEN-MR03",
+            "then": "Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.",
+            "when": "Open Map"
+          }
+        ],
+        "statement": "Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.",
+        "title": "Live map interpretation",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR03",
+          "method": "automated_and_review",
+          "negative_control": "Original build lacks a visible direction/uncertainty legend",
+          "oracle": "Visible and accessible compact live legend explains consumer-to-provider arrows, cross-network no-CDS and recorded-not-verified connectivity.",
+          "planned_target": "e2e/market-map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks."
+        ],
+        "id": "MR04",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "One valid row,55 rejected rows, an unreadable file and higher marked input",
+            "id": "SCEN-MR04",
+            "then": "All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.",
+            "when": "Preview, page, download, commit, reopen and cancel a corrected preview"
+          }
+        ],
+        "statement": "All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.",
+        "title": "Import reconciliation",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR04",
+          "method": "automated_and_review",
+          "negative_control": "Original fifty-note list loses access; reject stale sessions and formula-active CSV cells; rejected marked rows cannot downgrade diagnostics",
+          "oracle": "All rejected/flagged/present row details are accessible through bounded pagination and downloadable complete receipt before/after commit. Latest receipt retained only in originating dataset session, can be reopened, and corrected CSV retry preserves atomicity and existing draft/session checks.",
+          "planned_target": "src/ui/import-receipt.test.ts; e2e/import-receipt.spec.ts; existing e2e/import.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains."
+        ],
+        "id": "MR05",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A foundational link and active/suspended filter in a focused view",
+            "id": "SCEN-MR05",
+            "then": "Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.",
+            "when": "Inspect scope and capture SVG"
+          }
+        ],
+        "statement": "Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.",
+        "title": "Scope disclosure",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR05",
+          "method": "automated_and_review",
+          "negative_control": "Original capture omits hidden scope; repeated focus text and joined filter qualifier failed exact existing assertions",
+          "oracle": "Visible live hidden-link counts and detached captures explain foundational omissions, active filters and focus; intentional default remains.",
+          "planned_target": "e2e/market-map.spec.ts; e2e/connected-focus.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope."
+        ],
+        "id": "MR06",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A recorded route whose connectivity has not been established",
+            "id": "SCEN-MR06",
+            "then": "Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.",
+            "when": "Capture current map as PNG or SVG"
+          }
+        ],
+        "statement": "Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.",
+        "title": "Export certainty",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR06",
+          "method": "automated_and_review",
+          "negative_control": "Original detached export omits the explicit connectivity certainty boundary",
+          "oracle": "Every detached PNG/SVG retains a recorded-dependencies-not-connectivity-verified caveat, with full-dataset marking and frozen source/scope.",
+          "planned_target": "e2e/market-map.spec.ts; e2e/connected-focus.spec.ts; e2e/map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry."
+        ],
+        "id": "MR07",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Collinear saved nodes with unrelated service/CDS bodies and a network heading",
+            "id": "SCEN-MR07",
+            "then": "Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.",
+            "when": "Render and capture the explicit external dependency"
+          }
+        ],
+        "statement": "Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.",
+        "title": "Route readability",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR07",
+          "method": "automated_and_review",
+          "negative_control": "Original chord intersects unrelated obstacles; bounded impossible-enclosure case must terminate without changing endpoints/positions",
+          "oracle": "Render-only bounded deterministic bezier offsets or explicit endpoint labels mitigate confirmed collinear unrelated-node/route overlap. Stored endpoints and saved positions remain unchanged and SVG/PNG preserve rendered geometry.",
+          "planned_target": "src/map/route-offset.test.ts; e2e/market-map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior."
+        ],
+        "id": "MR08",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Projected Archive has one incoming and no outgoing dependency",
+            "id": "SCEN-MR08",
+            "then": "Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.",
+            "when": "Inspect the projected service"
+          }
+        ],
+        "statement": "Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.",
+        "title": "Projected relationship counts",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR08",
+          "method": "automated_and_review",
+          "negative_control": "Original zero dependencies wording hides its incoming count; inspector remains read-only",
+          "oracle": "Projected summary explicitly distinguishes outgoing dependencies from incoming Used by links, with true counts and read-only baseline behavior.",
+          "planned_target": "e2e/market-workspace.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name."
+        ],
+        "id": "MR09",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A current draft and synthetic.example.invalid as a new name",
+            "id": "SCEN-MR09",
+            "then": "New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.",
+            "when": "Reject or explicitly accept the listed warning"
+          }
+        ],
+        "statement": "New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.",
+        "title": "Sensitive dataset name",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR09",
+          "method": "automated_and_review",
+          "negative_control": "Original name bypasses acknowledgement; reject must retain current draft, accept must persist exactly reviewed name",
+          "oracle": "New dataset names use shared host/IP detector and list exact matches for explicit confirmation before creation. Cancel leaves current dataset/draft unchanged; confirmed name is the persisted name.",
+          "planned_target": "e2e/market-workspace.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too."
+        ],
+        "id": "MR10",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Metadata-only oversized native/fallback candidates and enlarged save baselines",
+            "id": "SCEN-MR10",
+            "then": "Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.",
+            "when": "Open or prepare a file write"
+          }
+        ],
+        "statement": "Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.",
+        "title": "Pre-read size bound",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR10",
+          "method": "automated_and_review",
+          "negative_control": "Read spies must remain untouched on over-limit metadata; equality boundary remains accepted and parser byte cap retained",
+          "oracle": "Both native and fallback file reads reject size over shared 100 MiB bound before arrayBuffer or baseline allocation. Retain parser byte check and active data; guard related save-target/baseline reads too.",
+          "planned_target": "src/file/dataset-file-size.test.ts; e2e/file-size.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions."
+        ],
+        "id": "MR11",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "A real rendered graph PNG with correct bands",
+            "id": "SCEN-MR11",
+            "then": "A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.",
+            "when": "Compare real content against a blank-dark-map fault fixture"
+          }
+        ],
+        "statement": "A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.",
+        "title": "PNG graph oracle",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR11",
+          "method": "automated_and_review",
+          "negative_control": "Old nonwhite predicate counts blank map pixels; new guard must reject that blank map while retaining captions/bands",
+          "oracle": "A graph-content oracle detects blank dark renderer output even with correct classification bands; actual expected graph content passes. Retain no-write, dimensions, offline, marking assertions.",
+          "planned_target": "e2e/map.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write."
+        ],
+        "id": "MR12",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Backup on Coral, an edit draft and independent-copy source",
+            "id": "SCEN-MR12",
+            "then": "Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.",
+            "when": "Visit all editor tabs and change copy destination to Amber"
+          }
+        ],
+        "statement": "Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.",
+        "title": "Qualified edit identity",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR12",
+          "method": "automated_and_review",
+          "negative_control": "Original Support tab loses identity; copy must retain original source and explicit destination without history writes",
+          "oracle": "Every editor tab keeps record name and network visible, including qualified creation destination/copy source as applicable; no unintended field/draft write.",
+          "planned_target": "e2e/market-workspace.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Required by the user-authorized checkpoint remediation for the supported offline Chrome/Edge app."
+        },
+        "guarantees": [
+          "PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits."
+        ],
+        "id": "MR13",
+        "intent_refs": [
+          "SCOPE-MARKET"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Wide/tall captured viewports with title, scope, legend and marking bands",
+            "id": "SCEN-MR13",
+            "then": "PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.",
+            "when": "Fit PNG/SVG framing into a1280x720 presentation reference"
+          }
+        ],
+        "statement": "PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.",
+        "title": "Presentation readability",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VERIFY-MR13",
+          "method": "automated_and_review",
+          "negative_control": "Original fixed legend scales below target; geometry tests include tall wrapping cases and actual exported render inspection",
+          "oracle": "PNG/SVG framing supports readable annotations at intended presentation size (1280x720 reference), with proportionate geometry, intact classification, no clipping and identical frozen capture scope. Verify actual rendered exports and document display limits.",
+          "planned_target": "src/map/export.test.ts; e2e/market-map.spec.ts; retained actual Chrome/Edge export observations"
+        }
+      }
+    ],
+    "decisions": [],
+    "governs": [
+      "src/**",
+      "e2e/**",
+      "tests/unit/**",
+      "vite.config.ts"
+    ],
+    "intent": {
+      "caller": "feature",
+      "id": "INTENT-MARKET",
+      "outcome": "Resolve thirteen findings while preserving offline single-file and atomic repository/session contracts.",
+      "problem": "Market checkpoint identified distribution, handling, interpretation and reconciliation gaps."
+    },
+    "non_goals": [
+      {
+        "id": "EXCL-RELEASE",
+        "statement": "No merge, publication, recruitment, schema/dependency addition, browser persistence or network runtime."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-MARKET",
+        "statement": "User authorized all twelve queued medium findings and runtime notice blocker in PR25."
+      }
+    ],
+    "sections": [
+      {
+        "blocks": [
+          {
+            "refs": [],
+            "text": "SMARTS: no material unresolved solution choice under the fixed offline single-file, repository-only writes and saved-position constraints. Embed generated runtime notices in the one deliverable; use shared detector and size bound; paginate diagnostics in memory and download complete safe receipts; keep geometry changes render-only with bounded obstacle avoidance and proportional annotations. Scalable: bounded lists/routes at the declared roughly100-service estate. Maintainable: existing DOM, repository and capture interfaces reused. Available: offline controls and fail-closed missing notices. Reliable: original bytes, draft, endpoints and session ownership retained. Testable: regression-first source-specific tests and actual export inspection. Securable: existing CSP, size/sensitive checks, classification and safe text/CSV remain operative. Real participant and physical file durability evidence remain unknown and do not certify release. Implementation methods are reversible and within the user-authorized thirteen findings.",
+            "type": "paragraph"
+          }
+        ],
+        "id": "SEC-SMARTS",
+        "title": "SMARTS design rationale"
+      }
+    ],
+    "sources": [],
+    "summary": "Implement checkpoint MR01-MR13 on the existing PR25 branch with local testing checkpoints.",
+    "title": "SIM market readiness remediation"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/market-readiness.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 3,
+  "schema_version": "0.3.2",
+  "slug": "market-readiness"
+}
+</script>
+</body></html>

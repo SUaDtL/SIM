@@ -1,10 +1,55 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page, type Locator } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 import { readFileSync } from "node:fs";
 import { openDataset } from "../src/db/dataset";
+
+import { editSelected, chooseReference, openFileMenu } from "./helpers/usability";
+
+async function sectionFor(page: Page, label: string): Promise<void> {
+  const section = /^Tier \d support/.test(label)
+    ? "Support"
+    : ["Consuming organization", "Depends on service", "Via CDS"].includes(label)
+      ? "Connections"
+      : "Details";
+  const tab = page.getByTestId("editor").getByRole("tab", { name: new RegExp(`^${section}\\b`, "i") });
+  if (await tab.count()) await tab.click();
+}
+async function pick(page: Page, label: string, name: string): Promise<void> {
+  await sectionFor(page, label);
+  const select = page.getByTestId("editor").getByLabel(label, { exact: true });
+  if (await select.getAttribute("data-reference")) await chooseReference(page, label, name);
+  else await select.selectOption({ label: name });
+}
+async function createReference(page: Page, label: string): Promise<Locator> {
+  await sectionFor(page, label);
+  await page
+    .getByTestId("editor")
+    .getByRole("button", { name: `Choose ${label}`, exact: true })
+    .click();
+  const child = page.getByTestId("record-picker");
+  await child.getByRole("button", { name: /^Create new / }).click();
+  return child;
+}
+async function connectionAction(page: Page, name: string): Promise<void> {
+  await sectionFor(page, "Depends on service");
+  const action = page.getByTestId("editor").getByRole("button", { name, exact: true });
+  if (!(await action.isVisible()))
+    await page
+      .getByTestId("editor")
+      .locator("details.connection-actions")
+      .filter({ has: page.getByRole("button", { name, exact: true, includeHidden: true }) })
+      .locator("summary")
+      .click();
+  await action.click();
+}
+async function cancelParent(page: Page): Promise<void> {
+  await page.getByTestId("editor").getByRole("button", { name: "Cancel", exact: true }).click();
+  const guard = page.getByRole("dialog", { name: "Unapplied changes", exact: true });
+  if (await guard.isVisible()) await guard.getByRole("button", { name: "Discard and continue", exact: true }).click();
+}
 
 const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 test.beforeEach(async ({ page }) => {
@@ -13,7 +58,7 @@ test.beforeEach(async ({ page }) => {
     delete (window as unknown as Record<string, unknown>)["showSaveFilePicker"];
   });
   await page.goto(url);
-  await expect(page.getByTestId("sqlite-version")).toBeVisible();
+  await expect(page.getByTestId("dataset-status")).toBeVisible();
 });
 
 for (const editedNotes of ["second.example.test", "Ordinary synthetic support note"]) {
@@ -24,6 +69,7 @@ for (const editedNotes of ["second.example.test", "Ordinary synthetic support no
     repo.createOrganization({ name: "Operations" });
     repo.createService({ name: "Orders", networkId: network.id, marking: "UNCLASSIFIED" });
     const chooser = page.waitForEvent("filechooser");
+    await openFileMenu(page);
     await page.getByRole("button", { name: "Open", exact: true }).click();
     await (
       await chooser
@@ -35,16 +81,25 @@ for (const editedNotes of ["second.example.test", "Ordinary synthetic support no
       .getByRole("button", { name: /^Orders/ })
       .click();
     const editor = page.getByTestId("editor");
+    await editSelected(page);
+    await sectionFor(page, "Name");
     await editor.getByLabel("Name", { exact: true }).fill("service.example.test");
-    await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Operations" });
+    await pick(page, "Tier 1 support", "Operations");
+    await sectionFor(page, "Tier 1 support");
     await editor.getByLabel("Tier 1 support notes").fill("first.example.test");
     await editor.getByRole("button", { name: "Apply changes" }).click();
     await expect(editor.getByTestId("sensitive-warning")).toBeVisible();
     await expect(editor.getByTestId("sensitive-warning")).toContainText("service.example.test");
     await expect(editor.getByTestId("sensitive-warning")).toContainText("first.example.test");
+    await sectionFor(page, "Tier 1 support");
     await editor.getByLabel("Tier 1 support notes").fill(editedNotes);
-    await editor.getByRole("button", { name: "Save anyway" }).click();
-    await expect(editor.getByTestId("editor-message")).toContainText("pending edit changed");
+    // The unified form now withdraws the old button immediately when the payload changes.
+    await expect(editor.getByTestId("sensitive-warning")).toBeHidden();
+    await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+    await editor.getByRole("button", { name: "Apply changes" }).click();
+    await expect(editor.getByTestId("sensitive-warning")).not.toContainText("first.example.test");
+    if (editedNotes.includes("example.test"))
+      await expect(editor.getByTestId("sensitive-warning")).toContainText(editedNotes);
     await expect(editor.getByLabel("Tier 1 support notes")).toHaveValue(editedNotes);
   });
 }
@@ -53,10 +108,12 @@ test("inline network and provider creation retain a new service draft", async ({
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Orders");
+  await sectionFor(page, "Description");
   await editor.getByLabel("Description", { exact: true }).fill("Retain this draft");
-  await editor.getByRole("button", { name: "Create network", exact: true }).click();
-  const child = page.getByRole("dialog", { name: "Create network" });
+  const child = await createReference(page, "Network");
   expect(
     await child.getByLabel("Name", { exact: true }).evaluate((node) => {
       const ids = node.getAttribute("aria-describedby")?.split(/\s+/) ?? [];
@@ -68,14 +125,13 @@ test("inline network and provider creation retain a new service draft", async ({
   await child.getByRole("button", { name: "Create and use" }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
   await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Amber");
-  await editor.getByRole("button", { name: "Create organization for Provided by" }).click();
-  const organization = page.getByRole("dialog", { name: "Create organization" });
+  const organization = await createReference(page, "Provided by");
   await organization.getByLabel("Name", { exact: true }).fill("Operations");
   await organization.getByRole("button", { name: "Create and use" }).click();
   await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Retain this draft");
   await expect(editor.getByLabel("Provided by", { exact: true }).locator("option:checked")).toHaveText("Operations");
   await editor.getByRole("button", { name: "Add service", exact: true }).click();
-  await expect(editor.getByRole("heading", { name: "Edit service" })).toBeVisible();
+  await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
 });
 
 test("Cancel child preserves parent and creates no history; Cancel parent leaves explicit children", async ({
@@ -84,17 +140,17 @@ test("Cancel child preserves parent and creates no history; Cancel parent leaves
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Pending Orders");
-  await editor.getByRole("button", { name: "Create network", exact: true }).click();
-  const child = page.getByRole("dialog", { name: "Create network" });
+  const child = await createReference(page, "Network");
   await child.getByLabel("Name", { exact: true }).fill("Never created");
   await page.keyboard.press("Escape");
   await expect(child).toHaveCount(0);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Pending Orders");
-  await expect(editor.getByLabel("Network", { exact: true })).toBeFocused();
+  await expect(editor.getByRole("button", { name: "Choose Network", exact: true })).toBeFocused();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
-  await editor.getByRole("button", { name: "Create organization for Provided by" }).click();
-  const org = page.getByRole("dialog", { name: "Create organization" });
+  const org = await createReference(page, "Provided by");
   await org.getByLabel("Name", { exact: true }).fill("Shared Operations");
   await org.getByRole("button", { name: "Create and use" }).click();
   await editor.getByRole("button", { name: "Add service", exact: true }).click();
@@ -103,7 +159,7 @@ test("Cancel child preserves parent and creates no history; Cancel parent leaves
   const decision = page.getByRole("dialog", { name: "Unapplied changes" });
   await decision.getByRole("button", { name: "Keep editing" }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Pending Orders");
-  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await cancelParent(page);
   await page.getByLabel("Show", { exact: true }).selectOption("organization");
   await expect(page.getByTestId("entity-list").getByText("Shared Operations")).toBeVisible();
   await page.getByRole("button", { name: "Undo", exact: true }).click();
@@ -116,17 +172,18 @@ test("new service stages app category support and consumption before first Add a
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Orders");
-  for (const [button, noun, name] of [
-    ["Create network", "network", "Amber"],
-    ["Create organization for Provided by", "organization", "Ordering"],
-    ["Create application for Application", "application", "Ordering"],
-    ["Create category for Category", "category", "Business"],
-    ["Create organization for Tier 1 support", "organization", "Helpdesk"],
-    ["Create consuming organization", "organization", "Customers"],
+  for (const [label, name] of [
+    ["Network", "Amber"],
+    ["Provided by", "Ordering"],
+    ["Application", "Ordering"],
+    ["Category", "Business"],
+    ["Tier 1 support", "Helpdesk"],
+    ["Consuming organization", "Customers"],
   ] as const) {
-    await editor.getByRole("button", { name: button, exact: true }).click();
-    const child = page.getByRole("dialog", { name: `Create ${noun}` });
+    const child = await createReference(page, label);
     await child.getByLabel("Name", { exact: true }).fill(name);
     await child.getByRole("button", { name: "Create and use" }).click();
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
@@ -160,33 +217,33 @@ test("inline creation keeps explicit service defaults and parked relation-only i
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Identity");
   await editor.getByLabel("Foundational", { exact: false }).uncheck();
   await editor.getByLabel("Marking", { exact: true }).selectOption("CUI");
-  await editor.getByRole("button", { name: "Create network", exact: true }).click();
-  const child = page.getByRole("dialog", { name: "Create network" });
+  const child = await createReference(page, "Network");
   await expect(page.getByRole("dialog")).toHaveCount(1);
   await child.getByLabel("Name", { exact: true }).fill("Amber");
   await child.getByRole("button", { name: "Create and use" }).click();
   await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
   await expect(editor.getByLabel("Foundational", { exact: false })).not.toBeChecked();
-  await editor.getByRole("button", { name: "Create organization for Tier 1 support" }).click();
-  const org = page.getByRole("dialog", { name: "Create organization" });
+  const org = await createReference(page, "Tier 1 support");
   await expect(org.getByRole("button", { name: "Create organization", exact: true })).toHaveCount(0);
   await org.getByLabel("Name", { exact: true }).fill("Operations");
   await org.getByRole("button", { name: "Create and use" }).click();
+  await sectionFor(page, "Tier 1 support");
   await editor.getByLabel("Tier 1 support notes").fill("Parked note");
-  await editor.getByRole("button", { name: "Create category for Category" }).click();
-  const category = page.getByRole("dialog", { name: "Create category" });
+  const category = await createReference(page, "Category");
   await category.getByLabel("Name", { exact: true }).fill("Business");
   await category.getByRole("button", { name: "Create and use" }).click();
   await expect(editor.getByLabel("Tier 1 support notes")).toHaveValue("Parked note");
   await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
   await expect(page.getByTestId("entity-list").getByText("Identity")).toHaveCount(0);
-  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await cancelParent(page);
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("");
-  await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "Operations" });
+  await pick(page, "Tier 1 support", "Operations");
   await expect(page.getByTestId("draft-status")).toHaveText("Unapplied changes");
 });
 
@@ -202,6 +259,7 @@ test("route edit stages with scalar changes and one Undo restores both; Cancel r
   const guard = repo.createCds({ name: "Guard", networkIds: [amber.id, blue.id] });
   repo.addDependency({ consumerServiceId: caller.id, providerServiceId: provider.id, viaCdsId: guard.id });
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -213,19 +271,26 @@ test("route edit stages with scalar changes and one Undo restores both; Cancel r
     .getByRole("button", { name: /^Orders/ })
     .click();
   const editor = page.getByTestId("editor");
-  await editor.getByRole("button", { name: "Edit route to Identity" }).click();
+  await editSelected(page);
+  await sectionFor(page, "Depends on service");
+  await connectionAction(page, "Edit route to Identity");
   await editor.getByRole("combobox", { name: "Route for Identity" }).selectOption("");
   await editor.getByRole("button", { name: "Cancel route" }).click();
   await expect(editor.getByTestId("dependencies")).toContainText("via Guard");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Revised Orders");
-  await editor.getByRole("button", { name: "Edit route to Identity" }).click();
+  await sectionFor(page, "Depends on service");
+  await connectionAction(page, "Edit route to Identity");
   await editor.getByRole("combobox", { name: "Route for Identity" }).selectOption("");
   await editor.getByRole("button", { name: "Use route" }).click();
   await editor.getByRole("button", { name: "Apply changes" }).click();
-  await expect(editor.getByTestId("dependencies")).toContainText("No CDS recorded");
+  await editor.getByRole("tab", { name: "Connections", exact: true }).click();
+  await expect(editor).toContainText("No CDS recorded");
   await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await editSelected(page);
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+  await sectionFor(page, "Depends on service");
   await expect(editor.getByTestId("dependencies")).toContainText("via Guard");
 });
 
@@ -233,15 +298,17 @@ test("child host warning is withdrawn after edits without applying the parent", 
   await page.getByLabel("Show", { exact: true }).selectOption("service");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await sectionFor(page, "Name");
   await editor.getByLabel("Name", { exact: true }).fill("Orders");
-  await editor.getByRole("button", { name: "Create organization for Provided by" }).click();
-  const child = page.getByRole("dialog", { name: "Create organization" });
+  const child = await createReference(page, "Provided by");
   await child.getByLabel("Name", { exact: true }).fill("first.example.test");
   await child.getByRole("button", { name: "Create and use" }).click();
   await expect(child.getByRole("button", { name: "Save anyway" })).toBeVisible();
   await child.getByLabel("Name", { exact: true }).fill("second.example.test");
   await expect(child.getByRole("button", { name: "Save anyway" })).toBeHidden();
-  await child.getByRole("button", { name: "Cancel" }).click();
+  await child.getByTestId("inline-child").getByRole("button", { name: "Cancel", exact: true }).click();
+  await child.getByRole("button", { name: "Close picker", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
@@ -260,6 +327,7 @@ test("unadded consumer provider and CDS choices survive scalar edits and unrelat
   repo.createService({ name: "Second provider", networkId: blue.id, marking: "UNCLASSIFIED" });
   repo.createCds({ name: "Guard", networkIds: [amber.id, blue.id] });
   const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
@@ -271,18 +339,23 @@ test("unadded consumer provider and CDS choices survive scalar edits and unrelat
     .getByRole("button", { name: /^Orders/ })
     .click();
   const editor = page.getByTestId("editor");
-  await editor.getByLabel("Add consumer", { exact: true }).selectOption({ label: "Second team" });
-  await editor.getByLabel("Depends on service", { exact: true }).selectOption({ label: "Second provider (Blue)" });
-  await editor.getByLabel("Via CDS", { exact: true }).selectOption({ label: "Guard" });
+  await editSelected(page);
+  await pick(page, "Consuming organization", "Second team");
+  await pick(page, "Depends on service", "Second provider (Blue)");
+  await pick(page, "Via CDS", "Guard");
+  await sectionFor(page, "Description");
   await editor.getByLabel("Description", { exact: true }).fill("Keep all choices");
-  await editor.getByLabel("Tier 1 support", { exact: true }).focus();
-  await editor.getByLabel("Tier 1 support", { exact: true }).selectOption({ label: "First team" });
-  await expect(editor.getByLabel("Add consumer", { exact: true }).locator("option:checked")).toHaveText("Second team");
+  await sectionFor(page, "Tier 1 support");
+  await editor.getByRole("button", { name: "Choose Tier 1 support", exact: true }).focus();
+  await pick(page, "Tier 1 support", "First team");
+  await expect(editor.getByLabel("Consuming organization", { exact: true }).locator("option:checked")).toHaveText(
+    "Second team",
+  );
   await expect(editor.getByLabel("Depends on service", { exact: true }).locator("option:checked")).toHaveText(
     "Second provider (Blue)",
   );
   await expect(editor.getByLabel("Via CDS", { exact: true }).locator("option:checked")).toHaveText("Guard");
-  await expect(editor.getByLabel("Tier 1 support", { exact: true })).toBeFocused();
+  await expect(editor.getByRole("button", { name: "Choose Tier 1 support", exact: true })).toBeFocused();
   await expect(editor.getByTestId("consumers")).toBeEmpty();
   await expect(editor.getByTestId("dependencies")).toBeEmpty();
 });

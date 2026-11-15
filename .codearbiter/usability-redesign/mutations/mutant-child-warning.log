@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+
+(node:12736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/1] [msedge] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent
+  1) [msedge] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  getByTestId('record-picker').getByRole('button', { name: 'Save anyway', exact: true })
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" getByTestId('record-picker').getByRole('button', { name: 'Save anyway', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByRole('button', { name: 'Save anyway', exact: true })
+        14 × locator resolved to <button type="button">Save anyway</button>
+           - unexpected value "visible"
+
+
+      201 |   await expect(picker.getByRole("button", { name: "Save anyway", exact: true })).toBeVisible();
+      202 |   await name.fill("second.example.test");
+    > 203 |   await expect(picker.getByRole("button", { name: "Save anyway", exact: true })).toBeHidden();
+          |                                                                                  ^
+      204 |   await picker.getByRole("button", { name: "Create and use", exact: true }).click();
+      205 |   await expect(picker).toContainText("second.example.test");
+      206 |   await expect(picker).not.toContainText("first.example.test");
+        at C:\Users\brenn\AppData\Local\Temp\sim-picker-mutation-8c062a1d34\e2e\usability-picker.spec.ts:203:82
+
+    Error Context: test-results\mutant-child-warning\usability-picker-T10-an-in-81e61-mation-preserves-the-parent-msedge\error-context.md
+
+
+  1 failed
+    [msedge] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent

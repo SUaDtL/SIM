@@ -1,0 +1,31 @@
+
+Running 18 tests using 2 workers
+
+(node:108440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [msedge] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (660ms)
+  ok  1 [msedge] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (940ms)
+  ok  3 [msedge] › e2e\editor-rhythm.spec.ts:57:1 › a populated single page stays searchable and distinguishes no matches from no relationships (576ms)
+  ok  4 [msedge] › e2e\import-receipt.spec.ts:90:1 › uncommitted retries retain the last receipt and replacing the dataset clears it (910ms)
+  ok  5 [msedge] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (958ms)
+(node:121800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [msedge] › e2e\editor-rhythm.spec.ts:115:1 › a new service explains its Add action rather than applying an existing record (620ms)
+  ok  7 [chrome] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (675ms)
+  ok  8 [msedge] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (620ms)
+  ok  9 [chrome] › e2e\editor-rhythm.spec.ts:57:1 › a populated single page stays searchable and distinguishes no matches from no relationships (565ms)
+  ok 10 [msedge] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (679ms)
+  ok 11 [chrome] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (991ms)
+  ok 12 [msedge] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (588ms)
+(node:121568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [chrome] › e2e\editor-rhythm.spec.ts:115:1 › a new service explains its Add action rather than applying an existing record (588ms)
+  ok 15 [chrome] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (633ms)
+  ok 14 [chrome] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (916ms)
+  ok 16 [chrome] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (663ms)
+  ok 17 [chrome] › e2e\import-receipt.spec.ts:90:1 › uncommitted retries retain the last receipt and replacing the dataset clears it (894ms)
+  ok 18 [chrome] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (589ms)
+
+  18 passed (7.8s)
