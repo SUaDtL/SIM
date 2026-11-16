@@ -185,9 +185,69 @@ test("keeps a spike-sized map readable: few crossings and label overlaps, no ove
     expect(m.cdsInsideNetworks).toBe(0);
     expect(m.tinyLabels).toBe(0);
     expect(m.labelWidth).toBeGreaterThan(10);
-    // Network labels grow to at most twice their size, so a very wide map can bring them below 13 px.
+    // Preserve the original layout baseline; the fixed-zoom regression below checks the 13 px target.
     expect(m.networkLabelPx).toBeGreaterThanOrEqual(11);
   }
+});
+
+test("network and CDS labels retain their readable screen size on wide map zooms without moving records", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.context().setOffline(true);
+  await page.addInitScript(() => {
+    delete (window as unknown as Record<string, unknown>)["showOpenFilePicker"];
+  });
+  await page.goto(simUrl);
+  await expect(page.getByTestId("sqlite-version")).toBeAttached();
+  const chooser = page.waitForEvent("filechooser");
+  await openFileMenu(page);
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (
+    await chooser
+  ).setFiles({ name: "layout.sqlite", mimeType: "application/x-sqlite3", buffer: await enterprise() });
+  await showMap(page);
+  const canvas = page.getByTestId("map-canvas");
+  await expect(page.getByTestId("map-summary")).toContainText("services");
+  const positions = () =>
+    canvas.evaluate((container) => {
+      interface Node {
+        id(): string;
+        isParent(): boolean;
+        position(): { x: number; y: number };
+      }
+      const cy = (container as unknown as { _cyreg: { cy: { nodes(): Node[] } } })._cyreg.cy;
+      // Compound network centers are derived from their children's label bounds.
+      // Service/CDS positions are the stored placement records that zoom must preserve.
+      return cy
+        .nodes()
+        .filter((node) => !node.isParent())
+        .map((node) => ({ id: node.id(), position: node.position() }));
+    });
+  const before = await positions();
+  // Fixed zooms reproduce the growth cap independently of fcose's random layout.
+  for (const zoom of [0.25, 0.125]) {
+    await canvas.evaluate((container, value) => {
+      const cy = (container as unknown as { _cyreg: { cy: { zoom(value: number): void } } })._cyreg.cy;
+      cy.zoom(value);
+    }, zoom);
+    await expect
+      .poll(() =>
+        canvas.evaluate((container) => {
+          interface Node {
+            numericStyle(name: string): number;
+          }
+          const cy = (container as unknown as { _cyreg: { cy: { nodes(selector: string): Node[]; zoom(): number } } })
+            ._cyreg.cy;
+          return {
+            network: Math.min(...cy.nodes(".network").map((node) => node.numericStyle("font-size") * cy.zoom())),
+            cds: Math.min(...cy.nodes(".cds").map((node) => node.numericStyle("font-size") * cy.zoom())),
+          };
+        }),
+      )
+      .toEqual({ network: 13, cds: 11 });
+  }
+  expect(await positions()).toEqual(before);
 });
 
 test("hides unreadably small service labels until hovered or zoomed into", async ({ page }) => {

@@ -39,6 +39,8 @@ export interface MapViewState {
   readonly zoom: number;
   readonly pan: { x: number; y: number };
   readonly focus: FocusRequest | null;
+  /** The unfocused scope to which this particular focused navigation entry returns. */
+  readonly focusReturn?: MapViewState | null;
 }
 
 export interface MapViewContext {
@@ -196,7 +198,17 @@ function place(cy: Core, fresh: NodeCollection): void {
 
 export function createMapView(ctx: MapViewContext): MapView {
   const canvas = el("div", { class: "map-canvas", "data-testid": "map-canvas" });
-  const empty = el("p", { class: "map-empty", "data-testid": "map-empty" }, "Add a network to start the map.");
+  const emptyMessage = el("span", {}, "Add a network to start the map.");
+  const clearFilters = button("Clear map filters", () => {
+    for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
+    filter = {};
+    applyView();
+    filtersTitle.focus();
+  });
+  // The message overlays the canvas without intercepting node input; its recovery action is interactive.
+  clearFilters.style.pointerEvents = "auto";
+  clearFilters.hidden = true;
+  const empty = el("div", { class: "map-empty", "data-testid": "map-empty", role: "status" }, emptyMessage);
   const summary = el("p", { class: "sr-only", "data-testid": "map-summary", "aria-live": "polite" });
   const scope = el("p", { class: "map-scope", "data-testid": "map-scope", "aria-live": "polite" });
   let scopeEntries: readonly string[] = [];
@@ -206,6 +218,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     el("span", {}, "Arrows: consumer → provider"),
     el("span", { class: "map-legend-crossing" }, "Red dashed: cross-network, no CDS recorded"),
     el("span", {}, "Recorded dependencies; connectivity is not verified"),
+    el("span", {}, "Crossing another network box does not imply transit"),
   );
   const exportStatus = el("p", { class: "map-feedback", "data-testid": "map-export-status", role: "status" });
   // As-Is, a To-Be scenario, or one map comparing a scenario with As-Is (WORK-013).
@@ -385,6 +398,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   let comparison: Comparison | null = null;
   let focus: FocusRequest | null = null;
   let focusReturn: MapViewState | null = null;
+  let focusNotice = "";
   let navigationIntent = 0;
   let navigationBusy = false;
   let pendingVisibleNode: string | null = null;
@@ -418,6 +432,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         return;
       }
       if (!focusReturn) focusReturn = captureView();
+      focusNotice = "";
       focus = { kind, subject, depth: 1 };
       chainRoot = null;
       applyView();
@@ -673,9 +688,25 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   /**
    * Re-apply everything the view adds on top of the data: hidden foundational links (Q-021), the
-   * highlighted chain (always showing its foundational links) and filters. Never moves or writes.
+   * highlighted chain (always showing its foundational links) and filters. Never moves dataset nodes or writes.
    */
   function applyView(): void {
+    if (focus) {
+      const expected = focus.kind === "network-connections" ? "network" : "service";
+      if (!graph.nodes.some((node) => node.data.id === focus?.subject && node.data.entity === expected)) {
+        const prior = focusReturn;
+        focus = null;
+        focusReturn = null;
+        pendingVisibleNode = null;
+        focusNotice = `Focus ended when its ${expected} became unavailable in the displayed view. Showing the current map scope.`;
+        // The focused viewport may contain only the removed subject. Restore its unfocused framing,
+        // retaining the current projection and compatible inventory filters rather than a blank view.
+        if (prior) {
+          cy.zoom(prior.zoom);
+          cy.pan(prior.pan);
+        }
+      }
+    }
     if (chainRoot !== null && cy.getElementById(chainRoot).empty()) chainRoot = null;
     if (selectedNode !== null && cy.getElementById(selectedNode).empty()) selectedNode = null;
     const selected = selectedNode === null ? undefined : graph.nodes.find((node) => node.data.id === selectedNode);
@@ -710,7 +741,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         : filterGraph(snapshot, graph, filter);
     focusStatus.textContent = membership
       ? `${membership.label}. Strict inventory filters are suspended during focus; Back restores them.`
-      : "";
+      : focusNotice;
     cy.batch(() => {
       cy.elements().forEach((e) => {
         const id = e.id();
@@ -779,6 +810,10 @@ export function createMapView(ctx: MapViewContext): MapView {
       `${String(hiddenFoundational)} foundational ${hiddenFoundational === 1 ? "dependency" : "dependencies"} hidden · ` +
         `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
       ...(focus ? [focusGraph(graph, focus).label] : []),
+      ...(focusNotice ? [focusNotice] : []),
+      ...(visibleDependencies.size === 0
+        ? [total === 0 ? "No dependencies recorded." : "No dependency links are visible in this scope."]
+        : []),
       ...(
         [
           ["Network", filterNetwork],
@@ -795,6 +830,16 @@ export function createMapView(ctx: MapViewContext): MapView {
     ];
     scopeEntries = qualifiers;
     scope.textContent = qualifiers.join(" · ");
+    const hasNetworks = graph.nodes.some((node) => node.data.entity === "network");
+    const nodesVisible = hasVisibleNodes();
+    const hasFilters = Object.values(filter).some((value) => value !== undefined);
+    empty.hidden = hasNetworks && nodesVisible;
+    emptyMessage.textContent = !hasNetworks
+      ? "Add a network to start the map."
+      : "No records match the current map filters. ";
+    clearFilters.hidden = !hasNetworks || nodesVisible || !hasFilters;
+    empty.replaceChildren(emptyMessage, ...(clearFilters.hidden ? [] : [clearFilters]));
+    updateExportButtons();
   }
 
   /** Route decoration changes display geometry only, never the snapshot or repository. */
@@ -835,8 +880,15 @@ export function createMapView(ctx: MapViewContext): MapView {
       });
   }
 
+  function hasVisibleNodes(): boolean {
+    return cy
+      .nodes()
+      .filter((node) => node.visible())
+      .nonempty();
+  }
+
   function updateExportButtons(): void {
-    const disabled = exporting || cy.nodes().empty();
+    const disabled = exporting || !hasVisibleNodes();
     exportPng.disabled = disabled;
     exportSvg.disabled = disabled;
   }
@@ -851,7 +903,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         : [
             `Selected chain: ${graph.nodes.find((node) => node.data.id === chainRoot)?.data.label.split("\n")[0] ?? ""}`,
           ]),
-      ...(unsaved ? ["Committed document has unsaved changes"] : []),
+      ...(unsaved ? ["Includes changes not saved to file"] : []),
     ];
     const extent = cy.extent();
     const visible = cy.elements().filter((element) => {
@@ -863,6 +915,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     const nodes = visible.nodes();
     const legend = [
       "Recorded dependencies; connectivity is not verified",
+      "Crossing another network box does not imply transit",
       ...(edges.nonempty() ? ["Depends on: consumer → provider"] : []),
       ...(edges.filter(".via-cds").nonempty() ? ["Dependency routed via CDS"] : []),
       ...(edges.filter(".cross-domain").nonempty() ? ["Cross-network dependency, no CDS recorded"] : []),
@@ -880,7 +933,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function beginExport(format: "PNG" | "SVG"): boolean {
-    if (exporting || snapshot === null || cy.nodes().empty()) return false;
+    if (exporting || snapshot === null || !hasVisibleNodes()) return false;
     exporting = true;
     exportStatus.textContent = `Exporting ${format}…`;
     element.setAttribute("aria-busy", "true");
@@ -921,7 +974,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     if (!beginExport("PNG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
-      if (cy.nodes().empty()) return;
+      if (!hasVisibleNodes()) return;
       const { capturedName, marking, caveat, frame } = prepareExport();
       let rendered: Promise<Blob>;
       try {
@@ -946,7 +999,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     if (!beginExport("SVG")) return;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
-      if (cy.nodes().empty()) return;
+      if (!hasVisibleNodes()) return;
       const { capturedName, marking, caveat, frame, measure } = prepareExport();
       let scene: SvgScene;
       try {
@@ -970,7 +1023,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   function applyZoom(exporting = false): void {
     // An export renders at twice the size, so its labels need half the growth.
     const zoom = cy.zoom() * (exporting ? 2 : 1);
-    const grow = (base: number, min: number) => Math.min(base * 2, Math.max(base, min / zoom));
+    // A model-space growth cap becomes unreadable on wide maps. Preserve the
+    // screen-space minimum at every zoom; stored node positions stay unchanged.
+    const grow = (base: number, min: number) => Math.max(base, min / zoom);
     cy.batch(() => {
       cy.nodes(".service").toggleClass("quiet", !exporting && 16 * zoom < MIN_SERVICE_LABEL_PX);
       cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX));
@@ -1139,8 +1194,6 @@ export function createMapView(ctx: MapViewContext): MapView {
       }
     });
 
-    empty.hidden = graph.nodes.some((n) => n.data.entity === "network");
-    updateExportButtons();
     const unplaced = applySaved(fresh.nodes());
     applyView();
     return unplaced;
@@ -1285,6 +1338,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     pendingVisibleNode = null;
     focus = null;
     focusReturn = null;
+    focusNotice = "";
     findResults.replaceChildren();
     view = { kind: "as-is" };
     showFoundational = false;
@@ -1319,11 +1373,15 @@ export function createMapView(ctx: MapViewContext): MapView {
       zoom: cy.zoom(),
       pan: { ...cy.pan() },
       focus: focus ? { ...focus } : null,
+      focusReturn: focusReturn ? { ...focusReturn, focusReturn: null } : null,
     };
   }
   function restoreView(saved: MapViewState): void {
     // Back restores an exact historical viewport even if a resize is still queued.
     pendingVisibleNode = null;
+    focus = null;
+    focusReturn = null;
+    focusNotice = "";
     view = saved.view;
     switchView();
     filterNetwork.value = saved.filter.networkId === undefined ? "" : String(saved.filter.networkId);
@@ -1333,11 +1391,15 @@ export function createMapView(ctx: MapViewContext): MapView {
     chainRoot = saved.chainRoot;
     selectedNode = saved.selectedNode === undefined ? saved.chainRoot : saved.selectedNode;
     focus = saved.focus;
+    focusReturn = saved.focus ? (saved.focusReturn ?? { ...saved, focus: null, focusReturn: null }) : null;
     showFoundational = saved.foundational;
     foundationalBox.checked = showFoundational;
     applyView();
-    cy.zoom(saved.zoom);
-    cy.pan(saved.pan);
+    // An unavailable historical focus has just restored its unfocused framing in applyView.
+    if (saved.focus === null || focus !== null) {
+      cy.zoom(saved.zoom);
+      cy.pan(saved.pan);
+    }
   }
   function reveal(entity: MapEntity, id: number): void {
     pendingVisibleNode = null;

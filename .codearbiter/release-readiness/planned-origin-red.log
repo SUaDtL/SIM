@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+(node:65024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections (5.5s)
+
+
+  1) [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Connection inspector', exact: true }).getByRole('button', { name: 'Review: Add Replacement on Blue (UNCLASSIFIED)', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('dialog', { name: 'Connection inspector', exact: true }).getByRole('button', { name: 'Review: Add Replacement on Blue (UNCLASSIFIED)', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Connection inspector', exact: true }).getByRole('button', { name: 'Review: Add Replacement on Blue (UNCLASSIFIED)', exact: true })
+
+
+      268 |     await expect(inspector).toContainText("Merge plan");
+      269 |     const origin = inspector.getByRole("button", {name: "Review: Add Replacement on Blue (UNCLASSIFIED)", exact: true});
+    > 270 |     await expect(origin).toBeVisible();
+          |                          ^
+      271 |     await origin.click();
+      272 |     const related = page.getByRole("dialog", {name: "Inspect related record", exact: true});
+      273 |     await expect(related.locator("[data-scenario-change-id]")).toHaveAttribute("data-scenario-change-id", String(ids.plannedChange));
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\connected-navigation-acceptance.spec.ts:270:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\planned-origin-red-results\connected-navigation-accep-bff4f-venance-in-both-projections-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections

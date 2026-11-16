@@ -1,0 +1,261 @@
+
+Running 9 tests using 1 worker
+
+(node:48204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-shell.spec.ts:26:1 › R06 document rename preserves inventory, classification and saved-file readback with Undo (30.0s)
+(node:55960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-shell.spec.ts:43:1 › R07 unassigned provider is identified as unrecorded (5.4s)
+(node:69016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\readiness-shell.spec.ts:49:1 › R09 no-create dependency picker does not promise an unavailable creation action (5.6s)
+(node:56004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [chrome] › e2e\readiness-shell.spec.ts:61:1 › R14 Save shortcut applies and downloads the active draft, but a modal owns the shortcut (30.0s)
+(node:72876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\readiness-shell.spec.ts:77:1 › R15 all legacy issues remain available after unrelated edits and repair links identify records (30.0s)
+(node:34460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [chrome] › e2e\readiness-shell.spec.ts:95:1 › R16 failed presentation protects successful unsaved change and offers safe view refresh (5.6s)
+(node:15964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [chrome] › e2e\readiness-shell.spec.ts:121:1 › R18 Help distinguishes current recorded baseline from file saving and real-project storage (5.5s)
+(node:73260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  8 [chrome] › e2e\readiness-shell.spec.ts:130:1 › R20 offline About identifies application version, source build and data format without inventory contents (5.5s)
+(node:64544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  9 [chrome] › e2e\readiness-shell.spec.ts:141:1 › R13 WASM startup rejection leaves an accessible failure shell and build identity (5.2s)
+
+
+  1) [chrome] › e2e\readiness-shell.spec.ts:26:1 › R06 document rename preserves inventory, classification and saved-file readback with Undo
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Rename dataset', exact: true })
+
+
+      28 |   await openFileMenu(page);
+      29 |   page.once("dialog", d => d.accept("Synthetic discovery"));
+    > 30 |   await page.getByRole("button", { name: "Rename dataset", exact: true }).click();
+         |                                                                           ^
+      31 |   await expect(page.getByTestId("dataset-status")).toContainText("Synthetic discovery");
+      32 |   const db = await downloaded(page, () => page.getByRole("button", { name: "Save file", exact: true }).click());
+      33 |   try {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:30:75
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R06-docume-b1b44-ved-file-readback-with-Undo-chrome\error-context.md
+
+  2) [chrome] › e2e\readiness-shell.spec.ts:43:1 › R07 unassigned provider is identified as unrecorded
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('entity-list')
+    Expected substring: "Provider not recorded"
+    Received string:    "OrdersAmberNo providerCUI"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('entity-list') with timeout 5000ms
+      - waiting for getByTestId('entity-list')
+        14 × locator resolved to <ul class="entity-list" data-testid="entity-list">…</ul>
+           - unexpected value "OrdersAmberNo providerCUI"
+
+
+      43 | test("R07 unassigned provider is identified as unrecorded", async ({ page }) => {
+      44 |   await openDatasetFile(page, await fixture(), "synthetic.sqlite");
+    > 45 |   await expect(page.getByTestId("entity-list")).toContainText("Provider not recorded");
+         |                                                 ^
+      46 |   await expect(page.getByTestId("entity-list")).not.toContainText("No provider");
+      47 | });
+      48 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:45:49
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R07-unassi-cf4a2-is-identified-as-unrecorded-chrome\error-context.md
+
+  3) [chrome] › e2e\readiness-shell.spec.ts:49:1 › R09 no-create dependency picker does not promise an unavailable creation action
+
+    Error: expect(locator).not.toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').getByTestId('picker-results')
+    Expected substring: not "create one"
+    Received string: "No assignmentNo matching records. Try another name or create one."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "not toContainText" getByTestId('record-picker').getByTestId('picker-results') with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByTestId('picker-results')
+        14 × locator resolved to <ul class="picker-results" data-testid="picker-results">…</ul>
+           - unexpected value "No assignmentNo matching records. Try another name or create one."
+
+
+      55 |   await picker.getByTestId("picker-query").fill("No such synthetic service");
+      56 |   await expect(picker.getByTestId("picker-results")).toContainText("No matching records");
+    > 57 |   await expect(picker.getByTestId("picker-results")).not.toContainText("create one");
+         |                                                          ^
+      58 |   await expect(picker.getByRole("button", { name: /^Create new/ })).toHaveCount(0);
+      59 | });
+      60 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:57:58
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R09-no-cre-91b84-unavailable-creation-action-chrome\error-context.md
+
+  4) [chrome] › e2e\readiness-shell.spec.ts:61:1 › R14 Save shortcut applies and downloads the active draft, but a modal owns the shortcut
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForEvent: Test timeout of 30000ms exceeded.
+    =========================== logs ===========================
+    waiting for event "download"
+    ============================================================
+
+      19 |
+      20 | async function downloaded(page: Page, action: () => Promise<unknown>) {
+    > 21 |   const download = page.waitForEvent("download");
+         |                         ^
+      22 |   await action();
+      23 |   return openDataset(new Uint8Array(readFileSync(await (await download).path())), { wasm });
+      24 | }
+        at downloaded (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:21:25)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:67:20
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R14-Save-s-9e71c-t-a-modal-owns-the-shortcut-chrome\error-context.md
+
+  5) [chrome] › e2e\readiness-shell.spec.ts:77:1 › R15 all legacy issues remain available after unrelated edits and repair links identify records
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /Review data issues/ })
+
+
+      78 |   await openDatasetFile(page, await fixture(true), "synthetic-legacy.sqlite");
+      79 |   await openFileMenu(page);
+    > 80 |   await page.getByRole("button", { name: /Review data issues/ }).click();
+         |                                                                  ^
+      81 |   const dialog = page.getByRole("dialog", { name: "Data issues", exact: true });
+      82 |   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(5);
+      83 |   await expect(dialog).toContainText("Synthetic guard 5");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:80:66
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R15-all-le-5872d-pair-links-identify-records-chrome\error-context.md
+
+  6) [chrome] › e2e\readiness-shell.spec.ts:95:1 › R16 failed presentation protects successful unsaved change and offers safe view refresh
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('dataset-message')
+    Expected substring: "Save As"
+    Received string:    "The change succeeded, but part of the view did not refresh. Try selecting another item or reopening the file."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('dataset-message') with timeout 5000ms
+      - waiting for getByTestId('dataset-message')
+        14 × locator resolved to <p role="status" data-severity="error" data-testid="dataset-message">The change succeeded, but part of the view did no…</p>
+           - unexpected value "The change succeeded, but part of the view did not refresh. Try selecting another item or reopening the file."
+
+
+      111 |   await page.getByRole("button", { name: "Apply changes", exact: true }).click();
+      112 |   await expect(page.getByTestId("dataset-message")).toContainText("The change succeeded");
+    > 113 |   await expect(page.getByTestId("dataset-message")).toContainText("Save As");
+          |                                                     ^
+      114 |   await expect(page.getByTestId("dataset-message")).not.toContainText("Try selecting another item or reopening");
+      115 |   await page.getByRole("button", { name: "Refresh view", exact: true }).click();
+      116 |   await expect(page.getByTestId("entity-list")).toContainText("Orders retained");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:113:53
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R16-failed-374ad-nd-offers-safe-view-refresh-chrome\error-context.md
+
+  7) [chrome] › e2e\readiness-shell.spec.ts:121:1 › R18 Help distinguishes current recorded baseline from file saving and real-project storage
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Using SIM' })
+    Expected substring: "current recorded enterprise"
+    Received string:    "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes commits its details, connections and support together as one undo step. Discard changes restores its draft. Save file applies a valid active draft before saving dataset bytes. Invalid or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately. Use Undo to reverse those commands. Apply changes saves the scenario name, description and any unadded change-builder choice together. Discard changes resets unapplied metadata and unadded change-builder choices. Cancel lets you choose how to handle that pending work. Neither reverses changes already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareThe saved baseline, a proposed scenario, or their comparison. Projected records are read-only until you deliberately open the baseline editor.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog', { name: 'Using SIM' }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Using SIM' })
+        14 × locator resolved to <dialog open="" class="help-dialog" aria-labelledby="help-title">…</dialog>
+           - unexpected value "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes commits its details, connections and support together as one undo step. Discard changes restores its draft. Save file applies a valid active draft before saving dataset bytes. Invalid or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately. Use Undo to reverse those commands. Apply changes saves the scenario name, description and any unadded change-builder choice together. Discard changes resets unapplied metadata and unadded change-builder choices. Cancel lets you choose how to handle that pending work. Neither reverses changes already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareThe saved baseline, a proposed scenario, or their comparison. Projected records are read-only until you deliberately open the baseline editor.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+
+
+      123 |   await page.getByRole("button", { name: "Help", exact: true }).click();
+      124 |   const help = page.getByRole("dialog", { name: "Using SIM" });
+    > 125 |   await expect(help).toContainText("current recorded enterprise");
+          |                      ^
+      126 |   await expect(help).toContainText("durable");
+      127 |   await expect(help).not.toContainText("The saved baseline");
+      128 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:125:22
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R18-Help-d-231a1-ng-and-real-project-storage-chrome\error-context.md
+
+  8) [chrome] › e2e\readiness-shell.spec.ts:130:1 › R20 offline About identifies application version, source build and data format without inventory contents
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('build-information')
+    Expected substring: "SIM 0.1.0"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByTestId('build-information') with timeout 5000ms
+      - waiting for getByTestId('build-information')
+
+
+      132 |   await page.locator("details.about-menu > summary").click();
+      133 |   const identity = page.getByTestId("build-information");
+    > 134 |   await expect(identity).toContainText("SIM 0.1.0");
+          |                          ^
+      135 |   await expect(identity).toContainText(/Build [a-f0-9]{40}/);
+      136 |   await expect(identity).toContainText("Data format 3");
+      137 |   await expect(identity).not.toContainText("Orders");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:134:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R20-offlin-cc911--without-inventory-contents-chrome\error-context.md
+
+  9) [chrome] › e2e\readiness-shell.spec.ts:141:1 › R13 WASM startup rejection leaves an accessible failure shell and build identity
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "SIM could not start"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      146 |   await page.goto(simUrl);
+      147 |   const failure = page.getByRole("alert");
+    > 148 |   await expect(failure).toContainText("SIM could not start");
+          |                         ^
+      149 |   await expect(failure).toContainText("dataset files");
+      150 |   await expect(failure).toContainText(/Build [a-f0-9]{40}/);
+      151 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:148:25
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\shell-red-results\readiness-shell-R13-WASM-s-e6032-re-shell-and-build-identity-chrome\error-context.md
+
+  9 failed
+    [chrome] › e2e\readiness-shell.spec.ts:26:1 › R06 document rename preserves inventory, classification and saved-file readback with Undo
+    [chrome] › e2e\readiness-shell.spec.ts:43:1 › R07 unassigned provider is identified as unrecorded
+    [chrome] › e2e\readiness-shell.spec.ts:49:1 › R09 no-create dependency picker does not promise an unavailable creation action
+    [chrome] › e2e\readiness-shell.spec.ts:61:1 › R14 Save shortcut applies and downloads the active draft, but a modal owns the shortcut
+    [chrome] › e2e\readiness-shell.spec.ts:77:1 › R15 all legacy issues remain available after unrelated edits and repair links identify records
+    [chrome] › e2e\readiness-shell.spec.ts:95:1 › R16 failed presentation protects successful unsaved change and offers safe view refresh
+    [chrome] › e2e\readiness-shell.spec.ts:121:1 › R18 Help distinguishes current recorded baseline from file saving and real-project storage
+    [chrome] › e2e\readiness-shell.spec.ts:130:1 › R20 offline About identifies application version, source build and data format without inventory contents
+    [chrome] › e2e\readiness-shell.spec.ts:141:1 › R13 WASM startup rejection leaves an accessible failure shell and build identity

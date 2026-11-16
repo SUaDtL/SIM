@@ -216,7 +216,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
           provider:
             provider !== undefined && provider !== null
               ? (organizations.get(provider) ?? "Missing provider")
-              : "No provider",
+              : "Provider not recorded",
           marking: service?.marking ?? "",
           detail:
             provider !== undefined && provider !== null

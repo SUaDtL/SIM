@@ -1,0 +1,214 @@
+
+Running 7 tests using 1 worker
+
+(node:42760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished consumer choice until explicitly finished (5.6s)
+(node:37284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished dependency choice until explicitly finished (5.8s)
+(node:72200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\readiness-editor.spec.ts:87:1 › R02 a changed open route blocks parent Apply until Use route or Cancel route (5.6s)
+(node:53252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [chrome] › e2e\readiness-editor.spec.ts:104:1 › R03 newly staged connection inspection shows pending state and its chosen route (5.7s)
+(node:51820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\readiness-editor.spec.ts:121:1 › R08 shared parent creation names the organization being edited (5.6s)
+(node:39732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [chrome] › e2e\readiness-editor.spec.ts:138:1 › R10 projected service exposes purpose provider support and named before-after context (5.7s)
+(node:66492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation (30.0s)
+
+
+  1) [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished consumer choice until explicitly finished
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('editor')
+    Expected: "edit"
+    Received: "read"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('editor') with timeout 5000ms
+      - waiting for getByTestId('editor')
+        14 × locator resolved to <aside class="editor" data-mode="read" aria-label="Editor" data-testid="editor">…</aside>
+           - unexpected value "read"
+
+
+      73 |     );
+      74 |     await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 75 |     await expect(editor).toHaveAttribute("data-mode", "edit");
+         |                          ^
+      76 |     await expect(editor.getByTestId("form-message")).toContainText(/Finish adding or cancel/);
+      77 |     await expect(editor.getByRole("button", { name: `Add ${composer}`, exact: true })).toBeFocused();
+      78 |     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:75:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R01-Apply-9de75-e-until-explicitly-finished-chrome\error-context.md
+
+  2) [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished dependency choice until explicitly finished
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('editor')
+    Expected: "edit"
+    Received: "read"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('editor') with timeout 5000ms
+      - waiting for getByTestId('editor')
+        14 × locator resolved to <aside class="editor" data-mode="read" aria-label="Editor" data-testid="editor">…</aside>
+           - unexpected value "read"
+
+
+      73 |     );
+      74 |     await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 75 |     await expect(editor).toHaveAttribute("data-mode", "edit");
+         |                          ^
+      76 |     await expect(editor.getByTestId("form-message")).toContainText(/Finish adding or cancel/);
+      77 |     await expect(editor.getByRole("button", { name: `Add ${composer}`, exact: true })).toBeFocused();
+      78 |     await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:75:26
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R01-Apply-c7c8a-e-until-explicitly-finished-chrome\error-context.md
+
+  3) [chrome] › e2e\readiness-editor.spec.ts:87:1 › R02 a changed open route blocks parent Apply until Use route or Cancel route
+
+    Error: expect(locator).not.toHaveText(expected) failed
+
+    Locator:  getByTestId('editor').getByTestId('editor-draft-summary')
+    Expected: not "No unapplied changes"
+    Received: "No unapplied changes"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveText" getByTestId('editor').getByTestId('editor-draft-summary') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('editor-draft-summary')
+        14 × locator resolved to <p data-testid="editor-draft-summary">No unapplied changes</p>
+           - unexpected value "No unapplied changes"
+
+
+      91 |   await connectionAction(page, "Edit route to Beta");
+      92 |   await editor.getByLabel("Route for Beta", { exact: true }).selectOption({ label: "Second guard" });
+    > 93 |   await expect(editor.getByTestId("editor-draft-summary")).not.toHaveText("No unapplied changes");
+         |                                                                ^
+      94 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+      95 |   await expect(editor).toHaveAttribute("data-mode", "edit");
+      96 |   await expect(editor.getByTestId("form-message")).toContainText(/Use route or Cancel route/);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:93:64
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R02-a-cha-ce2c5-l-Use-route-or-Cancel-route-chrome\error-context.md
+
+  4) [chrome] › e2e\readiness-editor.spec.ts:104:1 › R03 newly staged connection inspection shows pending state and its chosen route
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Connection inspector', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('dialog', { name: 'Connection inspector', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Connection inspector', exact: true })
+
+
+      111 |   await connectionAction(page, "Inspect connection to Beta (Blue)");
+      112 |   const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+    > 113 |   await expect(inspector).toBeVisible();
+          |                           ^
+      114 |   await expect(inspector).toContainText(/Pending changes/);
+      115 |   await expect(inspector).toContainText("Via CDS: Second guard");
+      116 |   await inspector.getByRole("button", { name: "Close", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:113:27
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R03-newly-3f187--state-and-its-chosen-route-chrome\error-context.md
+
+  5) [chrome] › e2e\readiness-editor.spec.ts:121:1 › R08 shared parent creation names the organization being edited
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').getByTestId('inline-child')
+    Expected substring: "Your organization is still a draft"
+    Received string:    "Create organizationNamePart of(top level)Synthetic operationsThis shared record remains available if you later cancel the service. Your service is still a draft.Create and useSave anywayCancel"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('record-picker').getByTestId('inline-child') with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByTestId('inline-child')
+        14 × locator resolved to <form novalidate="" data-testid="inline-child">…</form>
+           - unexpected value "Create organizationNamePart of(top level)Synthetic operationsThis shared record remains available if you later cancel the service. Your service is still a draft.Create and useSave anywayCancel"
+
+
+      129 |   await picker.getByRole("button", { name: /^Create new organization/ }).click();
+      130 |   const child = picker.getByTestId("inline-child");
+    > 131 |   await expect(child).toContainText("Your organization is still a draft");
+          |                       ^
+      132 |   await child.getByLabel("Name", { exact: true }).fill("Synthetic parent");
+      133 |   await child.getByRole("button", { name: "Create and use", exact: true }).click();
+      134 |   await expect(editor.locator(".notice")).toContainText("Organization changes are still pending");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:131:23
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R08-share-fa184-e-organization-being-edited-chrome\error-context.md
+
+  6) [chrome] › e2e\readiness-editor.spec.ts:138:1 › R10 projected service exposes purpose provider support and named before-after context
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor')
+    Expected substring: "Coordinates synthetic orders"
+    Received string:    "AlphaCompare projection: PlanExisting As-Is record in this projection.Network: Blue; marking: UNCLASSIFIED0 outgoing dependencies; Used by 0 services; 0 consumer organizations.Comparison status: rehomed.Services 3 → 3; cross-domain dependencies 0 → 0.Edit As-IsOpen scenario"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor') with timeout 5000ms
+      - waiting for getByTestId('editor')
+        14 × locator resolved to <aside hidden="" class="editor" aria-label="Editor" data-testid="editor" data-mode="projection">…</aside>
+           - unexpected value "AlphaCompare projection: PlanExisting As-Is record in this projection.Network: Blue; marking: UNCLASSIFIED0 outgoing dependencies; Used by 0 services; 0 consumer organizations.Comparison status: rehomed.Services 3 → 3; cross-domain dependencies 0 → 0.Edit As-IsOpen scenario"
+
+
+      143 |   await page.getByTestId("find-results").getByRole("button", { name: "Alpha (Blue) · service · projected", exact: true }).click();
+      144 |   const editor = page.getByTestId("editor");
+    > 145 |   await expect(editor).toContainText("Coordinates synthetic orders");
+          |                        ^
+      146 |   await expect(editor).toContainText("Synthetic operations");
+      147 |   await expect(editor).toContainText(/Amber.*Blue/);
+      148 |   await editor.getByRole("tab", { name: "Support", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:145:24
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R10-proje-46a22--named-before-after-context-chrome\error-context.md
+
+  7) [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('entity-list').getByRole('button', { name: /^Beta\b/ })
+
+
+      165 |   });
+      166 |   expect(before).toBeGreaterThan(20);
+    > 167 |   await page.getByTestId("entity-list").getByRole("button", { name: /^Beta\b/ }).click();
+          |                                                                                  ^
+      168 |   await page.getByRole("button", { name: "Back", exact: true }).click();
+      169 |   await expect(editor).toHaveAttribute("data-mode", "edit");
+      170 |   await expect(editor.getByRole("tab", { name: "Support", exact: true })).toHaveAttribute("aria-selected", "true");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:167:82
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-red-results\readiness-editor-R17-Back--7873a-ter-deep-Support-navigation-chrome\error-context.md
+
+  7 failed
+    [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished consumer choice until explicitly finished
+    [chrome] › e2e\readiness-editor.spec.ts:65:3 › R01 Apply retains unfinished dependency choice until explicitly finished
+    [chrome] › e2e\readiness-editor.spec.ts:87:1 › R02 a changed open route blocks parent Apply until Use route or Cancel route
+    [chrome] › e2e\readiness-editor.spec.ts:104:1 › R03 newly staged connection inspection shows pending state and its chosen route
+    [chrome] › e2e\readiness-editor.spec.ts:121:1 › R08 shared parent creation names the organization being edited
+    [chrome] › e2e\readiness-editor.spec.ts:138:1 › R10 projected service exposes purpose provider support and named before-after context
+    [chrome] › e2e\readiness-editor.spec.ts:154:1 › R17 Back restores the actual editor body scroll after deep Support navigation

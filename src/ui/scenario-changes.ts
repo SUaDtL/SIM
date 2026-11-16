@@ -3,8 +3,10 @@ import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import type { ScenarioChange, ScenarioChangeInput } from "../domain/types";
 import { applyScenario, serviceOrigin } from "../scenario/scenario";
-import { button, el, option } from "./dom";
+import { button, el, focusPagingControl, option } from "./dom";
 import type { EntityType } from "./forms";
+import { openReferencePicker } from "./reference-picker";
+import { collectionPage } from "./relationship-collection";
 
 /**
  * The changes in one scenario (WORK-013): each as a row with Remove, and a form to add one. Every
@@ -33,11 +35,11 @@ export function describeChange(repo: Repository, change: ScenarioChange, all: re
   const orgs = new Map(repo.listOrganizations().map((o) => [o.id, o.name]));
   const service = (id: number) => {
     const s = repo.getService(id);
-    return s ? `${s.name} (${networks.get(s.networkId) ?? "?"})` : "?";
+    return s ? `${s.name} (${networks.get(s.networkId) ?? "Network unavailable"})` : "Service unavailable";
   };
   switch (change.kind) {
     case "add":
-      return `Add ${change.name} on ${networks.get(change.networkId) ?? "?"} (${change.marking})`;
+      return `Add ${change.name} on ${networks.get(change.networkId) ?? "Network unavailable"} (${change.marking})`;
     case "retire":
       return `Retire ${service(change.serviceId)}`;
     case "merge": {
@@ -46,13 +48,16 @@ export function describeChange(repo: Repository, change: ScenarioChange, all: re
         change.intoServiceId !== null
           ? service(change.intoServiceId)
           : added?.kind === "add"
-            ? `${added.name} (${networks.get(added.networkId) ?? "?"}, added)`
-            : "?";
+            ? `${added.name} (${networks.get(added.networkId) ?? "Network unavailable"}, added)`
+            : "Merge target unavailable";
       return `Merge ${service(change.serviceId)} into ${into}`;
     }
     case "rehome": {
-      const provider = change.providerOrgId === null ? "" : `, provided by ${orgs.get(change.providerOrgId) ?? "?"}`;
-      return `Re-home ${service(change.serviceId)} to ${networks.get(change.networkId) ?? "?"}${provider}`;
+      const provider =
+        change.providerOrgId === null
+          ? ""
+          : `, provided by ${orgs.get(change.providerOrgId) ?? "Organization unavailable"}`;
+      return `Re-home ${service(change.serviceId)} to ${networks.get(change.networkId) ?? "Network unavailable"}${provider}`;
     }
   }
 }
@@ -66,48 +71,65 @@ export interface ScenarioChangeBuilder {
   showError(error: ValidationError | SensitiveInputWarning, retryConfirmed?: () => void): void;
   /** Refresh committed rows and diagnostics without touching builder controls or focus. */
   refresh(): void;
+  /** Reveal the exact authored change without changing the builder or metadata. */
+  revealChange(changeId: number): boolean;
 }
 
 export function createScenarioChanges(
   repo: Repository,
   scenarioId: number,
   onIntentChanged: () => void = () => undefined,
-  onInspect?: (target: { type: EntityType; id: number }) => void,
+  onInspect?: (target: { type: EntityType; id: number; changeId?: number }) => void,
 ): ScenarioChangeBuilder {
   let all = repo.listScenarioChanges(scenarioId);
   const message = el("p", { class: "message", "data-testid": "change-message", role: "alert" });
   const anyway = el("div", { class: "actions" });
   anyway.hidden = true;
   const rows = el("ul", { class: "rows", "data-testid": "scenario-changes" });
-  const empty = el("p", { class: "hint" }, "No changes yet: this scenario matches As-Is.");
+  const empty = el("p", { class: "hint" }, "No proposed changes yet.");
   const diagnostics = el("div", { "data-testid": "scenario-diagnostics" });
+  let page = 0;
+  let revealedChangeId: number | null = null;
+  const query = el("input", {
+    type: "search",
+    "aria-label": "Search scenario changes",
+    placeholder: "Search changes, services or networks",
+  });
+  const count = el("p", { class: "hint", role: "status", "data-testid": "scenario-change-count" });
+  const previous = button(
+    "Previous",
+    () => {
+      page--;
+      renderRows();
+      focusPagingControl(previous, next);
+    },
+    { "aria-label": "Previous scenario changes page" },
+  );
+  const next = button(
+    "Next",
+    () => {
+      page++;
+      renderRows();
+      focusPagingControl(next, previous);
+    },
+    { "aria-label": "Next scenario changes page" },
+  );
+  const paging = el("div", { class: "relationship-paging" }, previous, next);
+  query.addEventListener("input", () => {
+    page = 0;
+    renderRows();
+  });
 
-  const networks = repo.listNetworks();
-  const networkName = new Map(networks.map((n) => [n.id, n.name]));
-  const services = repo.listServices();
-  const changed = new Set(all.flatMap((c) => (c.kind === "add" ? [] : [c.serviceId])));
-
-  const kind = el("select", { id: "change-kind" });
+  const kind = el("select", { id: "change-kind" }, option("", "Choose a change"));
   for (const k of KINDS) kind.append(option(k.value, k.label));
-  const service = el("select", { id: "change-service" });
-  for (const s of services) {
-    if (!changed.has(s.id)) service.append(option(String(s.id), `${s.name} (${networkName.get(s.networkId) ?? "?"})`));
-  }
-  const into = el("select", { id: "change-into" });
-  for (const s of services)
-    into.append(option(`service:${String(s.id)}`, `${s.name} (${networkName.get(s.networkId) ?? "?"})`));
-  for (const c of all) {
-    if (c.kind === "add") {
-      into.append(option(`change:${String(c.id)}`, `${c.name} (${networkName.get(c.networkId) ?? "?"}, added)`));
-    }
-  }
-  const network = el("select", { id: "change-network" });
-  for (const n of networks) network.append(option(String(n.id), n.name));
+  const service = el("select", { id: "change-service" }, option("", "Choose a service"));
+  const into = el("select", { id: "change-into" }, option("", "Choose a merge target"));
+  const network = el("select", { id: "change-network" }, option("", "Choose a network"));
   const provider = el("select", { id: "change-provider" }, option("", "(unchanged)"));
-  for (const o of repo.listOrganizations()) provider.append(option(String(o.id), o.name));
   const name = el("input", { id: "change-name", type: "text", autocomplete: "off" });
   const marking = el("select", { id: "change-marking" });
   for (const m of MARKINGS) marking.append(option(m, m));
+  const prerequisite = el("p", { class: "hint", role: "status", "data-testid": "scenario-builder-guidance" });
 
   const fields: Record<string, HTMLElement> = {
     service: el("div", { class: "field" }, el("label", { for: "change-service" }, "Service"), service),
@@ -117,12 +139,66 @@ export function createScenarioChanges(
     marking: el("div", { class: "field" }, el("label", { for: "change-marking" }, "Marking"), marking),
     provider: el("div", { class: "field" }, el("label", { for: "change-provider" }, "Provider"), provider),
   };
+  const pickerUpdates: (() => void)[] = [];
+  const addPicker = (select: HTMLSelectElement, label: string): void => {
+    select.hidden = true;
+    const trigger = button(
+      "",
+      () => {
+        openReferencePicker({
+          label,
+          selectedValue: select.value,
+          allowNone: select === provider,
+          ...(select === provider
+            ? { noneLabel: kind.value === "rehome" ? "Keep existing provider" : "Provider not recorded" }
+            : {}),
+          returnFocus: trigger,
+          isCurrent: () => trigger.isConnected && repo.getScenario(scenarioId) !== undefined,
+          options: () =>
+            [...select.options]
+              .filter((item) => item.value !== "" && !item.disabled)
+              .map((item) => ({ value: item.value, label: item.text })),
+          onSelect: (value) => {
+            select.value = value;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+          },
+        });
+      },
+      {
+        id: `${select.id}-choose`,
+        class: "reference-field",
+        "aria-label": `Choose ${label}`,
+        "aria-haspopup": "dialog",
+      },
+    );
+    const update = () => {
+      trigger.textContent = select.selectedOptions[0]?.text ?? `Choose ${label}`;
+    };
+    select.before(trigger);
+    select.addEventListener("change", update);
+    pickerUpdates.push(update);
+    update();
+  };
+  addPicker(service, "scenario source service");
+  addPicker(into, "scenario merge target");
+  addPicker(network, "scenario network");
+  addPicker(provider, "scenario provider");
   const showFields = () => {
-    const uses = USES[kind.value as Kind];
+    const uses = kind.value === "" ? [] : USES[kind.value as Kind];
     for (const [key, field] of Object.entries(fields)) field.hidden = !uses.includes(key);
     // An added service has no current provider to keep.
     const none = provider.options[0];
-    if (none) none.textContent = kind.value === "add" ? "(none)" : "(unchanged)";
+    if (none) none.textContent = kind.value === "add" ? "Provider not recorded" : "Keep existing provider";
+    prerequisite.textContent =
+      kind.value === ""
+        ? "Choose what you want to propose, then choose the affected records."
+        : (kind.value === "add" || kind.value === "rehome") && network.options.length <= 1
+          ? "Add a network to the recorded enterprise before proposing this change."
+          : kind.value !== "add" && service.options.length <= 1
+            ? "No unchanged services are available. Add a service to the recorded enterprise or choose Add a service."
+            : "";
+    prerequisite.hidden = prerequisite.textContent === "";
+    for (const update of pickerUpdates) update();
   };
   kind.addEventListener("change", showFields);
   showFields();
@@ -148,6 +224,17 @@ export function createScenarioChanges(
   const hasPendingIntent = () => selected() !== initial;
 
   const input = (): ScenarioChangeInput => {
+    if (!KINDS.some((item) => item.value === kind.value)) {
+      throw new ValidationError("REQUIRED", "kind", "Choose a change before adding it.");
+    }
+    if (kind.value === "add" && !name.value.trim())
+      throw new ValidationError("REQUIRED", "name", "A new service name is required.");
+    if (USES[kind.value as Kind].includes("service") && !service.value)
+      throw new ValidationError("REQUIRED", "service", "Choose the service to change.");
+    if (USES[kind.value as Kind].includes("into") && !into.value)
+      throw new ValidationError("REQUIRED", "into", "Choose the merge target.");
+    if (USES[kind.value as Kind].includes("network") && !network.value)
+      throw new ValidationError("REQUIRED", "network", "Choose a network for this change.");
     const providerOrgId = provider.value === "" ? null : Number(provider.value);
     switch (kind.value as Kind) {
       case "add":
@@ -206,14 +293,23 @@ export function createScenarioChanges(
       anyway.hidden = false;
     } else {
       message.textContent = error.message;
+      const field =
+        error.field === "kind"
+          ? kind
+          : error.field === "name"
+            ? name
+            : fields[error.field]?.querySelector<HTMLElement>("button, input, select");
+      field?.focus();
     }
   };
 
   const add = (confirmSensitive: boolean) => {
     withdrawWarning();
     try {
-      repo.addScenarioChange(scenarioId, input(), { confirmSensitive });
+      const change = repo.addScenarioChange(scenarioId, input(), { confirmSensitive });
       clearPendingIntent();
+      // Successful creation must be visible even when the previous search excluded this row.
+      revealChange(change.id);
     } catch (error) {
       if (error instanceof SensitiveInputWarning) {
         showError(error, () => {
@@ -249,6 +345,67 @@ export function createScenarioChanges(
     onIntentChanged();
   }
 
+  function renderRows(): void {
+    const result = collectionPage(
+      all.map((change) => ({ label: describeChange(repo, change, all), detail: "", change })),
+      query.value,
+      page,
+    );
+    page = result.page;
+    rows.replaceChildren(
+      ...result.rows.map(({ label, change }) =>
+        el(
+          "li",
+          {
+            "data-change-id": String(change.id),
+            tabindex: "-1",
+            ...(revealedChangeId === change.id ? { "aria-current": "true" } : {}),
+          },
+          el("span", { class: "row-name" }, label),
+          button(
+            "Remove",
+            () => {
+              try {
+                repo.removeScenarioChange(change.id);
+                refresh();
+                const alternative = rows.querySelector<HTMLButtonElement>("button");
+                if (alternative) alternative.focus();
+                else query.focus();
+              } catch (error) {
+                message.textContent = error instanceof ValidationError ? error.message : "Could not remove the change.";
+              }
+            },
+            { "aria-label": `Remove change: ${label}`, class: "subtle" },
+          ),
+        ),
+      ),
+    );
+    count.textContent = `${String(result.first)}–${String(result.last)} of ${String(result.total)}${query.value.trim() ? ` matching (${String(all.length)} recorded)` : ""}`;
+    empty.hidden = result.total > 0;
+    empty.textContent =
+      all.length === 0
+        ? "No proposed changes yet."
+        : "No changes match your search. Try another service or network name.";
+    previous.disabled = result.page === 0;
+    next.disabled = result.page + 1 >= result.pages;
+    paging.hidden = result.pages === 1;
+  }
+
+  function revealChange(changeId: number): boolean {
+    const index = all.findIndex((change) => change.id === changeId);
+    if (index < 0) return false;
+    query.value = "";
+    page = Math.floor(index / 20);
+    revealedChangeId = changeId;
+    renderRows();
+    const row = [...rows.querySelectorAll<HTMLElement>("li")].find(
+      (item) => item.dataset["changeId"] === String(changeId),
+    );
+    row?.focus();
+    row?.scrollIntoView({ block: "nearest" });
+    return true;
+  }
+
   function refresh(): void {
     const wasPending = hasPendingIntent();
     all = repo.listScenarioChanges(scenarioId);
@@ -258,22 +415,25 @@ export function createScenarioChanges(
     const latestChanged = new Set(all.flatMap((change) => (change.kind === "add" ? [] : [change.serviceId])));
     const sync = (select: HTMLSelectElement, choices: { value: string; label: string }[]): void => {
       const currentValue = select.value;
-      if (wasPending && currentValue !== "" && !choices.some((choice) => choice.value === currentValue)) {
+      const missing = wasPending && currentValue !== "" && !choices.some((choice) => choice.value === currentValue);
+      if (missing) {
         choices.push({ value: currentValue, label: "(selected target no longer available)" });
       }
       select.replaceChildren(...choices.map((choice) => option(choice.value, choice.label)));
       if (choices.some((choice) => choice.value === currentValue)) select.value = currentValue;
+      if (missing && select.selectedOptions[0]) select.selectedOptions[0].disabled = true;
     };
-    sync(
-      service,
-      latestServices
+    sync(service, [
+      { value: "", label: "Choose a service" },
+      ...latestServices
         .filter((item) => !latestChanged.has(item.id))
         .map((item) => ({
           value: String(item.id),
           label: `${item.name} (${latestNetworkNames.get(item.networkId) ?? "?"})`,
         })),
-    );
+    ]);
     sync(into, [
+      { value: "", label: "Choose a merge target" },
       ...latestServices.map((item) => ({
         value: `service:${String(item.id)}`,
         label: `${item.name} (${latestNetworkNames.get(item.networkId) ?? "?"})`,
@@ -285,38 +445,17 @@ export function createScenarioChanges(
           label: `${change.name} (${latestNetworkNames.get(change.networkId) ?? "?"}, added)`,
         })),
     ]);
-    sync(
-      network,
-      latestNetworks.map((item) => ({ value: String(item.id), label: item.name })),
-    );
+    sync(network, [
+      { value: "", label: "Choose a network" },
+      ...latestNetworks.map((item) => ({ value: String(item.id), label: item.name })),
+    ]);
     sync(provider, [
-      { value: "", label: kind.value === "add" ? "(none)" : "(unchanged)" },
+      { value: "", label: kind.value === "add" ? "Provider not recorded" : "Keep existing provider" },
       ...repo.listOrganizations().map((item) => ({ value: String(item.id), label: item.name })),
     ]);
+    showFields();
     if (!wasPending) initial = selected();
-    rows.replaceChildren(
-      ...all.map((change) => {
-        const text = describeChange(repo, change, all);
-        return el(
-          "li",
-          {},
-          el("span", { class: "row-name" }, text),
-          button(
-            "Remove",
-            () => {
-              try {
-                repo.removeScenarioChange(change.id);
-                refresh();
-              } catch (error) {
-                message.textContent = error instanceof ValidationError ? error.message : "Could not remove the change.";
-              }
-            },
-            { "aria-label": `Remove change: ${text}`, class: "subtle" },
-          ),
-        );
-      }),
-    );
-    empty.hidden = all.length > 0;
+    renderRows();
     const issues = repo.scenarioNameCollisions(scenarioId);
     const projected = applyScenario(repo.snapshot(), scenarioId);
     const projection = projected.projection;
@@ -341,14 +480,23 @@ export function createScenarioChanges(
         ? `${String(impact.coalescedDependencies.length)} dependency link${impact.coalescedDependencies.length === 1 ? " is" : "s are"} coalesced in the projection.`
         : "",
     ].filter(Boolean);
-    const targets = new Map<string, { type: EntityType; id: number; label: string }>();
-    const addTarget = (type: EntityType, id: number, label: string): void => {
-      targets.set(`${type}:${String(id)}`, { type, id, label });
+    const targets = new Map<string, { type: EntityType; id: number; label: string; changeId?: number }>();
+    const addTarget = (type: EntityType, id: number, label: string, changeId?: number): void => {
+      targets.set(`${type}:${String(id)}:${changeId === undefined ? "" : String(changeId)}`, {
+        type,
+        id,
+        label,
+        ...(changeId === undefined ? {} : { changeId }),
+      });
+    };
+    const addChange = (change: ScenarioChange): void => {
+      addTarget("scenario", change.scenarioId, `Review: ${describeChange(repo, change, all)}`, change.id);
     };
     const addService = (id: number): void => {
       const origin = serviceOrigin(projected, id);
       if (origin.kind === "planned") {
-        addTarget("scenario", origin.scenarioId, `Inspect originating scenario change ${String(origin.changeId)}`);
+        const change = all.find((item) => item.id === origin.changeId);
+        if (change) addChange(change);
         return;
       }
       const record = repo.getService(origin.serviceId);
@@ -358,6 +506,14 @@ export function createScenarioChanges(
     };
     for (const issue of issues) {
       for (const id of issue.serviceIds) addService(id);
+      for (const change of all) {
+        if (change.kind === "add") continue;
+        if (
+          issue.serviceIds.includes(change.serviceId) ||
+          (change.kind === "merge" && change.intoServiceId !== null && issue.serviceIds.includes(change.intoServiceId))
+        )
+          addChange(change);
+      }
       const network = repo.getNetwork(issue.networkId);
       if (network) addTarget("network", network.id, `Inspect affected network ${network.name}`);
     }
@@ -380,21 +536,28 @@ export function createScenarioChanges(
       }
       for (const id of route.responsibleChangeIds) {
         const change = all.find((item) => item.id === id);
-        if (change)
-          addTarget("scenario", change.scenarioId, `Inspect originating scenario change ${String(change.id)}`);
+        if (change) addChange(change);
       }
     }
     diagnostics.replaceChildren(
       ...(issues.length > 0
         ? [
-            el("p", {}, "This scenario has naming conflicts. Remove or revise a change to repair it."),
+            el(
+              "p",
+              {},
+              "This scenario has naming conflicts. Review the affected changes, then remove and re-add a change with corrected choices.",
+            ),
             el("ul", {}, ...issues.map((issue) => el("li", {}, issue.message))),
           ]
         : []),
       ...(effects.length > 0 ? [el("ul", {}, ...effects.map((effect) => el("li", {}, effect)))] : []),
       ...[...targets.values()].map((target) => {
         const control = button(target.label, () => {
-          onInspect?.({ type: target.type, id: target.id });
+          onInspect?.({
+            type: target.type,
+            id: target.id,
+            ...(target.changeId === undefined ? {} : { changeId: target.changeId }),
+          });
         });
         control.disabled = onInspect === undefined;
         return control;
@@ -405,13 +568,22 @@ export function createScenarioChanges(
 
   const elements = [
     el("h3", {}, "Changes"),
+    el(
+      "p",
+      { class: "hint", "data-testid": "scenario-command-guidance" },
+      "Add change and Remove take effect immediately. Undo reverses them. Cancel or Discard drops only changes you have not applied.",
+    ),
+    query,
+    count,
     rows,
     empty,
+    paging,
     diagnostics,
     el(
       "div",
       { class: "add-change" },
       el("div", { class: "field" }, el("label", { for: "change-kind" }, "Change"), kind),
+      prerequisite,
       ...Object.values(fields),
       button("Add change", () => {
         add(false);
@@ -428,5 +600,6 @@ export function createScenarioChanges(
     clearPendingIntent,
     showError,
     refresh,
+    revealChange,
   };
 }

@@ -117,9 +117,9 @@ for (const kind of ["retire", "merge", "rehome"] as const) {
       await editSelected(page);
       const editor = page.getByTestId("editor");
       await page.getByLabel("Change", { exact: true }).selectOption(kind);
-      await page.getByLabel("Service", { exact: true }).selectOption({ label: `${source} (Amber)` });
-      if (kind === "merge") await page.getByLabel("Into", { exact: true }).selectOption({ label: "Gamma (Amber)" });
-      if (kind === "rehome") await editor.getByLabel("Network", { exact: true }).selectOption({ label: "Blue" });
+      await chooseReference(page, "scenario source service", `${source} (Amber)`);
+      if (kind === "merge") await chooseReference(page, "scenario merge target", "Gamma (Amber)");
+      if (kind === "rehome") await chooseReference(page, "scenario network", "Blue");
       await page.getByRole("button", { name: "Add change", exact: true }).click();
       await expect(page.getByTestId("scenario-changes").locator("li")).toHaveCount(1);
       await expect(editor.getByTestId("editor-draft-summary")).toHaveText("No unapplied changes");
@@ -130,6 +130,7 @@ for (const kind of ["retire", "merge", "rehome"] as const) {
       await editor.getByLabel("Description", { exact: true }).fill("Independent pending metadata");
       await page.getByLabel("Change", { exact: true }).selectOption("add");
       await page.getByLabel("New service name", { exact: true }).fill("Synthetic planned service");
+      await chooseReference(page, "scenario network", "Amber");
       await page.getByRole("button", { name: "Add change", exact: true }).click();
       await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Independent pending metadata");
       await expect(editor.getByTestId("editor-draft-summary")).toContainText("Unapplied draft");
@@ -141,10 +142,11 @@ test("ACT-UX-10 scenario guidance names immediate Add Remove and Undo boundaries
   await load(page, "scenario", "Plan");
   await editSelected(page);
   const editor = page.getByTestId("editor");
-  await expect(editor.locator(".editor-heading")).toContainText("Add change and Remove take effect immediately");
-  await expect(editor.locator(".editor-heading")).toContainText("Undo");
-  await expect(editor.locator(".editor-heading")).toContainText("metadata");
-  await expect(editor.locator(".editor-heading")).toContainText("Cancel and Discard");
+  await expect(editor.locator(".editor-heading")).toContainText("Apply changes saves the name, description");
+  const commands = editor.getByTestId("scenario-command-guidance");
+  await expect(commands).toContainText("Add change and Remove take effect immediately");
+  await expect(commands).toContainText("Undo reverses them");
+  await expect(commands).toContainText("Cancel or Discard drops only changes you have not applied");
   await expect(editor.locator(".editor-heading")).not.toContainText("Use Apply changes for all sections");
 });
 

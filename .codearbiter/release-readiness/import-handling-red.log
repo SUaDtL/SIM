@@ -1,0 +1,35 @@
+
+Running 1 test using 1 worker
+
+(node:41812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-shell.spec.ts:183:1 › V01 higher-marked held rows have explicit preview handling distinct from current dataset marking (5.6s)
+
+
+  1) [chrome] › e2e\readiness-shell.spec.ts:183:1 › V01 higher-marked held rows have explicit preview handling distinct from current dataset marking
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Import CSV', exact: true }).getByTestId('import-handling')
+    Expected substring: "Preview handling: SECRET"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog', { name: 'Import CSV', exact: true }).getByTestId('import-handling') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).getByTestId('import-handling')
+
+
+      191 |   });
+      192 |   await expect(dialog.getByTestId("import-summary")).toContainText("nothing");
+    > 193 |   await expect(dialog.getByTestId("import-handling")).toContainText("Preview handling: SECRET");
+          |                                                       ^
+      194 |   await expect(dialog.getByTestId("import-handling")).toContainText("Current dataset: CUI");
+      195 |   await expect(dialog.getByTestId("import-handling")).toContainText("not changed");
+      196 |   await expect(page.getByTestId("banner-top")).toContainText("CUI");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-shell.spec.ts:193:55
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\import-handling-red-results\readiness-shell-V01-higher-f74a3-rom-current-dataset-marking-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-shell.spec.ts:183:1 › V01 higher-marked held rows have explicit preview handling distinct from current dataset marking

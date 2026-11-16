@@ -1,0 +1,32 @@
+
+Running 1 test using 1 worker
+
+(node:72116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-map.spec.ts:164:1 › R04 restoring navigation history for a deleted focus subject uses its unfocused checkpoint (920ms)
+
+
+  1) [chrome] › e2e\readiness-map.spec.ts:164:1 › R04 restoring navigation history for a deleted focus subject uses its unfocused checkpoint
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.53699466056446
+    Received: 350.581998474447
+
+    Expected precision:    6
+    Expected difference: < 0.0000005
+    Received difference:   331.04500381388254
+
+      184 |   const after = await mapState(page);
+      185 |   expect(after.zoom).toBeCloseTo(before.zoom, 6);
+    > 186 |   expect(after.pan.x).toBeCloseTo(before.pan.x, 6);
+          |                       ^
+      187 |   expect(after.pan.y).toBeCloseTo(before.pan.y, 6);
+      188 | });
+      189 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-map.spec.ts:186:23
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\map-history-invalid-red-results\readiness-map-R04-restorin-4a2c7-es-its-unfocused-checkpoint-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-map.spec.ts:164:1 › R04 restoring navigation history for a deleted focus subject uses its unfocused checkpoint

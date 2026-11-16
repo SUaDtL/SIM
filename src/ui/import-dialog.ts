@@ -374,8 +374,8 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       el("p", { "data-testid": "import-summary" }, `Import will add ${describeAdded(result.report.added)}.`),
       el(
         "p",
-        { class: "hint" },
-        `Receipt classification: ${receipt.classification}. Highest recognized input marking; unreadable files and unrecognized markings need source review.`,
+        { class: "warning", "data-testid": "import-handling" },
+        `Preview handling: ${receipt.classification}. Current dataset: ${receipt.source.marking}; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: ${receipt.classification}.`,
       ),
       button("Download preview receipt", () => {
         downloadReceipt(receipt, "sim-import-preview.csv");

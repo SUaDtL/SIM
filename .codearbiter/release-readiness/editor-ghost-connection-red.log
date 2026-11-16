@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+(node:41004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\readiness-editor.spec.ts:386:1 › R10 removed service connection is explicitly recorded history, never a pending edit (5.7s)
+
+
+  1) [chrome] › e2e\readiness-editor.spec.ts:386:1 › R10 removed service connection is explicitly recorded history, never a pending edit
+
+    Error: expect(locator).not.toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Connection inspector', exact: true })
+    Expected substring: not "Pending changes"
+    Received string: "Current As-Is connection for a removed service — read-onlyAlpha (Amber) → Beta (Blue)Via CDS: First guardPending changes — not yet applied. This inspector shows the staged connection. Finish editing in the current service, then Apply changes to record it.Close"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "not toContainText" getByRole('dialog', { name: 'Connection inspector', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Connection inspector', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Connection inspector">…</dialog>
+           - unexpected value "Current As-Is connection for a removed service — read-onlyAlpha (Amber) → Beta (Blue)Via CDS: First guardPending changes — not yet applied. This inspector shows the staged connection. Finish editing in the current service, then Apply changes to record it.Close"
+
+
+      403 |   await expect(dialog).toContainText("Via CDS: First guard");
+      404 |   await expect(dialog.getByRole("button", { name: "Edit consuming service", exact: true })).toHaveCount(0);
+    > 405 |   await expect(dialog).not.toContainText("Pending changes");
+          |                            ^
+      406 |   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+      407 | });
+      408 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\readiness-editor.spec.ts:405:28
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-release-readiness-20261115\editor-ghost-connection-red-results\readiness-editor-R10-remov-68f7f-istory-never-a-pending-edit-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\readiness-editor.spec.ts:386:1 › R10 removed service connection is explicitly recorded history, never a pending edit

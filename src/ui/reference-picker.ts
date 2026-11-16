@@ -11,6 +11,8 @@ export interface ReferencePickerOptions {
   readonly options: () => readonly PickerOption[];
   readonly selectedValue?: string;
   readonly allowNone?: boolean;
+  /** Explain the caller's empty-value semantics; ordinary reference clearing keeps its default. */
+  readonly noneLabel?: string;
   readonly onSelect: (value: string) => void;
   readonly isCurrent?: () => boolean;
   readonly returnFocus: HTMLElement;
@@ -150,7 +152,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
           "li",
           {},
           button(
-            "No assignment",
+            ctx.noneLabel ?? "No assignment",
             () => {
               choose("");
             },
@@ -159,7 +161,15 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
         ),
       );
     if (discovered.total === 0)
-      rows.push(el("li", { class: "empty" }, "No matching records. Try another name or create one."));
+      rows.push(
+        el(
+          "li",
+          { class: "empty" },
+          ctx.create
+            ? "No matching records. Try another name or create one."
+            : "No matching records. Try another name.",
+        ),
+      );
     results.replaceChildren(...rows);
     count.textContent =
       discovered.total === 0

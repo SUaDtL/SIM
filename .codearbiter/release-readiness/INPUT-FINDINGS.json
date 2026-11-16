@@ -1,0 +1,1099 @@
+{
+  "metadata": {
+    "repository": "SUaDtL/SIM",
+    "reviewed_commit": "55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121",
+    "tree": "05faf98c188e70ae38df405af0ca33ba92ddc288",
+    "review_date": "2026-11-15",
+    "recommendation": "Hold final end-user sign-off; correct S1 findings and complete exact-artifact acceptance. Product gaps are scoped separately from release defects.",
+    "repo_modified": false,
+    "full_current_app_executed": false,
+    "native_file_acceptance_executed": false,
+    "ci": {
+      "run_id": 43742863179,
+      "status": "success verified from API",
+      "head": "883f9ba02a3d4e23d10e0088e940bf9efbc29d56",
+      "tree_matches_reviewed_main": true,
+      "test_counts": "PR reports 392 unit and 612 browser tests; not independently recounted from logs in this audit"
+    },
+    "published_release": {
+      "tag": "v0.1.0",
+      "date": "2026-11-12",
+      "commit": "6c489bf1b6b0dd3f70470174625e404b1d21f5bb",
+      "asset": "sim-0.1.0.html",
+      "asset_sha256": "b905392b0104c6f44af3958445b2e2a543f6812cc4a9fa9c4b052f0a4fdd6123"
+    }
+  },
+  "findings": [
+    {
+      "id": "R01",
+      "severity": "S1",
+      "title": "Apply accepts an unfinished dependency or consumer selection without including it",
+      "evidence_level": "Executed source branch with controlled adapters; complete editor path traced",
+      "user_journey": "Edit an existing service. Choose a dependency or consuming organization. Before Add dependency/Add consumer, choose Apply changes, Save file, or Apply and continue.",
+      "observed": "The chooser sets relationIntent.touched, so hasPendingDraft reports pending work. The service-save branch reads only serviceDraft arrays. The probe recorded applied=true, an empty dependency/consumer payload, and the completion call with No changes to apply. Production inspection resets the composer. A staged-row positive control includes the dependency correctly.",
+      "user_impact": "An engineer can believe an interview detail was retained when the successful operation omitted it. This is loss of unfinished user work, not evidence that previously committed rows are deleted.",
+      "required_outcome": "Either include the fully specified composer in the single Apply, or refuse Apply with a focused Finish adding or cancel this connection action. Never report overall completion and discard it. Apply, Save file and navigation must share that decision.",
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            264,
+            307
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L264-L307"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            647,
+            754
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L647-L754"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            1366,
+            1540
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L1366-L1540"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": [
+            304,
+            340
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts#L304-L340"
+        }
+      ],
+      "acceptance": "Exercise consumer and dependency selections separately, with valid/invalid route, name edit, Save file, Apply, Apply-and-continue and Capture. Reopen the saved dataset to verify content. Use Add first as the positive control.",
+      "evidence": [
+        "evidence/draft-probe.json"
+      ],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R02",
+      "severity": "S1",
+      "title": "An open route editor is outside draft detection and Apply",
+      "evidence_level": "Source trace plus Apply-boundary probe",
+      "user_journey": "For an existing dependency, open Actions > Edit route, select a different CDS, and use the parent Apply or navigate before Use route.",
+      "observed": "The temporary route select has no draft change collector. Only Use route changes dep.viaCdsId. In the boundary probe the visible candidate was route 5, hasPendingDraft was false, and Apply still submitted route 4. No full browser route interaction is claimed by this probe.",
+      "user_impact": "The editor can say no unapplied changes while a visible route choice differs from the stored route. Navigation can omit a loss decision.",
+      "required_outcome": "Track the open route task as pending work, or integrate it into the service draft. Save/Apply must resolve it; cancellation must intentionally restore it.",
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            1410,
+            1460
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L1410-L1460"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            264,
+            307
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L264-L307"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            647,
+            754
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L647-L754"
+        }
+      ],
+      "acceptance": "Change the route without Use route, then test Apply, Save, Back, Cancel and another service. No input disappears through a successful completion.",
+      "evidence": [
+        "evidence/draft-probe.json"
+      ],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R03",
+      "severity": "S1",
+      "title": "A pending connection can open saved details or do nothing",
+      "evidence_level": "Executed lookup fragment and current editor/workspace wiring",
+      "user_journey": "Add a dependency to an existing service but do not Apply. Inspect connection from the pending row. Separately stage a route change and inspect it.",
+      "observed": "Rows come from serviceDraft, but requestDependency passes repo.snapshot(). The new pending relationship has no saved row, so the inspector returns without UI. A changed route produces details for its old saved route.",
+      "user_impact": "The user cannot tell whether the visible connection or the inspector is authoritative.",
+      "required_outcome": "Inspect the same state as the invoking row and label it Pending, or make the saved-state scope explicit and do not offer an inert action for a not-yet-applied row.",
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            1396,
+            1486
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L1396-L1486"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": [
+            460,
+            520
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts#L460-L520"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": [
+            521,
+            595
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts#L521-L595"
+        }
+      ],
+      "acceptance": "Pending addition, pending route edit, pending removal, applied row, and projected row each show accurate state; no action silently returns.",
+      "evidence": [
+        "evidence/draft-probe.json"
+      ],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R04",
+      "severity": "S1",
+      "title": "Removing a focus subject hides the remaining map",
+      "evidence_level": "Executed complete focus module; refresh/view lifecycle source traced",
+      "user_journey": "Focus Depends on a service, then delete that service through Inventory; or switch to a To-Be view that retires it. Return to Map.",
+      "observed": "focusGraph returns an empty visible set for a missing subject. The current refresh and switchView paths do not clear or revalidate focus. applyView therefore filters all nodes. The pure-module probe retained four graph nodes but exposed zero. The UI supplies Focus target unavailable, but that message tells the user to select a current record while the map itself is empty.",
+      "user_impact": "A populated enterprise appears to disappear after a normal change or scenario switch. Capture remains enabled while graph nodes exist.",
+      "required_outcome": "When a focus target is no longer in the displayed graph, explicitly end that focus or restore its prior valid scope and explain why. Do not silently capture a misleading blank map.",
+      "sources": [
+        {
+          "path": "src/map/focus.ts",
+          "lines": [
+            26,
+            36
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/focus.ts#L26-L36"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            665,
+            705
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L665-L705"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            1175,
+            1280
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L1175-L1280"
+        }
+      ],
+      "acceptance": "Delete, retire, merge away, switch projection and Undo a focused subject. Remaining records stay reachable. Export reflects a valid scope.",
+      "evidence": [
+        "evidence/focus-probe.json"
+      ],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R05",
+      "severity": "S1",
+      "title": "The published download is not the reviewed merged application",
+      "evidence_level": "Live GitHub release and tag metadata",
+      "user_journey": "A new user downloads the published SIM HTML from Releases.",
+      "observed": "The only listed release is v0.1.0, published November 12, 2026. Its annotated tag resolves to 6c489bf1b6b0dd3f70470174625e404b1d21f5bb, not the reviewed main. The HTML asset was last updated November 12. New merges do not update this artifact.",
+      "user_impact": "A user following the release channel receives the pre-coherence application, regardless of current-main fixes.",
+      "required_outcome": "After fixes and acceptance, publish a versioned artifact from the approved commit, verify the downloaded bytes, and point user instructions at that artifact. Do not overwrite or relabel the old binary as tested current code.",
+      "sources": [
+        {
+          "path": "GitHub release metadata",
+          "url": "https://github.com/SUaDtL/SIM/releases/tag/v0.1.0",
+          "lines": null
+        },
+        {
+          "path": "Git tag object",
+          "url": "https://api.github.com/repos/SUaDtL/SIM/git/tags/8cc5cc9a52cf8e2fd1d55bc9ea1108eb126c1b6d",
+          "lines": null
+        }
+      ],
+      "acceptance": "The exact downloaded artifact has the approved build identity and checksum. Run the user acceptance journeys against those bytes, not a dev server.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R06",
+      "severity": "S2",
+      "title": "An enterprise started in Untitled dataset has no rename path",
+      "evidence_level": "Current shell, form and capture source",
+      "user_journey": "Start entering a real enterprise in the initial document, save to a meaningful filename, then capture a briefing image.",
+      "observed": "Boot creates Untitled dataset. New asks for a name, but the current shell offers no rename action. Save As changes the filename, not the embedded dataset name. Capture takes repo.datasetName().",
+      "user_impact": "The engineer can end up with a serious assessment and exported figures titled Untitled dataset, with no ordinary rename operation.",
+      "required_outcome": "Offer document name editing in document information without recreating inventory; keep filename and document title distinct and clear.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            843,
+            925
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L843-L925"
+        }
+      ],
+      "acceptance": "Rename a populated document, Save As, reopen, and export. References, history and classification remain intact.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R07",
+      "severity": "S2",
+      "title": "Unassigned provider is presented as No provider",
+      "evidence_level": "Current inventory source",
+      "user_journey": "Enter a discovered service whose responsible organization is not yet known.",
+      "observed": "The inventory substitutes No provider when providerOrgId is null. Elsewhere the summary uses Not assigned.",
+      "user_impact": "A data omission looks like a confirmed enterprise fact. This matters when the map is used to identify ownership gaps.",
+      "required_outcome": "Use Provider not recorded or Not assigned consistently. A future Confirmed none state must require an explicit assessment rather than inferring from null.",
+      "sources": [
+        {
+          "path": "src/ui/list-panel.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/list-panel.ts"
+        },
+        {
+          "path": "src/ui/record-summary.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/record-summary.ts"
+        }
+      ],
+      "acceptance": "A service with no provider is described as unrecorded in Inventory, summary, search and detached outputs.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R08",
+      "severity": "S2",
+      "title": "Shared creation copy says service while editing an organization",
+      "evidence_level": "Current referenceControls path",
+      "user_journey": "Edit an organization and create its missing parent organization from Part of.",
+      "observed": "The same child creator is attached to organization.parentId, but its hint says cancel the service / Your service is still a draft, and its success says Service changes are still pending.",
+      "user_impact": "The user is told about a different task and cannot confidently understand which record has been saved.",
+      "required_outcome": "Derive the parent noun and identity from the invoking task; use neutral parent wording where necessary.",
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            947,
+            1050
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L947-L1050"
+        }
+      ],
+      "acceptance": "Create references from a service and a parent organization. Every message names the actual parent and the independently created child.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R09",
+      "severity": "S2",
+      "title": "Picker promises creation where creation is unavailable",
+      "evidence_level": "Executed complete picker component in Chromium",
+      "user_journey": "Open an empty or no-match source-service/dependency picker that has no create callback.",
+      "observed": "The rendered message is No matching records. Try another name or create one. There are zero visible creation buttons. Escape and exact duplicate-name keyboard selection passed as positive controls.",
+      "user_impact": "The apparent next action is impossible. This is a real unfinished-state message, not legitimate missing inventory.",
+      "required_outcome": "Condition the empty state on supported actions. Where inline service creation is intentionally out of scope, offer a context-preserving route to add one or simply describe the limitation.",
+      "sources": [
+        {
+          "path": "src/ui/reference-picker.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/reference-picker.ts"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            876,
+            965
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L876-L965"
+        }
+      ],
+      "acceptance": "Empty and no-match states for every picker offer only actions that actually exist.",
+      "evidence": [
+        "evidence/picker-probe.json",
+        "evidence/picker-empty-component.png"
+      ],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R10",
+      "severity": "S2",
+      "title": "Projected inspection is a developer-oriented second-class summary",
+      "evidence_level": "Current projected inspector and connection inspector source",
+      "user_journey": "Inspect the same service in As-Is and To-Be/Compare while explaining the proposed enterprise.",
+      "observed": "The baseline has a structured summary. Projected inspection primarily shows network, marking, counts, internal comparison-status values and projection-effect paragraphs. Projected connection origins can be As-Is service #ID or change #ID. Descriptions, provider and support context are not presented at comparable depth.",
+      "user_impact": "The proposed design is harder to explain and validate than the baseline. IDs and counts replace business-readable identities.",
+      "required_outcome": "Present equivalent read-only information with qualified names, explicit before/after changes and exact originating-change links. Keep storage IDs in optional diagnostics.",
+      "sources": [
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            335,
+            466
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L335-L466"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": [
+            500,
+            583
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts#L500-L583"
+        },
+        {
+          "path": "src/ui/record-summary.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/record-summary.ts"
+        }
+      ],
+      "acceptance": "For moved, retired, merged and planned services, a reviewer can identify provider, purpose, support and each changed relationship without entering edit mode or interpreting numeric IDs.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R11",
+      "severity": "S2",
+      "title": "A scenario-change link does not identify a scenario change",
+      "evidence_level": "Current diagnostic target construction and navigation",
+      "user_journey": "Use Inspect originating scenario change N from an unresolved route or collision diagnostic.",
+      "observed": "The target contains only {type:scenario,id:scenarioId}. The change ID exists in the label but not the navigation target. Targets are deduplicated by scenario ID. The summary contains a scenario count, not a selected authored change. The repair message says revise, while the change rows expose Remove and Add rather than Edit.",
+      "user_impact": "The advertised repair target is not delivered; users must search a scenario and reconstruct its change.",
+      "required_outcome": "Navigate to the actual change, show its human-readable description and affected records, and provide a bounded revise operation or accurately label the remove/re-add workflow.",
+      "sources": [
+        {
+          "path": "src/ui/scenario-changes.ts",
+          "lines": [
+            300,
+            438
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/scenario-changes.ts#L300-L438"
+        },
+        {
+          "path": "src/ui/record-summary.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/record-summary.ts"
+        }
+      ],
+      "acceptance": "Multiple responsible changes in one scenario remain independently addressable. Clicking a change diagnostic reveals that exact change.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R12",
+      "severity": "S2",
+      "title": "Scenario authoring still uses unbounded, preselected control lists",
+      "evidence_level": "Current scenario builder source",
+      "user_journey": "Create a scenario over an enterprise with hundreds of services and many planned changes.",
+      "observed": "Unlike the new record pickers and relationship pages, the scenario builder eagerly lists all services, merge targets and networks in native selects and renders every change row. It defaults to merge and preselects available source/target records.",
+      "user_impact": "The largest planning workflow retains the old scanning burden. Accidental default intent and same-name selection are more difficult to spot. Pixel overflow and performance were not measured here.",
+      "required_outcome": "Reuse qualified searchable selectors and bounded change browsing, show deliberate intent, and expose clear empty/prerequisite states. Do not add another wizard.",
+      "sources": [
+        {
+          "path": "src/ui/scenario-changes.ts",
+          "lines": [
+            15,
+            142
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/scenario-changes.ts#L15-L142"
+        },
+        {
+          "path": "src/ui/scenario-changes.ts",
+          "lines": [
+            295,
+            326
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/scenario-changes.ts#L295-L326"
+        }
+      ],
+      "acceptance": "Author and locate changes among 500 services, duplicate names and 100 changes without manual dropdown scanning; no arbitrary default becomes a change without deliberate submission.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R13",
+      "severity": "S2",
+      "title": "Startup failure has no user-facing boundary",
+      "evidence_level": "Source failure-path review; fault injection still required",
+      "user_journey": "Open a damaged/incompatible standalone file or encounter an SQLite/WASM initialization failure.",
+      "observed": "The source shell initially contains an empty app element, and main ends with void boot() without a top-level user-facing failure handler.",
+      "user_impact": "An initialization rejection can leave a blank page and a console-only diagnosis. A user has no next step or application identity.",
+      "required_outcome": "Render a minimal loading/failure shell that survives initialization failure, names the app build, provides safe troubleshooting and never implies that user data was erased.",
+      "sources": [
+        {
+          "path": "sim.html",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/sim.html"
+        },
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        }
+      ],
+      "acceptance": "Inject boot/WASM failure in the exact built offline HTML and verify a visible, accessible failure state and an actionable recovery instruction.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R14",
+      "severity": "S2",
+      "title": "The normal Save shortcut is not wired to dataset saving",
+      "evidence_level": "Source-confirmed missing handler; native browser behavior not retested",
+      "user_journey": "Use Ctrl+S or Command+S while working with a local document.",
+      "observed": "The reviewed global handler supports dataset Undo/Redo; workspace supports F2. No dataset Save shortcut is wired in these interaction owners. The browser retains its own default behavior.",
+      "user_impact": "A file-centric application leaves a highly familiar saving gesture outside its document model. Native-dialog consequences are not claimed from this source inspection.",
+      "required_outcome": "Implement and advertise a tested Save-file shortcut, with correct modal ownership and native file-picker user activation. Or explicitly explain the unavailable shortcut until supported.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts"
+        }
+      ],
+      "acceptance": "Test Ctrl+S/Command+S with clean, dirty, invalid, pending-composer and modal states using the distributed file in supported browsers.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R15",
+      "severity": "S2",
+      "title": "Legacy issues are truncated without a persistent repair surface",
+      "evidence_level": "Current dataset-open path",
+      "user_journey": "Open a structurally readable imported/legacy dataset with more than three semantic issues.",
+      "observed": "Open summarizes the first three issues, then more issues remain. This text is a transient global message and does not expose the complete issue set with record-level repair targets.",
+      "user_impact": "An engineer cannot determine whether the starting picture is trustworthy or work through the remaining defects.",
+      "required_outcome": "Provide a session-visible, complete, paginated issue list tied to exact records and repair actions. Preserve unrelated work and do not block the whole assessment for unrelated issues.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        }
+      ],
+      "acceptance": "Open a fixture with at least five issues; every issue remains discoverable after another edit and can be traced to its records.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R16",
+      "severity": "S2",
+      "title": "A successful-change error suggests reopening without first protecting work",
+      "evidence_level": "Current shell failure text",
+      "user_journey": "A repository change succeeds but part of the presentation fails to refresh.",
+      "observed": "The message recommends selecting another item or reopening the file. The newly applied work may not yet be saved. Existing discard guards reduce risk; this is not proof of automatic data loss.",
+      "user_impact": "The recommended troubleshooting step can put the user on a path to discard the very change that succeeded.",
+      "required_outcome": "Offer a safe view refresh first. If reopening is necessary, explicitly protect changes with Save a copy before reopening and describe which state will be read.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        }
+      ],
+      "acceptance": "Inject a subscriber/rendering failure after a successful mutation. Recovery instructions and actions preserve applied unsaved data.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R17",
+      "severity": "S2",
+      "title": "Navigation records the outer editor scroll, not the editing body",
+      "evidence_level": "CSS and context capture source; integrated journey still required",
+      "user_journey": "Scroll deeply within a service editor, navigate through a resolved edit, then use Back to restore the editing context.",
+      "observed": "Editing CSS sets the outer editor overflow to hidden and gives .editor-body overflow:auto. Editor viewContext and restoreViewContext use element.scrollTop on the outer editor.",
+      "user_impact": "The advertised return-context restoration omits the actual editing-body scroll position. This can force the user to reconstruct where they were working.",
+      "required_outcome": "Capture and restore the active scroll owner for each inspector/editor mode, after the retained section is laid out. Preserve intentional draft decisions.",
+      "sources": [
+        {
+          "path": "src/ui/app.css",
+          "lines": [
+            790,
+            850
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/app.css#L790-L850"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            1615,
+            1745
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L1615-L1745"
+        },
+        {
+          "path": "src/ui/workspace.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/workspace.ts"
+        }
+      ],
+      "acceptance": "Record inner scrollTop and focused control before a deep-edit navigation. Back restores the correct section, inner scroll and meaningful focus without resurrecting discarded data.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R18",
+      "severity": "S2",
+      "title": "Help and entry documentation retain misleading or implementation-level language",
+      "evidence_level": "Current help/README and rendered headings",
+      "user_journey": "A new solutions engineer follows the bundled instructions to begin a real assessment.",
+      "observed": "Help calls As-Is the saved baseline although it displays current applied unsaved edits. The first-map example says to use a temporary .sqlite location. README Quick start begins with npm install/build. The editor explains metadata, builder choice and completed commands in a long warning-like paragraph.",
+      "user_impact": "The mental model of current/saved/proposed data is wrong, and onboarding still reads partly as instructions for a tester or developer.",
+      "required_outcome": "Define As-Is as current recorded baseline and separately show saved status. Separate a clearly labeled practice tutorial from real-project steps, use an approved durable save location, and lead end users to the packaged HTML rather than a build command.",
+      "sources": [
+        {
+          "path": "src/ui/help.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/help.ts"
+        },
+        {
+          "path": "README.md",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/README.md"
+        },
+        {
+          "path": "src/ui/editor-panel.ts",
+          "lines": [
+            879,
+            901
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/editor-panel.ts#L879-L901"
+        }
+      ],
+      "acceptance": "A first-time user can explain what Apply, Save, As-Is and To-Be mean and can begin a real named enterprise without following developer setup.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R19",
+      "severity": "S2",
+      "title": "A zero-result filter has no dedicated map empty state",
+      "evidence_level": "Current map visibility and empty-hint source",
+      "user_journey": "Combine valid Network and Category filters that match no services in a populated dataset.",
+      "observed": "The map-empty hint is driven by whether any network exists in the full graph, not the filtered visible graph. The scope line remains, but there is no clear No records match / Clear filters state in the empty canvas.",
+      "user_impact": "An empty map can look like missing data rather than an intentionally narrowed scope.",
+      "required_outcome": "Distinguish new dataset, zero filtered results, invalid focus, failed rendering and no dependency links. Give the correct recovery action without rearranging nodes.",
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            665,
+            795
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L665-L795"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            1145,
+            1160
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L1145-L1160"
+        }
+      ],
+      "acceptance": "Each empty state names its cause, offers the appropriate action and preserves saved positions.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    },
+    {
+      "id": "R20",
+      "severity": "S2",
+      "title": "About exposes the database engine version but not the application build",
+      "evidence_level": "Current shell and release metadata",
+      "user_journey": "A user reports a problem from a copied standalone HTML file.",
+      "observed": "About includes SQLite version. The reviewed UI does not show a SIM release/build commit identity. The release download and current main differ substantially.",
+      "user_impact": "Support cannot reliably establish what code the user is running from the in-app information.",
+      "required_outcome": "Show SIM version, build commit/date, data-format version, and a copyable safe support-information summary. Never include inventory contents by default.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        },
+        {
+          "path": "package.json",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/package.json"
+        }
+      ],
+      "acceptance": "The distributed artifact identifies itself accurately even offline, and the identity matches the release manifest/checksum.",
+      "evidence": [],
+      "status": "open",
+      "production_retest": "not run"
+    }
+  ],
+  "capability_gaps": [
+    {
+      "id": "G01",
+      "title": "Evidence and uncertainty belong to the record or connection",
+      "current": "Service descriptions and support notes exist, but Dependency has only endpoints and optional CDS; no source, verification date, assessor or uncertainty state.",
+      "first_day_problem": "I heard that Orders uses Identity, but have not validated it. The diagram has no way to distinguish that from established knowledge.",
+      "minimum": "Optional source/evidence note, observed date and verification state; distinguish unassessed, reported, verified and explicitly confirmed-none without forcing a form-filling exercise.",
+      "sources": [
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        }
+      ]
+    },
+    {
+      "id": "G02",
+      "title": "Capture unresolved observations without inventing topology",
+      "current": "A service requires a network; there is no discovery observation/question item or accountable follow-up record. Organization has name and parent only.",
+      "first_day_problem": "I know a service exists, but not where it runs or which team can validate its dependencies. I must use external notes or create a misleading placeholder network.",
+      "minimum": "A lightweight unassigned-observation / open-question list that can later resolve to real records, with optional responsible contact/team. Unknown must not masquerade as a network or a verified absence.",
+      "sources": [
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        },
+        {
+          "path": "src/ui/forms.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/forms.ts"
+        }
+      ]
+    },
+    {
+      "id": "G03",
+      "title": "Explain why the enterprise needs each service",
+      "current": "Purpose can be free text in description; no structured mission/capability relationship, criticality or required-versus-optional dependency.",
+      "first_day_problem": "Reducing service or cross-network counts cannot tell me whether a proposed consolidation preserves essential capabilities.",
+      "minimum": "Optional purpose/capability and impact tags, criticality with a human-defined scale, and dependency importance. Do not auto-generate a maturity score or invent weights.",
+      "sources": [
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            1215,
+            1262
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L1215-L1262"
+        }
+      ]
+    },
+    {
+      "id": "G04",
+      "title": "A connection needs an explanation, not just endpoints",
+      "current": "A dependency has no independent description, logical interface name, business use, source or validation note. CDS routing is a single optional reference.",
+      "first_day_problem": "The line cannot explain what is exchanged, why the consumer needs it, or what a reviewer should validate.",
+      "minimum": "Optional logical relationship description and evidence. Keep dependency direction distinct from data-flow direction. Preserve service-level scope; no mandatory host/IP inventory or live reachability claim.",
+      "sources": [
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        }
+      ]
+    },
+    {
+      "id": "G05",
+      "title": "Repeatable inventory export and reconciliation",
+      "current": "Import is append-only. Existing names are returned as already present before incoming values are applied. Receipts now exist and are complete; they are not an export of the current inventory.",
+      "first_day_problem": "A corrected spreadsheet from another team cannot update the same inventory cleanly, and I cannot give that team a product-generated current-state table for validation.",
+      "minimum": "Current-state tabular export first, then an explicit field-diff update mode using stable identity across rename/move. No silent overwrite and no delete-by-omission.",
+      "sources": [
+        {
+          "path": "src/import/engine.ts",
+          "lines": [
+            150,
+            230
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/import/engine.ts#L150-L230"
+        },
+        {
+          "path": "src/ui/import-dialog.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/import-dialog.ts"
+        },
+        {
+          "path": "src/ui/import-receipt.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/import-receipt.ts"
+        },
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        }
+      ]
+    },
+    {
+      "id": "G06",
+      "title": "Reproduce a briefing, not merely download a picture",
+      "current": "Positions persist, but MapViewState stores filters/focus/view/viewport in runtime navigation only. Capture takes the current viewport; it is not a durable named view or dated assessment snapshot.",
+      "first_day_problem": "I prepare a boundary view today and must reconstruct it tomorrow. A screenshot cannot establish its evidence date or distinguish the assessment from current later edits.",
+      "minimum": "Small named view definitions and an explicit capture context/date; separate view presets from immutable assessment baselines. Preserve one-click current-view capture.",
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            30,
+            42
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L30-L42"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            843,
+            925
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L843-L925"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            1340,
+            1379
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L1340-L1379"
+        },
+        {
+          "path": "src/domain/types.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts"
+        }
+      ]
+    },
+    {
+      "id": "G07",
+      "title": "Target-network planning is still narrower than network consolidation",
+      "current": "Scenario operations add, retire, merge and rehome services over baseline networks. No scenario-only network or CDS creation/retirement/route authoring is represented by the change union.",
+      "first_day_problem": "A future network that does not yet exist cannot be represented as a purely proposed network without using baseline records as a workaround.",
+      "minimum": "Treat this as a separate scope decision after release defects and evidence capture. Introduce only the target-topology operations demonstrated by a real consolidation journey. Do not advertise a complete migration workbench yet.",
+      "sources": [
+        {
+          "path": "src/domain/types.ts",
+          "lines": [
+            133,
+            185
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/domain/types.ts#L133-L185"
+        }
+      ]
+    }
+  ],
+  "verification_risks": [
+    {
+      "id": "V01",
+      "title": "Higher-marked import preview versus current dataset banners",
+      "level": "Source-observed labeling mismatch; visual/policy acceptance not established",
+      "detail": "The receipt computes a highest recognized incoming marking and displays that value. App banners remain based on the current dataset repository until a commit changes it. Test a synthetic higher-marked rejected/held row over a lower-marked dataset: the modal should clearly identify its handling scope. No data leak or legal/compliance conclusion is asserted.",
+      "sources": [
+        {
+          "path": "src/main.ts",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/main.ts"
+        },
+        {
+          "path": "src/ui/import-dialog.ts",
+          "lines": [
+            346,
+            405
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/import-dialog.ts#L346-L405"
+        },
+        {
+          "path": "src/ui/import-receipt.ts",
+          "lines": [
+            30,
+            51
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/ui/import-receipt.ts#L30-L51"
+        }
+      ]
+    },
+    {
+      "id": "V02",
+      "title": "A restored focused view does not restore its focus-return checkpoint",
+      "level": "Source-state risk; exact end-to-end sequence not executed",
+      "detail": "captureView includes focus but not focusReturn. restoreView restores focus without rebuilding focusReturn. Back-from-focus uses only that separate variable. Verify history sequences that exit focus, then restore an older focused context; the visible return action must not become inert.",
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            464,
+            480
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L464-L480"
+        },
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            1340,
+            1379
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L1340-L1379"
+        }
+      ]
+    },
+    {
+      "id": "V03",
+      "title": "Connection geometry can cross an unrelated network container",
+      "level": "Explicit current display limitation, not a new verified regression",
+      "detail": "applyRouteOffsets considers visible leaves and network heading text, not entire unrelated network containers. README correctly calls it bounded avoidance rather than a full obstacle router. Inspect a seven-network synthetic map for false transit implications. Do not infer network reachability from geometric intersection.",
+      "sources": [
+        {
+          "path": "src/map/map-view.ts",
+          "lines": [
+            797,
+            840
+          ],
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/src/map/map-view.ts#L797-L840"
+        },
+        {
+          "path": "README.md",
+          "lines": null,
+          "url": "https://github.com/SUaDtL/SIM/blob/55986ee2a078ccfdc4f09dbe62ddd7fd5b8f2121/README.md"
+        }
+      ]
+    },
+    {
+      "id": "V04",
+      "title": "Exact-artifact browser and native-file acceptance remains open",
+      "level": "Current-session verification limitation",
+      "detail": "The complete current built application was not available to execute in this audit environment. Current-source traces, component Chromium tests and controlled handler probes are not full app acceptance. Native file picker permission/refusal, reload/close, concurrent writer and recovery-file readback require the actual distributed HTML.",
+      "sources": []
+    }
+  ],
+  "acceptance_journeys": [
+    {
+      "id": "J01",
+      "title": "First-day enterprise setup",
+      "procedure": "Start from the delivered HTML, name the enterprise after entering two services, save, close, reopen, capture a correctly titled view.",
+      "findings": [
+        "R05",
+        "R06",
+        "R18",
+        "R20"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J02",
+      "title": "Capture an uncertain interview fact",
+      "procedure": "Record an unverified dependency, its source and an open ownership question without marking it verified or creating a fake network.",
+      "findings": [
+        "G01",
+        "G02",
+        "G04"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J03",
+      "title": "Apply an unfinished dependency choice",
+      "procedure": "Choose provider/route, skip Add dependency and invoke Apply, Save and Apply-and-continue. The choice is applied or explicitly retained for completion.",
+      "findings": [
+        "R01"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J04",
+      "title": "Apply an unfinished consumer choice",
+      "procedure": "Choose a consuming organization, skip Add consumer, then Save. No successful result silently discards it.",
+      "findings": [
+        "R01"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J05",
+      "title": "Finish or cancel a route task",
+      "procedure": "Choose a new route but do not Use route; navigate, Save, Apply and Cancel. The active route task is consistently resolved.",
+      "findings": [
+        "R02"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J06",
+      "title": "Inspect pending versus saved connection",
+      "procedure": "Inspect newly staged and route-modified rows. The inspector shows their pending state or clearly identified saved state.",
+      "findings": [
+        "R03"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J07",
+      "title": "Remove a map-focus subject",
+      "procedure": "Focus a service, delete/retire/merge it, switch view and return. Remaining map records stay visible and the invalid focus is explained.",
+      "findings": [
+        "R04"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J08",
+      "title": "Nested focus and Back",
+      "procedure": "Enter/exit focus, navigate, use workspace Back and Back from focus. Each visible return action reaches a valid earlier scope.",
+      "findings": [
+        "V02"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J09",
+      "title": "Missing-reference creation and no-match states",
+      "procedure": "Test every picker empty/no-match/create/cancel path, including organization parent and dependency/source service. Text and actions match the task.",
+      "findings": [
+        "R08",
+        "R09"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J10",
+      "title": "Explain the proposed enterprise",
+      "procedure": "Inspect moved, planned, merged and retired services, and follow diagnostics to individual authored changes. No unexplained IDs or dead repair actions.",
+      "findings": [
+        "R10",
+        "R11",
+        "R12"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J11",
+      "title": "Correct an imported enterprise inventory",
+      "procedure": "Reimport updated ownership or descriptions. Present a truthful no-update explanation until an explicit reconciliation mode exists. Export current rows for review.",
+      "findings": [
+        "G05"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J12",
+      "title": "Legacy defects remain repairable",
+      "procedure": "Open five semantic defects, review every issue, perform unrelated work and resume the issue list.",
+      "findings": [
+        "R15"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J13",
+      "title": "Failure after a successful change",
+      "procedure": "Inject renderer failure after commit, protect data, recover the view and save. No misleading rollback or unsafe reopen instruction.",
+      "findings": [
+        "R16"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J14",
+      "title": "Startup failure",
+      "procedure": "Inject SQLite/WASM startup failure in distributed HTML; a visible failure shell and exact build identity survive.",
+      "findings": [
+        "R13",
+        "R20"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J15",
+      "title": "Keyboard Save and deep edit return",
+      "procedure": "Exercise Ctrl/Cmd+S and Back while deep in Support/Connections with populated collections. Restore body scroll/focus.",
+      "findings": [
+        "R14",
+        "R17"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J16",
+      "title": "Explicit empty map states",
+      "procedure": "Empty dataset, zero filtered results, missing focus and render failure each show the right cause/action.",
+      "findings": [
+        "R04",
+        "R19"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J17",
+      "title": "Handling labels on import previews",
+      "procedure": "Use only synthetic data: higher recognized incoming marking, rejected/held rows and unreadable input over a lower-marked dataset. Verify unambiguous preview labels and receipts.",
+      "findings": [
+        "V01"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J18",
+      "title": "Briefing repeatability and route readability",
+      "procedure": "Prepare a seven-network boundary view, inspect complete paths and all omissions, reopen next day and recover the intended view.",
+      "findings": [
+        "G06",
+        "V03"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J19",
+      "title": "Real file and recovery lifecycle",
+      "procedure": "On supported Edge/Chrome offline file://: Save, Save As cancel/refusal, recovery writes/readback, external conflict, reload/close and interrupted work. Record exact methods and untestable denial states.",
+      "findings": [
+        "V04"
+      ],
+      "status": "not run on full production application in this audit"
+    },
+    {
+      "id": "J20",
+      "title": "Delivered bytes and fresh-user task test",
+      "procedure": "Identify checksum/build in the actual downloaded artifact. A solutions engineer unfamiliar with SIM completes setup, edit, inspect and capture without author coaching.",
+      "findings": [
+        "R05",
+        "R20",
+        "V04"
+      ],
+      "status": "not run on full production application in this audit"
+    }
+  ]
+}

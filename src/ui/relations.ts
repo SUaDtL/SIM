@@ -5,6 +5,8 @@ import type { EntityType } from "./forms";
 export interface EntityTarget {
   readonly type: EntityType;
   readonly id: number;
+  /** An exact authored change within a scenario, never an inferred record identity. */
+  readonly changeId?: number;
 }
 
 export interface EntityMatch {

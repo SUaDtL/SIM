@@ -1,0 +1,1459 @@
+
+> sim@0.1.0 check
+> npm run typecheck && npm run lint && npm run format:check && npm run build && npm test && npm run e2e
+
+
+> sim@0.1.0 typecheck
+> tsc --noEmit
+
+
+> sim@0.1.0 lint
+> eslint .
+
+
+> sim@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> sim@0.1.0 build
+> vite build
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./scripts/runtime-notices" without a file extension (vite.config.ts:3:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+vite v8.3.7 building client environment for production...
+transforming...
+✓ 57 modules transformed.
+rendering chunks...
+[plugin vite:singlefile]
+
+[plugin vite:singlefile] Inlining: sim-Dro6FDBM.js
+[plugin vite:singlefile] Inlining: style-C2a6nGyJ.css
+computing gzip size...
+dist/sim.html  1,821.34 kB │ gzip: 704.46 kB
+
+✓ built in 211ms
+
+> sim@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+
+ Test Files  33 passed (33)
+      Tests  393 passed (393)
+   Start at  15:05:19
+   Duration  1.31s (tests 52%, transform 26%, import 20%, worker 2%)
+
+
+> sim@0.1.0 e2e
+> playwright test
+
+
+Running 716 tests using 4 workers
+
+(node:51836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok   3 [msedge] › e2e\action-editor.spec.ts:48:3 › ACT-UX-07 Support confirmation is revealed and focused at 1366 (1.3s)
+  ok   4 [msedge] › e2e\action-map.spec.ts:97:3 › Accepted canvas selection viewport › edge selection pans only the required distance and Back restores the exact earlier viewport (1.2s)
+  ok   2 [msedge] › e2e\acceptance-journeys.spec.ts:46:1 › J1: create network and service with only required inputs, Save file, then reopen (1.7s)
+  ok   6 [msedge] › e2e\action-map.spec.ts:150:3 › Accepted canvas selection viewport › Stay after an actual edge-node click preserves the pending draft and exact viewport (977ms)
+  ok   5 [msedge] › e2e\action-editor.spec.ts:48:3 › ACT-UX-07 Support confirmation is revealed and focused at 320 (1.2s)
+  ok   8 [msedge] › e2e\action-map.spec.ts:234:5 › Find actual actions at 1366px › Find query has a readable text area and remains within the viewport (490ms)
+  ok   7 [msedge] › e2e\acceptance-journeys.spec.ts:73:1 › J2: invalid field keeps staged relationships; valid Apply, Undo and Redo move together (1.3s)
+  ok   9 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Apply keeps the section and visible focus at 1366 (643ms)
+  ok  10 [msedge] › e2e\action-map.spec.ts:250:5 › Find actual actions at 1366px › accepted keyboard Find restores focus to the opened graph or non-map record (520ms)
+  ok  11 [msedge] › e2e\acceptance-journeys.spec.ts:123:1 › AC082: Save file refuses invalid scenario builder, then saves metadata and one change together (812ms)
+  ok  12 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Discard keeps the section and visible focus at 1366 (714ms)
+  ok  13 [msedge] › e2e\action-map.spec.ts:268:5 › Find actual actions at 1366px › input, result keys and inside/outside dismissal preserve reachable focus (924ms)
+  ok  15 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Cancel keeps the section and visible focus at 1366 (674ms)
+  ok  14 [msedge] › e2e\acceptance-journeys.spec.ts:158:1 › J7: projected Find and tap keep baseline, moved, retired and planned identities distinct (1.0s)
+  ok  16 [msedge] › e2e\action-map.spec.ts:341:5 › Find actual actions at 1366px › graph and non-map results open exact typed targets by pointer and keyboard (841ms)
+  ok  17 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Apply keeps the section and visible focus at 1366 (821ms)
+  x    1 [msedge] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata (5.5s)
+  ok  19 [msedge] › e2e\action-map.spec.ts:392:5 › Find actual actions at 1366px › Previous and Next results preserve query, page identities and keyboard reachability (690ms)
+(node:53480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  20 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Discard keeps the section and visible focus at 1366 (846ms)
+  ok  21 [msedge] › e2e\action-map.spec.ts:234:5 › Find actual actions at 320px › Find query has a readable text area and remains within the viewport (529ms)
+  ok  18 [msedge] › e2e\acceptance-journeys.spec.ts:239:1 › AC021: a late older Open candidate cannot replace the newer one (1.8s)
+  ok  22 [msedge] › e2e\action-inspection.spec.ts:26:3 › Help begins at its introductory heading at 1366px and restores its origin (538ms)
+  ok  24 [msedge] › e2e\action-map.spec.ts:250:5 › Find actual actions at 320px › accepted keyboard Find restores focus to the opened graph or non-map record (642ms)
+  ok  23 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Cancel keeps the section and visible focus at 1366 (742ms)
+  ok  26 [msedge] › e2e\action-inspection.spec.ts:26:3 › Help begins at its introductory heading at 320px and restores its origin (410ms)
+  ok  25 [msedge] › e2e\acceptance-journeys.spec.ts:284:1 › AC039: a relevant external relationship change preserves the draft and offers explicit reload (806ms)
+  ok  28 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Apply keeps the section and visible focus at 320 (742ms)
+  ok  27 [msedge] › e2e\action-map.spec.ts:268:5 › Find actual actions at 320px › input, result keys and inside/outside dismissal preserve reachable focus (894ms)
+  ok  29 [msedge] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 1366x900 (734ms)
+  ok  30 [msedge] › e2e\action-navigation.spec.ts:74:1 › More service actions preserves the tab and primary Edit positions (839ms)
+  ok  31 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Discard keeps the section and visible focus at 320 (712ms)
+  ok  33 [msedge] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 320x720 (677ms)
+  ok  32 [msedge] › e2e\action-map.spec.ts:341:5 › Find actual actions at 320px › graph and non-map results open exact typed targets by pointer and keyboard (956ms)
+  ok  35 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Cancel keeps the section and visible focus at 320 (630ms)
+  ok  36 [msedge] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 1366x320 (680ms)
+  ok  34 [msedge] › e2e\action-navigation.spec.ts:87:1 › Create similar Cancel restores the source Support inspector and menu trigger (1.1s)
+  ok  37 [msedge] › e2e\action-map.spec.ts:392:5 › Find actual actions at 320px › Previous and Next results preserve query, page identities and keyboard reachability (709ms)
+  ok  40 [msedge] › e2e\action-shell.spec.ts:16:3 › Import Cancel returns focus to the visible File trigger (480ms)
+  ok  38 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Apply keeps the section and visible focus at 320 (842ms)
+  ok  42 [msedge] › e2e\action-shell.spec.ts:16:3 › Import Escape returns focus to the visible File trigger (373ms)
+  ok  41 [msedge] › e2e\banner.spec.ts:63:1 › shows the highest marking at the top and bottom and follows edits both ways (831ms)
+  ok  39 [msedge] › e2e\action-navigation.spec.ts:108:1 › Nested related-record Back restores the previous query and record within the modal (1.1s)
+  ok  44 [msedge] › e2e\action-shell.spec.ts:16:3 › Import Import returns focus to the visible File trigger (449ms)
+  ok  43 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Discard keeps the section and visible focus at 320 (844ms)
+  ok  47 [msedge] › e2e\action-shell.spec.ts:35:3 › Replacement Stay returns focus to the visible File trigger (509ms)
+  ok  46 [msedge] › e2e\action-navigation.spec.ts:129:3 › Successive service node clicks retain the Connections inspection section (869ms)
+  ok  48 [msedge] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Cancel keeps the section and visible focus at 320 (685ms)
+  ok  49 [msedge] › e2e\action-shell.spec.ts:35:3 › Replacement Escape returns focus to the visible File trigger (476ms)
+  ok  45 [msedge] › e2e\banner.spec.ts:88:1 › adds a caveat after the marking, keeps it through save and reopen, and clears it (1.3s)
+  ok  50 [msedge] › e2e\action-navigation.spec.ts:129:3 › Successive service node clicks retain the Support inspection section (853ms)
+  ok  53 [msedge] › e2e\banner.spec.ts:135:1 › shows TOP SECRET with dark text on orange (442ms)
+  ok  52 [msedge] › e2e\action-shell.spec.ts:35:3 › Replacement Discard all and continue returns focus to the visible File trigger (493ms)
+  ok  51 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 retire Alpha clears only consumed scenario intent (1.0s)
+  ok  56 [msedge] › e2e\action-shell.spec.ts:35:3 › Replacement Save retained returns focus to the visible File trigger (614ms)
+  ok  54 [msedge] › e2e\action-navigation.spec.ts:138:1 › Actual right-edge node click remains visible after opening its inspector without moving the node (865ms)
+  ok  55 [msedge] › e2e\banner.spec.ts:151:1 › opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a demo (1.1s)
+  ok  58 [msedge] › e2e\action-shell.spec.ts:35:3 › Replacement Save declined returns focus to the visible File trigger (650ms)
+  ok  57 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 retire Beta clears only consumed scenario intent (1.2s)
+  ok  61 [msedge] › e2e\action-shell.spec.ts:56:3 › License Escape restores the About origin (438ms)
+  ok  59 [msedge] › e2e\action-navigation.spec.ts:162:3 › F2 preserves Connections editing intent (1.0s)
+  ok  63 [msedge] › e2e\action-shell.spec.ts:56:3 › License Escape restores the Help origin (401ms)
+  ok  60 [msedge] › e2e\connected-acceptance.spec.ts:110:1 › a successful provider child survives a missing parent name and the guarded child Undo (1.4s)
+  ok  65 [msedge] › e2e\action-shell.spec.ts:71:1 › Host-like import opt-in retains keyboard focus and can be reversed with another Space (411ms)
+  ok  62 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 merge Alpha clears only consumed scenario intent (1.1s)
+  ok  64 [msedge] › e2e\action-navigation.spec.ts:162:3 › F2 preserves Support editing intent (901ms)
+  ok  69 [msedge] › e2e\action-navigation.spec.ts:171:1 › Connection inspector editing lands on Connections for the exact consuming service (820ms)
+  ok  68 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 merge Beta clears only consumed scenario intent (981ms)
+  ok  67 [msedge] › e2e\connected-editor-acceptance.spec.ts:87:3 › UX1-003 child Cancel preserves the complete parent draft, scroll and invoking focus without history (1.4s)
+  ok  70 [msedge] › e2e\action-navigation.spec.ts:184:1 › Return to results restores a visible map search control (746ms)
+  ok  71 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 rehome Alpha clears only consumed scenario intent (1.0s)
+  ok  72 [msedge] › e2e\connected-editor-acceptance.spec.ts:87:3 › UX1-003 child Escape preserves the complete parent draft, scroll and invoking focus without history (1.2s)
+  ok  73 [msedge] › e2e\action-navigation.spec.ts:191:1 › Successful deletion moves focus to current results and remains undoable (847ms)
+  ok  66 [msedge] › e2e\connected-acceptance.spec.ts:151:1 › initial service relations commit together and created reference IDs survive UI save and reopen (2.8s)
+  ok  74 [msedge] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 rehome Beta clears only consumed scenario intent (1.0s)
+  ok  75 [msedge] › e2e\connected-editor-acceptance.spec.ts:151:1 › UX1-017 an edited child succeeds only after its fresh exact warning is reviewed and confirmed (904ms)
+  ok  78 [msedge] › e2e\action-editor.spec.ts:141:1 › ACT-UX-10 scenario guidance names immediate Add Remove and Undo boundaries (504ms)
+  ok  77 [msedge] › e2e\connected-acceptance.spec.ts:250:1 › network and CDS reverse lists distinguish membership from boundary routes and navigate the recorded owner (838ms)
+  ok  76 [msedge] › e2e\action-navigation.spec.ts:205:1 › Workspace draft Escape retains the current record, draft and retry focus (980ms)
+  ok  79 [msedge] › e2e\connected-editor-acceptance.spec.ts:187:1 › UX3-001 populated outgoing, incoming and organization relations have distinct semantic headings (546ms)
+  ok  80 [msedge] › e2e\action-editor.spec.ts:153:1 › ACT-UX-11 blocked deletion disables confirmation while inspection and cancellation work (767ms)
+  ok  82 [msedge] › e2e\connected-editor.spec.ts:65:3 › changed support note cannot reuse an old sensitive acknowledgement (second.example.test) (914ms)
+  ok  84 [msedge] › e2e\action-editor.spec.ts:170:1 › ACT-COV-01 actual network edit footer Add service respects draft choice and destination (1.0s)
+  ok  83 [msedge] › e2e\connected-focus.spec.ts:165:3 › network focus preserves complete routes, full marking and return context at 1600px (1.3s)
+  ok  81 [msedge] › e2e\connected-acceptance.spec.ts:283:1 › CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft (1.8s)
+  ok  85 [msedge] › e2e\connected-editor.spec.ts:65:3 › changed support note cannot reuse an old sensitive acknowledgement (Ordinary synthetic support note) (929ms)
+  ok  89 [msedge] › e2e\connected-editor.spec.ts:107:1 › inline network and provider creation retain a new service draft (869ms)
+  ok  87 [msedge] › e2e\connected-focus.spec.ts:165:3 › network focus preserves complete routes, full marking and return context at 1024px (1.2s)
+  ok  86 [msedge] › e2e\connected-navigation-acceptance.spec.ts:133:1 › two Back hops restore each service and organization context plus the originating editor control focus (1.2s)
+  ok  88 [msedge] › e2e\connected-acceptance.spec.ts:341:1 › an invalid initial route rolls back the service and all staged relations while retaining the full draft (1.8s)
+  ok  90 [msedge] › e2e\connected-editor.spec.ts:137:1 › Cancel child preserves parent and creates no history; Cancel parent leaves explicit children (885ms)
+  ok  91 [msedge] › e2e\connected-focus.spec.ts:235:1 › directional focus expands explicitly without data writes or position changes (923ms)
+  ok  92 [msedge] › e2e\connected-navigation-acceptance.spec.ts:183:1 › Stay from an ordinary list click and physical map tap preserves the complete dirty navigation context (1.1s)
+  ok  95 [msedge] › e2e\connected-focus.spec.ts:267:1 › both CDS segments open the same owning connection inspector without writing (718ms)
+  ok  93 [msedge] › e2e\connected-acceptance.spec.ts:393:1 › editing an incoming dependency guards the dirty provider and opens its actual consumer owner (1.4s)
+  ok  94 [msedge] › e2e\connected-editor.spec.ts:169:1 › new service stages app category support and consumption before first Add and saves their IDs (1.5s)
+  ok  99 [msedge] › e2e\connected-editor.spec.ts:216:1 › inline creation keeps explicit service defaults and parked relation-only intent (1.1s)
+  ok  97 [msedge] › e2e\connected-focus.spec.ts:290:1 › projected focused routes remain read-only and retain full marking in To-Be and Compare capture (2.2s)
+  ok  98 [msedge] › e2e\connected-acceptance.spec.ts:426:1 › one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together (2.2s)
+  ok 100 [msedge] › e2e\connected-editor.spec.ts:250:1 › route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing (1.1s)
+  ok 101 [msedge] › e2e\connected-focus.spec.ts:341:1 › cancelled captures restore visible status and retain the active draft (857ms)
+  ok 102 [msedge] › e2e\connected-navigation.spec.ts:101:1 › partial Find keeps duplicate services and cross-type names distinct with keyboard selection (558ms)
+  ok 103 [msedge] › e2e\connected-editor.spec.ts:297:1 › child host warning is withdrawn after edits without applying the parent (629ms)
+  ok 104 [msedge] › e2e\connected-focus.spec.ts:363:1 › unresolved projected connection inspector preserves former CDS provenance (623ms)
+  ok 105 [msedge] › e2e\connected-navigation.spec.ts:125:1 › reference peek preserves scalar and support draft, returns focus, and adds no history (798ms)
+  ok 107 [msedge] › e2e\connected-focus.spec.ts:381:1 › projection layout handles newly planned nodes hidden by a strict inventory filter without writes (666ms)
+  ok 106 [msedge] › e2e\connected-editor.spec.ts:316:1 › unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh (981ms)
+  ok 108 [msedge] › e2e\connected-navigation.spec.ts:154:1 › accepted Back restores prior service, list filter and map framing without Undo (768ms)
+  ok 110 [msedge] › e2e\connected-projection.spec.ts:64:1 › projected Find distinguishes a planned service from its same-named baseline peer (581ms)
+  x   96 [msedge] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections (5.5s)
+(node:39148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 111 [msedge] › e2e\connected-navigation.spec.ts:185:1 › Stay rejects a Find request before selection, filters, chain or framing change (821ms)
+  ok 112 [msedge] › e2e\connected-projection.spec.ts:86:1 › Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter (651ms)
+  ok 109 [msedge] › e2e\connected-focus.spec.ts:408:1 › capture current view keeps a dirty draft, while failed Apply and capture keeps the applied history (1.4s)
+  ok 115 [msedge] › e2e\connected-projection.spec.ts:118:1 › switching View closes the old projected inspector with an actionable current-view message (638ms)
+  ok 113 [msedge] › e2e\connected-navigation.spec.ts:212:1 › Back Stay keeps the current dirty record and an accepted discard returns correctly (938ms)
+  ok 116 [msedge] › e2e\connected-focus.spec.ts:452:1 › explicit keyboard editing keeps Apply reachable at laptop width and returns to the map (735ms)
+  ok 117 [msedge] › e2e\connected-projection.spec.ts:129:1 › Back from a baseline record restores the planned origin and Compare context (687ms)
+  ok 114 [msedge] › e2e\connected-ux.spec.ts:7:1 › UX0-003 Find Stay preserves the filter and pending form (1.3s)
+  ok 119 [msedge] › e2e\connected-focus.spec.ts:477:1 › foundational summary counts the routes actually hidden after chain reveal (663ms)
+  ok 118 [msedge] › e2e\connected-navigation.spec.ts:231:1 › non-map references expose separate recorded reverse roles and application/category membership (927ms)
+  ok 122 [msedge] › e2e\csp.spec.ts:18:1 › ships the CON-006 Content Security Policy and boots under it with no violations (278ms)
+  ok 124 [msedge] › e2e\csp.spec.ts:39:1 › the policy blocks network access from inside the page (263ms)
+  ok 121 [msedge] › e2e\connected-ux.spec.ts:39:1 › UX2 partial Find offers explicit results and a useful no-results state (737ms)
+  ok 120 [msedge] › e2e\connected-projection.spec.ts:148:1 › Undo removing a UI-created planned origin closes its inspector and removes the stale Find target (1.1s)
+  ok 123 [msedge] › e2e\connected-navigation.spec.ts:257:1 › existing-network guidance and normalized unchanged Apply preserve the saved checkpoint (773ms)
+  ok 125 [msedge] › e2e\dataset-file.spec.ts:37:3 › without the File System Access API (download/upload fallback) › opens an uploaded dataset and saves it as a download that reopens identically (580ms)
+  ok 129 [msedge] › e2e\dataset-file.spec.ts:58:3 › without the File System Access API (download/upload fallback) › shows a readable error for a file that is not a dataset and keeps the current one (412ms)
+  ok 126 [msedge] › e2e\delete-consequences.spec.ts:123:3 › service delete names its actual consequences and Undo restores them (1.1s)
+  ok 128 [msedge] › e2e\connected-navigation.spec.ts:273:1 › Find Apply and continue commits once before revealing the accepted typed target (831ms)
+  ok 130 [msedge] › e2e\dataset-file.spec.ts:69:3 › without the File System Access API (download/upload fallback) › New asks for a name and starts an unsaved dataset (371ms)
+  ok 127 [msedge] › e2e\connected-projection.spec.ts:176:1 › a late old Back decision cannot reopen an old target after Open installs a different dataset (1.4s)
+  ok 132 [msedge] › e2e\editor-external-deletion.spec.ts:21:1 › AC039: an external deletion keeps the pending draft until its targeted close (346ms)
+  ok 133 [msedge] › e2e\dataset-file.spec.ts:76:3 › without the File System Access API (download/upload fallback) › Save file applies an active draft and requests a download in one action (466ms)
+  ok 131 [msedge] › e2e\delete-consequences.spec.ts:123:3 › organization delete names its actual consequences and Undo restores them (911ms)
+  ok 135 [msedge] › e2e\entry-ui.spec.ts:139:1 › switches inventory and map, hides the empty inspector and collapses the list (392ms)
+  ok 134 [msedge] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (572ms)
+  ok 136 [msedge] › e2e\dataset-file.spec.ts:94:3 › without the File System Access API (download/upload fallback) › an invalid Open candidate leaves a pending draft intact without a discard decision (442ms)
+  ok 139 [msedge] › e2e\editor-rhythm.spec.ts:57:1 › a populated single page stays searchable and distinguishes no matches from no relationships (579ms)
+  ok 140 [msedge] › e2e\dataset-file.spec.ts:108:3 › without the File System Access API (download/upload fallback) › a valid New candidate offers Stay and Discard for a pending draft (542ms)
+  ok 137 [msedge] › e2e\delete-consequences.spec.ts:123:3 › CDS delete names its actual consequences and Undo restores them (933ms)
+  ok 143 [msedge] › e2e\delete-consequences.spec.ts:123:3 › category delete names its actual consequences and Undo restores them (881ms)
+  ok 141 [msedge] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (1.2s)
+  ok 145 [msedge] › e2e\editor-rhythm.spec.ts:115:1 › a new service explains its Add action rather than applying an existing record (631ms)
+  ok 144 [msedge] › e2e\delete-consequences.spec.ts:123:3 › application delete names its actual consequences and Undo restores them (883ms)
+  ok 142 [msedge] › e2e\dataset-file.spec.ts:166:3 › with the File System Access API (save in place) › Save writes back to the opened file and Save As writes to a new file (2.1s)
+  ok 146 [msedge] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (709ms)
+  ok 148 [msedge] › e2e\dataset-file.spec.ts:183:3 › with the File System Access API (save in place) › does not touch browser storage (373ms)
+  ok 147 [msedge] › e2e\delete-consequences.spec.ts:123:3 › scenario delete names its actual consequences and Undo restores them (900ms)
+  ok 150 [msedge] › e2e\dataset-file.spec.ts:195:3 › with the File System Access API (save in place) › canceling the first native save leaves the draft unapplied (368ms)
+  ok 149 [msedge] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (774ms)
+  ok 152 [msedge] › e2e\dataset-file.spec.ts:211:3 › with the File System Access API (save in place) › a denied native picker reports failure without applying the draft (386ms)
+  ok 154 [msedge] › e2e\dataset-file.spec.ts:225:3 › with the File System Access API (save in place) › editing during a pending native picker does not save a substituted draft (408ms)
+  ok 138 [msedge] › e2e\entry-ui.spec.ts:154:1 › creates every entity type, edits one field and keeps the rest (4.5s)
+  ok 153 [msedge] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (645ms)
+  ok 151 [msedge] › e2e\delete-consequences.spec.ts:143:1 › Cancel and blocked delete preserve a dirty draft; completed delete discards only that draft (1.2s)
+  ok 157 [msedge] › e2e\file-size.spec.ts:8:3 › native oversized Open refuses before reading and preserves the pending draft (425ms)
+  ok 155 [msedge] › e2e\dataset-file.spec.ts:255:3 › with the File System Access API (save in place) › Save and continue persists the old pending draft before installing New (1.1s)
+  ok 159 [msedge] › e2e\file-size.spec.ts:8:3 › fallback oversized Open refuses before reading and preserves the pending draft (429ms)
+  ok 158 [msedge] › e2e\delete-consequences.spec.ts:181:1 › a changed deletion plan is rechecked before confirmation (899ms)
+  ok 161 [msedge] › e2e\file-size.spec.ts:52:1 › the shipped standalone licenses are readable offline and close back to the workspace (437ms)
+  ok 160 [msedge] › e2e\dataset-file.spec.ts:274:3 › with the File System Access API (save in place) › a native write failure retains the applied change for Undo and retry (522ms)
+  ok 164 [msedge] › e2e\dataset-file.spec.ts:294:3 › with the File System Access API (save in place) › a canceled native write reports that Apply already succeeded (468ms)
+  ok 163 [msedge] › e2e\history.spec.ts:127:1 › undoes and redoes edits with buttons and keys, and rebuilds the open form (666ms)
+  ok 162 [msedge] › e2e\delete-consequences.spec.ts:208:1 › Find and map tap resolve a dirty editor while view-only actions keep its input (1.7s)
+  ok 165 [msedge] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (915ms)
+  ok 166 [msedge] › e2e\history.spec.ts:161:1 › undoes a drag, a Re-layout and an added service by putting the map back (1.3s)
+  ok 167 [msedge] › e2e\import.spec.ts:101:1 › imports the demo enterprise's CSV files into an empty dataset as one undo step, laid out (777ms)
+  ok 168 [msedge] › e2e\import-receipt.spec.ts:90:1 › uncommitted retries retain the last receipt and replacing the dataset clears it (996ms)
+  ok 170 [msedge] › e2e\import.spec.ts:124:1 › Cancel writes nothing, and the preview follows the host-data choice (462ms)
+  ok 171 [msedge] › e2e\interaction-layout.spec.ts:7:1 › document menu labels share a readable left edge instead of floating by word length (294ms)
+  ok 156 [msedge] › e2e\entry-ui.spec.ts:188:1 › deletes with an in-panel confirmation and refuses to delete a network in use (4.4s)
+  ok 169 [msedge] › e2e\history.spec.ts:200:1 › asks before New, Open or closing would discard edits, and not for an untouched dataset (1.0s)
+  ok 172 [msedge] › e2e\import.spec.ts:151:1 › selecting a new file immediately invalidates the previous import preview (422ms)
+  ok 173 [msedge] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 1366px (363ms)
+  ok 176 [msedge] › e2e\import.spec.ts:178:1 › late file reads cannot replace a newer preview or reopen a closed import (427ms)
+  ok 177 [msedge] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 1024px (358ms)
+  ok 175 [msedge] › e2e\history.spec.ts:236:1 › finds a node by name, clearing a filter that hides it (632ms)
+  ok 179 [msedge] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 768px (373ms)
+  ok 178 [msedge] › e2e\import.spec.ts:229:1 › undo inside the dialog does nothing, and one undo after an import removes only the import (677ms)
+  ok 180 [msedge] › e2e\inventory-flow.spec.ts:28:1 › populated inventory opens directly on structured services with exact network scope (579ms)
+  ok 181 [msedge] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 390px (345ms)
+  ok 184 [msedge] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 320px (358ms)
+  ok 182 [msedge] › e2e\import.spec.ts:260:1 › downloads a template with a byte-order mark, its columns and an example row (527ms)
+  ok 183 [msedge] › e2e\inventory-flow.spec.ts:49:1 › inventory keeps each type's query, page and scope when returning to browse (676ms)
+  ok 185 [msedge] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 1366px (525ms)
+  ok 188 [msedge] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 1024px (504ms)
+  ok 187 [msedge] › e2e\inventory-flow.spec.ts:71:1 › row selection and Back retain the browse position and focus without an edit (796ms)
+  ok 186 [msedge] › e2e\layout-quality.spec.ts:131:1 › keeps a spike-sized map readable: few crossings and label overlaps, no overlapping networks (1.4s)
+  ok 189 [msedge] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 768px (495ms)
+  ok 190 [msedge] › e2e\inventory-flow.spec.ts:101:1 › new dataset clears the previous session's browse cache (602ms)
+  ok 192 [msedge] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 390px (533ms)
+  ok 194 [msedge] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 320px (507ms)
+  ok 193 [msedge] › e2e\inventory-flow.spec.ts:117:1 › Find reveals an excluded typed service and Back restores the complete inventory scope (921ms)
+  ok 191 [msedge] › e2e\layout-quality.spec.ts:193:1 › hides unreadably small service labels until hovered or zoomed into (1.5s)
+  ok 195 [msedge] › e2e\map-find-dismissal.spec.ts:25:1 › Find dismisses on another action while retaining the query and target focus (494ms)
+  ok 196 [msedge] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 1366px (746ms)
+  ok 197 [msedge] › e2e\map.spec.ts:197:1 › draws networks as containers, the external zone, CDS between networks and classified edges (502ms)
+  ok 198 [msedge] › e2e\map-find-dismissal.spec.ts:38:1 › Find dismisses on a genuine outside canvas press and another popup (592ms)
+  ok 174 [msedge] › e2e\entry-ui.spec.ts:210:1 › edits support tiers, consumers and dependencies on a service (5.8s)
+  ok 199 [msedge] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 320px (727ms)
+  ok 201 [msedge] › e2e\map-find-dismissal.spec.ts:57:1 › Escape from Find results closes the transient surface and returns focus to the query (515ms)
+  ok 200 [msedge] › e2e\map.spec.ts:232:1 › pans and zooms, fits everything into view and uses the full map work surface (844ms)
+  ok 203 [msedge] › e2e\market-map.spec.ts:75:1 › live map explains direction, uncertainty and the actually omitted foundational dependency (595ms)
+  ok 204 [msedge] › e2e\map-find-dismissal.spec.ts:81:1 › Find keeps its input and results one boundary for keyboard and pointer activation (552ms)
+  ok 207 [msedge] › e2e\market-workspace.spec.ts:29:1 › first-use Help explains the offline workflow and preserves a pending draft (375ms)
+  ok 206 [msedge] › e2e\market-map.spec.ts:95:1 › detached SVG preserves omission and connectivity qualification with presentation-sized annotations (634ms)
+  ok 208 [msedge] › e2e\market-workspace.spec.ts:48:1 › host-like New dataset name requires acknowledgement before resolving or losing the current draft (428ms)
+  ok 205 [msedge] › e2e\map.spec.ts:258:1 › updates as data is edited and opens a tapped node in the editor (1.4s)
+  ok 209 [msedge] › e2e\market-map.spec.ts:118:1 › the collinear direct external route avoids unrelated service and CDS nodes without moving them (614ms)
+  ok 210 [msedge] › e2e\market-workspace.spec.ts:71:1 › a confirmed host-like name is the exact dataset name saved and reopened (500ms)
+  ok 211 [msedge] › e2e\map.spec.ts:297:1 › shows a hint instead of an empty map for a new dataset (357ms)
+  ok 212 [msedge] › e2e\market-map.spec.ts:160:1 › a bent direct route stays clear of network headings and markings (609ms)
+  ok 213 [msedge] › e2e\market-workspace.spec.ts:103:1 › qualified editing identity stays visible across Support, Connections and copy destination (892ms)
+  ok 215 [msedge] › e2e\market-map.spec.ts:192:1 › a detached focus capture explains its scope once (658ms)
+  ok 216 [msedge] › e2e\market-workspace.spec.ts:132:1 › projected service summary counts incoming and outgoing dependencies separately (550ms)
+  ok 214 [msedge] › e2e\map.spec.ts:306:1 › hides links to foundational services until asked, without moving anything (1.3s)
+  ok 219 [msedge] › e2e\offline-boot.spec.ts:12:1 › boots SQLite offline from file:// with no network requests or errors (258ms)
+  ok 217 [msedge] › e2e\menu-dismissal.spec.ts:23:1 › map menus replace each other and dismiss on another action or the canvas (660ms)
+  ok 218 [msedge] › e2e\map.spec.ts:396:1 › lays out an unarranged dataset once and reopens a saved one exactly as it was (789ms)
+  ok 202 [msedge] › e2e\entry-ui.spec.ts:271:1 › a new service takes its network's marking and success is not shown as an error (4.4s)
+  ok 221 [msedge] › e2e\menu-dismissal.spec.ts:45:1 › document and map menus share dismissal without taking focus from the next control (624ms)
+  ok 220 [msedge] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished consumer choice until explicitly finished (1.1s)
+  ok 223 [msedge] › e2e\entry-ui.spec.ts:290:1 › shows field errors and saves host-like text only after Save anyway (671ms)
+  ok 224 [msedge] › e2e\menu-dismissal.spec.ts:64:1 › filter input stays usable while keyboard focus leaving a menu dismisses it (583ms)
+  ok 227 [msedge] › e2e\menu-dismissal.spec.ts:86:1 › menu actions dismiss after activation while cancelled layout and SVG download still work (594ms)
+  ok 222 [msedge] › e2e\map.spec.ts:415:1 › saves where services and networks are dragged (1.6s)
+  ok 225 [msedge] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished dependency choice until explicitly finished (1.1s)
+  ok 228 [msedge] › e2e\menu-dismissal.spec.ts:105:1 › dynamically rendered record and edit menus dismiss without losing a draft (746ms)
+  ok 229 [msedge] › e2e\map.spec.ts:456:1 › places new services and networks without moving anything already placed (924ms)
+  ok 230 [msedge] › e2e\readiness-editor.spec.ts:127:5 › R01 Add consumer preserves the other unfinished connection choice (994ms)
+  ok 231 [msedge] › e2e\menu-dismissal.spec.ts:136:1 › connection menus replace each other and keep the chosen staged action (697ms)
+  ok 234 [msedge] › e2e\menu-dismissal.spec.ts:162:1 › inline disclosures remain open while floating menus yield to modal tasks (568ms)
+  ok 233 [msedge] › e2e\readiness-editor.spec.ts:127:5 › R01 Cancel consumer preserves the other unfinished connection choice (982ms)
+  ok 232 [msedge] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves (1.1s)
+  ok 235 [msedge] › e2e\menu-dismissal.spec.ts:178:1 › route editing continues outside its closed action menu and Cancel restores the trigger (737ms)
+  ok 237 [msedge] › e2e\map.spec.ts:531:1 › re-lays out the whole map only after confirming (999ms)
+  ok 236 [msedge] › e2e\readiness-editor.spec.ts:127:5 › R01 Add dependency preserves the other unfinished connection choice (1.1s)
+  ok 238 [msedge] › e2e\menu-dismissal.spec.ts:201:1 › edit-footer deletion exposes its confirmation outside the closed menu and keeps Cancel safe (765ms)
+  ok 226 [msedge] › e2e\entry-ui.spec.ts:313:1 › keeps typed text across relationship edits and marks the dataset unsaved (4.3s)
+  ok 239 [msedge] › e2e\map.spec.ts:564:1 › highlights everything that chains to a tapped node, with its foundational links (812ms)
+  ok 240 [msedge] › e2e\readiness-editor.spec.ts:127:5 › R01 Cancel dependency preserves the other unfinished connection choice (1.1s)
+  ok 241 [msedge] › e2e\readiness-map.spec.ts:87:1 › R04 deleting the focused service ends focus without hiding the remaining map or changing positions (1.0s)
+  ok 245 [msedge] › e2e\readiness-map.spec.ts:127:1 › R04 removing an isolated focus subject restores the unfocused viewport so remaining services are on screen (772ms)
+  ok 244 [msedge] › e2e\readiness-editor.spec.ts:150:1 › R02 a changed open route blocks parent Apply until Use route or Cancel route (985ms)
+  ok 243 [msedge] › e2e\map.spec.ts:598:1 › keeps the chain through drags and edits and clears it when its start is deleted (1.4s)
+  ok 246 [msedge] › e2e\readiness-map.spec.ts:164:1 › R04 restoring navigation history for a deleted focus subject uses its unfocused checkpoint (948ms)
+  ok 247 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Save retains unfinished consumer and independent metadata (1.0s)
+  ok 248 [msedge] › e2e\map.spec.ts:630:1 › filters by network, category and organization without moving anything or writing (1.3s)
+  ok 249 [msedge] › e2e\readiness-map.spec.ts:191:3 › R04 Retire caller projection exits unavailable focus and leaves current services reachable (789ms)
+  ok 250 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and continue retains unfinished consumer and independent metadata (1.1s)
+  ok 252 [msedge] › e2e\readiness-map.spec.ts:191:3 › R04 Merge caller projection exits unavailable focus and leaves current services reachable (756ms)
+  ok 251 [msedge] › e2e\map.spec.ts:683:1 › exports the current view as a PNG framed by the classification banner, without writing (1.0s)
+  ok 254 [msedge] › e2e\readiness-map.spec.ts:214:1 › R19 zero filter matches has a clear recovery action preserving viewport, arrangement and file state (746ms)
+  ok 253 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and capture retains unfinished consumer and independent metadata (1.1s)
+  ok 242 [msedge] › e2e\entry-ui.spec.ts:330:1 › saves entered data, opens another file without errors and reopens the saved one (5.1s)
+  ok 255 [msedge] › e2e\map.spec.ts:757:1 › keeps an export busy through repository refresh and recovers from a synchronous render failure (1.3s)
+  ok 256 [msedge] › e2e\readiness-map.spec.ts:234:1 › R19 an empty dataset asks for a network while services without dependencies remain visible and capturable (716ms)
+  ok 257 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Save retains unfinished dependency and independent metadata (1.0s)
+  ok 258 [msedge] › e2e\entry-ui.spec.ts:368:1 › a new service named Identity or DNS starts out foundational unless the user chose otherwise (1.1s)
+  ok 259 [msedge] › e2e\map.spec.ts:835:1 › delivers a frozen PNG with the original dataset name after replacing the dataset (951ms)
+  ok 260 [msedge] › e2e\readiness-map.spec.ts:260:1 › V02 workspace Back restores a focused view together with a working Back from focus checkpoint (854ms)
+  ok 262 [msedge] › e2e\readiness-scenario.spec.ts:49:1 › R11 each responsible scenario change has an exact readable review destination (821ms)
+  ok 261 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and continue retains unfinished dependency and independent metadata (1.2s)
+  ok 264 [msedge] › e2e\readiness-map.spec.ts:284:1 › V03 seven-network geometry preserves the one recorded relationship even when a line crosses another container (896ms)
+  ok 265 [msedge] › e2e\readiness-scenario.spec.ts:80:1 › R10 projected connection origins link to each exact responsible change (982ms)
+  ok 263 [msedge] › e2e\map.spec.ts:889:1 › exports the current view as SVG with the banner, every label and the highlight, without writing (1.5s)
+  ok 267 [msedge] › e2e\readiness-shell.spec.ts:32:1 › R06 document rename preserves inventory, classification and saved-file readback with Undo (670ms)
+  ok 266 [msedge] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and capture retains unfinished dependency and independent metadata (1.1s)
+  ok 270 [msedge] › e2e\readiness-shell.spec.ts:51:1 › R07 unassigned provider is identified as unrecorded (481ms)
+  ok 269 [msedge] › e2e\recovery.spec.ts:49:1 › refuses external changes, retains work, and saves to a separate target (567ms)
+  ok 268 [msedge] › e2e\readiness-scenario.spec.ts:107:1 › R12 a fresh scenario builder has no arbitrary operation or record selected (714ms)
+  ok 272 [msedge] › e2e\readiness-shell.spec.ts:57:1 › R09 no-create dependency picker does not promise an unavailable creation action (649ms)
+  ok 271 [msedge] › e2e\readiness-editor.spec.ts:220:1 › R02 Save and navigation preserve an unfinished route; Cancel route restores the original (955ms)
+  ok 275 [msedge] › e2e\readiness-shell.spec.ts:72:1 › R14 Save shortcut applies and downloads the active draft, but a modal owns the shortcut (675ms)
+  ok 276 [msedge] › e2e\readiness-editor.spec.ts:245:1 › R02 unfinished route remains visible across another relationship addition (1.1s)
+  ok 274 [msedge] › e2e\readiness-scenario.spec.ts:125:1 › R12 large scenario changes and qualified record choices are searchable and bounded (2.0s)
+  ok 277 [msedge] › e2e\readiness-shell.spec.ts:95:1 › R15 all legacy issues remain available after unrelated edits and repair links identify records (810ms)
+  ok 280 [msedge] › e2e\reference-picker-component.spec.ts:107:1 › component: 500 records stay bounded and duplicate names choose the exact keyboard-selected identity (218ms)
+  ok 279 [msedge] › e2e\readiness-shell.spec.ts:115:1 › R16 failed presentation protects successful unsaved change and offers safe view refresh (769ms)
+  ok 278 [msedge] › e2e\readiness-editor.spec.ts:266:1 › R03 changed staged route is pending; applied inspection matches the saved state (1.2s)
+  ok 282 [msedge] › e2e\readiness-shell.spec.ts:150:1 › R18 Help distinguishes current recorded baseline from file saving and real-project storage (485ms)
+  ok 281 [msedge] › e2e\reference-picker-component.spec.ts:130:1 › component: every result page is reachable and the last page retains exact values (1.0s)
+  ok 285 [msedge] › e2e\reference-picker-component.spec.ts:142:1 › component: search blur and Escape do not assign or create anything (223ms)
+  ok 283 [msedge] › e2e\readiness-editor.spec.ts:288:1 › R03 newly staged connection inspection shows pending state and its chosen route (913ms)
+  ok 284 [msedge] › e2e\readiness-shell.spec.ts:159:1 › R20 offline About identifies application version, source build and data format without inventory contents (502ms)
+  ok 288 [msedge] › e2e\readiness-shell.spec.ts:172:1 › R13 WASM startup rejection leaves an accessible failure shell and build identity (248ms)
+  ok 286 [msedge] › e2e\reference-picker-component.spec.ts:158:1 › component: child back preserves query and validation keeps raw parent until explicit Create and use (470ms)
+  ok 290 [msedge] › e2e\reference-picker-component.spec.ts:180:1 › component: a removed candidate cannot silently assign or fall back to another option (223ms)
+  ok 287 [msedge] › e2e\readiness-editor.spec.ts:305:1 › R08 shared parent creation names the organization being edited (813ms)
+  ok 289 [msedge] › e2e\readiness-shell.spec.ts:186:1 › V01 higher-marked held rows have explicit preview handling distinct from current dataset marking (557ms)
+  ok 273 [msedge] › e2e\recovery.spec.ts:66:1 › recovery preserves applied content, excludes draft text, and reopens after reload (4.8s)
+  ok 291 [msedge] › e2e\reference-picker-component.spec.ts:192:1 › component: stale ownership and a completion after close never assign another session's identity (308ms)
+  ok 295 [msedge] › e2e\review-expectations.spec.ts:22:1 › Add service inherits the active non-first network and marking (542ms)
+  ok 293 [msedge] › e2e\readiness-shell.spec.ts:207:3 › R14 Control+S saves clean state and retains invalid input without a download (714ms)
+  ok 292 [msedge] › e2e\readiness-editor.spec.ts:325:1 › R10 projected service exposes purpose provider support and named before-after context (872ms)
+  ok 296 [msedge] › e2e\review-expectations.spec.ts:32:1 › All networks keeps general creation defaults and scoped creation respects Stay (661ms)
+  ok 297 [msedge] › e2e\readiness-shell.spec.ts:207:3 › R14 Meta+S saves clean state and retains invalid input without a download (659ms)
+  ok 294 [msedge] › e2e\recovery.spec.ts:123:1 › rejects file aliases and retains a failed recovery for retry (1.4s)
+  ok 298 [msedge] › e2e\readiness-editor.spec.ts:360:3 › R10 Beta has qualified read-only proposed or historical details (770ms)
+  ok 301 [msedge] › e2e\recovery.spec.ts:151:1 › Stop recovery cancels a selection whose file read is still pending (465ms)
+  ok 299 [msedge] › e2e\review-expectations.spec.ts:50:3 › read-summary Delete Cancel removes each dialog and restores its visible trigger (737ms)
+  ok 300 [msedge] › e2e\readiness-shell.spec.ts:232:1 › R15 issue pagination preserves complete access and enabled keyboard focus at boundaries (751ms)
+  ok 302 [msedge] › e2e\readiness-editor.spec.ts:360:3 › R10 Gamma has qualified read-only proposed or historical details (719ms)
+  ok 304 [msedge] › e2e\review-expectations.spec.ts:50:3 › read-summary Delete Escape removes each dialog and restores its visible trigger (681ms)
+  ok 306 [msedge] › e2e\readiness-editor.spec.ts:360:3 › R10 Delta has qualified read-only proposed or historical details (724ms)
+  ok 303 [msedge] › e2e\route-diagnostics.spec.ts:11:1 › incoming rehome and CDS membership refusals link to exact owners without losing drafts (1.2s)
+  ok 305 [msedge] › e2e\readiness-shell.spec.ts:250:1 › J01 renamed populated enterprise saves, reopens and captures the current title (1.3s)
+  ok 307 [msedge] › e2e\review-expectations.spec.ts:74:1 › staged relationship search indexes domain labels and context rather than actions (703ms)
+  ok 308 [msedge] › e2e\readiness-editor.spec.ts:386:1 › R10 removed service connection is explicitly recorded history, never a pending edit (742ms)
+  ok 309 [msedge] › e2e\scenario-builder.spec.ts:45:1 › unadded scenario intent is protected on navigation and can be discarded (873ms)
+  ok 311 [msedge] › e2e\session-import-journeys.spec.ts:46:1 › J3: invalid and late Open candidates preserve a pending draft until a reviewed replacement wins (902ms)
+  ok 312 [msedge] › e2e\readiness-editor.spec.ts:409:1 › R17 Back restores the actual editor body scroll after deep Support navigation (718ms)
+  ok 310 [msedge] › e2e\scenario.spec.ts:131:1 › switches between As-Is, To-Be and Compare without writing, with the reduction metrics (1.2s)
+  ok 313 [msedge] › e2e\scenario-builder.spec.ts:71:1 › an untouched builder stays clean and Add change preserves pending metadata (884ms)
+  ok 314 [msedge] › e2e\session-import-journeys.spec.ts:112:1 › J6: a late CSV read cannot replace the reviewed preview, survive Escape, or alter one-step Undo (674ms)
+  ok 315 [msedge] › e2e\readiness-editor.spec.ts:435:1 › R16 inspector failure after apply does not claim the committed rename was rolled back (756ms)
+  ok 316 [msedge] › e2e\scenario.spec.ts:171:1 › signed baseline and planned services open a read-only projection, then Edit As-Is restores baseline editing (681ms)
+  ok 318 [msedge] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search outgoing dependencies only searches and preserves the unapplied entity draft (601ms)
+  ok 317 [msedge] › e2e\scenario-builder.spec.ts:98:1 › scenario sensitive acknowledgement is withdrawn when its exact input changes (775ms)
+  ok 320 [msedge] › e2e\scenario.spec.ts:231:1 › an invalidated CDS route stays visibly unresolved in the map, summary and SVG capture (691ms)
+  ok 321 [msedge] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search incoming services only searches and preserves the unapplied entity draft (631ms)
+  ok 322 [msedge] › e2e\scenario-builder.spec.ts:115:1 › Apply changes commits scenario metadata and builder as one undoable command (801ms)
+  ok 324 [msedge] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search consuming organizations only searches and preserves the unapplied entity draft (615ms)
+  ok 325 [msedge] › e2e\scenario-builder.spec.ts:130:1 › invalid builder keeps both builder input and pending metadata without a partial write (662ms)
+  ok 326 [msedge] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search joins networks only searches and preserves the unapplied entity draft (538ms)
+  ok 323 [msedge] › e2e\scenario.spec.ts:280:1 › authors scenario changes in the editor, one undo step each, with the banner following (1.6s)
+  ok 327 [msedge] › e2e\scenario-builder.spec.ts:145:1 › builder acknowledgement cannot apply stale scenario metadata (773ms)
+  ok 329 [msedge] › e2e\usability-records.spec.ts:109:1 › T03 a service can be understood and browsed without opening a draft or a loss prompt (839ms)
+  ok 328 [msedge] › e2e\usability-picker.spec.ts:62:1 › T01/T05: missing network and provider are created in context; child cancellation and parent cancellation retain the right work (1.0s)
+  ok 330 [msedge] › e2e\scenario-builder.spec.ts:162:1 › legacy scenario collision is diagnosed and its invalid change can be removed (742ms)
+  ok 333 [msedge] › e2e\scenario-builder.spec.ts:191:1 › scenario diagnostics explain unresolved routes and merge transfer effects (602ms)
+  ok 334 [msedge] › e2e\usability-shell.spec.ts:87:1 › document setup is disclosed while Save and history remain direct (346ms)
+  ok 331 [msedge] › e2e\usability-records.spec.ts:140:1 › T06 Create similar makes one independent service with reviewed shared references and optional support only (1.3s)
+  ok 332 [msedge] › e2e\usability-picker.spec.ts:118:1 › T02/T10: choose a qualified duplicate among 500 services by keyboard without blur assignment (1.8s)
+  ok 335 [msedge] › e2e\usability-shell.spec.ts:110:1 › map questions are explicit and browsing retains the active focus and arranged positions (852ms)
+  ok 336 [msedge] › e2e\usability-records.spec.ts:216:1 › T07 a 500-service organization collection exposes explicit role filters, search and every result page (1.0s)
+  ok 337 [msedge] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent (620ms)
+  ok 340 [msedge] › e2e\usability-validation.spec.ts:64:1 › Save file reveals a parked invalid draft and its exact field without a partial write (743ms)
+  ok 338 [msedge] › e2e\usability-shell.spec.ts:151:1 › inventory and global discovery page every match instead of rendering a button cloud (1.4s)
+  x  319 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels (6.8s)
+  ok 342 [msedge] › e2e\usability.spec.ts:10:1 › a corrected field clears its invalid state before the next refusal (429ms)
+  ok 339 [msedge] › e2e\usability-records.spec.ts:246:1 › T15 all seven baseline record types have readable summaries and explicit editing (1.7s)
+(node:49456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 341 [msedge] › e2e\usability-validation.spec.ts:83:1 › Apply and capture reveals a parked invalid draft, then captures only after correction (1.1s)
+  ok 343 [msedge] › e2e\usability.spec.ts:24:1 › connection inspector Edit consuming service enters the owner's edit task (801ms)
+  ok 347 [msedge] › e2e\usability.spec.ts:50:1 › T03 selecting a service reads it before an explicit Edit task (928ms)
+  ok 346 [msedge] › e2e\usability-validation.spec.ts:120:1 › a connection inspector from a pending Open becomes inert when a same-ID dataset replaces its owner (1.5s)
+  ok 344 [msedge] › e2e\usability-records.spec.ts:283:1 › T07/T08 relationship search, role, page, scroll and row focus survive Back and read refresh (2.1s)
+(node:27792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 348 [msedge] › e2e\usability.spec.ts:70:1 › T09 switching workspace parks the same draft for capture and guarded navigation (1.1s)
+  ok 349 [msedge] › e2e\workflow-coherence.spec.ts:10:1 › an existing service keeps fields and relations in one pending edit (1.2s)
+(node:32652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 351 [msedge] › e2e\workflow-coherence.spec.ts:52:1 › new service defaults stop following after a deliberate marking choice (813ms)
+  ok 350 [chrome] › e2e\acceptance-journeys.spec.ts:46:1 › J1: create network and service with only required inputs, Save file, then reopen (1.2s)
+  ok 353 [msedge] › e2e\workflow-coherence.spec.ts:77:1 › a selected network opens the same service form with its context preselected (468ms)
+  ok 352 [chrome] › e2e\action-editor.spec.ts:48:3 › ACT-UX-07 Support confirmation is revealed and focused at 1366 (982ms)
+  ok 356 [chrome] › e2e\action-editor.spec.ts:48:3 › ACT-UX-07 Support confirmation is revealed and focused at 320 (747ms)
+  ok 354 [chrome] › e2e\acceptance-journeys.spec.ts:73:1 › J2: invalid field keeps staged relationships; valid Apply, Undo and Redo move together (1.2s)
+  ok 357 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Apply keeps the section and visible focus at 1366 (621ms)
+  ok 358 [chrome] › e2e\acceptance-journeys.spec.ts:123:1 › AC082: Save file refuses invalid scenario builder, then saves metadata and one change together (725ms)
+  ok 359 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Discard keeps the section and visible focus at 1366 (693ms)
+  ok 360 [chrome] › e2e\acceptance-journeys.spec.ts:158:1 › J7: projected Find and tap keep baseline, moved, retired and planned identities distinct (947ms)
+  ok 361 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Cancel keeps the section and visible focus at 1366 (565ms)
+  ok 363 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Apply keeps the section and visible focus at 1366 (691ms)
+  x  345 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels (7.4s)
+(node:40292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 362 [chrome] › e2e\acceptance-journeys.spec.ts:239:1 › AC021: a late older Open candidate cannot replace the newer one (1.6s)
+  ok 364 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Discard keeps the section and visible focus at 1366 (836ms)
+  ok 367 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Cancel keeps the section and visible focus at 1366 (603ms)
+  ok 366 [chrome] › e2e\acceptance-journeys.spec.ts:284:1 › AC039: a relevant external relationship change preserves the draft and offers explicit reload (804ms)
+  x  355 [msedge] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue (5.4s)
+  ok 368 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Apply keeps the section and visible focus at 320 (645ms)
+(node:72848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 370 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Discard keeps the section and visible focus at 320 (624ms)
+  ok 371 [chrome] › e2e\action-map.spec.ts:97:3 › Accepted canvas selection viewport › edge selection pans only the required distance and Back restores the exact earlier viewport (860ms)
+  ok 372 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Support Cancel keeps the section and visible focus at 320 (533ms)
+  ok 374 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Apply keeps the section and visible focus at 320 (723ms)
+  ok 373 [chrome] › e2e\action-map.spec.ts:150:3 › Accepted canvas selection viewport › Stay after an actual edge-node click preserves the pending draft and exact viewport (761ms)
+  ok 376 [chrome] › e2e\action-map.spec.ts:234:5 › Find actual actions at 1366px › Find query has a readable text area and remains within the viewport (419ms)
+  ok 375 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Discard keeps the section and visible focus at 320 (728ms)
+  ok 377 [chrome] › e2e\action-map.spec.ts:250:5 › Find actual actions at 1366px › accepted keyboard Find restores focus to the opened graph or non-map record (436ms)
+  ok 378 [chrome] › e2e\action-editor.spec.ts:78:7 › ACT-UX-08 Connections Cancel keeps the section and visible focus at 320 (546ms)
+  ok 379 [chrome] › e2e\action-map.spec.ts:268:5 › Find actual actions at 1366px › input, result keys and inside/outside dismissal preserve reachable focus (716ms)
+  ok 380 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 retire Alpha clears only consumed scenario intent (780ms)
+  ok 381 [chrome] › e2e\action-map.spec.ts:341:5 › Find actual actions at 1366px › graph and non-map results open exact typed targets by pointer and keyboard (711ms)
+  ok 382 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 retire Beta clears only consumed scenario intent (792ms)
+  ok 383 [chrome] › e2e\action-map.spec.ts:392:5 › Find actual actions at 1366px › Previous and Next results preserve query, page identities and keyboard reachability (586ms)
+  x  369 [chrome] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata (5.3s)
+(node:47484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 385 [chrome] › e2e\action-map.spec.ts:234:5 › Find actual actions at 320px › Find query has a readable text area and remains within the viewport (417ms)
+  x  365 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels (7.0s)
+  ok 384 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 merge Alpha clears only consumed scenario intent (1.0s)
+  ok 387 [chrome] › e2e\action-map.spec.ts:250:5 › Find actual actions at 320px › accepted keyboard Find restores focus to the opened graph or non-map record (578ms)
+  ok 386 [chrome] › e2e\action-inspection.spec.ts:26:3 › Help begins at its introductory heading at 1366px and restores its origin (443ms)
+(node:71672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 390 [chrome] › e2e\action-inspection.spec.ts:26:3 › Help begins at its introductory heading at 320px and restores its origin (460ms)
+  ok 389 [chrome] › e2e\action-map.spec.ts:268:5 › Find actual actions at 320px › input, result keys and inside/outside dismissal preserve reachable focus (962ms)
+  ok 388 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 merge Beta clears only consumed scenario intent (1.2s)
+  ok 392 [chrome] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 1366x900 (842ms)
+  ok 393 [chrome] › e2e\action-map.spec.ts:341:5 › Find actual actions at 320px › graph and non-map results open exact typed targets by pointer and keyboard (944ms)
+  ok 395 [chrome] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 320x720 (628ms)
+  ok 394 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 rehome Alpha clears only consumed scenario intent (1.0s)
+  ok 397 [chrome] › e2e\action-inspection.spec.ts:67:3 › More commands stay anchored and reachable at 1366x320 (660ms)
+  ok 396 [chrome] › e2e\action-map.spec.ts:392:5 › Find actual actions at 320px › Previous and Next results preserve query, page identities and keyboard reachability (866ms)
+  ok 400 [chrome] › e2e\action-shell.spec.ts:16:3 › Import Cancel returns focus to the visible File trigger (404ms)
+  ok 398 [chrome] › e2e\action-editor.spec.ts:115:5 › ACT-UX-09 rehome Beta clears only consumed scenario intent (1.1s)
+  ok 399 [chrome] › e2e\action-navigation.spec.ts:74:1 › More service actions preserves the tab and primary Edit positions (879ms)
+  ok 401 [chrome] › e2e\action-shell.spec.ts:16:3 › Import Escape returns focus to the visible File trigger (438ms)
+  ok 402 [chrome] › e2e\action-editor.spec.ts:141:1 › ACT-UX-10 scenario guidance names immediate Add Remove and Undo boundaries (607ms)
+  ok 404 [chrome] › e2e\action-shell.spec.ts:16:3 › Import Import returns focus to the visible File trigger (514ms)
+  ok 406 [chrome] › e2e\action-shell.spec.ts:35:3 › Replacement Stay returns focus to the visible File trigger (505ms)
+  ok 403 [chrome] › e2e\action-navigation.spec.ts:87:1 › Create similar Cancel restores the source Support inspector and menu trigger (1.2s)
+  ok 405 [chrome] › e2e\action-editor.spec.ts:153:1 › ACT-UX-11 blocked deletion disables confirmation while inspection and cancellation work (908ms)
+  ok 407 [chrome] › e2e\action-shell.spec.ts:35:3 › Replacement Escape returns focus to the visible File trigger (469ms)
+  ok 410 [chrome] › e2e\action-shell.spec.ts:35:3 › Replacement Discard all and continue returns focus to the visible File trigger (483ms)
+  ok 408 [chrome] › e2e\action-navigation.spec.ts:108:1 › Nested related-record Back restores the previous query and record within the modal (1.0s)
+  ok 409 [chrome] › e2e\action-editor.spec.ts:170:1 › ACT-COV-01 actual network edit footer Add service respects draft choice and destination (1.1s)
+  ok 411 [chrome] › e2e\action-shell.spec.ts:35:3 › Replacement Save retained returns focus to the visible File trigger (550ms)
+  ok 412 [chrome] › e2e\action-navigation.spec.ts:129:3 › Successive service node clicks retain the Connections inspection section (877ms)
+  ok 414 [chrome] › e2e\action-shell.spec.ts:35:3 › Replacement Save declined returns focus to the visible File trigger (526ms)
+  ok 413 [chrome] › e2e\banner.spec.ts:63:1 › shows the highest marking at the top and bottom and follows edits both ways (855ms)
+  ok 416 [chrome] › e2e\action-shell.spec.ts:56:3 › License Escape restores the About origin (384ms)
+  ok 418 [chrome] › e2e\action-shell.spec.ts:56:3 › License Escape restores the Help origin (382ms)
+  ok 415 [chrome] › e2e\action-navigation.spec.ts:129:3 › Successive service node clicks retain the Support inspection section (893ms)
+  x  391 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels (7.2s)
+  ok 419 [chrome] › e2e\action-shell.spec.ts:71:1 › Host-like import opt-in retains keyboard focus and can be reversed with another Space (477ms)
+  ok 417 [chrome] › e2e\banner.spec.ts:88:1 › adds a caveat after the marking, keeps it through save and reopen, and clears it (1.3s)
+(node:62460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 420 [chrome] › e2e\action-navigation.spec.ts:138:1 › Actual right-edge node click remains visible after opening its inspector without moving the node (864ms)
+  ok 422 [chrome] › e2e\banner.spec.ts:135:1 › shows TOP SECRET with dark text on orange (508ms)
+  ok 424 [chrome] › e2e\action-navigation.spec.ts:162:3 › F2 preserves Connections editing intent (968ms)
+  ok 421 [chrome] › e2e\connected-acceptance.spec.ts:110:1 › a successful provider child survives a missing parent name and the guarded child Undo (1.4s)
+  ok 425 [chrome] › e2e\banner.spec.ts:151:1 › opens the fictional demo enterprise, marked UNCLASSIFIED and labelled as a demo (1.1s)
+  ok 426 [chrome] › e2e\action-navigation.spec.ts:162:3 › F2 preserves Support editing intent (876ms)
+  ok 428 [chrome] › e2e\connected-editor-acceptance.spec.ts:87:3 › UX1-003 child Cancel preserves the complete parent draft, scroll and invoking focus without history (1.3s)
+  ok 429 [chrome] › e2e\action-navigation.spec.ts:171:1 › Connection inspector editing lands on Connections for the exact consuming service (905ms)
+  ok 431 [chrome] › e2e\action-navigation.spec.ts:184:1 › Return to results restores a visible map search control (785ms)
+  ok 427 [chrome] › e2e\connected-acceptance.spec.ts:151:1 › initial service relations commit together and created reference IDs survive UI save and reopen (2.8s)
+  ok 430 [chrome] › e2e\connected-editor-acceptance.spec.ts:87:3 › UX1-003 child Escape preserves the complete parent draft, scroll and invoking focus without history (1.2s)
+  ok 432 [chrome] › e2e\action-navigation.spec.ts:191:1 › Successful deletion moves focus to current results and remains undoable (822ms)
+  ok 433 [chrome] › e2e\connected-acceptance.spec.ts:250:1 › network and CDS reverse lists distinguish membership from boundary routes and navigate the recorded owner (789ms)
+  ok 434 [chrome] › e2e\connected-editor-acceptance.spec.ts:151:1 › UX1-017 an edited child succeeds only after its fresh exact warning is reviewed and confirmed (855ms)
+  ok 437 [chrome] › e2e\connected-editor-acceptance.spec.ts:187:1 › UX3-001 populated outgoing, incoming and organization relations have distinct semantic headings (450ms)
+  ok 435 [chrome] › e2e\action-navigation.spec.ts:205:1 › Workspace draft Escape retains the current record, draft and retry focus (873ms)
+  ok 438 [chrome] › e2e\connected-editor.spec.ts:65:3 › changed support note cannot reuse an old sensitive acknowledgement (second.example.test) (693ms)
+  ok 436 [chrome] › e2e\connected-acceptance.spec.ts:283:1 › CDS choices follow endpoint membership and a rehome refuses the entire now-invalid route draft (1.6s)
+  ok 439 [chrome] › e2e\connected-focus.spec.ts:165:3 › network focus preserves complete routes, full marking and return context at 1600px (1.1s)
+  ok 440 [chrome] › e2e\connected-editor.spec.ts:65:3 › changed support note cannot reuse an old sensitive acknowledgement (Ordinary synthetic support note) (759ms)
+  x  423 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels (7.1s)
+  ok 443 [chrome] › e2e\connected-editor.spec.ts:107:1 › inline network and provider creation retain a new service draft (750ms)
+  ok 442 [chrome] › e2e\connected-focus.spec.ts:165:3 › network focus preserves complete routes, full marking and return context at 1024px (1.0s)
+(node:26656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 441 [chrome] › e2e\connected-acceptance.spec.ts:341:1 › an invalid initial route rolls back the service and all staged relations while retaining the full draft (1.6s)
+  ok 445 [chrome] › e2e\connected-focus.spec.ts:235:1 › directional focus expands explicitly without data writes or position changes (912ms)
+  ok 444 [chrome] › e2e\connected-editor.spec.ts:137:1 › Cancel child preserves parent and creates no history; Cancel parent leaves explicit children (943ms)
+  ok 447 [chrome] › e2e\connected-acceptance.spec.ts:393:1 › editing an incoming dependency guards the dirty provider and opens its actual consumer owner (1.4s)
+  ok 448 [chrome] › e2e\connected-focus.spec.ts:267:1 › both CDS segments open the same owning connection inspector without writing (787ms)
+  ok 449 [chrome] › e2e\connected-editor.spec.ts:169:1 › new service stages app category support and consumption before first Add and saves their IDs (1.6s)
+  ok 452 [chrome] › e2e\connected-editor.spec.ts:216:1 › inline creation keeps explicit service defaults and parked relation-only intent (1.1s)
+  ok 451 [chrome] › e2e\connected-focus.spec.ts:290:1 › projected focused routes remain read-only and retain full marking in To-Be and Compare capture (2.2s)
+  ok 450 [chrome] › e2e\connected-acceptance.spec.ts:426:1 › one Apply Undo and Redo restores scalar support consumption and two qualified dependency rows together (2.3s)
+  ok 453 [chrome] › e2e\connected-editor.spec.ts:250:1 › route edit stages with scalar changes and one Undo restores both; Cancel route writes nothing (1.1s)
+  ok 454 [chrome] › e2e\connected-focus.spec.ts:341:1 › cancelled captures restore visible status and retain the active draft (822ms)
+  ok 455 [chrome] › e2e\connected-navigation-acceptance.spec.ts:133:1 › two Back hops restore each service and organization context plus the originating editor control focus (1.1s)
+  ok 456 [chrome] › e2e\connected-editor.spec.ts:297:1 › child host warning is withdrawn after edits without applying the parent (631ms)
+  ok 457 [chrome] › e2e\connected-focus.spec.ts:363:1 › unresolved projected connection inspector preserves former CDS provenance (648ms)
+  ok 460 [chrome] › e2e\connected-focus.spec.ts:381:1 › projection layout handles newly planned nodes hidden by a strict inventory filter without writes (658ms)
+  ok 458 [chrome] › e2e\connected-navigation-acceptance.spec.ts:183:1 › Stay from an ordinary list click and physical map tap preserves the complete dirty navigation context (1.0s)
+  ok 459 [chrome] › e2e\connected-editor.spec.ts:316:1 › unadded consumer provider and CDS choices survive scalar edits and unrelated support refresh (998ms)
+  ok 463 [chrome] › e2e\connected-navigation.spec.ts:101:1 › partial Find keeps duplicate services and cross-type names distinct with keyboard selection (495ms)
+  ok 461 [chrome] › e2e\connected-focus.spec.ts:408:1 › capture current view keeps a dirty draft, while failed Apply and capture keeps the applied history (1.2s)
+  ok 464 [chrome] › e2e\connected-navigation.spec.ts:125:1 › reference peek preserves scalar and support draft, returns focus, and adds no history (688ms)
+  ok 465 [chrome] › e2e\connected-focus.spec.ts:452:1 › explicit keyboard editing keeps Apply reachable at laptop width and returns to the map (481ms)
+  x  446 [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels (7.2s)
+(node:55676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 467 [chrome] › e2e\connected-focus.spec.ts:477:1 › foundational summary counts the routes actually hidden after chain reveal (484ms)
+  ok 466 [chrome] › e2e\connected-navigation.spec.ts:154:1 › accepted Back restores prior service, list filter and map framing without Undo (728ms)
+  ok 468 [chrome] › e2e\connected-projection.spec.ts:64:1 › projected Find distinguishes a planned service from its same-named baseline peer (594ms)
+  ok 470 [chrome] › e2e\connected-navigation.spec.ts:185:1 › Stay rejects a Find request before selection, filters, chain or framing change (876ms)
+  ok 471 [chrome] › e2e\connected-projection.spec.ts:86:1 › Edit As-Is reveals a rehomed service at its real baseline identity despite the previous filter (649ms)
+  ok 472 [chrome] › e2e\connected-navigation.spec.ts:212:1 › Back Stay keeps the current dirty record and an accepted discard returns correctly (742ms)
+  ok 473 [chrome] › e2e\connected-projection.spec.ts:118:1 › switching View closes the old projected inspector with an actionable current-view message (522ms)
+  ok 475 [chrome] › e2e\connected-projection.spec.ts:129:1 › Back from a baseline record restores the planned origin and Compare context (566ms)
+  ok 474 [chrome] › e2e\connected-navigation.spec.ts:231:1 › non-map references expose separate recorded reverse roles and application/category membership (761ms)
+  ok 477 [chrome] › e2e\connected-navigation.spec.ts:257:1 › existing-network guidance and normalized unchanged Apply preserve the saved checkpoint (604ms)
+  ok 476 [chrome] › e2e\connected-projection.spec.ts:148:1 › Undo removing a UI-created planned origin closes its inspector and removes the stale Find target (844ms)
+  x  462 [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections (5.5s)
+(node:57420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 478 [chrome] › e2e\connected-navigation.spec.ts:273:1 › Find Apply and continue commits once before revealing the accepted typed target (796ms)
+  ok 480 [chrome] › e2e\csp.spec.ts:18:1 › ships the CON-006 Content Security Policy and boots under it with no violations (266ms)
+  ok 482 [chrome] › e2e\csp.spec.ts:39:1 › the policy blocks network access from inside the page (240ms)
+  ok 479 [chrome] › e2e\connected-projection.spec.ts:176:1 › a late old Back decision cannot reopen an old target after Open installs a different dataset (1.4s)
+  ok 483 [chrome] › e2e\dataset-file.spec.ts:37:3 › without the File System Access API (download/upload fallback) › opens an uploaded dataset and saves it as a download that reopens identically (484ms)
+  ok 481 [chrome] › e2e\connected-ux.spec.ts:7:1 › UX0-003 Find Stay preserves the filter and pending form (1.1s)
+  ok 485 [chrome] › e2e\dataset-file.spec.ts:58:3 › without the File System Access API (download/upload fallback) › shows a readable error for a file that is not a dataset and keeps the current one (343ms)
+  ok 484 [chrome] › e2e\delete-consequences.spec.ts:123:3 › service delete names its actual consequences and Undo restores them (948ms)
+  ok 487 [chrome] › e2e\dataset-file.spec.ts:69:3 › without the File System Access API (download/upload fallback) › New asks for a name and starts an unsaved dataset (333ms)
+  ok 486 [chrome] › e2e\connected-ux.spec.ts:39:1 › UX2 partial Find offers explicit results and a useful no-results state (657ms)
+  ok 489 [chrome] › e2e\dataset-file.spec.ts:76:3 › without the File System Access API (download/upload fallback) › Save file applies an active draft and requests a download in one action (435ms)
+  ok 490 [chrome] › e2e\editor-external-deletion.spec.ts:21:1 › AC039: an external deletion keeps the pending draft until its targeted close (233ms)
+  ok 488 [chrome] › e2e\delete-consequences.spec.ts:123:3 › organization delete names its actual consequences and Undo restores them (878ms)
+  ok 491 [chrome] › e2e\dataset-file.spec.ts:94:3 › without the File System Access API (download/upload fallback) › an invalid Open candidate leaves a pending draft intact without a discard decision (389ms)
+  ok 492 [chrome] › e2e\editor-rhythm.spec.ts:38:1 › empty connection groups retain addition controls without blank search or disabled paging (599ms)
+  ok 494 [chrome] › e2e\dataset-file.spec.ts:108:3 › without the File System Access API (download/upload fallback) › a valid New candidate offers Stay and Discard for a pending draft (597ms)
+  ok 493 [chrome] › e2e\delete-consequences.spec.ts:123:3 › CDS delete names its actual consequences and Undo restores them (943ms)
+  ok 495 [chrome] › e2e\editor-rhythm.spec.ts:57:1 › a populated single page stays searchable and distinguishes no matches from no relationships (630ms)
+  x  469 [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access (7.5s)
+(node:54768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 497 [chrome] › e2e\delete-consequences.spec.ts:123:3 › category delete names its actual consequences and Undo restores them (855ms)
+  ok 498 [chrome] › e2e\editor-rhythm.spec.ts:79:1 › relationship paging stays bounded and preserves the complete unapplied draft (1.3s)
+  ok 500 [chrome] › e2e\delete-consequences.spec.ts:123:3 › application delete names its actual consequences and Undo restores them (910ms)
+  ok 496 [chrome] › e2e\dataset-file.spec.ts:166:3 › with the File System Access API (save in place) › Save writes back to the opened file and Save As writes to a new file (2.1s)
+  ok 501 [chrome] › e2e\editor-rhythm.spec.ts:115:1 › a new service explains its Add action rather than applying an existing record (728ms)
+  ok 503 [chrome] › e2e\dataset-file.spec.ts:183:3 › with the File System Access API (save in place) › does not touch browser storage (438ms)
+  ok 505 [chrome] › e2e\dataset-file.spec.ts:195:3 › with the File System Access API (save in place) › canceling the first native save leaves the draft unapplied (362ms)
+  ok 502 [chrome] › e2e\delete-consequences.spec.ts:123:3 › scenario delete names its actual consequences and Undo restores them (927ms)
+  ok 506 [chrome] › e2e\dataset-file.spec.ts:211:3 › with the File System Access API (save in place) › a denied native picker reports failure without applying the draft (346ms)
+  ok 504 [chrome] › e2e\editor-rhythm.spec.ts:126:1 › relationship paging keeps repeatable keyboard focus through middle and boundary pages (764ms)
+  ok 508 [chrome] › e2e\dataset-file.spec.ts:225:3 › with the File System Access API (save in place) › editing during a pending native picker does not save a substituted draft (380ms)
+  ok 509 [chrome] › e2e\editor-rhythm.spec.ts:152:1 › read-summary relationship paging transfers boundary focus without editing (773ms)
+  ok 507 [chrome] › e2e\delete-consequences.spec.ts:143:1 › Cancel and blocked delete preserve a dirty draft; completed delete discards only that draft (1.3s)
+  ok 510 [chrome] › e2e\dataset-file.spec.ts:255:3 › with the File System Access API (save in place) › Save and continue persists the old pending draft before installing New (1.0s)
+  ok 511 [chrome] › e2e\editor-rhythm.spec.ts:169:1 › checklist paging transfers boundary focus and retains staged choices (680ms)
+  ok 512 [chrome] › e2e\delete-consequences.spec.ts:181:1 › a changed deletion plan is rechecked before confirmation (773ms)
+  ok 514 [chrome] › e2e\entry-ui.spec.ts:139:1 › switches inventory and map, hides the empty inspector and collapses the list (352ms)
+  ok 513 [chrome] › e2e\dataset-file.spec.ts:274:3 › with the File System Access API (save in place) › a native write failure retains the applied change for Undo and retry (453ms)
+  ok 517 [chrome] › e2e\dataset-file.spec.ts:294:3 › with the File System Access API (save in place) › a canceled native write reports that Apply already succeeded (454ms)
+  ok 518 [chrome] › e2e\file-size.spec.ts:8:3 › native oversized Open refuses before reading and preserves the pending draft (345ms)
+  ok 519 [chrome] › e2e\file-size.spec.ts:8:3 › fallback oversized Open refuses before reading and preserves the pending draft (346ms)
+  ok 520 [chrome] › e2e\file-size.spec.ts:52:1 › the shipped standalone licenses are readable offline and close back to the workspace (337ms)
+  ok 515 [chrome] › e2e\delete-consequences.spec.ts:208:1 › Find and map tap resolve a dirty editor while view-only actions keep its input (1.6s)
+  ok 521 [chrome] › e2e\history.spec.ts:127:1 › undoes and redoes edits with buttons and keys, and rebuilds the open form (600ms)
+  ok 522 [chrome] › e2e\import-receipt.spec.ts:27:1 › all mixed-import diagnostics remain reviewable and downloadable after commit (809ms)
+  ok 523 [chrome] › e2e\history.spec.ts:161:1 › undoes a drag, a Re-layout and an added service by putting the map back (1.1s)
+  x  499 [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access (7.7s)
+  ok 524 [chrome] › e2e\import-receipt.spec.ts:90:1 › uncommitted retries retain the last receipt and replacing the dataset clears it (907ms)
+(node:66464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 526 [chrome] › e2e\interaction-layout.spec.ts:7:1 › document menu labels share a readable left edge instead of floating by word length (280ms)
+  ok 527 [chrome] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 1366px (361ms)
+  ok 516 [chrome] › e2e\entry-ui.spec.ts:154:1 › creates every entity type, edits one field and keeps the rest (4.2s)
+  ok 529 [chrome] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 1024px (359ms)
+  ok 525 [chrome] › e2e\history.spec.ts:200:1 › asks before New, Open or closing would discard edits, and not for an untouched dataset (1.1s)
+  ok 528 [chrome] › e2e\import.spec.ts:101:1 › imports the demo enterprise's CSV files into an empty dataset as one undo step, laid out (926ms)
+  ok 531 [chrome] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 768px (373ms)
+  ok 532 [chrome] › e2e\history.spec.ts:236:1 › finds a node by name, clearing a filter that hides it (623ms)
+  ok 534 [chrome] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 390px (371ms)
+  ok 533 [chrome] › e2e\import.spec.ts:124:1 › Cancel writes nothing, and the preview follows the host-data choice (524ms)
+  ok 536 [chrome] › e2e\interaction-layout.spec.ts:29:3 › action labels stay centered and reachable at 320px (365ms)
+  ok 535 [chrome] › e2e\inventory-flow.spec.ts:28:1 › populated inventory opens directly on structured services with exact network scope (649ms)
+  ok 537 [chrome] › e2e\import.spec.ts:151:1 › selecting a new file immediately invalidates the previous import preview (446ms)
+  ok 538 [chrome] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 1366px (523ms)
+  ok 540 [chrome] › e2e\import.spec.ts:178:1 › late file reads cannot replace a newer preview or reopen a closed import (429ms)
+  ok 539 [chrome] › e2e\inventory-flow.spec.ts:49:1 › inventory keeps each type's query, page and scope when returning to browse (639ms)
+  ok 541 [chrome] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 1024px (550ms)
+  ok 542 [chrome] › e2e\import.spec.ts:229:1 › undo inside the dialog does nothing, and one undo after an import removes only the import (663ms)
+  ok 544 [chrome] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 768px (491ms)
+  ok 543 [chrome] › e2e\inventory-flow.spec.ts:71:1 › row selection and Back retain the browse position and focus without an edit (835ms)
+  ok 545 [chrome] › e2e\import.spec.ts:260:1 › downloads a template with a byte-order mark, its columns and an example row (541ms)
+  ok 546 [chrome] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 390px (544ms)
+  ok 547 [chrome] › e2e\inventory-flow.spec.ts:101:1 › new dataset clears the previous session's browse cache (691ms)
+  ok 549 [chrome] › e2e\interaction-layout.spec.ts:56:3 › long service context remains separated and readable at 320px (546ms)
+  ok 551 [chrome] › e2e\map-find-dismissal.spec.ts:25:1 › Find dismisses on another action while retaining the query and target focus (531ms)
+  ok 550 [chrome] › e2e\inventory-flow.spec.ts:117:1 › Find reveals an excluded typed service and Back restores the complete inventory scope (933ms)
+  ok 548 [chrome] › e2e\layout-quality.spec.ts:131:1 › keeps a spike-sized map readable: few crossings and label overlaps, no overlapping networks (1.5s)
+  ok 530 [chrome] › e2e\entry-ui.spec.ts:188:1 › deletes with an in-panel confirmation and refuses to delete a network in use (4.8s)
+  ok 552 [chrome] › e2e\map-find-dismissal.spec.ts:38:1 › Find dismisses on a genuine outside canvas press and another popup (575ms)
+  ok 553 [chrome] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 1366px (709ms)
+  ok 556 [chrome] › e2e\map-find-dismissal.spec.ts:57:1 › Escape from Find results closes the transient surface and returns focus to the query (483ms)
+  ok 554 [chrome] › e2e\layout-quality.spec.ts:193:1 › hides unreadably small service labels until hovered or zoomed into (1.3s)
+  ok 557 [chrome] › e2e\inventory-flow.spec.ts:148:3 › reverse keyboard browsing keeps focused records unobscured at 320px (677ms)
+  ok 558 [chrome] › e2e\map-find-dismissal.spec.ts:81:1 › Find keeps its input and results one boundary for keyboard and pointer activation (516ms)
+  ok 561 [chrome] › e2e\market-workspace.spec.ts:29:1 › first-use Help explains the offline workflow and preserves a pending draft (321ms)
+  ok 559 [chrome] › e2e\map.spec.ts:197:1 › draws networks as containers, the external zone, CDS between networks and classified edges (511ms)
+  ok 560 [chrome] › e2e\market-map.spec.ts:75:1 › live map explains direction, uncertainty and the actually omitted foundational dependency (595ms)
+  ok 562 [chrome] › e2e\market-workspace.spec.ts:48:1 › host-like New dataset name requires acknowledgement before resolving or losing the current draft (397ms)
+  ok 564 [chrome] › e2e\market-map.spec.ts:95:1 › detached SVG preserves omission and connectivity qualification with presentation-sized annotations (623ms)
+  ok 565 [chrome] › e2e\market-workspace.spec.ts:71:1 › a confirmed host-like name is the exact dataset name saved and reopened (406ms)
+  ok 563 [chrome] › e2e\map.spec.ts:232:1 › pans and zooms, fits everything into view and uses the full map work surface (847ms)
+  ok 566 [chrome] › e2e\market-map.spec.ts:118:1 › the collinear direct external route avoids unrelated service and CDS nodes without moving them (579ms)
+  ok 567 [chrome] › e2e\market-workspace.spec.ts:103:1 › qualified editing identity stays visible across Support, Connections and copy destination (926ms)
+  ok 569 [chrome] › e2e\market-map.spec.ts:160:1 › a bent direct route stays clear of network headings and markings (529ms)
+  ok 568 [chrome] › e2e\map.spec.ts:258:1 › updates as data is edited and opens a tapped node in the editor (1.3s)
+  ok 570 [chrome] › e2e\market-workspace.spec.ts:132:1 › projected service summary counts incoming and outgoing dependencies separately (558ms)
+  ok 572 [chrome] › e2e\map.spec.ts:297:1 › shows a hint instead of an empty map for a new dataset (324ms)
+  ok 571 [chrome] › e2e\market-map.spec.ts:192:1 › a detached focus capture explains its scope once (690ms)
+  ok 575 [chrome] › e2e\offline-boot.spec.ts:12:1 › boots SQLite offline from file:// with no network requests or errors (242ms)
+  ok 573 [chrome] › e2e\menu-dismissal.spec.ts:23:1 › map menus replace each other and dismiss on another action or the canvas (691ms)
+  ok 577 [chrome] › e2e\menu-dismissal.spec.ts:45:1 › document and map menus share dismissal without taking focus from the next control (580ms)
+  ok 555 [chrome] › e2e\entry-ui.spec.ts:210:1 › edits support tiers, consumers and dependencies on a service (5.6s)
+  ok 574 [chrome] › e2e\map.spec.ts:306:1 › hides links to foundational services until asked, without moving anything (1.3s)
+  ok 576 [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished consumer choice until explicitly finished (1.0s)
+  ok 578 [chrome] › e2e\menu-dismissal.spec.ts:64:1 › filter input stays usable while keyboard focus leaving a menu dismisses it (582ms)
+  ok 580 [chrome] › e2e\map.spec.ts:396:1 › lays out an unarranged dataset once and reopens a saved one exactly as it was (743ms)
+  ok 582 [chrome] › e2e\menu-dismissal.spec.ts:86:1 › menu actions dismiss after activation while cancelled layout and SVG download still work (612ms)
+  ok 581 [chrome] › e2e\readiness-editor.spec.ts:94:3 › R01 Apply retains unfinished dependency choice until explicitly finished (1.1s)
+  ok 584 [chrome] › e2e\menu-dismissal.spec.ts:105:1 › dynamically rendered record and edit menus dismiss without losing a draft (719ms)
+  ok 585 [chrome] › e2e\readiness-editor.spec.ts:127:5 › R01 Add consumer preserves the other unfinished connection choice (1.0s)
+  ok 583 [chrome] › e2e\map.spec.ts:415:1 › saves where services and networks are dragged (1.6s)
+  ok 586 [chrome] › e2e\menu-dismissal.spec.ts:136:1 › connection menus replace each other and keep the chosen staged action (724ms)
+  ok 589 [chrome] › e2e\menu-dismissal.spec.ts:162:1 › inline disclosures remain open while floating menus yield to modal tasks (574ms)
+  ok 587 [chrome] › e2e\readiness-editor.spec.ts:127:5 › R01 Cancel consumer preserves the other unfinished connection choice (1.0s)
+  ok 588 [chrome] › e2e\map.spec.ts:456:1 › places new services and networks without moving anything already placed (926ms)
+  ok 590 [chrome] › e2e\menu-dismissal.spec.ts:178:1 › route editing continues outside its closed action menu and Cancel restores the trigger (650ms)
+  ok 591 [chrome] › e2e\readiness-editor.spec.ts:127:5 › R01 Add dependency preserves the other unfinished connection choice (935ms)
+  ok 579 [chrome] › e2e\entry-ui.spec.ts:271:1 › a new service takes its network's marking and success is not shown as an error (4.1s)
+  ok 593 [chrome] › e2e\menu-dismissal.spec.ts:201:1 › edit-footer deletion exposes its confirmation outside the closed menu and keeps Cancel safe (695ms)
+  ok 592 [chrome] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves (1.1s)
+  ok 595 [chrome] › e2e\entry-ui.spec.ts:290:1 › shows field errors and saves host-like text only after Save anyway (642ms)
+  ok 594 [chrome] › e2e\readiness-editor.spec.ts:127:5 › R01 Cancel dependency preserves the other unfinished connection choice (1.0s)
+  ok 596 [chrome] › e2e\readiness-map.spec.ts:87:1 › R04 deleting the focused service ends focus without hiding the remaining map or changing positions (918ms)
+  ok 597 [chrome] › e2e\map.spec.ts:531:1 › re-lays out the whole map only after confirming (966ms)
+  ok 599 [chrome] › e2e\readiness-editor.spec.ts:150:1 › R02 a changed open route blocks parent Apply until Use route or Cancel route (923ms)
+  ok 600 [chrome] › e2e\readiness-map.spec.ts:127:1 › R04 removing an isolated focus subject restores the unfocused viewport so remaining services are on screen (765ms)
+  ok 601 [chrome] › e2e\map.spec.ts:564:1 › highlights everything that chains to a tapped node, with its foundational links (846ms)
+  ok 602 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Save retains unfinished consumer and independent metadata (914ms)
+  ok 603 [chrome] › e2e\readiness-map.spec.ts:164:1 › R04 restoring navigation history for a deleted focus subject uses its unfocused checkpoint (944ms)
+  ok 604 [chrome] › e2e\map.spec.ts:598:1 › keeps the chain through drags and edits and clears it when its start is deleted (1.3s)
+  ok 606 [chrome] › e2e\readiness-map.spec.ts:191:3 › R04 Retire caller projection exits unavailable focus and leaves current services reachable (682ms)
+  ok 605 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and continue retains unfinished consumer and independent metadata (1.0s)
+  ok 608 [chrome] › e2e\readiness-map.spec.ts:191:3 › R04 Merge caller projection exits unavailable focus and leaves current services reachable (639ms)
+  ok 607 [chrome] › e2e\map.spec.ts:630:1 › filters by network, category and organization without moving anything or writing (1.1s)
+  ok 609 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and capture retains unfinished consumer and independent metadata (931ms)
+  ok 610 [chrome] › e2e\readiness-map.spec.ts:214:1 › R19 zero filter matches has a clear recovery action preserving viewport, arrangement and file state (672ms)
+  ok 598 [chrome] › e2e\entry-ui.spec.ts:313:1 › keeps typed text across relationship edits and marks the dataset unsaved (4.2s)
+  ok 611 [chrome] › e2e\map.spec.ts:683:1 › exports the current view as a PNG framed by the classification banner, without writing (966ms)
+  ok 613 [chrome] › e2e\readiness-map.spec.ts:234:1 › R19 an empty dataset asks for a network while services without dependencies remain visible and capturable (654ms)
+  ok 612 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Save retains unfinished dependency and independent metadata (928ms)
+  ok 616 [chrome] › e2e\readiness-map.spec.ts:260:1 › V02 workspace Back restores a focused view together with a working Back from focus checkpoint (829ms)
+  ok 617 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and continue retains unfinished dependency and independent metadata (1.0s)
+  ok 615 [chrome] › e2e\map.spec.ts:757:1 › keeps an export busy through repository refresh and recovers from a synchronous render failure (1.3s)
+  ok 618 [chrome] › e2e\readiness-map.spec.ts:284:1 › V03 seven-network geometry preserves the one recorded relationship even when a line crosses another container (823ms)
+  ok 620 [chrome] › e2e\map.spec.ts:835:1 › delivers a frozen PNG with the original dataset name after replacing the dataset (829ms)
+  ok 619 [chrome] › e2e\readiness-editor.spec.ts:169:5 › R01 Apply and capture retains unfinished dependency and independent metadata (1.1s)
+  ok 621 [chrome] › e2e\readiness-scenario.spec.ts:49:1 › R11 each responsible scenario change has an exact readable review destination (836ms)
+  ok 623 [chrome] › e2e\readiness-editor.spec.ts:220:1 › R02 Save and navigation preserve an unfinished route; Cancel route restores the original (918ms)
+  ok 624 [chrome] › e2e\readiness-scenario.spec.ts:80:1 › R10 projected connection origins link to each exact responsible change (861ms)
+  ok 622 [chrome] › e2e\map.spec.ts:889:1 › exports the current view as SVG with the banner, every label and the highlight, without writing (1.4s)
+  ok 626 [chrome] › e2e\readiness-scenario.spec.ts:107:1 › R12 a fresh scenario builder has no arbitrary operation or record selected (613ms)
+  ok 614 [chrome] › e2e\entry-ui.spec.ts:330:1 › saves entered data, opens another file without errors and reopens the saved one (4.8s)
+  ok 627 [chrome] › e2e\readiness-shell.spec.ts:32:1 › R06 document rename preserves inventory, classification and saved-file readback with Undo (662ms)
+  ok 625 [chrome] › e2e\readiness-editor.spec.ts:245:1 › R02 unfinished route remains visible across another relationship addition (1.0s)
+  ok 630 [chrome] › e2e\readiness-shell.spec.ts:51:1 › R07 unassigned provider is identified as unrecorded (422ms)
+  ok 629 [chrome] › e2e\entry-ui.spec.ts:368:1 › a new service named Identity or DNS starts out foundational unless the user chose otherwise (1.0s)
+  ok 632 [chrome] › e2e\readiness-shell.spec.ts:57:1 › R09 no-create dependency picker does not promise an unavailable creation action (613ms)
+  ok 631 [chrome] › e2e\readiness-editor.spec.ts:266:1 › R03 changed staged route is pending; applied inspection matches the saved state (1.2s)
+  ok 633 [chrome] › e2e\recovery.spec.ts:49:1 › refuses external changes, retains work, and saves to a separate target (470ms)
+  ok 628 [chrome] › e2e\readiness-scenario.spec.ts:125:1 › R12 large scenario changes and qualified record choices are searchable and bounded (1.9s)
+  ok 634 [chrome] › e2e\readiness-shell.spec.ts:72:1 › R14 Save shortcut applies and downloads the active draft, but a modal owns the shortcut (666ms)
+  ok 635 [chrome] › e2e\readiness-editor.spec.ts:288:1 › R03 newly staged connection inspection shows pending state and its chosen route (837ms)
+  ok 638 [chrome] › e2e\reference-picker-component.spec.ts:107:1 › component: 500 records stay bounded and duplicate names choose the exact keyboard-selected identity (216ms)
+  ok 637 [chrome] › e2e\readiness-shell.spec.ts:95:1 › R15 all legacy issues remain available after unrelated edits and repair links identify records (766ms)
+  ok 639 [chrome] › e2e\readiness-editor.spec.ts:305:1 › R08 shared parent creation names the organization being edited (656ms)
+  ok 641 [chrome] › e2e\readiness-shell.spec.ts:115:1 › R16 failed presentation protects successful unsaved change and offers safe view refresh (618ms)
+  ok 640 [chrome] › e2e\reference-picker-component.spec.ts:130:1 › component: every result page is reachable and the last page retains exact values (990ms)
+  ok 644 [chrome] › e2e\reference-picker-component.spec.ts:142:1 › component: search blur and Escape do not assign or create anything (181ms)
+  ok 642 [chrome] › e2e\readiness-editor.spec.ts:325:1 › R10 projected service exposes purpose provider support and named before-after context (751ms)
+  ok 643 [chrome] › e2e\readiness-shell.spec.ts:150:1 › R18 Help distinguishes current recorded baseline from file saving and real-project storage (442ms)
+  ok 645 [chrome] › e2e\reference-picker-component.spec.ts:158:1 › component: child back preserves query and validation keeps raw parent until explicit Create and use (356ms)
+  ok 648 [chrome] › e2e\reference-picker-component.spec.ts:180:1 › component: a removed candidate cannot silently assign or fall back to another option (210ms)
+  ok 647 [chrome] › e2e\readiness-shell.spec.ts:159:1 › R20 offline About identifies application version, source build and data format without inventory contents (418ms)
+  ok 646 [chrome] › e2e\readiness-editor.spec.ts:360:3 › R10 Beta has qualified read-only proposed or historical details (678ms)
+  ok 649 [chrome] › e2e\reference-picker-component.spec.ts:192:1 › component: stale ownership and a completion after close never assign another session's identity (261ms)
+  ok 650 [chrome] › e2e\readiness-shell.spec.ts:172:1 › R13 WASM startup rejection leaves an accessible failure shell and build identity (175ms)
+  ok 653 [chrome] › e2e\review-expectations.spec.ts:22:1 › Add service inherits the active non-first network and marking (456ms)
+  ok 652 [chrome] › e2e\readiness-shell.spec.ts:186:1 › V01 higher-marked held rows have explicit preview handling distinct from current dataset marking (529ms)
+  ok 651 [chrome] › e2e\readiness-editor.spec.ts:360:3 › R10 Gamma has qualified read-only proposed or historical details (677ms)
+  ok 654 [chrome] › e2e\review-expectations.spec.ts:32:1 › All networks keeps general creation defaults and scoped creation respects Stay (584ms)
+  ok 655 [chrome] › e2e\readiness-shell.spec.ts:207:3 › R14 Control+S saves clean state and retains invalid input without a download (597ms)
+  ok 656 [chrome] › e2e\readiness-editor.spec.ts:360:3 › R10 Delta has qualified read-only proposed or historical details (742ms)
+  ok 658 [chrome] › e2e\readiness-shell.spec.ts:207:3 › R14 Meta+S saves clean state and retains invalid input without a download (620ms)
+  ok 657 [chrome] › e2e\review-expectations.spec.ts:50:3 › read-summary Delete Cancel removes each dialog and restores its visible trigger (721ms)
+  ok 636 [chrome] › e2e\recovery.spec.ts:66:1 › recovery preserves applied content, excludes draft text, and reopens after reload (4.7s)
+  ok 659 [chrome] › e2e\readiness-editor.spec.ts:386:1 › R10 removed service connection is explicitly recorded history, never a pending edit (772ms)
+  ok 660 [chrome] › e2e\readiness-shell.spec.ts:232:1 › R15 issue pagination preserves complete access and enabled keyboard focus at boundaries (668ms)
+  ok 661 [chrome] › e2e\review-expectations.spec.ts:50:3 › read-summary Delete Escape removes each dialog and restores its visible trigger (678ms)
+  ok 663 [chrome] › e2e\readiness-editor.spec.ts:409:1 › R17 Back restores the actual editor body scroll after deep Support navigation (692ms)
+  ok 665 [chrome] › e2e\review-expectations.spec.ts:74:1 › staged relationship search indexes domain labels and context rather than actions (554ms)
+  ok 662 [chrome] › e2e\recovery.spec.ts:123:1 › rejects file aliases and retains a failed recovery for retry (1.3s)
+  ok 666 [chrome] › e2e\readiness-editor.spec.ts:435:1 › R16 inspector failure after apply does not claim the committed rename was rolled back (676ms)
+  ok 664 [chrome] › e2e\readiness-shell.spec.ts:250:1 › J01 renamed populated enterprise saves, reopens and captures the current title (1.1s)
+  ok 668 [chrome] › e2e\recovery.spec.ts:151:1 › Stop recovery cancels a selection whose file read is still pending (380ms)
+  ok 667 [chrome] › e2e\route-diagnostics.spec.ts:11:1 › incoming rehome and CDS membership refusals link to exact owners without losing drafts (1.2s)
+  ok 670 [chrome] › e2e\scenario-builder.spec.ts:45:1 › unadded scenario intent is protected on navigation and can be discarded (879ms)
+  ok 671 [chrome] › e2e\session-import-journeys.spec.ts:46:1 › J3: invalid and late Open candidates preserve a pending draft until a reviewed replacement wins (999ms)
+  ok 669 [chrome] › e2e\scenario.spec.ts:131:1 › switches between As-Is, To-Be and Compare without writing, with the reduction metrics (1.3s)
+  ok 672 [chrome] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search outgoing dependencies only searches and preserves the unapplied entity draft (625ms)
+  ok 674 [chrome] › e2e\session-import-journeys.spec.ts:112:1 › J6: a late CSV read cannot replace the reviewed preview, survive Escape, or alter one-step Undo (675ms)
+  ok 673 [chrome] › e2e\scenario-builder.spec.ts:71:1 › an untouched builder stays clean and Add change preserves pending metadata (830ms)
+  ok 675 [chrome] › e2e\scenario.spec.ts:171:1 › signed baseline and planned services open a read-only projection, then Edit As-Is restores baseline editing (664ms)
+  ok 676 [chrome] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search incoming services only searches and preserves the unapplied entity draft (664ms)
+  ok 678 [chrome] › e2e\scenario-builder.spec.ts:98:1 › scenario sensitive acknowledgement is withdrawn when its exact input changes (772ms)
+  ok 680 [chrome] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search consuming organizations only searches and preserves the unapplied entity draft (624ms)
+  ok 679 [chrome] › e2e\scenario.spec.ts:231:1 › an invalidated CDS route stays visibly unresolved in the map, summary and SVG capture (676ms)
+  ok 682 [chrome] › e2e\usability-discovery.spec.ts:8:3 › Enter in Search joins networks only searches and preserves the unapplied entity draft (538ms)
+  ok 681 [chrome] › e2e\scenario-builder.spec.ts:115:1 › Apply changes commits scenario metadata and builder as one undoable command (740ms)
+  ok 685 [chrome] › e2e\scenario-builder.spec.ts:130:1 › invalid builder keeps both builder input and pending metadata without a partial write (667ms)
+  ok 683 [chrome] › e2e\scenario.spec.ts:280:1 › authors scenario changes in the editor, one undo step each, with the banner following (1.5s)
+  ok 684 [chrome] › e2e\usability-picker.spec.ts:62:1 › T01/T05: missing network and provider are created in context; child cancellation and parent cancellation retain the right work (1.0s)
+  ok 686 [chrome] › e2e\scenario-builder.spec.ts:145:1 › builder acknowledgement cannot apply stale scenario metadata (789ms)
+  ok 687 [chrome] › e2e\usability-records.spec.ts:109:1 › T03 a service can be understood and browsed without opening a draft or a loss prompt (818ms)
+  ok 689 [chrome] › e2e\scenario-builder.spec.ts:162:1 › legacy scenario collision is diagnosed and its invalid change can be removed (624ms)
+  ok 688 [chrome] › e2e\usability-picker.spec.ts:118:1 › T02/T10: choose a qualified duplicate among 500 services by keyboard without blur assignment (1.7s)
+  ok 691 [chrome] › e2e\scenario-builder.spec.ts:191:1 › scenario diagnostics explain unresolved routes and merge transfer effects (556ms)
+  ok 693 [chrome] › e2e\usability-shell.spec.ts:87:1 › document setup is disclosed while Save and history remain direct (352ms)
+  ok 690 [chrome] › e2e\usability-records.spec.ts:140:1 › T06 Create similar makes one independent service with reviewed shared references and optional support only (1.3s)
+  ok 692 [chrome] › e2e\usability-picker.spec.ts:187:1 › T10: an inline child's exact host warning is withdrawn on edit and fresh confirmation preserves the parent (577ms)
+  ok 694 [chrome] › e2e\usability-shell.spec.ts:110:1 › map questions are explicit and browsing retains the active focus and arranged positions (781ms)
+  ok 696 [chrome] › e2e\usability-validation.spec.ts:64:1 › Save file reveals a parked invalid draft and its exact field without a partial write (722ms)
+  ok 695 [chrome] › e2e\usability-records.spec.ts:216:1 › T07 a 500-service organization collection exposes explicit role filters, search and every result page (1.0s)
+  ok 698 [chrome] › e2e\usability-validation.spec.ts:83:1 › Apply and capture reveals a parked invalid draft, then captures only after correction (932ms)
+  ok 697 [chrome] › e2e\usability-shell.spec.ts:151:1 › inventory and global discovery page every match instead of rendering a button cloud (1.3s)
+  x  677 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels (6.8s)
+  ok 701 [chrome] › e2e\usability.spec.ts:10:1 › a corrected field clears its invalid state before the next refusal (396ms)
+  ok 699 [chrome] › e2e\usability-records.spec.ts:246:1 › T15 all seven baseline record types have readable summaries and explicit editing (1.5s)
+(node:65640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 702 [chrome] › e2e\usability.spec.ts:24:1 › connection inspector Edit consuming service enters the owner's edit task (685ms)
+  ok 700 [chrome] › e2e\usability-validation.spec.ts:120:1 › a connection inspector from a pending Open becomes inert when a same-ID dataset replaces its owner (1.4s)
+  ok 705 [chrome] › e2e\usability.spec.ts:50:1 › T03 selecting a service reads it before an explicit Edit task (805ms)
+  ok 706 [chrome] › e2e\workflow-coherence.spec.ts:10:1 › an existing service keeps fields and relations in one pending edit (1.1s)
+  ok 703 [chrome] › e2e\usability-records.spec.ts:283:1 › T07/T08 relationship search, role, page, scroll and row focus survive Back and read refresh (1.9s)
+  ok 707 [chrome] › e2e\usability.spec.ts:70:1 › T09 switching workspace parks the same draft for capture and guarded navigation (979ms)
+  ok 708 [chrome] › e2e\workflow-coherence.spec.ts:52:1 › new service defaults stop following after a deliberate marking choice (662ms)
+  ok 709 [chrome] › e2e\workflow-coherence.spec.ts:77:1 › a selected network opens the same service form with its context preselected (366ms)
+  x  704 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels (6.9s)
+(node:60712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  710 [chrome] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue (5.3s)
+  x  711 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels (6.7s)
+(node:57384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  712 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels (6.8s)
+(node:39068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  713 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels (6.7s)
+(node:73328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  714 [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels (6.6s)
+(node:52220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  715 [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access (6.9s)
+(node:52716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  716 [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access (6.9s)
+
+
+  1) [msedge] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Using SIM', exact: true })
+    Expected substring: "For an existing service, Apply changes commits its details, connections and support together as one undo step."
+    Received string:    "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Start a real assessmentUse File → Rename dataset to name your enterprise, including after adding records. Use Save file (Ctrl+S or Command+S) and choose an approved, durable .sqlite location. The document title and file name are separate; Save As chooses another file. Record only the relationships you have established and keep unanswered questions in your assessment notes.Practice: make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes records its details, connections and support together as one undo step. Finish adding or cancel any open connection task first. Discard changes restores its draft. Save file applies a valid active draft before saving it to disk. Invalid, unfinished or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareAs-Is is the current recorded enterprise, including applied changes not yet saved to file. To-Be applies a proposed scenario to that current baseline; Compare shows their differences. File saving is separate. Projected records are read-only until you deliberately open the baseline editor.Map lines show recorded dependencies between their endpoints. A line crossing another network box does not imply transit through that network. Layout avoids some obstacles; it does not validate network reachability.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog', { name: 'Using SIM', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Using SIM', exact: true })
+        14 × locator resolved to <dialog open="" class="help-dialog" aria-labelledby="help-title">…</dialog>
+           - unexpected value "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Start a real assessmentUse File → Rename dataset to name your enterprise, including after adding records. Use Save file (Ctrl+S or Command+S) and choose an approved, durable .sqlite location. The document title and file name are separate; Save As chooses another file. Record only the relationships you have established and keep unanswered questions in your assessment notes.Practice: make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes records its details, connections and support together as one undo step. Finish adding or cancel any open connection task first. Discard changes restores its draft. Save file applies a valid active draft before saving it to disk. Invalid, unfinished or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareAs-Is is the current recorded enterprise, including applied changes not yet saved to file. To-Be applies a proposed scenario to that current baseline; Compare shows their differences. File saving is separate. Projected records are read-only until you deliberately open the baseline editor.Map lines show recorded dependencies between their endpoints. A line crossing another network box does not imply transit through that network. Layout avoids some obstacles; it does not validate network reachability.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+
+
+      11 |   await page.getByRole("button", { name: "Help", exact: true }).click();
+      12 |   const help = page.getByRole("dialog", { name: "Using SIM", exact: true });
+    > 13 |   await expect(help).toContainText(
+         |                      ^
+      14 |     "For an existing service, Apply changes commits its details, connections and support together as one undo step.",
+      15 |   );
+      16 |   await expect(help).toContainText(
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\action-inspection.spec.ts:13:22
+
+    Error Context: test-results\action-inspection-Help-dis-cbdc5-rafts-and-scenario-metadata-msedge\error-context.md
+
+  2) [msedge] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor')
+    Expected substring: "projection: Merge plan"
+    Received string:    "Service: ReplacementTo-Be: Merge plan · Proposed record, read-onlyOpen scenarioPlanned service added by this scenario.Review: Add Replacement on Blue (UNCLASSIFIED)OverviewConnectionsSupportNetworkBlueClassificationUNCLASSIFIEDProvided byNot assignedApplicationNot assignedCategoryNot assignedFoundationalNot foundationalDescriptionNo description recorded.Depends on0–0 of 0No outgoing dependencies recorded.PreviousNextUsed by services1–1 of 1Orders (Amber)Via CDS: GuardConnection detailsNo matching relationships. Try another search or role.PreviousNextConsumed by organizations0–0 of 0No consuming organizations recorded.PreviousNextSupport assignments0–0 of 0No support organizations assigned.PreviousNextProjection detailsProjection effects: 0 support assignments dropped; 0 consumer links transferred; 1 dependencies transferred."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor') with timeout 5000ms
+      - waiting for getByTestId('editor')
+        14 × locator resolved to <aside class="editor" aria-label="Editor" data-testid="editor" data-mode="projection">…</aside>
+           - unexpected value "Service: ReplacementTo-Be: Merge plan · Proposed record, read-onlyOpen scenarioPlanned service added by this scenario.Review: Add Replacement on Blue (UNCLASSIFIED)OverviewConnectionsSupportNetworkBlueClassificationUNCLASSIFIEDProvided byNot assignedApplicationNot assignedCategoryNot assignedFoundationalNot foundationalDescriptionNo description recorded.Depends on0–0 of 0No outgoing dependencies recorded.PreviousNextUsed by services1–1 of 1Orders (Amber)Via CDS: GuardConnection detailsNo matching relationships. Try another search or role.PreviousNextConsumed by organizations0–0 of 0No consuming organizations recorded.PreviousNextSupport assignments0–0 of 0No support organizations assigned.PreviousNextProjection detailsProjection effects: 0 support assignments dropped; 0 consumer links transferred; 1 dependencies transferred."
+
+
+      247 |     await find(page, "Replacement (Blue)");
+      248 |     await expect(editor).toContainText("Planned service added by this scenario");
+    > 249 |     await expect(editor).toContainText("projection: Merge plan");
+          |                          ^
+      250 |     await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
+      251 |     await page.getByTestId("map-canvas").evaluate((container, target) => {
+      252 |       const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\connected-navigation-acceptance.spec.ts:249:26
+
+    Error Context: test-results\connected-navigation-accep-bff4f-venance-in-both-projections-msedge\error-context.md
+
+  3) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-b9c8d-s-usable-at-1600-CSS-pixels-msedge\error-context.md
+
+  4) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-aea1f-s-usable-at-1366-CSS-pixels-msedge\error-context.md
+
+  5) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-0a377-s-usable-at-1024-CSS-pixels-msedge\error-context.md
+
+  6) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-92790-ns-usable-at-768-CSS-pixels-msedge\error-context.md
+
+  7) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-f8142-ns-usable-at-390-CSS-pixels-msedge\error-context.md
+
+  8) [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-a4d01-ns-usable-at-320-CSS-pixels-msedge\error-context.md
+
+  9) [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:232:7
+
+    Error Context: test-results\usability-layout-T11-T12-a-54b14-s-editing-and-picker-access-msedge\error-context.md
+
+  10) [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:232:7
+
+    Error Context: test-results\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\error-context.md
+
+  11) [msedge] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('dataset-message')
+    Expected substring: "organization cycle"
+    Received string:    "Opened with 1 existing data issue. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('dataset-message') with timeout 5000ms
+      - waiting for getByTestId('dataset-message')
+        14 × locator resolved to <p role="status" data-severity="neutral" data-testid="dataset-message">Opened with 1 existing data issue. Use File → Rev…</p>
+           - unexpected value "Opened with 1 existing data issue. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten."
+
+
+      110 |   await (await chooser).setFiles({ name: "legacy.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
+      111 |   await expect(page.getByTestId("dataset-status")).toContainText("Legacy");
+    > 112 |   await expect(page.getByTestId("dataset-message")).toContainText("organization cycle");
+          |                                                     ^
+      113 | });
+      114 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\workflow-coherence.spec.ts:112:53
+
+    Error Context: test-results\workflow-coherence-opening-15f8f-its-existing-semantic-issue-msedge\error-context.md
+
+  12) [chrome] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Using SIM', exact: true })
+    Expected substring: "For an existing service, Apply changes commits its details, connections and support together as one undo step."
+    Received string:    "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Start a real assessmentUse File → Rename dataset to name your enterprise, including after adding records. Use Save file (Ctrl+S or Command+S) and choose an approved, durable .sqlite location. The document title and file name are separate; Save As chooses another file. Record only the relationships you have established and keep unanswered questions in your assessment notes.Practice: make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes records its details, connections and support together as one undo step. Finish adding or cancel any open connection task first. Discard changes restores its draft. Save file applies a valid active draft before saving it to disk. Invalid, unfinished or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareAs-Is is the current recorded enterprise, including applied changes not yet saved to file. To-Be applies a proposed scenario to that current baseline; Compare shows their differences. File saving is separate. Projected records are read-only until you deliberately open the baseline editor.Map lines show recorded dependencies between their endpoints. A line crossing another network box does not imply transit through that network. Layout avoids some obstacles; it does not validate network reachability.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog', { name: 'Using SIM', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Using SIM', exact: true })
+        14 × locator resolved to <dialog open="" class="help-dialog" aria-labelledby="help-title">…</dialog>
+           - unexpected value "Using SIMInventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.Start a real assessmentUse File → Rename dataset to name your enterprise, including after adding records. Use Save file (Ctrl+S or Command+S) and choose an approved, durable .sqlite location. The document title and file name are separate; Save As chooses another file. Record only the relationships you have established and keep unanswered questions in your assessment notes.Practice: make your first mapAdd two fictional networks, such as Coral and Amber. A network is a domain that contains services.Add Portal on Coral and Identity on Amber. A service is a capability that a network provides.Edit Portal. In Connections, record its explicit dependency on Identity. Choose a CDS only when a cross-domain solution is recorded for that route. Apply changes.Open Map and ask Depends on, Used by, or Network connections. Arrows run from the consuming service to the provider it depends on. Check Filters and hidden-link counts before drawing conclusions.Choose Save file and a temporary .sqlite location. Reopen the file to continue later. Use Capture to give a colleague a picture with its scope and classification.Try the fictional demoStart with a service, ask what it depends on, then inspect a connection. Compare a scenario with As-Is before editing the baseline. The demo is fictional and UNCLASSIFIED.Open demoApply, save and recoverAdd creates a record. For an existing service, Apply changes records its details, connections and support together as one undo step. Finish adding or cancel any open connection task first. Discard changes restores its draft. Save file applies a valid active draft before saving it to disk. Invalid, unfinished or unconfirmed input stops the save.In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.Saved means the active file write completed. In the download fallback, Download requested means a download was handed to the browser; check the downloaded file. Save As chooses another file. Cancelling a picker keeps your work.Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.Map vocabularyDependencyAn explicit consuming service → providing service relationship. A consuming organization is a separate inventory relationship.CDSA recorded cross-domain solution between networks. No CDS recorded is uncertainty about the route, not proof of direct connectivity.Foundational serviceA shared underlying capability. Links to these services are hidden by default to reduce clutter; the scope disclosure counts the omitted links.As-Is / To-Be / CompareAs-Is is the current recorded enterprise, including applied changes not yet saved to file. To-Be applies a proposed scenario to that current baseline; Compare shows their differences. File saving is separate. Projected records are read-only until you deliberately open the baseline editor.Map lines show recorded dependencies between their endpoints. A line crossing another network box does not imply transit through that network. Layout avoids some obstacles; it does not validate network reachability.Your files and classificationSIM runs offline from this HTML. It does not discover networks, upload data, or store datasets in browser storage. Your .sqlite files are ordinary local files, not encrypted vaults. Keep real host names and IP addresses out; a warning is not a classification guarantee. The banner and exports show the highest marking anywhere in the dataset, even in a filtered view.Licenses and noticesClose Help"
+
+
+      11 |   await page.getByRole("button", { name: "Help", exact: true }).click();
+      12 |   const help = page.getByRole("dialog", { name: "Using SIM", exact: true });
+    > 13 |   await expect(help).toContainText(
+         |                      ^
+      14 |     "For an existing service, Apply changes commits its details, connections and support together as one undo step.",
+      15 |   );
+      16 |   await expect(help).toContainText(
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\action-inspection.spec.ts:13:22
+
+    Error Context: test-results\action-inspection-Help-dis-cbdc5-rafts-and-scenario-metadata-chrome\error-context.md
+
+  13) [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor')
+    Expected substring: "projection: Merge plan"
+    Received string:    "Service: ReplacementTo-Be: Merge plan · Proposed record, read-onlyOpen scenarioPlanned service added by this scenario.Review: Add Replacement on Blue (UNCLASSIFIED)OverviewConnectionsSupportNetworkBlueClassificationUNCLASSIFIEDProvided byNot assignedApplicationNot assignedCategoryNot assignedFoundationalNot foundationalDescriptionNo description recorded.Depends on0–0 of 0No outgoing dependencies recorded.PreviousNextUsed by services1–1 of 1Orders (Amber)Via CDS: GuardConnection detailsNo matching relationships. Try another search or role.PreviousNextConsumed by organizations0–0 of 0No consuming organizations recorded.PreviousNextSupport assignments0–0 of 0No support organizations assigned.PreviousNextProjection detailsProjection effects: 0 support assignments dropped; 0 consumer links transferred; 1 dependencies transferred."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor') with timeout 5000ms
+      - waiting for getByTestId('editor')
+        14 × locator resolved to <aside class="editor" aria-label="Editor" data-testid="editor" data-mode="projection">…</aside>
+           - unexpected value "Service: ReplacementTo-Be: Merge plan · Proposed record, read-onlyOpen scenarioPlanned service added by this scenario.Review: Add Replacement on Blue (UNCLASSIFIED)OverviewConnectionsSupportNetworkBlueClassificationUNCLASSIFIEDProvided byNot assignedApplicationNot assignedCategoryNot assignedFoundationalNot foundationalDescriptionNo description recorded.Depends on0–0 of 0No outgoing dependencies recorded.PreviousNextUsed by services1–1 of 1Orders (Amber)Via CDS: GuardConnection detailsNo matching relationships. Try another search or role.PreviousNextConsumed by organizations0–0 of 0No consuming organizations recorded.PreviousNextSupport assignments0–0 of 0No support organizations assigned.PreviousNextProjection detailsProjection effects: 0 support assignments dropped; 0 consumer links transferred; 1 dependencies transferred."
+
+
+      247 |     await find(page, "Replacement (Blue)");
+      248 |     await expect(editor).toContainText("Planned service added by this scenario");
+    > 249 |     await expect(editor).toContainText("projection: Merge plan");
+          |                          ^
+      250 |     await expect(editor.getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
+      251 |     await page.getByTestId("map-canvas").evaluate((container, target) => {
+      252 |       const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\connected-navigation-acceptance.spec.ts:249:26
+
+    Error Context: test-results\connected-navigation-accep-bff4f-venance-in-both-projections-chrome\error-context.md
+
+  14) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-b9c8d-s-usable-at-1600-CSS-pixels-chrome\error-context.md
+
+  15) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-aea1f-s-usable-at-1366-CSS-pixels-chrome\error-context.md
+
+  16) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-0a377-s-usable-at-1024-CSS-pixels-chrome\error-context.md
+
+  17) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-92790-ns-usable-at-768-CSS-pixels-chrome\error-context.md
+
+  18) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-f8142-ns-usable-at-390-CSS-pixels-chrome\error-context.md
+
+  19) [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:192:5
+
+    Error Context: test-results\usability-layout-T11-T12-l-a4d01-ns-usable-at-320-CSS-pixels-chrome\error-context.md
+
+  20) [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:232:7
+
+    Error Context: test-results\usability-layout-T11-T12-a-54b14-s-editing-and-picker-access-chrome\error-context.md
+
+  21) [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('editor').getByTestId('error-name')
+    Expected pattern: /required/i
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('editor').getByTestId('error-name') with timeout 5000ms
+      - waiting for getByTestId('editor').getByTestId('error-name')
+        14 × locator resolved to <p hidden="" class="field-error" id="field-name-error" data-testid="error-name"></p>
+           - unexpected value ""
+
+
+      173 |   await editor.getByLabel("Name", { exact: true }).fill("");
+      174 |   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    > 175 |   await expect(editor.getByTestId("error-name")).toContainText(/required/i);
+          |                                                  ^
+      176 |   await contained(page, editor.getByRole("button", { name: "Apply changes", exact: true }));
+      177 |   await noHorizontalOverflow(page);
+      178 |   await capture(page, info, `${label}-validation.png`);
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:175:50)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:232:7
+
+    Error Context: test-results\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\error-context.md
+
+  22) [chrome] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('dataset-message')
+    Expected substring: "organization cycle"
+    Received string:    "Opened with 1 existing data issue. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('dataset-message') with timeout 5000ms
+      - waiting for getByTestId('dataset-message')
+        14 × locator resolved to <p role="status" data-severity="neutral" data-testid="dataset-message">Opened with 1 existing data issue. Use File → Rev…</p>
+           - unexpected value "Opened with 1 existing data issue. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten."
+
+
+      110 |   await (await chooser).setFiles({ name: "legacy.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
+      111 |   await expect(page.getByTestId("dataset-status")).toContainText("Legacy");
+    > 112 |   await expect(page.getByTestId("dataset-message")).toContainText("organization cycle");
+          |                                                     ^
+      113 | });
+      114 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\workflow-coherence.spec.ts:112:53
+
+    Error Context: test-results\workflow-coherence-opening-15f8f-its-existing-semantic-issue-chrome\error-context.md
+
+  22 failed
+    [msedge] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata
+    [msedge] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels
+    [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access
+    [msedge] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access
+    [msedge] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue
+    [chrome] › e2e\action-inspection.spec.ts:7:1 › Help distinguishes immediate scenario commands from service drafts and scenario metadata
+    [chrome] › e2e\connected-navigation-acceptance.spec.ts:240:1 › a dependency merged into a virtual planned service stays read-only with scenario provenance in both projections
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1600 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1366 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 1024 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 768 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 390 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:190:3 › T11/T12: long connected service remains usable at 320 CSS pixels
+    [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 200 percent preserves editing and picker access
+    [chrome] › e2e\usability-layout.spec.ts:197:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access
+    [chrome] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue
+  694 passed (3.9m)

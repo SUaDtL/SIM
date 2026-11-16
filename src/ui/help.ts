@@ -13,7 +13,13 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
       { class: "help-intro" },
       "Inventory the services each network provides, record what they depend on, and make a map for a decision. SIM draws the relationships you enter; connectivity is not verified.",
     ),
-    el("h3", {}, "Make your first map"),
+    el("h3", {}, "Start a real assessment"),
+    el(
+      "p",
+      {},
+      "Use File → Rename dataset to name your enterprise, including after adding records. Use Save file (Ctrl+S or Command+S) and choose an approved, durable .sqlite location. The document title and file name are separate; Save As chooses another file. Record only the relationships you have established and keep unanswered questions in your assessment notes.",
+    ),
+    el("h3", {}, "Practice: make your first map"),
     el(
       "ol",
       {},
@@ -53,12 +59,12 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
     el(
       "p",
       {},
-      "Add creates a record. For an existing service, Apply changes commits its details, connections and support together as one undo step. Discard changes restores its draft. Save file applies a valid active draft before saving dataset bytes. Invalid or unconfirmed input stops the save.",
+      "Add creates a record. For an existing service, Apply changes records its details, connections and support together as one undo step. Finish adding or cancel any open connection task first. Discard changes restores its draft. Save file applies a valid active draft before saving it to disk. Invalid, unfinished or unconfirmed input stops the save.",
     ),
     el(
       "p",
       {},
-      "In a scenario, Add change and Remove take effect immediately. Use Undo to reverse those commands. Apply changes saves the scenario name, description and any unadded change-builder choice together. Discard changes resets unapplied metadata and unadded change-builder choices. Cancel lets you choose how to handle that pending work. Neither reverses changes already added or removed.",
+      "In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.",
     ),
     el(
       "p",
@@ -96,8 +102,13 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
       el(
         "dd",
         {},
-        "The saved baseline, a proposed scenario, or their comparison. Projected records are read-only until you deliberately open the baseline editor.",
+        "As-Is is the current recorded enterprise, including applied changes not yet saved to file. To-Be applies a proposed scenario to that current baseline; Compare shows their differences. File saving is separate. Projected records are read-only until you deliberately open the baseline editor.",
       ),
+    ),
+    el(
+      "p",
+      {},
+      "Map lines show recorded dependencies between their endpoints. A line crossing another network box does not imply transit through that network. Layout avoids some obstacles; it does not validate network reachability.",
     ),
     el("h3", {}, "Your files and classification"),
     el(

@@ -16,7 +16,7 @@ import {
   suggestsFoundational,
 } from "./forms";
 import type { Selection } from "./list-panel";
-import { createScenarioChanges, type ScenarioChangeBuilder } from "./scenario-changes";
+import { createScenarioChanges, describeChange, type ScenarioChangeBuilder } from "./scenario-changes";
 import {
   captureRecordSummaryView,
   createRecordSummary,
@@ -33,8 +33,12 @@ export interface EditorContext {
   selectionChanged(): void;
   draftChanged?(): void;
   requestServiceOnNetwork?(networkId: number): void;
-  requestNavigate?(target: { type: EntityType; id: number }, intent: "peek" | "edit"): void;
-  requestDependency?(consumer: number, provider: number): void;
+  requestNavigate?(target: { type: EntityType; id: number; changeId?: number }, intent: "peek" | "edit"): void;
+  requestDependency?(
+    consumer: number,
+    provider: number,
+    pending?: { snapshot: Snapshot; label: string; scope?: "pending" | "recorded" | "projected" },
+  ): void;
   requestCancel?(): void;
   requestSimilar?(sourceId: number): void;
   /** Successful guarded deletion has closed the editor and any confirmation modal. */
@@ -57,6 +61,7 @@ export interface EditorPanel {
   isEditing(): boolean;
   viewContext(): EditorViewContext;
   restoreViewContext(context: EditorViewContext): void;
+  revealScenarioChange(changeId: number): boolean;
   close(): void;
   /** The dataset changed: refresh relationship rows, keeping any text the user is typing. */
   refresh(): void;
@@ -71,16 +76,21 @@ export interface EditorPanel {
     view: { kind: "to-be" | "compare"; scenarioId: number },
     projected: Snapshot,
     comparison: Comparison | null,
-    actions: { editAsIs(entity: MapEntity, id: number): void; openScenario(id: number): void },
+    actions: {
+      editAsIs(entity: MapEntity, id: number): void;
+      openScenario(id: number): void;
+      inspectRecord?(target: { type: EntityType; id: number }): void;
+    },
   ): void;
   openServiceOnNetwork(networkId: number): void;
 }
 
 const TIERS: readonly Tier[] = [1, 2, 3];
+const RELATIONSHIP_PAGE_SIZE = 20;
 
 function describe(error: unknown): string {
   if (error instanceof ValidationError || error instanceof SensitiveInputWarning) return error.message;
-  return "Something went wrong; nothing was changed.";
+  return "The operation could not finish. Your dataset remains open. Use Save As to protect applied changes before reopening a file.";
 }
 
 export function createEditor(ctx: EditorContext): EditorPanel {
@@ -97,6 +107,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   let editing = false;
   let activeSection = "details";
   const relationViews = new Map<string, { query: string; page: number }>();
+  const routeIntents = new Map<number, number | null>();
   let sectionErrors = new Set<string>();
   function showSection(section: string): void {
     activeSection = section;
@@ -138,6 +149,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     serviceDraft = null;
     scenarioBuilder = null;
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
+    routeIntents.clear();
     const summary = createRecordSummary({
       repo: ctx.repo(),
       target: { type, id },
@@ -269,6 +281,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
 
   function hasPendingDraft(): boolean {
     if (relationIntent.touched) return true;
+    if (routeIntents.size > 0) return true;
     if (scenarioBuilder?.hasPendingIntent()) return true;
     if (!collectCurrent || !baseValues) return false;
     if (JSON.stringify(collectCurrent()) !== JSON.stringify(baseValues)) return true;
@@ -334,11 +347,16 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     view: { kind: "to-be" | "compare"; scenarioId: number },
     projected: Snapshot,
     comparison: Comparison | null,
-    actions: { editAsIs(entity: MapEntity, id: number): void; openScenario(id: number): void },
+    actions: {
+      editAsIs(entity: MapEntity, id: number): void;
+      openScenario(id: number): void;
+      inspectRecord?(target: { type: EntityType; id: number }): void;
+    },
   ): void {
     editing = false;
     element.dataset["mode"] = "projection";
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
+    routeIntents.clear();
     current = null;
     relations = null;
     collectCurrent = null;
@@ -350,32 +368,85 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     scenarioBuilder = null;
     const origin = node.data.origin;
     const scenarioName = projected.scenarios.find((item) => item.id === view.scenarioId)?.name ?? "Scenario";
-    const title = node.data.label.split("\n")[0] ?? "Map item";
-    const details: HTMLElement[] = [
-      el("p", {}, `${view.kind === "compare" ? "Compare" : "To-Be"} projection: ${scenarioName}`),
-      el(
-        "p",
-        {},
-        origin.kind === "planned"
-          ? "Planned service added by this scenario."
-          : "Existing As-Is record in this projection.",
-      ),
-    ];
+    const asIs = ctx.repo().snapshot();
+    const baselineService =
+      node.data.entity === "service" && origin.kind === "baseline"
+        ? asIs.services.find((item) => item.id === origin.entityId)
+        : undefined;
+    const projectedService =
+      node.data.entity === "service" ? projected.services.find((item) => item.id === node.data.entityId) : undefined;
+    const comparisonStatus = node.data.entity === "service" ? comparison?.status.get(node.data.entityId) : undefined;
+    const removed = Boolean(
+      baselineService && (!projectedService || comparisonStatus === "retired" || comparisonStatus === "merged"),
+    );
+    const summarySnapshot = removed ? asIs : projected;
+    const summary = createRecordSummary({
+      repo: ctx.repo(),
+      snapshot: summarySnapshot,
+      readOnly: true,
+      context: `${view.kind === "compare" ? "Compare" : "To-Be"}: ${scenarioName}${removed ? " · Removed from proposal; current As-Is details shown" : " · Proposed record, read-only"}`,
+      target: { type: node.data.entity, id: node.data.entityId },
+      onNavigate: (target) => actions.inspectRecord?.(target),
+      onDependency: (consumer, provider) =>
+        ctx.requestDependency?.(consumer, provider, {
+          snapshot: summarySnapshot,
+          label: removed
+            ? "Current As-Is connection for a removed service — read-only"
+            : "Projected connection — read-only",
+          scope: removed ? "recorded" : "projected",
+        }),
+    });
+    const details: HTMLElement[] =
+      origin.kind === "planned" ? [el("p", {}, "Planned service added by this scenario.")] : [];
+    const technical: HTMLElement[] = [];
     if (node.data.entity === "service") {
-      const service = projected.services.find((item) => item.id === node.data.entityId);
-      if (service) {
-        const network = projected.networks.find((item) => item.id === service.networkId);
-        details.push(el("p", {}, `Network: ${network?.name ?? "Unavailable"}; marking: ${service.marking}`));
-        const providers = projected.dependencies.filter((item) => item.consumerServiceId === service.id);
-        const usedBy = projected.dependencies.filter((item) => item.providerServiceId === service.id);
-        const consumers = projected.consumption.filter((item) => item.serviceId === service.id);
+      if (baselineService && projectedService) {
+        const beforeNetwork =
+          asIs.networks.find((item) => item.id === baselineService.networkId)?.name ?? "Unavailable network";
+        const afterNetwork =
+          projected.networks.find((item) => item.id === projectedService.networkId)?.name ?? "Unavailable network";
+        if (baselineService.networkId !== projectedService.networkId)
+          details.push(el("p", {}, `Proposed move: ${beforeNetwork} → ${afterNetwork}`));
+        if (baselineService.providerOrgId !== projectedService.providerOrgId) {
+          const beforeProvider =
+            asIs.organizations.find((item) => item.id === baselineService.providerOrgId)?.name ?? "Not assigned";
+          const afterProvider =
+            projected.organizations.find((item) => item.id === projectedService.providerOrgId)?.name ?? "Not assigned";
+          details.push(el("p", {}, `Proposed provider: ${beforeProvider} → ${afterProvider}`));
+        }
+      }
+      const changes = ctx.repo().listScenarioChanges(view.scenarioId);
+      const relevant = changes.filter((change) =>
+        origin.kind === "planned"
+          ? change.id === origin.changeId
+          : change.kind !== "add" &&
+            (change.serviceId === node.data.entityId ||
+              (change.kind === "merge" && change.intoServiceId === node.data.entityId)),
+      );
+      if (removed) {
+        const change = relevant.find((item) => item.kind === "retire" || item.kind === "merge");
         details.push(
           el(
             "p",
             {},
-            `${String(providers.length)} outgoing dependencies; Used by ${String(usedBy.length)} ${usedBy.length === 1 ? "service" : "services"}; ${String(consumers.length)} consumer organizations.`,
+            change?.kind === "merge" ? "Merged into another service in this proposal." : "Retired in this proposal.",
           ),
         );
+      }
+      if (relevant.length)
+        details.push(
+          el(
+            "div",
+            { class: "actions" },
+            ...relevant.map((change) =>
+              button(`Review: ${describeChange(ctx.repo(), change, changes)}`, () => {
+                ctx.requestNavigate?.({ type: "scenario", id: view.scenarioId, changeId: change.id }, "peek");
+              }),
+            ),
+          ),
+        );
+      const service = projected.services.find((item) => item.id === node.data.entityId);
+      if (service) {
         if ("projection" in projected) {
           const provenance = (projected as ProjectedSnapshot).projection;
           const related = projected.dependencies.filter(
@@ -408,7 +479,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               item.after.providerServiceId === service.id,
           ).length;
           if (dropped + transfers + links > 0) {
-            details.push(
+            technical.push(
               el(
                 "p",
                 {},
@@ -418,11 +489,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           }
         }
       }
-      const status = comparison?.status.get(node.data.entityId);
-      if (status) details.push(el("p", {}, `Comparison status: ${status}.`));
     }
     if (comparison) {
-      details.push(
+      technical.push(
         el(
           "p",
           {},
@@ -439,7 +508,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         );
         const changedRoutes = comparison.routeChanges.filter((route) => relatedKeys.has(route.key));
         if (changedRoutes.length > 0) {
-          details.push(
+          technical.push(
             el(
               "p",
               {},
@@ -449,7 +518,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         }
       }
     }
-    const actionsRow = el("div", { class: "actions" });
+    const actionsRow = summary.querySelector<HTMLElement>(".record-summary-actions") ?? el("div", { class: "actions" });
     if (origin.kind === "baseline") {
       actionsRow.append(
         button("Edit As-Is", () => {
@@ -462,7 +531,14 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         actions.openScenario(view.scenarioId);
       }),
     );
-    element.replaceChildren(el("h2", {}, title), ...details, actionsRow);
+    if (details.length) {
+      summary.insertBefore(
+        el("section", { "aria-label": "Proposed changes" }, ...details),
+        summary.querySelector(".summary-tabs"),
+      );
+    }
+    if (technical.length) summary.append(el("details", {}, el("summary", {}, "Projection details"), ...technical));
+    element.replaceChildren(summary);
     ctx.selectionChanged();
     draftChanged();
   }
@@ -500,6 +576,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     editing = false;
     element.dataset["mode"] = "empty";
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
+    routeIntents.clear();
     current = null;
     relations = null;
     collectCurrent = null;
@@ -521,6 +598,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     sectionErrors = new Set();
     relationViews.clear();
     relationIntent = { consumer: "", provider: "", via: "", touched: false };
+    routeIntents.clear();
     const repo = ctx.repo();
     const d = descriptor(type);
     const noun = nounOf(type);
@@ -588,7 +666,14 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     let pending: FormValues | null = null;
     let pendingSignature: string | null = null;
     const signature = (): string =>
-      JSON.stringify([type, id, collect(), serviceDraft, scenarioBuilder?.collectPendingIntent() ?? null]);
+      JSON.stringify([
+        type,
+        id,
+        collect(),
+        serviceDraft,
+        [...routeIntents],
+        scenarioBuilder?.collectPendingIntent() ?? null,
+      ]);
     warning.append(
       button(
         "Save anyway",
@@ -618,6 +703,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         e.hidden = true;
       }
       message.textContent = "";
+      for (const action of element.querySelectorAll('[aria-describedby="connection-task-error"]'))
+        action.removeAttribute("aria-describedby");
+      for (const cue of element.querySelectorAll('[data-testid="connection-task-error"]')) cue.remove();
       diagnosticActions.replaceChildren();
       conflictActions.hidden = true;
       notice.textContent = "";
@@ -665,7 +753,16 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       }
       try {
         if (type === "scenario" && id !== null && scenarioBuilder) {
-          const intent = scenarioBuilder.collectPendingIntent();
+          let intent: ReturnType<ScenarioChangeBuilder["collectPendingIntent"]>;
+          try {
+            intent = scenarioBuilder.collectPendingIntent();
+          } catch (error) {
+            if (error instanceof ValidationError || error instanceof SensitiveInputWarning) {
+              scenarioBuilder.showError(error);
+              return false;
+            }
+            throw error;
+          }
           const phase: { value: "metadata" | "builder" } = { value: "metadata" };
           try {
             ctx.repo().atomic(() => {
@@ -693,6 +790,55 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           return true;
         }
         if (type === "service" && serviceDraft) {
+          if (relationIntent.touched || routeIntents.size > 0) {
+            sectionErrors.add("connections");
+            showSection("connections");
+            const routeProvider = routeIntents.keys().next().value;
+            if (
+              routeProvider !== undefined &&
+              !element.querySelector(`[data-route-provider="${String(routeProvider)}"] select`)
+            ) {
+              const view = relationViews.get("dependencies");
+              const index = serviceDraft.dependencies.findIndex(
+                (dependency) => dependency.providerServiceId === routeProvider,
+              );
+              if (view && index >= 0) {
+                view.query = "";
+                view.page = Math.floor(index / RELATIONSHIP_PAGE_SIZE);
+                renderRelations();
+              }
+            }
+            const route =
+              routeProvider === undefined
+                ? null
+                : element.querySelector<HTMLElement>(`[data-route-provider="${String(routeProvider)}"] select`);
+            message.textContent =
+              routeIntents.size > 0
+                ? "Finish the route choice: Use route or Cancel route before applying changes."
+                : "Finish adding or cancel this connection before applying changes.";
+            reveal(message);
+            const action =
+              route ??
+              element.querySelector<HTMLElement>(
+                relationIntent.consumer ? "#add-consumer-action" : "#add-dependency-action",
+              );
+            if (action) {
+              const cue = el(
+                "p",
+                {
+                  class: "field-error",
+                  role: "alert",
+                  id: "connection-task-error",
+                  "data-testid": "connection-task-error",
+                },
+                message.textContent,
+              );
+              action.before(cue);
+              action.setAttribute("aria-describedby", cue.id);
+              reveal(action);
+            }
+            return false;
+          }
           const draft = {
             fields: serviceInputFromValues(input),
             support: serviceDraft.support,
@@ -876,7 +1022,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           "p",
           { class: "hint" },
           type === "scenario" && id !== null
-            ? "Add change and Remove take effect immediately; use Undo to reverse them. Apply changes saves metadata and any unadded builder choice together. Cancel and Discard handle unapplied metadata and unadded choices; they do not reverse completed Add or Remove commands. Save file also applies a valid draft."
+            ? "Apply changes saves the name, description and any proposal you have not added yet. Save file also applies valid changes."
             : `${id === null ? `Use Add ${noun} to create this record.` : "Use Apply changes for all sections."} Save file also applies a valid draft.`,
         ),
       ),
@@ -1005,7 +1151,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                     el(
                       "p",
                       { class: "hint" },
-                      "This shared record remains available if you later cancel the service. Your service is still a draft.",
+                      `This shared record remains available if you later cancel the ${owner ? nounOf(owner.type) : "record"}. Your ${owner ? nounOf(owner.type) : "record"} is still a draft.`,
                     ),
                     message,
                   );
@@ -1028,7 +1174,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                         ...d.list(repo).map((item) => option(String(item.id), item.name)),
                       );
                       const notice = element.querySelector<HTMLElement>(".notice");
-                      if (notice) notice.textContent = `${d.label} created. Service changes are still pending.`;
+                      if (notice) {
+                        const parent = owner ? nounOf(owner.type) : "record";
+                        notice.textContent = `${d.label} created. ${parent[0]?.toUpperCase() ?? ""}${parent.slice(1)} changes are still pending.`;
+                      }
                       complete(String(id));
                       draftChanged();
                     } catch (error) {
@@ -1289,7 +1438,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       next.setAttribute("aria-label", `Next ${title} page`);
       const paging = el("div", { class: "relationship-paging" }, previous, next);
       function render(): void {
-        const result = collectionPage(rows, view.query, view.page);
+        const result = collectionPage(rows, view.query, view.page, RELATIONSHIP_PAGE_SIZE);
         view.page = result.page;
         list.replaceChildren(...result.rows.map((row) => row.element));
         count.textContent = `${String(result.first)}-${String(result.last)} of ${String(result.total)} relationships`;
@@ -1378,7 +1527,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       draft.consumerOrgIds.push(Number(consumerPick.value));
       draft.consumerOrgIds.sort((a, b) => a - b);
       relationIntent.consumer = "";
-      relationIntent.touched = false;
+      relationIntent.touched = Boolean(relationIntent.provider || relationIntent.via);
       changed("add-consumer");
     });
     addConsumer.id = "add-consumer-action";
@@ -1397,48 +1546,64 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         class: "route-edit inline-menu-task",
         role: "group",
         "aria-label": `Edit route for ${name}`,
+        "data-route-provider": String(dep.providerServiceId),
       });
       route.hidden = true;
+      const beginRoute = (focus = true): void => {
+        actions.open = false;
+        route.hidden = false;
+        const pick = el(
+          "select",
+          { "aria-label": `Route for ${name}` },
+          option("", "No CDS recorded", dep.viaCdsId === null),
+        );
+        const networkId = Number(element.querySelector<HTMLSelectElement>("#field-networkId")?.value);
+        for (const cds of cdsList) {
+          const valid =
+            provider &&
+            provider.networkId !== networkId &&
+            cds.networkIds.includes(networkId) &&
+            cds.networkIds.includes(provider.networkId);
+          if (cds.id === dep.viaCdsId || valid) {
+            const item = option(
+              String(cds.id),
+              cds.name + (valid ? "" : " (current route; not valid for these endpoints)"),
+              cds.id === dep.viaCdsId,
+            );
+            item.disabled = !valid;
+            pick.append(item);
+          }
+        }
+        route.replaceChildren(
+          pick,
+          button("Use route", () => {
+            dep.viaCdsId = pick.value === "" ? null : Number(pick.value);
+            routeIntents.delete(dep.providerServiceId);
+            changed("add-dependency");
+          }),
+          button("Cancel route", () => {
+            routeIntents.delete(dep.providerServiceId);
+            route.replaceChildren();
+            route.hidden = true;
+            draftChanged();
+            actions.querySelector("summary")?.focus();
+          }),
+        );
+        pick.value = String(
+          (routeIntents.has(dep.providerServiceId) ? routeIntents.get(dep.providerServiceId) : dep.viaCdsId) ?? "",
+        );
+        pick.addEventListener("change", () => {
+          const candidate = pick.value === "" ? null : Number(pick.value);
+          if (candidate === dep.viaCdsId) routeIntents.delete(dep.providerServiceId);
+          else routeIntents.set(dep.providerServiceId, candidate);
+          draftChanged();
+        });
+        if (focus) pick.focus();
+      };
       const editRoute = button(
         "Edit route",
         () => {
-          actions.open = false;
-          route.hidden = false;
-          const pick = el(
-            "select",
-            { "aria-label": `Route for ${name}` },
-            option("", "No CDS recorded", dep.viaCdsId === null),
-          );
-          const networkId = Number(element.querySelector<HTMLSelectElement>("#field-networkId")?.value);
-          for (const cds of cdsList) {
-            const valid =
-              provider &&
-              provider.networkId !== networkId &&
-              cds.networkIds.includes(networkId) &&
-              cds.networkIds.includes(provider.networkId);
-            if (cds.id === dep.viaCdsId || valid) {
-              const item = option(
-                String(cds.id),
-                cds.name + (valid ? "" : " (current route; not valid for these endpoints)"),
-                cds.id === dep.viaCdsId,
-              );
-              item.disabled = !valid;
-              pick.append(item);
-            }
-          }
-          route.replaceChildren(
-            pick,
-            button("Use route", () => {
-              dep.viaCdsId = pick.value === "" ? null : Number(pick.value);
-              changed("add-dependency");
-            }),
-            button("Cancel route", () => {
-              route.replaceChildren();
-              route.hidden = true;
-              actions.querySelector("summary")?.focus();
-            }),
-          );
-          pick.focus();
+          beginRoute();
         },
         { "aria-label": `Edit route to ${name}` },
       );
@@ -1457,7 +1622,48 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       if (serviceId !== null)
         actions.append(
           button(`Inspect connection to ${label}`, () => {
-            ctx.requestDependency?.(serviceId, dep.providerServiceId);
+            if (!hasPendingDraft()) {
+              ctx.requestDependency?.(serviceId, dep.providerServiceId);
+              return;
+            }
+            const snapshot = ctx.repo().snapshot();
+            const fields = collectCurrent ? serviceInputFromValues(collectCurrent()) : null;
+            const saved = snapshot.services.find((item) => item.id === serviceId);
+            const staged: Snapshot = {
+              ...snapshot,
+              services:
+                fields && saved
+                  ? snapshot.services.map((item) =>
+                      item.id === serviceId
+                        ? {
+                            ...saved,
+                            ...fields,
+                            providerOrgId: fields.providerOrgId ?? null,
+                            applicationId: fields.applicationId ?? null,
+                            categoryId: fields.categoryId ?? null,
+                            description: fields.description ?? null,
+                            foundational: fields.foundational ?? false,
+                          }
+                        : item,
+                    )
+                  : snapshot.services,
+              support: [
+                ...snapshot.support.filter((item) => item.serviceId !== serviceId),
+                ...draft.support.map((item) => ({ ...item, serviceId })),
+              ],
+              consumption: [
+                ...snapshot.consumption.filter((item) => item.serviceId !== serviceId),
+                ...draft.consumerOrgIds.map((orgId) => ({ orgId, serviceId })),
+              ],
+              dependencies: [
+                ...snapshot.dependencies.filter((item) => item.consumerServiceId !== serviceId),
+                ...draft.dependencies.map((item) => ({ ...item, consumerServiceId: serviceId })),
+              ],
+            };
+            ctx.requestDependency?.(serviceId, dep.providerServiceId, {
+              snapshot: staged,
+              label: "Pending changes — not yet applied",
+            });
           }),
         );
       actions.append(
@@ -1466,6 +1672,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           "Remove",
           () => {
             draft.dependencies = draft.dependencies.filter((row) => row.providerServiceId !== dep.providerServiceId);
+            routeIntents.delete(dep.providerServiceId);
             changed("add-dependency");
           },
           {
@@ -1475,6 +1682,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           },
         ),
       );
+      if (routeIntents.has(dep.providerServiceId)) beginRoute(false);
       return { label: name, detail: `${networkName} ${via}`, element: el("li", {}, nameCell, actions, route) };
     });
     const taken = new Set(deps.map((dep) => dep.providerServiceId));
@@ -1525,7 +1733,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       draft.dependencies.sort((a, b) => a.providerServiceId - b.providerServiceId);
       relationIntent.provider = "";
       relationIntent.via = "";
-      relationIntent.touched = false;
+      relationIntent.touched = Boolean(relationIntent.consumer);
       changed("add-dependency");
     });
     addDependency.id = "add-dependency-action";
@@ -1558,6 +1766,15 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         el("label", { for: "add-consumer" }, "Consuming organization"),
         consumerPick,
         addConsumer,
+        button(
+          "Cancel consumer addition",
+          () => {
+            relationIntent.consumer = "";
+            relationIntent.touched = Boolean(relationIntent.provider || relationIntent.via);
+            changed("add-consumer");
+          },
+          { class: "subtle" },
+        ),
       ),
       el("h3", {}, "Depends on"),
       pageRows("dependencies", depRows),
@@ -1569,6 +1786,16 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         el("label", { for: "add-dependency-via" }, "Via CDS"),
         viaPick,
         addDependency,
+        button(
+          "Cancel dependency addition",
+          () => {
+            relationIntent.provider = "";
+            relationIntent.via = "";
+            relationIntent.touched = Boolean(relationIntent.consumer);
+            changed("add-dependency");
+          },
+          { class: "subtle" },
+        ),
       ),
       message,
     );
@@ -1670,7 +1897,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       section: editing
         ? activeSection
         : (element.querySelector<HTMLElement>(".record-summary")?.dataset["summarySection"] ?? "overview"),
-      scrollTop: element.scrollTop,
+      scrollTop: (editing ? (element.querySelector<HTMLElement>(".editor-body") ?? element) : element).scrollTop,
       summary: captureRecordSummaryView(element.querySelector<HTMLElement>(".record-summary") ?? element),
     }),
     restoreViewContext: (view) => {
@@ -1684,7 +1911,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           false,
           view.summary,
         );
-      element.scrollTop = view.scrollTop;
+      (editing ? (element.querySelector<HTMLElement>(".editor-body") ?? element) : element).scrollTop = view.scrollTop;
       const summary = element.querySelector<HTMLElement>(".record-summary");
       if (summary && view.summary) restoreRecordSummaryView(summary, view.summary, { focus: true });
     },
@@ -1698,6 +1925,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     pendingDraftLabel,
     applyActiveDraft,
     discardActiveDraft,
+    revealScenarioChange: (changeId) => scenarioBuilder?.revealChange(changeId) ?? false,
     inspectProjected,
     openServiceOnNetwork,
   };

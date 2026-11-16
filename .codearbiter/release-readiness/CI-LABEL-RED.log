@@ -1,0 +1,42 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/layout-quality.spec.ts --grep network and CDS labels --project chrome
+
+
+Running 1 test using 1 worker
+
+(node:65156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\layout-quality.spec.ts:193:1 › network and CDS labels retain their readable screen size on wide map zooms without moving records (5.6s)
+
+
+  1) [chrome] › e2e\layout-quality.spec.ts:193:1 › network and CDS labels retain their readable screen size on wide map zooms without moving records
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "cds": 11,
+    -   "network": 13,
+    +   "cds": 8,
+    +   "network": 10,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      246 |         }),
+      247 |       )
+    > 248 |       .toEqual({ network: 13, cds: 11 });
+          |        ^
+      249 |   }
+      250 |   expect(await positions()).toEqual(before);
+      251 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\layout-quality.spec.ts:248:8
+
+    Error Context: test-results\layout-quality-network-and-108db-ooms-without-moving-records-chrome\error-context.md
+
+  1 failed
+    [chrome] › e2e\layout-quality.spec.ts:193:1 › network and CDS labels retain their readable screen size on wide map zooms without moving records
