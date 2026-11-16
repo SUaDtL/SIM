@@ -1,0 +1,96 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-map.spec.ts --grep Depends on --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts
+
+
+Running 2 tests using 2 workers
+
+(node:65456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown (5.9s)
+  x  1 [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown (6.0s)
+
+
+  1) [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('button', { name: 'Fit focus', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('button', { name: 'Fit focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Fit focus', exact: true })
+        14 × locator resolved to <button type="button">Fit focus</button>
+           - unexpected value "inactive"
+
+
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+      139 |     await expect(expand).toBeDisabled();
+    > 140 |     await expect(page.getByRole("button", { name: "Fit focus", exact: true })).toBeFocused();
+          |                                                                                ^
+      141 |     await expect(page.getByTestId("focus-status")).toContainText(
+      142 |       "No further recorded dependencies to show in this direction",
+      143 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:140:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('button', { name: 'Fit focus', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('button', { name: 'Fit focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Fit focus', exact: true })
+        14 × locator resolved to <button type="button">Fit focus</button>
+           - unexpected value "inactive"
+
+
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+      139 |     await expect(expand).toBeDisabled();
+    > 140 |     await expect(page.getByRole("button", { name: "Fit focus", exact: true })).toBeFocused();
+          |                                                                                ^
+      141 |     await expect(page.getByTestId("focus-status")).toContainText(
+      142 |       "No further recorded dependencies to show in this direction",
+      143 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:140:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-terminal-focus-red-artifacts\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+    [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 

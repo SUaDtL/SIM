@@ -11,6 +11,7 @@ import {
   type FieldDef,
   fieldFor,
   type FormValues,
+  type Option,
   nounOf,
   serviceInputFromValues,
   suggestsFoundational,
@@ -280,6 +281,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   } | null = null;
 
   function hasPendingDraft(): boolean {
+    if (activePicker?.hasPendingDraft()) return true;
     if (relationIntent.touched) return true;
     if (routeIntents.size > 0) return true;
     if (scenarioBuilder?.hasPendingIntent()) return true;
@@ -544,6 +546,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function applyActiveDraft(): boolean {
+    if (activePicker?.hasPendingDraft()) {
+      activePicker.revealPendingDraft();
+      return false;
+    }
     if (!hasPendingDraft()) return true;
     return applyCurrent?.() ?? true;
   }
@@ -567,6 +573,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     if (!network) return;
     network.value = String(networkId);
     network.dispatchEvent(new Event("change", { bubbles: true }));
+    // Context establishes initial defaults before the user edits this fresh form.
+    baseValues = collectCurrent?.() ?? baseValues;
     draftChanged();
   }
 
@@ -836,6 +844,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               action.before(cue);
               action.setAttribute("aria-describedby", cue.id);
               reveal(action);
+              cue.scrollIntoView({ block: "nearest" });
             }
             return false;
           }
@@ -1029,7 +1038,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       tabs,
       form,
     );
-    if (type === "service" && id === null) {
+    if (type === "service" && id === null && repo.listServices().length > 0) {
       const start = button(
         "Start from an existing service",
         () => {
@@ -1052,6 +1061,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         { id: "start-existing", class: "reference-link" },
       );
       detailsPanel.prepend(start);
+    } else if (type === "service" && id === null) {
+      detailsPanel.prepend(
+        el("p", { class: "hint" }, "No services recorded yet. Create your first service using the fields below."),
+      );
     }
     if (type === "service") {
       const references: readonly [string, EntityType, string][] = [
@@ -1062,14 +1075,21 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       ];
       for (const [key, relatedType, label] of references) {
         const select = form.querySelector<HTMLSelectElement>(`#field-${key}`);
-        if (select) referenceControls(select, relatedType, label);
+        const fieldDef = d.fields.find((field) => field.key === key);
+        if (select) referenceControls(select, relatedType, label, () => fieldDef?.options?.(repo, id) ?? []);
       }
       form.querySelector("#field-networkId")?.addEventListener("change", () => {
         renderRelations();
       });
     } else if (type === "organization") {
       const parent = form.querySelector<HTMLSelectElement>("#field-parentId");
-      if (parent) referenceControls(parent, "organization", "Part of");
+      if (parent)
+        referenceControls(
+          parent,
+          "organization",
+          "Part of",
+          () => d.fields.find((field) => field.key === "parentId")?.options?.(repo, id) ?? [],
+        );
     }
     renderRelations();
     showSection(activeSection);
@@ -1079,8 +1099,14 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   /** A compact selected-value field opens the common bounded picker. */
-  function referenceControls(select: HTMLSelectElement, type: EntityType, label: string): void {
+  function referenceControls(
+    select: HTMLSelectElement,
+    type: EntityType,
+    label: string,
+    eligible: () => readonly Option[],
+  ): void {
     const d = descriptor(type);
+    const canCreate = type !== "service" && type !== "cds";
     const owner = current;
     const repo = ctx.repo();
     select.hidden = true;
@@ -1091,31 +1117,44 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       () => {
         activePicker = openReferencePicker({
           label: d.label.toLowerCase(),
+          onDraftChanged: draftChanged,
+          emptyMessage:
+            d.list(repo).length === 0
+              ? `No ${d.label.toLowerCase()} records recorded yet. ${canCreate ? "Create one to continue." : "Close this picker to continue."}`
+              : `No eligible ${d.label.toLowerCase()} records are available for this field. Close this picker to continue.`,
           returnFocus: trigger,
           selectedValue: field().value,
           allowNone: field().options[0]?.value === "",
           isCurrent: () => current === owner && ctx.repo() === repo && element.isConnected,
           options: () => {
             const descriptions = new Map(d.list(repo).map((record) => [String(record.id), record.detail]));
-            return [...field().options]
-              .filter((item) => item.value !== "" && !item.disabled && d.get(repo, Number(item.value)) !== undefined)
+            return eligible()
+              .filter((item) => item.value !== "" && d.get(repo, Number(item.value)) !== undefined)
               .map((item) => ({
                 value: item.value,
-                label: item.text,
+                label: item.label,
                 detail: descriptions.get(item.value) ?? "",
               }));
           },
           onSelect: (value) => {
             const invoking = field();
+            const choice = eligible().find((item) => item.value === value);
+            if (choice && ![...invoking.options].some((item) => item.value === value))
+              invoking.append(option(choice.value, choice.label));
             invoking.value = value;
             invoking.dispatchEvent(new Event("change", { bubbles: true }));
             invoking.dispatchEvent(new Event("input", { bubbles: true }));
             update();
           },
-          ...(type === "service" || type === "cds"
+          ...(!canCreate
             ? {}
             : {
-                create: (query: string, complete: (value: string) => void, back: () => void) => {
+                create: (
+                  query: string,
+                  complete: (value: string) => void,
+                  back: () => void,
+                  trackDraft: (read: () => boolean) => void,
+                ) => {
                   const controls = new Map<string, () => FormValues[string]>();
                   const errors = new Map<string, HTMLElement>();
                   const defaults = { ...d.values(repo, null), name: query };
@@ -1157,6 +1196,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                   );
                   const collect = (): FormValues =>
                     Object.fromEntries([...controls].map(([key, read]) => [key, read()]));
+                  // Search text promoted into a child name is meaningful work;
+                  // untouched kind/marking/relationship defaults are not edits.
+                  const initial = { ...collect(), name: "" };
+                  trackDraft(() => JSON.stringify(collect()) !== JSON.stringify(initial));
                   let confirmed: string | null = null;
                   const commit = (allow: boolean): void => {
                     if (!form.isConnected || current !== owner || ctx.repo() !== repo) return;
@@ -1167,12 +1210,6 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                     }
                     try {
                       const id = d.save(repo, null, values, { confirmSensitive: allow });
-                      const invoking = field();
-                      const none = invoking.options[0]?.value === "" ? invoking.options[0].text : null;
-                      invoking.replaceChildren(
-                        ...(none === null ? [] : [option("", none)]),
-                        ...d.list(repo).map((item) => option(String(item.id), item.name)),
-                      );
                       const notice = element.querySelector<HTMLElement>(".notice");
                       if (notice) {
                         const parent = owner ? nounOf(owner.type) : "record";
@@ -1195,7 +1232,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                   form.addEventListener("input", () => {
                     confirmed = null;
                     confirm.hidden = true;
+                    draftChanged();
                   });
+                  form.addEventListener("change", draftChanged);
                   form.addEventListener("submit", (event) => {
                     event.preventDefault();
                     commit(false);
@@ -1802,10 +1841,29 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     relations.replaceChildren(supportPanel, connectionsPanel);
     for (const tier of TIERS) {
       const select = relations.querySelector<HTMLSelectElement>(`#support-${String(tier)}`);
-      if (select) referenceControls(select, "organization", `Tier ${String(tier)} support`);
+      if (select)
+        referenceControls(select, "organization", `Tier ${String(tier)} support`, () =>
+          repo.listOrganizations().map((org) => ({ value: String(org.id), label: org.name })),
+        );
     }
-    referenceControls(consumerPick, "organization", "Consuming organization");
-    referenceControls(providerPick, "service", "Depends on service");
+    referenceControls(consumerPick, "organization", "Consuming organization", () =>
+      repo
+        .listOrganizations()
+        .filter((org) => !draft.consumerOrgIds.includes(org.id))
+        .map((org) => ({ value: String(org.id), label: org.name })),
+    );
+    referenceControls(providerPick, "service", "Depends on service", () =>
+      repo
+        .listServices()
+        .filter(
+          (service) =>
+            service.id !== serviceId && !draft.dependencies.some((dep) => dep.providerServiceId === service.id),
+        )
+        .map((service) => ({
+          value: String(service.id),
+          label: `${service.name} (${repo.getNetwork(service.networkId)?.name ?? "Unavailable"})`,
+        })),
+    );
     const incoming = repo.listDependencies().filter((dep) => dep.providerServiceId === serviceId);
     connectionsPanel.append(
       el("h3", {}, "Used by services"),

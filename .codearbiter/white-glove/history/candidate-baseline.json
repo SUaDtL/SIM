@@ -1,0 +1,7 @@
+{
+  "commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+  "tree": "4ac3883bbdb0c5b020cabde4a35f47c1ba107971",
+  "html_sha256": "617399b0779b5d9887721740dd95303cc771aa0758d6cb225583911db3b052c1",
+  "baseline_full_gate": "2 browser failures /726passed; exit code not captured in original orchestrator, log failure retained",
+  "fixture_policy": "fictional only; no supplied probes executed"
+}

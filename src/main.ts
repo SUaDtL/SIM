@@ -18,6 +18,7 @@ import { commitPreparedImport, describeAdded, prepareImport } from "./import/eng
 import { Repository } from "./domain/repository";
 import { DatasetSession, type SaveResult } from "./session/dataset-session";
 import { Recovery } from "./session/recovery";
+import { describeDataIssue } from "./ui/data-issues";
 // `?url` (not `?inline`): Vite 8 on Windows cannot load the WASM with `?inline`.
 // The single-file plugin still inlines it as a data: URL, so no fetch occurs.
 import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
@@ -189,6 +190,7 @@ function openDataIssues(): void {
       return;
     }
     const issues = inspectDatasetSemantics(owner.db).filter((issue) => issue.severity === "legacy");
+    const snapshot = owner.repo.snapshot();
     page = Math.min(Math.max(page, 0), Math.max(0, Math.ceil(issues.length / 20) - 1));
     rows.replaceChildren(
       ...issues.slice(page * 20, page * 20 + 20).map((issue) => {
@@ -201,8 +203,14 @@ function openDataIssues(): void {
         const label = record?.name ?? "affected record";
         return el(
           "li",
-          { "data-testid": "data-issue-row" },
-          el("p", {}, `${issue.code.replaceAll("_", " ")} — ${label}: ${issue.witness}`),
+          { class: "data-issue-row", "data-testid": "data-issue-row" },
+          el("p", {}, describeDataIssue(issue, snapshot)),
+          el(
+            "details",
+            {},
+            el("summary", {}, "Technical details"),
+            el("p", {}, `${issue.code} · ${issue.table} · ${issue.rowId}: ${issue.witness}`),
+          ),
           ...(target
             ? [
                 uiButton(`Review ${label}`, () => {
@@ -215,7 +223,7 @@ function openDataIssues(): void {
       }),
     );
     count.textContent = issues.length
-      ? `${String(issues.length)} current data issues. Showing ${String(page * 20 + 1)}–${String(Math.min((page + 1) * 20, issues.length))}.`
+      ? `${String(issues.length)} current data ${issues.length === 1 ? "issue" : "issues"}. Showing ${String(page * 20 + 1)}–${String(Math.min((page + 1) * 20, issues.length))}.`
       : "No current data issues.";
     previous.disabled = page === 0;
     next.disabled = (page + 1) * 20 >= issues.length;

@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-16T16:41:00.746565+00:00",
+  "scope": "Post-PR26 white-glove stabilization and honest180-case accounting",
+  "branch": "codex/sim-white-glove",
+  "receiving_commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+  "candidate": {
+    "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
+    "source_commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+    "source_tree": "4ac3883bbdb0c5b020cabde4a35f47c1ba107971",
+    "source_modified": true,
+    "platform": "win32 10.0.26200",
+    "node": "v24.18.0",
+    "actualWorkers": 2
+  },
+  "source_epoch": "d77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6",
+  "local_check": {
+    "exit_code": 0,
+    "unit_pass": 410,
+    "browser_pass": 972
+  },
+  "uat_results": "uat-results.json",
+  "independent_review": "in progress; only funnel aggregate may close the review",
+  "delivery": "Not committed/pushed/opened at this collection point. Actual later delivery is recorded separately in the final PR description and local handoff; this immutable local record does not predict it.",
+  "release_recommendation": "Review candidate only. No merge/tag/publication authorized; mandatory native/AT/participant and remaining visual/copy acceptance must not be represented as passed.",
+  "governance_owner": "PLAN-WHITE-GLOVE and its native work items; this is derived verification evidence, not a second progress ledger."
+}

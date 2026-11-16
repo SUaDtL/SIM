@@ -1,0 +1,47 @@
+{
+  "fixtures": [
+    {
+      "id": "E0",
+      "name": "First-use empty enterprise",
+      "purpose": "Empty states, first service, missing network/provider, cancel, naming.",
+      "build": "Use ordinary New. No invented placeholder network is permitted to satisfy incomplete discovery."
+    },
+    {
+      "id": "E1",
+      "name": "Small deterministic enterprise",
+      "purpose": "Entity CRUD, drafts, reuse, Save/Undo and contextual defaults.",
+      "build": "Two internal networks with distinct names, three organizations including a hierarchy, two applications, three categories, a CDS spanning the networks, Orders/Identity/Directory services and a duplicate service display name on another network. Record exact IDs/counts after using repository APIs."
+    },
+    {
+      "id": "E2",
+      "name": "Seven-network discovery picture",
+      "purpose": "Directional focus, shared-CDS/shared-provider traps, scenarios and captures.",
+      "build": "Seven fictional domains with at least 120 services, 40 organizations, internal/local/boundary/external/foundational dependencies, directed multi-hop chain and cycle, one isolated service, and two distinct proposals. Build through current repository APIs; assert the exact fixture manifest rather than assuming a demo count."
+    },
+    {
+      "id": "E3",
+      "name": "Density and readability stress",
+      "purpose": "1000-item search, paging, long names, narrow relationships.",
+      "build": "1000 services, 60 organizations, more than 100 relationships on a hub, duplicate display names across networks, long spaced/unbroken/Unicode labels. Never truncate or merge identities by label."
+    },
+    {
+      "id": "E4",
+      "name": "Admitted legacy diagnostics",
+      "purpose": "Read-only admission, bounded issue review and incremental repair.",
+      "build": "Separate disposable files with known existing semantic anomalies. Use controlled fixture construction only. Never create these in a real inventory."
+    },
+    {
+      "id": "E5",
+      "name": "File-operation safety",
+      "purpose": "Native handle conflicts, recovery, errors and cancellation.",
+      "build": "Temporary approved synthetic-only paths; independent readback. Distinguish injected adapters from real native permission/write observations. Do not exercise destructive tests against personal files."
+    },
+    {
+      "id": "E6",
+      "name": "Synthetic marking matrix",
+      "purpose": "Banner/preview/capture consistency",
+      "build": "Entirely fictional data with simulated marking values, explicitly labelled synthetic test data. Never load actual customer, operational or classified content. Exercise caveats and higher-labelled objects outside focus."
+    }
+  ],
+  "dataset_generation_status": "Contract only, not populated application datasets in this packet."
+}

@@ -6,14 +6,16 @@ import { showCaptureOptions } from "./helpers/map-controls";
 import { wasm } from "../tests/helpers/sqlite";
 import { editSelected, editorSection, openDatasetFile, openFileMenu, simUrl } from "./helpers/usability";
 
-async function fixture(issues: boolean | number = false) {
+async function fixture(issues: boolean | number = false, eligibleService = false) {
   const db = await createDataset("Synthetic enterprise", wasm);
   const repo = new Repository(db);
   const network = repo.createNetwork({ name: "Amber", kind: "internal", marking: "CUI" });
   repo.createService({ name: "Orders", networkId: network.id, marking: "CUI", description: "Synthetic purpose" });
+  if (eligibleService) repo.createService({ name: "Identity", networkId: network.id, marking: "CUI" });
   repo.setPositions([
     { entity: "network", id: network.id, x: 0, y: 0 },
     { entity: "service", id: 1, x: 0, y: 0 },
+    ...(eligibleService ? [{ entity: "service" as const, id: 2, x: 200, y: 0 }] : []),
   ]);
   if (issues)
     for (let i = 1; i <= (typeof issues === "number" ? issues : 5); i++)
@@ -55,7 +57,9 @@ test("R07 unassigned provider is identified as unrecorded", async ({ page }) => 
 });
 
 test("R09 no-create dependency picker does not promise an unavailable creation action", async ({ page }) => {
-  await openDatasetFile(page, await fixture(), "synthetic.sqlite");
+  // A query miss needs a nonempty eligible universe; self is never eligible.
+  // WG06 separately covers a truly empty eligible set and its actionable message.
+  await openDatasetFile(page, await fixture(false, true), "synthetic.sqlite");
   await page
     .getByTestId("entity-list")
     .getByRole("button", { name: /Orders/ })

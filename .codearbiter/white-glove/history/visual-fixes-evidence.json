@@ -1,0 +1,1156 @@
+{
+  "task": "WHITE-GLOVE-VISUAL-FIXES",
+  "packet": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-author.json",
+  "packetSha256": "f5983482c1e0115b7813aac9e9825482228560e22ced3fb1ea008e0d90bae30b",
+  "findingInput": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\white-glove-visual-verdict.md",
+  "findingInputSha256": "8bd0547e956ce6bdad91b88743c9aa11602406013aa79b573c71c04b7f067227",
+  "redCandidateSha256": "186fb0a34d18339f6fae144ad0bc228e1e8954c871e7389e1af8f1105f66a1da",
+  "greenCandidateSha256BeforeAfter": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+  "test": {
+    "path": "e2e/white-glove-visual-fixes.spec.ts",
+    "sha256": "5ad9e3478833207048573bfcb1372ca5284dc6080a73f328ad90889817e03a20"
+  },
+  "unit": {
+    "path": "src/ui/import-dialog.test.ts",
+    "sha256": "17e4c77a4310b5650d323be83b30b904010295ecb23c02bac2e06da4a5efc976"
+  },
+  "redRuns": [
+    {
+      "source": "WORK/visual-fixes-first-red-source.ts, SHAe702600683c3947bc67c7cccf2d0aa7a738e7814ec853d8c4c0eb39e56d20885",
+      "result": "12 failed: 8 genuine issue/copy failures, 4 invalid route has-locator setup failures explicitly excluded as product evidence",
+      "command": "npx playwright test e2e/white-glove-visual-fixes.spec.ts --output WORK/visual-fixes-red --reporter=list",
+      "exit": 1,
+      "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red.log"
+    },
+    {
+      "result": "4/4 genuine focus-outline/cue intersection RED after locator setup corrected",
+      "command": "npx playwright test e2e/white-glove-visual-fixes.spec.ts --grep ROUTE-SPACING --output WORK/visual-route-red --reporter=list",
+      "exit": 1,
+      "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red.log"
+    },
+    {
+      "result": "4/4 genuine RED with strengthened full cue/outline scroll bounds; same final test source as GREEN",
+      "command": "npx playwright test e2e/white-glove-visual-fixes.spec.ts --grep ROUTE-SPACING --output WORK/visual-route-visible-red --reporter=list",
+      "exit": 1,
+      "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red.log"
+    }
+  ],
+  "greenRuns": [
+    {
+      "result": "12/12 passed both installed Edge/Chrome at320x768 and1366x768",
+      "command": "npx playwright test e2e/white-glove-visual-fixes.spec.ts --output WORK/visual-fixes-green --reporter=list",
+      "exit": 0,
+      "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green.log"
+    },
+    {
+      "result": "6/6 zero/one/many exact copy golden tests; many receipt values are distinct to catch swapped count fields",
+      "command": "npx vitest run src/ui/import-dialog.test.ts",
+      "exit": 0,
+      "log": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-count-unit-green.log"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npx tsc --noEmit",
+      "exit": 0
+    },
+    {
+      "command": "npx eslint e2e/white-glove-visual-fixes.spec.ts src/ui/import-dialog.test.ts",
+      "exit": 0
+    },
+    {
+      "command": "npx prettier --check e2e/white-glove-visual-fixes.spec.ts src/ui/import-dialog.test.ts",
+      "exit": 0
+    }
+  ],
+  "assertions": [
+    "Primary qualified explanation remains exact, width >= min180px/75percent-row and height <=12 line-heights; technical witness starts below primary",
+    "Exact raw code/table/row/witness retained; Review Orders and Close fully scrolled reachable; inspect then SQLite snapshot readback unchanged and Undo disabled",
+    "Full actual cue Range rectangles and complete computed5px focus outline fit editor-scroll client bounds with1px tolerance; no intersection, exact text/focus/aria-describedby preserved",
+    "One current issue uses singular grammar; import allones receipt and flagged row use exact contract; actual CSV retains exactly1 Added/Already present/Rejected/Host-like warning/File not imported record; only accepted network written; Undo readback restores original domain",
+    "Formatter zero/one/many contracts preserve every count and handling instruction"
+  ],
+  "geometryAndText": [
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\.last-run.json",
+      "content": {
+        "status": "passed",
+        "failedTests": []
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-completed-receipt.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": "Classification: UNCLASSIFIED\n\nSource dataset: Synthetic white-glove enterprise\n\nAdded 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.\n\nThis receipt records the completed import, even if you later undo it. Counts describe records/links and row diagnostics; warning notes are not extra imported rows.\n\nHost-like rows were held.\n\nnetworks.csv: 4 rows reviewed\nunreadable.csv: Row 1: A quoted value is never closed. This file was not imported.\nDownload receipt\nRejected rows\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\nAlready-present rows\n\nRows 1–1 of 1\n\nnetworks.csv row 3: Network \"Amber\" is already in the dataset.\nHost-like rows\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-import-preview.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": "Import CSV\n\nFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.\n\nDownload templates\nCSV files\nnetworks.csv: Networks, 4 rows\nunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.\n\nImport will add 1 network.\n\nPreview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.\n\nDownload preview receipt\n\n1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test\nImport these rows anyway\n1 row will not be imported\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\n1 row already in the dataset, left as they are\nImport\nCancel",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-completed-receipt.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": "Classification: UNCLASSIFIED\n\nSource dataset: Synthetic white-glove enterprise\n\nAdded 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.\n\nThis receipt records the completed import, even if you later undo it. Counts describe records/links and row diagnostics; warning notes are not extra imported rows.\n\nHost-like rows were held.\n\nnetworks.csv: 4 rows reviewed\nunreadable.csv: Row 1: A quoted value is never closed. This file was not imported.\nDownload receipt\nRejected rows\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\nAlready-present rows\n\nRows 1–1 of 1\n\nnetworks.csv row 3: Network \"Amber\" is already in the dataset.\nHost-like rows\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-import-preview.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": "Import CSV\n\nFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.\n\nDownload templates\nCSV files\nnetworks.csv: Networks, 4 rows\nunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.\n\nImport will add 1 network.\n\nPreview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.\n\nDownload preview receipt\n\n1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test\nImport these rows anyway\n1 row will not be imported\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\n1 row already in the dataset, left as they are\nImport\nCancel",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-completed-receipt.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": "Classification: UNCLASSIFIED\n\nSource dataset: Synthetic white-glove enterprise\n\nAdded 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.\n\nThis receipt records the completed import, even if you later undo it. Counts describe records/links and row diagnostics; warning notes are not extra imported rows.\n\nHost-like rows were held.\n\nnetworks.csv: 4 rows reviewed\nunreadable.csv: Row 1: A quoted value is never closed. This file was not imported.\nDownload receipt\nRejected rows\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\nAlready-present rows\n\nRows 1–1 of 1\n\nnetworks.csv row 3: Network \"Amber\" is already in the dataset.\nHost-like rows\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-import-preview.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": "Import CSV\n\nFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.\n\nDownload templates\nCSV files\nnetworks.csv: Networks, 4 rows\nunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.\n\nImport will add 1 network.\n\nPreview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.\n\nDownload preview receipt\n\n1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test\nImport these rows anyway\n1 row will not be imported\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\n1 row already in the dataset, left as they are\nImport\nCancel",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-completed-receipt.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": "Classification: UNCLASSIFIED\n\nSource dataset: Synthetic white-glove enterprise\n\nAdded 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.\n\nThis receipt records the completed import, even if you later undo it. Counts describe records/links and row diagnostics; warning notes are not extra imported rows.\n\nHost-like rows were held.\n\nnetworks.csv: 4 rows reviewed\nunreadable.csv: Row 1: A quoted value is never closed. This file was not imported.\nDownload receipt\nRejected rows\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\nAlready-present rows\n\nRows 1–1 of 1\n\nnetworks.csv row 3: Network \"Amber\" is already in the dataset.\nHost-like rows\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-import-preview.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": "Import CSV\n\nFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.\n\nDownload templates\nCSV files\nnetworks.csv: Networks, 4 rows\nunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.\n\nImport will add 1 network.\n\nPreview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.\n\nDownload preview receipt\n\n1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.\n\nRows 1–1 of 1\n\nnetworks.csv row 5: Looks like host data: held-synthetic.example.test\nImport these rows anyway\n1 row will not be imported\n\nRows 1–1 of 1\n\nnetworks.csv row 4: Kind must be internal or external, not \"invalid\".\n1 row already in the dataset, left as they are\nImport\nCancel",
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\expanded-issue.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": {
+          "row": {
+            "x": 398,
+            "y": 296.71875,
+            "right": 968,
+            "bottom": 558.90625,
+            "width": 570,
+            "height": 262.1875
+          },
+          "primary": {
+            "x": 398,
+            "y": 322.71875,
+            "right": 968,
+            "bottom": 383.609375,
+            "width": 570,
+            "height": 60.890625
+          },
+          "technical": {
+            "x": 398,
+            "y": 407.609375,
+            "right": 968,
+            "bottom": 495.90625,
+            "width": 570,
+            "height": 88.296875
+          },
+          "lineHeight": 20.3,
+          "primaryText": "Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.",
+          "technicalText": "Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]"
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\expanded-issue.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": {
+          "row": {
+            "x": 398,
+            "y": 296.71875,
+            "right": 968,
+            "bottom": 558.90625,
+            "width": 570,
+            "height": 262.1875
+          },
+          "primary": {
+            "x": 398,
+            "y": 322.71875,
+            "right": 968,
+            "bottom": 383.609375,
+            "width": 570,
+            "height": 60.890625
+          },
+          "technical": {
+            "x": 398,
+            "y": 407.609375,
+            "right": 968,
+            "bottom": 495.90625,
+            "width": 570,
+            "height": 88.296875
+          },
+          "lineHeight": 20.3,
+          "primaryText": "Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.",
+          "technicalText": "Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]"
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": {
+          "textRects": [
+            {
+              "left": 325,
+              "right": 722.734375,
+              "top": 463.375,
+              "bottom": 479.375
+            }
+          ],
+          "outline": {
+            "left": 320,
+            "right": 1047,
+            "top": 485.375,
+            "bottom": 536.375
+          },
+          "visible": {
+            "left": 284,
+            "top": 346.015625,
+            "right": 1083,
+            "bottom": 676.015625
+          },
+          "outward": 5,
+          "focus": true,
+          "overlapping": []
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "data": {
+          "textRects": [
+            {
+              "left": 325,
+              "right": 722.734375,
+              "top": 463.375,
+              "bottom": 479.375
+            }
+          ],
+          "outline": {
+            "left": 320,
+            "right": 1047,
+            "top": 485.375,
+            "bottom": 536.375
+          },
+          "visible": {
+            "left": 284,
+            "top": 346.015625,
+            "right": 1083,
+            "bottom": 676.015625
+          },
+          "outward": 5,
+          "focus": true,
+          "overlapping": []
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\expanded-issue.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": {
+          "row": {
+            "x": 33.796875,
+            "y": 252.421875,
+            "right": 286.1875,
+            "bottom": 595.796875,
+            "width": 252.390625,
+            "height": 343.375
+          },
+          "primary": {
+            "x": 33.796875,
+            "y": 278.421875,
+            "right": 286.1875,
+            "bottom": 400.203125,
+            "width": 252.390625,
+            "height": 121.78125
+          },
+          "technical": {
+            "x": 33.796875,
+            "y": 424.203125,
+            "right": 286.1875,
+            "bottom": 532.796875,
+            "width": 252.390625,
+            "height": 108.59375
+          },
+          "lineHeight": 20.3,
+          "primaryText": "Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.",
+          "technicalText": "Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]"
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\expanded-issue.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": {
+          "row": {
+            "x": 33.796875,
+            "y": 252.421875,
+            "right": 286.1875,
+            "bottom": 595.796875,
+            "width": 252.390625,
+            "height": 343.375
+          },
+          "primary": {
+            "x": 33.796875,
+            "y": 278.421875,
+            "right": 286.1875,
+            "bottom": 400.203125,
+            "width": 252.390625,
+            "height": 121.78125
+          },
+          "technical": {
+            "x": 33.796875,
+            "y": 424.203125,
+            "right": 286.1875,
+            "bottom": 532.796875,
+            "width": 252.390625,
+            "height": 108.59375
+          },
+          "lineHeight": 20.3,
+          "primaryText": "Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.",
+          "technicalText": "Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]"
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "chrome",
+        "browser": "157.0.8103.51",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": {
+          "textRects": [
+            {
+              "left": 26,
+              "right": 287.34375,
+              "top": 499.890625,
+              "bottom": 515.890625
+            },
+            {
+              "left": 26,
+              "right": 159.109375,
+              "top": 517.890625,
+              "bottom": 533.890625
+            }
+          ],
+          "outline": {
+            "left": 21,
+            "right": 300,
+            "top": 539.890625,
+            "bottom": 590.890625
+          },
+          "visible": {
+            "left": 1,
+            "top": 498.53125,
+            "right": 320,
+            "bottom": 598.53125
+          },
+          "outward": 5,
+          "focus": true,
+          "overlapping": []
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.json",
+      "content": {
+        "candidateHtmlSha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+        "channel": "msedge",
+        "browser": "157.0.4341.60",
+        "viewport": {
+          "width": 320,
+          "height": 768
+        },
+        "data": {
+          "textRects": [
+            {
+              "left": 26,
+              "right": 287.34375,
+              "top": 499.890625,
+              "bottom": 515.890625
+            },
+            {
+              "left": 26,
+              "right": 159.109375,
+              "top": 517.890625,
+              "bottom": 533.890625
+            }
+          ],
+          "outline": {
+            "left": 21,
+            "right": 300,
+            "top": 539.890625,
+            "bottom": 590.890625
+          },
+          "visible": {
+            "left": 1,
+            "top": 498.53125,
+            "right": 320,
+            "bottom": 598.53125
+          },
+          "outward": 5,
+          "focus": true,
+          "overlapping": []
+        },
+        "qualification": "Actual offline rendering and browser geometry. No human/OS/native acceptance claim."
+      }
+    }
+  ],
+  "manuallyInspected": [
+    "RED Chrome320 expanded issue and route cue screenshots",
+    "GREEN Chrome320 expanded issue and route cue screenshots",
+    "GREEN Edge1366 completed receipt screenshot"
+  ],
+  "boundaries": [
+    "App fixes/builds owned by root; this unit writes only new UI regression and new formatter unit source",
+    "No hidden threshold weakening, skipped cases or rewritten old tests",
+    "No native OS picker, physical permission, human participant or screen-reader qualification",
+    "No exact-head hosted CI, merge or release claim",
+    "Collected screenshots beyond five named inspections are retained rather than claimed individually visually inspected"
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\.last-run.json",
+      "sha256": "b1adc6c0a3417a6fcc2ef7d1033ecd638e79e3c7bb72c0bb04cfd039286ae0c8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\error-context.md",
+      "sha256": "c6fe2ad48793d98ec458bce76823398fc885132b0972545f763eba8b8bc060bd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-completed-receipt.json",
+      "sha256": "a067f190ec32ed332999f79790c16f7305216d36ef9866559755b8a9d8c85bcc"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-completed-receipt.png",
+      "sha256": "d97faefc2c02eaf2f0e2078ff442f7ee37e6b861536fe4d411c405cba3016a4c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-import-preview.json",
+      "sha256": "c8e1b17c6650202b755424e0151420bfc9610197fd629195b3563b4bc1b4777b"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-import-preview.png",
+      "sha256": "56ba5585c69270f7f63466f2d8af77e25b8f090745da84be429298d90d19d8ce"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\test-failed-1.png",
+      "sha256": "434045a4a320eb63433d620807c5428bdf21d81009341496946c2453a8c48e3f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\trace.zip",
+      "sha256": "39e18c25b3cc9c9bc3efcdea05a8d259e1e418b70b2aa1c74341a00757b3bb38"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\error-context.md",
+      "sha256": "c6fe2ad48793d98ec458bce76823398fc885132b0972545f763eba8b8bc060bd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-completed-receipt.json",
+      "sha256": "cae412e1d360a5856d712900465334c4ac54d0b75029cd2953218854f324d289"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-completed-receipt.png",
+      "sha256": "1c869792f90a883b1ab5cfa661664bcfe8fb12d1beb7422d6ba09c2ba6fc8eb0"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-import-preview.json",
+      "sha256": "a76548a78e6caf3ea924d211cf9efb95026a72fb1d64fc5e5c4f1099190b88ca"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-import-preview.png",
+      "sha256": "c0b132983465785ff6d8d6ab777f36986466060ed6ad46390e82c3dfea0035f3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\test-failed-1.png",
+      "sha256": "434045a4a320eb63433d620807c5428bdf21d81009341496946c2453a8c48e3f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\test-failed-2.png",
+      "sha256": "c4f0135855896b6c6f30b0c030512f14961dca4fd9c59bc66d11207d3512fd2c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\trace.zip",
+      "sha256": "360e38d275f2dac4ee17240066f54226c2458c7c3d8795f9162f635aa0c566e1"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\error-context.md",
+      "sha256": "5cc8fc1439ef9be5f3310878863d049b8d03852e012762e631dc8ca04f7fa704"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-completed-receipt.json",
+      "sha256": "06294302ce2e76ca814f811594e067abebb0de669ee4bb7ea493a61705670b1c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-completed-receipt.png",
+      "sha256": "62fe07bf3f7ffe496dfb57476f9ecd0d3b564c770eb4a5127c68b7ef1dc9d573"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-import-preview.json",
+      "sha256": "f8828e7d348430444533ad565a0d5c4b9eac26db8332d2225865ec6e88d73b68"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-import-preview.png",
+      "sha256": "b6f62679a5f10427d147bfb0f81c9143eda93332de53e9219bf135a6b2112507"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\test-failed-1.png",
+      "sha256": "cd8af4c4843bf47c699cd6cb801d5f19df5a44bc25fc8b3aa2873898bbf4a1f8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\trace.zip",
+      "sha256": "2f33f2e97d5ac42a02fa0de78a3f3d50b32a6c545f14758d6a44630246653ce3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\error-context.md",
+      "sha256": "5cc8fc1439ef9be5f3310878863d049b8d03852e012762e631dc8ca04f7fa704"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-completed-receipt.json",
+      "sha256": "37d998553d42f76fb25e4e37d8576ebfbcc1afd35b4d0c35a46ce2653ca9188a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-completed-receipt.png",
+      "sha256": "87e77787c53253dcc2c4506c87e48794b539a761dbb5a2135fc023fa1801164f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-import-preview.json",
+      "sha256": "48c55de56f2f157efd8e74e27231f8c1459aa9b03590881a924c85524de10673"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-import-preview.png",
+      "sha256": "567cdaaa18e088110d3fada184f1aaa10a09de06890ed2637ae53065f87444a2"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\test-failed-1.png",
+      "sha256": "cd8af4c4843bf47c699cd6cb801d5f19df5a44bc25fc8b3aa2873898bbf4a1f8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\test-failed-2.png",
+      "sha256": "528c08a8641b6f3dc53694a32b39417ecaad4f8c1febb404e406ad3db1b24f36"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\trace.zip",
+      "sha256": "b1b485eb792a6fc7f7db378e59923e407ade9539a3f4e30c0043688e760fbf0d"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\error-context.md",
+      "sha256": "6e991b47f8d6fdda1ba4fef3b0fc476617680a2ee876811f4b2aa65942cfa6bd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\expanded-issue.json",
+      "sha256": "3e98b75b640ec3a93bcf33ad25fccea3792394c2edade28a840a5a147ec176fb"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\expanded-issue.png",
+      "sha256": "41909d2579973e44cc6b909dda0f154ddc8e58761cf3bd15df49214bfe91f739"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\test-failed-1.png",
+      "sha256": "79517ac2e9be212b4b17d1b9a43a5aafc182f43ecd46eeda1d505818f848e2dc"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\trace.zip",
+      "sha256": "5313e2840634905785fbbaad9a7e1cb9db8fdb6710845caa19166b6636c0a89a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\error-context.md",
+      "sha256": "6e991b47f8d6fdda1ba4fef3b0fc476617680a2ee876811f4b2aa65942cfa6bd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\expanded-issue.json",
+      "sha256": "32ef801178ddd410ed388f1222b360b3df9c75a6b4d5227dd3128ff40d3f5558"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\expanded-issue.png",
+      "sha256": "f1932192e786fc840e1b586c051b9df5f924a86f2ef4c69bbf3ac08f310d3772"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\test-failed-1.png",
+      "sha256": "7aecbe8683bcade480649cf3652f3d75eeff58eff791db92ea5c6295c341773d"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\test-failed-2.png",
+      "sha256": "c3983c75e55045700523c7a16bf2079b3c64ce8e928ca6416a67c5105ee6a261"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\trace.zip",
+      "sha256": "7ea785f3f1e814959af65d0298cc286ddbb56a71a05c540087ff06e2166c0795"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\error-context.md",
+      "sha256": "032171233db7a7df93c743a6e002bce84bf8e1b139a840fe931fac41b01893c8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\test-failed-1.png",
+      "sha256": "bd726e2cc6e391d0b0625d2651ab07bb1d27ea9679b4d1947412319ed1da15c3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\trace.zip",
+      "sha256": "d766a46582e9691d089fcf173fae72a9ad4df2d4cf04483d7e9321f79d824044"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\error-context.md",
+      "sha256": "032171233db7a7df93c743a6e002bce84bf8e1b139a840fe931fac41b01893c8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-1.png",
+      "sha256": "bd726e2cc6e391d0b0625d2651ab07bb1d27ea9679b4d1947412319ed1da15c3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-2.png",
+      "sha256": "186665315165c21e5e61b66e3deb8ff28bb5f0828774c746aef98937852ff4cd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\trace.zip",
+      "sha256": "ee68370b3657063be700564471508a635aca80523ae9d0586e00e1f29f715e64"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\error-context.md",
+      "sha256": "03e1675434450b39e7cecae2fa83505c2a74347351d3e76bb488486cb287d677"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\expanded-issue.json",
+      "sha256": "04d18527e445dc07c259ef1bfdb6d089dd0c988b1bb82c27211abd1f930cbc9f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\expanded-issue.png",
+      "sha256": "8c0e1bc501bb8926d5cc399a7ff8b3c67345544df841d49aca6d11d404e53556"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\test-failed-1.png",
+      "sha256": "271667d20ca13b5e9b96c04cf56a992a84229f191602af010f78fe12a1279859"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\trace.zip",
+      "sha256": "767be68b0b9f221ead23c5bb478cdb097204b6375558d3a7c319190bddfc9204"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\error-context.md",
+      "sha256": "03e1675434450b39e7cecae2fa83505c2a74347351d3e76bb488486cb287d677"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\expanded-issue.json",
+      "sha256": "8dfdb1bd81756805fcf119ca540512ee2616a6597adde41635113fce8c978025"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\expanded-issue.png",
+      "sha256": "4a1a152895d818ab453b1b51e53815538bf88ae11c84abac090e0f0595434562"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\test-failed-1.png",
+      "sha256": "1f89033712c039cb32804fb9116aeffeb306d78c6422a90c66e767445ebd9f2f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\test-failed-2.png",
+      "sha256": "e8aa5c6b48ca99d5c50c46980f381adcdb4d7864f8b68b26ff958da273fffdbd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\trace.zip",
+      "sha256": "450a78c587416b01db9c0aaf7fe817337eccca1f944c6eafd99c0b1a9d038ed7"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\error-context.md",
+      "sha256": "e0e8915317589c74e4ca3c3057754774d20ebfc9e6488c0ca48ca4925d68b5b0"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\test-failed-1.png",
+      "sha256": "e3741e5f0239da89e92c46e0d364fccb1e9d1db750f9c0c921b72aef86dbb32e"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\trace.zip",
+      "sha256": "536d320b1f2a130d7ef8696bc9ca1906434057eee59d8db86d6727c880c993b9"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\error-context.md",
+      "sha256": "e0e8915317589c74e4ca3c3057754774d20ebfc9e6488c0ca48ca4925d68b5b0"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-1.png",
+      "sha256": "e3741e5f0239da89e92c46e0d364fccb1e9d1db750f9c0c921b72aef86dbb32e"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-2.png",
+      "sha256": "2b43c66816be382625d2661b92599f91fe16d202785e0e95077c10f738886fb3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\trace.zip",
+      "sha256": "157692f64d40d5c5dd1910db8c330010341629747b6030a24ce6f414e7a9d9c0"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\.last-run.json",
+      "sha256": "d783719d9de503cabd28c624ca11e8d9b7f00c48feaa4d59d7cf89bc9b0537c5"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\error-context.md",
+      "sha256": "2b9815deb06601c8a1dfccefb04943f8e502b49e6faf1079de6822c6f6e95ec4"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.json",
+      "sha256": "8727714f147271ae941799998a0ea1e107c1b4f3f6ad25058b34bbb535772572"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.png",
+      "sha256": "be82e37b5d0c4cacfc9cd156814111bee1ca13980de484974fa5883d0dfe5084"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\test-failed-1.png",
+      "sha256": "3781ad6b82cafce6191bd48f2a473ccf6070d5370f3a16dbad8db9acd7e22f57"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\trace.zip",
+      "sha256": "4809924a657726ee4004b2e89fa87c007538167d896bc128e7a251916b82d974"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\error-context.md",
+      "sha256": "2b9815deb06601c8a1dfccefb04943f8e502b49e6faf1079de6822c6f6e95ec4"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.json",
+      "sha256": "8f246c66041c1bf020549a8e20fed868ce069c5d4c290333b4db0bf81d421ace"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.png",
+      "sha256": "57c0d682ac5346aca8ab40449ccccffc3e85ece6f60a4e4fa67da1f797a3250c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-1.png",
+      "sha256": "3781ad6b82cafce6191bd48f2a473ccf6070d5370f3a16dbad8db9acd7e22f57"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-2.png",
+      "sha256": "13d8e8a179dbeff1d79a1fddb4ca3e153f878e2342a71d14e0a7184180a06c49"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\trace.zip",
+      "sha256": "173f8eede01cf2febfad25bf35d1d7f90aee6c413e6877a517ad44cfedf3d0cb"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\error-context.md",
+      "sha256": "93934caf571269267d5dae6d34808ec23287187d652cca7202420b2157930947"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.json",
+      "sha256": "b7ea5a9e7fb09b007b50eb74a6fdf74c8aac76cedf7d62da0b04b8af4d662fe6"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.png",
+      "sha256": "6874e67dfb4fcf7e69d2c7d12b0ce313433a61c5ae50e39f2bfbe6fc9cf66393"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\test-failed-1.png",
+      "sha256": "3c3c68f4391ac42b75ab0c704e85d322a332fc98e1f8fb27a7d1bf638b2a497f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\trace.zip",
+      "sha256": "361f8b7c8649d03a9e5dbb3e91381f25e6b82b90a75e6e33cbbb5bb1485e9453"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\error-context.md",
+      "sha256": "93934caf571269267d5dae6d34808ec23287187d652cca7202420b2157930947"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.json",
+      "sha256": "2e3fd52ef5c38fa0436468c9bd0a8e7328411c2d234229f34eeaac23ca9ad16a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.png",
+      "sha256": "340b30f1523050324190b174668e548f1acb86791ead91f71d827713028f83b5"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-1.png",
+      "sha256": "e88cb3717ec3162139279d441a68b30f500bc57fd9057d7ed285c0934b3a8ba7"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-2.png",
+      "sha256": "4a0c5a8befe9d63716bec5c5006f15028e5de40975d940e51b3fd4af21373393"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\trace.zip",
+      "sha256": "23c5a469fea3f10d3d6e70a4b2c042ce89a7591d0984e2d2c0c122861f126eea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\.last-run.json",
+      "sha256": "d783719d9de503cabd28c624ca11e8d9b7f00c48feaa4d59d7cf89bc9b0537c5"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\error-context.md",
+      "sha256": "5f4f843c4f4e875e55624bdfda6f5402b21209cd8f025a6cff1240b369df5459"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.json",
+      "sha256": "4bc6c1039902f887f750e0d6b2c333fe32de45b89a8345f506921187879d681a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.png",
+      "sha256": "57c0d682ac5346aca8ab40449ccccffc3e85ece6f60a4e4fa67da1f797a3250c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\test-failed-1.png",
+      "sha256": "3781ad6b82cafce6191bd48f2a473ccf6070d5370f3a16dbad8db9acd7e22f57"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\trace.zip",
+      "sha256": "076f773b59d75988bd10727c6b89cc83cec0e369995945df01182da85c4724ee"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\error-context.md",
+      "sha256": "5f4f843c4f4e875e55624bdfda6f5402b21209cd8f025a6cff1240b369df5459"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.json",
+      "sha256": "a67e4bb7b748d91079f9fefbd06b64e717b749eb3d43a57532d175213fdc5bb8"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.png",
+      "sha256": "57c0d682ac5346aca8ab40449ccccffc3e85ece6f60a4e4fa67da1f797a3250c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-1.png",
+      "sha256": "3781ad6b82cafce6191bd48f2a473ccf6070d5370f3a16dbad8db9acd7e22f57"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\test-failed-2.png",
+      "sha256": "6e47f7522d0d389aa776c2c746d92a39e300950d52d7590da363ba882c9d10ff"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\trace.zip",
+      "sha256": "d3969a85f274fe831b9b5c882b8489d44413908503ef5ff1fe484242adccba06"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\error-context.md",
+      "sha256": "fb8bc30190369b97666e3914fe6fe766a20e00d444bca69a5cae51c2cf0aec51"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.json",
+      "sha256": "ae6a169e54afe3cd502d4b44091375656da4b3bdc2a1d3327def5776b79e08e5"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.png",
+      "sha256": "775dc294d7bc3df9718ee93797296bbfbb6fe816e4e28d7726aa967c5fec8aaf"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\test-failed-1.png",
+      "sha256": "3c3c68f4391ac42b75ab0c704e85d322a332fc98e1f8fb27a7d1bf638b2a497f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\trace.zip",
+      "sha256": "69c9e9f6451c4427e90b688f1850421ac33979c47bdb91f8510df29754f5f507"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\error-context.md",
+      "sha256": "fb8bc30190369b97666e3914fe6fe766a20e00d444bca69a5cae51c2cf0aec51"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.json",
+      "sha256": "74a29fb086ffbb295e7a7b4df352faa3bc79a8e155a6eb4645f0be7e11e7929b"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.png",
+      "sha256": "775dc294d7bc3df9718ee93797296bbfbb6fe816e4e28d7726aa967c5fec8aaf"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-1.png",
+      "sha256": "3c3c68f4391ac42b75ab0c704e85d322a332fc98e1f8fb27a7d1bf638b2a497f"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\test-failed-2.png",
+      "sha256": "55d8a194241c2276e8a419ec11fcd074c894843c7c85b273f164e4c5508c6048"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-route-visible-red\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\trace.zip",
+      "sha256": "519fa1e004e8c241beaf764ece752dd1f0c6b7b4504ac5f86bdceb1ae0266b30"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-completed-receipt.json",
+      "sha256": "2b3800da69b27bcb8e2c30f5d7e83629726d8f9b1fb57b8f5dcc4683797f7e13"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-completed-receipt.png",
+      "sha256": "aa43557de2f23a1fcf7e49dca23bf20e7ccfe5a67809fc3cacf3207398a308c1"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-import-preview.json",
+      "sha256": "250ed7a1873cdc405940c2f3cdf64607df32a30bc75d978f46422b0b1a1cb582"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-import-preview.png",
+      "sha256": "dc82ac2675ffc58c158b56a57f6bc3426a5d65496cd1532ee55ea352f066a29a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-completed-receipt.json",
+      "sha256": "7b417cacb83c9d572c2cf0339e8158d4934e02aeaf6e864a98bad7c0068f6051"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-completed-receipt.png",
+      "sha256": "0304291002fc82a8644026e4b5d6ecaf10890fc1b9ce9677b49ac71c1d8756b3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-import-preview.json",
+      "sha256": "46a654e2fc9c5fb2d2e50b8f9e3cde4dd85fce0d185d0537b44e08368e5fc205"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-import-preview.png",
+      "sha256": "ea278ca04076d45af56955c10369fe2f84d9e211671c3e8de2f437ff9788e8b3"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-completed-receipt.json",
+      "sha256": "310fb633c7ef4a44b31a66b6fd3a2788c045d0849879519338d82bf7996de1ab"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-completed-receipt.png",
+      "sha256": "adc1f68d51968924bca16060da9cf293c3795f277cf419f6dee1f43ec7834409"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-import-preview.json",
+      "sha256": "849057d7ea2008c46e64f497039c7cf032ec0ce0cd36edcfbe095f9d87f0063d"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-import-preview.png",
+      "sha256": "966d90b5f23b5e7dbd880d6b22e776d23f6847fb7e51f72f7076dc21c226d22e"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-completed-receipt.json",
+      "sha256": "dce3a4d7528a2b687aa80e71b17d6788fed479842fd928704e8673aab79f4771"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-completed-receipt.png",
+      "sha256": "e4522cd831bb587eea542be57019d8f6e09b4df7cce69acea409790cf80cf588"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-import-preview.json",
+      "sha256": "ec82cbf1eadc9a131f82e8f6b0b0e006d3282ea069db3d487eec5021eefb3e1d"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-import-preview.png",
+      "sha256": "e0c6f598634d82fad428c20808f48db2b3ba874baf9000c4fcca5668ea78f05c"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\\singular-receipt.csv",
+      "sha256": "8a1283c638a8eef76692c43d951fbce437808ec88cce7e61cbaedf847df582ea"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\expanded-issue.json",
+      "sha256": "b9678203c1c50c22a18fa622290a1024dc784262b0bbb1014253f5dbc81332aa"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\\expanded-issue.png",
+      "sha256": "5019eaaa43b565d3f3eb0ac507ead5709c977c0d6246edd2a40e6d3d6771f293"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\expanded-issue.json",
+      "sha256": "deda8544b83d89d536a85ee4322cedc53b053b48fffc2539c7bbb6f6ab2386e7"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\\expanded-issue.png",
+      "sha256": "0df9f0f38e4d26c9a97e4e1cc15112b16acba3216914ea200990c94cf51b4fce"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.json",
+      "sha256": "df279445deb02cf03b8316a148bf2f51bc1e32480215c2f0c07d9797fa04a885"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\\route-corrective-focus.png",
+      "sha256": "d54e649554fd200c3e3b22c5cd8a002e620cfb9d3cc00808adb2743149abcaef"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.json",
+      "sha256": "c6e8464829c34f8b877957352ea0206703f3b1040682878b7ab42c30c2d26209"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\\route-corrective-focus.png",
+      "sha256": "0f682ce79eacfbe89a062d0e5d4c649eae4bb19e4ab1057a5dc82e82cd734ecd"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\expanded-issue.json",
+      "sha256": "03bf2004dc35577345935744a91aeab4866ee7da89c1660fd7ca38cd61b1ba8e"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\\expanded-issue.png",
+      "sha256": "fe93db802a2b20edd850e9a0abcfbb41022ebd234d6d78cb9cb2433afce3817a"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\expanded-issue.json",
+      "sha256": "357783ae36fae8b8470eeec617d3d5f50f34e56ed1886ee1db643ea5715d4215"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\\expanded-issue.png",
+      "sha256": "be7eddefd252e0dbfcffaab95e2a4643e6fb6c11f9e57fcf715280b264cf55a4"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.json",
+      "sha256": "ba55921ba1fa88b01e5790ce78031a3dc963b80d7b5816258171ae7c4102dc7e"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\\route-corrective-focus.png",
+      "sha256": "cce59ffc042f6bbef1f76f5d9e0f6f30d58beadcb67abdaa1056089c49bdc81b"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.json",
+      "sha256": "873fd0f28618e31c14c400f70a1b5e5c2518e27832445a581ec330eb8b5f51b7"
+    },
+    {
+      "path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\visual-fixes-green\\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\\route-corrective-focus.png",
+      "sha256": "d98c692b9d5e251036f5ce4c0a585ff2666fb692379c63e43b7f7afd38a48b58"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  10:36:29
+   Duration  136ms (transform 64%, import 27%, worker 5%, tests 4%)
+

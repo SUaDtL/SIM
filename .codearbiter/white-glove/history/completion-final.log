@@ -1,0 +1,23 @@
+
+Running 14 tests using 2 workers
+
+(node:52500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chrome] › e2e\white-glove-completion.spec.ts:115:1 › NAV01 parked support draft returns to the same section, raw text, caret and control without a write (1.1s)
+  ok  2 [msedge] › e2e\white-glove-completion.spec.ts:115:1 › NAV01 parked support draft returns to the same section, raw text, caret and control without a write (1.1s)
+  ok  3 [chrome] › e2e\white-glove-completion.spec.ts:149:1 › SCEN02 an authored planned Add retains typed identity through Save, Undo, Redo and readback (1.3s)
+  ok  4 [msedge] › e2e\white-glove-completion.spec.ts:149:1 › SCEN02 an authored planned Add retains typed identity through Save, Undo, Redo and readback (1.4s)
+  ok  5 [chrome] › e2e\white-glove-completion.spec.ts:198:1 › SCEN06 E3 1000-service/60-organization source, target and provider choices stay qualified and paged (9.4s)
+  ok  6 [msedge] › e2e\white-glove-completion.spec.ts:198:1 › SCEN06 E3 1000-service/60-organization source, target and provider choices stay qualified and paged (9.5s)
+  ok  7 [chrome] › e2e\white-glove-completion.spec.ts:281:1 › SCEN11 populated proposals isolate selection, removed origins, Back, deletion and Undo/Redo (2.5s)
+  ok  8 [msedge] › e2e\white-glove-completion.spec.ts:281:1 › SCEN11 populated proposals isolate selection, removed origins, Back, deletion and Undo/Redo (2.5s)
+  ok  9 [chrome] › e2e\white-glove-completion.spec.ts:376:3 › CAP04 PNG frozen source graph, frame and dimensions survive dataset replacement (1.4s)
+  ok 10 [msedge] › e2e\white-glove-completion.spec.ts:376:3 › CAP04 PNG frozen source graph, frame and dimensions survive dataset replacement (1.4s)
+  ok 11 [chrome] › e2e\white-glove-completion.spec.ts:376:3 › CAP04 SVG frozen source graph, frame and dimensions survive dataset replacement (1.2s)
+  ok 12 [msedge] › e2e\white-glove-completion.spec.ts:376:3 › CAP04 SVG frozen source graph, frame and dimensions survive dataset replacement (1.2s)
+  ok 13 [chrome] › e2e\white-glove-completion.spec.ts:544:1 › CAP03 child-only input blocks outside pointer and remains exact across controlled capture refusal (2.0s)
+  ok 14 [msedge] › e2e\white-glove-completion.spec.ts:544:1 › CAP03 child-only input blocks outside pointer and remains exact across controlled capture refusal (2.1s)
+
+  14 passed (20.0s)

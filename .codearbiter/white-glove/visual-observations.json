@@ -1,0 +1,1120 @@
+{
+  "as_of": "2026-11-16T16:41:00.746565+00:00",
+  "candidate_sha256": "989746ed4de16f9418f066fe2a2ef753043b88fb107561a22f4e67d3e787230b",
+  "collection": {
+    "html_sha256": "989746ed4de16f9418f066fe2a2ef753043b88fb107561a22f4e67d3e787230b",
+    "fixture_e1_sha256": "72f318d12f61346e6fd5f294b3fac9611f93f0f534d5e8bac93ad8bdd6da1e5c",
+    "fixture_e3_sha256": "70a9419e93cc50ef48140887a5da19a225faed746fcac7c3ae89a8ff60dd48dc",
+    "rows": [
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "first-use",
+        "screenshot": "msedge-1366-first-use.png",
+        "text": "msedge-1366-first-use.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "file-menu",
+        "screenshot": "msedge-1366-file-menu.png",
+        "text": "msedge-1366-file-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "about-menu",
+        "screenshot": "msedge-1366-about-menu.png",
+        "text": "msedge-1366-about-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "license-dialog",
+        "screenshot": "msedge-1366-license-dialog.png",
+        "text": "msedge-1366-license-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "help-dialog",
+        "screenshot": "msedge-1366-help-dialog.png",
+        "text": "msedge-1366-help-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "inventory",
+        "screenshot": "msedge-1366-inventory.png",
+        "text": "msedge-1366-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "service-summary",
+        "screenshot": "msedge-1366-service-summary.png",
+        "text": "msedge-1366-service-summary.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "edit-details",
+        "screenshot": "msedge-1366-edit-details.png",
+        "text": "msedge-1366-edit-details.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "reference-picker",
+        "screenshot": "msedge-1366-reference-picker.png",
+        "text": "msedge-1366-reference-picker.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "picker-query-miss",
+        "screenshot": "msedge-1366-picker-query-miss.png",
+        "text": "msedge-1366-picker-query-miss.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "inline-child",
+        "screenshot": "msedge-1366-inline-child.png",
+        "text": "msedge-1366-inline-child.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "E3-populated-inventory",
+        "screenshot": "msedge-1366-E3-populated-inventory.png",
+        "text": "msedge-1366-E3-populated-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "E3-connections",
+        "screenshot": "msedge-1366-E3-connections.png",
+        "text": "msedge-1366-E3-connections.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "E3-support",
+        "screenshot": "msedge-1366-E3-support.png",
+        "text": "msedge-1366-E3-support.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "required-error",
+        "screenshot": "msedge-1366-required-error.png",
+        "text": "msedge-1366-required-error.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 1366,
+        "state": "discard-confirmation",
+        "screenshot": "msedge-1366-discard-confirmation.png",
+        "text": "msedge-1366-discard-confirmation.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "first-use",
+        "screenshot": "msedge-320-first-use.png",
+        "text": "msedge-320-first-use.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "file-menu",
+        "screenshot": "msedge-320-file-menu.png",
+        "text": "msedge-320-file-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "about-menu",
+        "screenshot": "msedge-320-about-menu.png",
+        "text": "msedge-320-about-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "license-dialog",
+        "screenshot": "msedge-320-license-dialog.png",
+        "text": "msedge-320-license-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "help-dialog",
+        "screenshot": "msedge-320-help-dialog.png",
+        "text": "msedge-320-help-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "inventory",
+        "screenshot": "msedge-320-inventory.png",
+        "text": "msedge-320-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "service-summary",
+        "screenshot": "msedge-320-service-summary.png",
+        "text": "msedge-320-service-summary.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "edit-details",
+        "screenshot": "msedge-320-edit-details.png",
+        "text": "msedge-320-edit-details.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "reference-picker",
+        "screenshot": "msedge-320-reference-picker.png",
+        "text": "msedge-320-reference-picker.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "picker-query-miss",
+        "screenshot": "msedge-320-picker-query-miss.png",
+        "text": "msedge-320-picker-query-miss.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "inline-child",
+        "screenshot": "msedge-320-inline-child.png",
+        "text": "msedge-320-inline-child.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "E3-populated-inventory",
+        "screenshot": "msedge-320-E3-populated-inventory.png",
+        "text": "msedge-320-E3-populated-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "E3-connections",
+        "screenshot": "msedge-320-E3-connections.png",
+        "text": "msedge-320-E3-connections.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "E3-support",
+        "screenshot": "msedge-320-E3-support.png",
+        "text": "msedge-320-E3-support.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "required-error",
+        "screenshot": "msedge-320-required-error.png",
+        "text": "msedge-320-required-error.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "msedge",
+        "width": 320,
+        "state": "discard-confirmation",
+        "screenshot": "msedge-320-discard-confirmation.png",
+        "text": "msedge-320-discard-confirmation.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "first-use",
+        "screenshot": "chrome-1366-first-use.png",
+        "text": "chrome-1366-first-use.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "file-menu",
+        "screenshot": "chrome-1366-file-menu.png",
+        "text": "chrome-1366-file-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "about-menu",
+        "screenshot": "chrome-1366-about-menu.png",
+        "text": "chrome-1366-about-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "license-dialog",
+        "screenshot": "chrome-1366-license-dialog.png",
+        "text": "chrome-1366-license-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "help-dialog",
+        "screenshot": "chrome-1366-help-dialog.png",
+        "text": "chrome-1366-help-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "inventory",
+        "screenshot": "chrome-1366-inventory.png",
+        "text": "chrome-1366-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "service-summary",
+        "screenshot": "chrome-1366-service-summary.png",
+        "text": "chrome-1366-service-summary.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "edit-details",
+        "screenshot": "chrome-1366-edit-details.png",
+        "text": "chrome-1366-edit-details.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "reference-picker",
+        "screenshot": "chrome-1366-reference-picker.png",
+        "text": "chrome-1366-reference-picker.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "picker-query-miss",
+        "screenshot": "chrome-1366-picker-query-miss.png",
+        "text": "chrome-1366-picker-query-miss.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "inline-child",
+        "screenshot": "chrome-1366-inline-child.png",
+        "text": "chrome-1366-inline-child.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "E3-populated-inventory",
+        "screenshot": "chrome-1366-E3-populated-inventory.png",
+        "text": "chrome-1366-E3-populated-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "E3-connections",
+        "screenshot": "chrome-1366-E3-connections.png",
+        "text": "chrome-1366-E3-connections.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "E3-support",
+        "screenshot": "chrome-1366-E3-support.png",
+        "text": "chrome-1366-E3-support.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "required-error",
+        "screenshot": "chrome-1366-required-error.png",
+        "text": "chrome-1366-required-error.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 1366,
+        "state": "discard-confirmation",
+        "screenshot": "chrome-1366-discard-confirmation.png",
+        "text": "chrome-1366-discard-confirmation.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "first-use",
+        "screenshot": "chrome-320-first-use.png",
+        "text": "chrome-320-first-use.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "file-menu",
+        "screenshot": "chrome-320-file-menu.png",
+        "text": "chrome-320-file-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "about-menu",
+        "screenshot": "chrome-320-about-menu.png",
+        "text": "chrome-320-about-menu.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "license-dialog",
+        "screenshot": "chrome-320-license-dialog.png",
+        "text": "chrome-320-license-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "help-dialog",
+        "screenshot": "chrome-320-help-dialog.png",
+        "text": "chrome-320-help-dialog.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "inventory",
+        "screenshot": "chrome-320-inventory.png",
+        "text": "chrome-320-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "service-summary",
+        "screenshot": "chrome-320-service-summary.png",
+        "text": "chrome-320-service-summary.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "edit-details",
+        "screenshot": "chrome-320-edit-details.png",
+        "text": "chrome-320-edit-details.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "reference-picker",
+        "screenshot": "chrome-320-reference-picker.png",
+        "text": "chrome-320-reference-picker.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "picker-query-miss",
+        "screenshot": "chrome-320-picker-query-miss.png",
+        "text": "chrome-320-picker-query-miss.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "inline-child",
+        "screenshot": "chrome-320-inline-child.png",
+        "text": "chrome-320-inline-child.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "E3-populated-inventory",
+        "screenshot": "chrome-320-E3-populated-inventory.png",
+        "text": "chrome-320-E3-populated-inventory.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "E3-connections",
+        "screenshot": "chrome-320-E3-connections.png",
+        "text": "chrome-320-E3-connections.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "E3-support",
+        "screenshot": "chrome-320-E3-support.png",
+        "text": "chrome-320-E3-support.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "required-error",
+        "screenshot": "chrome-320-required-error.png",
+        "text": "chrome-320-required-error.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      },
+      {
+        "channel": "chrome",
+        "width": 320,
+        "state": "discard-confirmation",
+        "screenshot": "chrome-320-discard-confirmation.png",
+        "text": "chrome-320-discard-confirmation.txt",
+        "errors": [],
+        "horizontalOverflow": false
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "chrome-1366-about-menu.png",
+        "sha256": "f7b5673537d5ff0fdae20c05628a4cfc5ea9b8c166ede8496679940eb7289f4e"
+      },
+      {
+        "path": "chrome-1366-about-menu.txt",
+        "sha256": "b421cbc76d91b719f934dda4eabc34db970720022d36f2a16db7c3c3c36c6711"
+      },
+      {
+        "path": "chrome-1366-discard-confirmation.png",
+        "sha256": "cd0cd1b05cba9af3ad31d97e298033ba32ec1c9cb14a680b208bbc7bb7eaa52c"
+      },
+      {
+        "path": "chrome-1366-discard-confirmation.txt",
+        "sha256": "281a52f230698f50fd3194e213c8e953d816888a7913670119d927ba0005d5ff"
+      },
+      {
+        "path": "chrome-1366-E3-connections.png",
+        "sha256": "7127cae7b67bdb21e5b1aa7a4fb7fa256c2f205bc83eb2c6ae76cea511883f9c"
+      },
+      {
+        "path": "chrome-1366-E3-connections.txt",
+        "sha256": "81a5cb82e921ea539b0859d33398e66c6fa284de6a37a7612e1c3a76ee938e18"
+      },
+      {
+        "path": "chrome-1366-E3-populated-inventory.png",
+        "sha256": "03ac39f106979a38d5dae5ab89bd2e93806e4d2c7005200b9052f047d8a7cfe8"
+      },
+      {
+        "path": "chrome-1366-E3-populated-inventory.txt",
+        "sha256": "5aba050326517d7c1736081789be1272132fa4b9f20c91911a1852e25daa73d9"
+      },
+      {
+        "path": "chrome-1366-E3-support.png",
+        "sha256": "c3be827a1bdc1e9cc61a49484785172b99acb752259b0c6e9fa6957490c437c4"
+      },
+      {
+        "path": "chrome-1366-E3-support.txt",
+        "sha256": "c8129d50fd81548f6ba3d5c9a4f10e2b73437caae53fe06eb331fa8b364761d5"
+      },
+      {
+        "path": "chrome-1366-edit-details.png",
+        "sha256": "e27aec6c68130fe2a3a59eea07d8b104056d7ffe952a3ee85eb891211f2ced8c"
+      },
+      {
+        "path": "chrome-1366-edit-details.txt",
+        "sha256": "53eb2fa1b542bafaa869389fbe1aa48629289cc23fa885121326ea409fcca4b8"
+      },
+      {
+        "path": "chrome-1366-file-menu.png",
+        "sha256": "80dbf3649b843fbc0298e931e3dd827ec1e451e21897695913f779fb03e82d92"
+      },
+      {
+        "path": "chrome-1366-file-menu.txt",
+        "sha256": "b851bf41603dc4a716741708e660a5961ddc078e0f83837e47d72ea046b40f25"
+      },
+      {
+        "path": "chrome-1366-first-use.png",
+        "sha256": "cbe451f200ecd67cecddb810618ba2b0ada7880f2a36158cb7e06ebe903f7aa8"
+      },
+      {
+        "path": "chrome-1366-first-use.txt",
+        "sha256": "d511e06ea06cbcf332282862fd2f830d3e3f7b24246ba0b57929a46f696444a0"
+      },
+      {
+        "path": "chrome-1366-help-dialog.png",
+        "sha256": "34a2eed4deb8a6e4c31b68b8a1e44563b8748592626d1e6b5024b8b20567e23d"
+      },
+      {
+        "path": "chrome-1366-help-dialog.txt",
+        "sha256": "e4241da953064c597d4a3a8e36a51c165e439689f3c1431669a0f5306203d680"
+      },
+      {
+        "path": "chrome-1366-inline-child.png",
+        "sha256": "fc157a17ee59fc46927ba1417e00036d5c91fbefbd0d48e382b60df32f8e0374"
+      },
+      {
+        "path": "chrome-1366-inline-child.txt",
+        "sha256": "db7e2091b56fd616f1b806f8248085849ef2ba47341710655c8cfd17d74b4720"
+      },
+      {
+        "path": "chrome-1366-inventory.png",
+        "sha256": "04e0c61489628f691e423aa9d3d28b0b3f256dfb557cbf9e52e3b43ca12d3984"
+      },
+      {
+        "path": "chrome-1366-inventory.txt",
+        "sha256": "6b79397e485039cb493e092b261bee019a87973a341b5ca3ccb70e3f7bbdccd4"
+      },
+      {
+        "path": "chrome-1366-license-dialog.png",
+        "sha256": "734e4b4f178314e7cf3a58beae143e5699e337a0dfe3ba175ae276c2656af012"
+      },
+      {
+        "path": "chrome-1366-license-dialog.txt",
+        "sha256": "9f23df08542e97e9dbc54128a94dc4148761876ef9898106741bbbd034779b5a"
+      },
+      {
+        "path": "chrome-1366-picker-query-miss.png",
+        "sha256": "0a140c7c03fe884c8d634be6d3e6aed893161dc4e70ad5c333e2c2cb21fd80c5"
+      },
+      {
+        "path": "chrome-1366-picker-query-miss.txt",
+        "sha256": "b5c3cffc732ef4e16562c123f00ff731d5c4cedc39f73562ddc0189c61fb3a4f"
+      },
+      {
+        "path": "chrome-1366-reference-picker.png",
+        "sha256": "fb784bb2cc532c0832925bbcaa179e0e7d6ea8131ac16f21756014e5d581a640"
+      },
+      {
+        "path": "chrome-1366-reference-picker.txt",
+        "sha256": "2b3abaa45171a63dd6e72865d2ee7c08c583523720ec035cfda9c8c941717a8d"
+      },
+      {
+        "path": "chrome-1366-required-error.png",
+        "sha256": "dc52f8498b7e27bcbf3138e5b623aa360474789634fb920dadf4d3e93bbdf7f0"
+      },
+      {
+        "path": "chrome-1366-required-error.txt",
+        "sha256": "8fe7e5745977b9734a75af0540bf4635dfa94e046f5359984fc3abd8b3de547f"
+      },
+      {
+        "path": "chrome-1366-service-summary.png",
+        "sha256": "b0556a0e8fd296c580b5e266ce7f00e1c5f9fc768ee7bab8d5e6a3bde9e769ce"
+      },
+      {
+        "path": "chrome-1366-service-summary.txt",
+        "sha256": "fe21bf7e107b1a92e8d927c15705fff91c3ca35a188a9dbd53f0eff59415164a"
+      },
+      {
+        "path": "chrome-320-about-menu.png",
+        "sha256": "e7398255a6312dcb5f9102b8302cab647c93a92a2beea4bb8e77c62f3b6499b5"
+      },
+      {
+        "path": "chrome-320-about-menu.txt",
+        "sha256": "b421cbc76d91b719f934dda4eabc34db970720022d36f2a16db7c3c3c36c6711"
+      },
+      {
+        "path": "chrome-320-discard-confirmation.png",
+        "sha256": "a011034065ca0a03d9de9693903203005fd02301c33e0c5f85d03ba3a293420c"
+      },
+      {
+        "path": "chrome-320-discard-confirmation.txt",
+        "sha256": "281a52f230698f50fd3194e213c8e953d816888a7913670119d927ba0005d5ff"
+      },
+      {
+        "path": "chrome-320-E3-connections.png",
+        "sha256": "f05f0a93d9a8afb4c0455d841a3d72a1319ef56d86b853cb73c3bfa16fb03a10"
+      },
+      {
+        "path": "chrome-320-E3-connections.txt",
+        "sha256": "81a5cb82e921ea539b0859d33398e66c6fa284de6a37a7612e1c3a76ee938e18"
+      },
+      {
+        "path": "chrome-320-E3-populated-inventory.png",
+        "sha256": "6a5ab7809875c46d83b776297679746544b1f2b768133a806766bd9546e31112"
+      },
+      {
+        "path": "chrome-320-E3-populated-inventory.txt",
+        "sha256": "b1c630872de1f845cf228bedf76de5262a6de287ed17573139000170976e0189"
+      },
+      {
+        "path": "chrome-320-E3-support.png",
+        "sha256": "f47ce8f44b257a91709c899be0490b0dc52164c6bbf4cb0be177b58479adaafb"
+      },
+      {
+        "path": "chrome-320-E3-support.txt",
+        "sha256": "c8129d50fd81548f6ba3d5c9a4f10e2b73437caae53fe06eb331fa8b364761d5"
+      },
+      {
+        "path": "chrome-320-edit-details.png",
+        "sha256": "eb622204b6d1814865b9f166994702ed3599ea2cd84af24468cfbba22f6bd0b1"
+      },
+      {
+        "path": "chrome-320-edit-details.txt",
+        "sha256": "53eb2fa1b542bafaa869389fbe1aa48629289cc23fa885121326ea409fcca4b8"
+      },
+      {
+        "path": "chrome-320-file-menu.png",
+        "sha256": "a9ebda881d3f59cf974a61574d67b478df1224949f9cef313a4c1db98dccd1a9"
+      },
+      {
+        "path": "chrome-320-file-menu.txt",
+        "sha256": "b851bf41603dc4a716741708e660a5961ddc078e0f83837e47d72ea046b40f25"
+      },
+      {
+        "path": "chrome-320-first-use.png",
+        "sha256": "241b08c63b2f7886b818a792b49b721b5f7af16dfe4ff95c13c6bb091faf8952"
+      },
+      {
+        "path": "chrome-320-first-use.txt",
+        "sha256": "d511e06ea06cbcf332282862fd2f830d3e3f7b24246ba0b57929a46f696444a0"
+      },
+      {
+        "path": "chrome-320-help-dialog.png",
+        "sha256": "2b13d28ac013d5653885186e5db1cd117cbdd56cd7c406773e5850d9e0e52e19"
+      },
+      {
+        "path": "chrome-320-help-dialog.txt",
+        "sha256": "e4241da953064c597d4a3a8e36a51c165e439689f3c1431669a0f5306203d680"
+      },
+      {
+        "path": "chrome-320-inline-child.png",
+        "sha256": "f4b895cbf72a5f40ec2fcc904f5d854a4d675a3dcca305dd07ff58965a62ca35"
+      },
+      {
+        "path": "chrome-320-inline-child.txt",
+        "sha256": "db7e2091b56fd616f1b806f8248085849ef2ba47341710655c8cfd17d74b4720"
+      },
+      {
+        "path": "chrome-320-inventory.png",
+        "sha256": "744113ddd54c1c3a60263b076bfe0b7f007dd1f8c4451a2ee02c052c4f834933"
+      },
+      {
+        "path": "chrome-320-inventory.txt",
+        "sha256": "42bc5f89640ac8df97aa05fba43cc5f603efe009a785861905fbf26b9e68b731"
+      },
+      {
+        "path": "chrome-320-license-dialog.png",
+        "sha256": "100b24920f0fc9e6b648249f1cccfcb96c55138da521f27724862dbddbea8c09"
+      },
+      {
+        "path": "chrome-320-license-dialog.txt",
+        "sha256": "9f23df08542e97e9dbc54128a94dc4148761876ef9898106741bbbd034779b5a"
+      },
+      {
+        "path": "chrome-320-picker-query-miss.png",
+        "sha256": "f0b999159993296e94e6698d1bf8a03e931831a17dbf5bfa721ab5fdd9e5e4b7"
+      },
+      {
+        "path": "chrome-320-picker-query-miss.txt",
+        "sha256": "b5c3cffc732ef4e16562c123f00ff731d5c4cedc39f73562ddc0189c61fb3a4f"
+      },
+      {
+        "path": "chrome-320-reference-picker.png",
+        "sha256": "16e07aacdff255bf5985255ac330818ce03edb7e7def6256a0d1e3b168b99eec"
+      },
+      {
+        "path": "chrome-320-reference-picker.txt",
+        "sha256": "2b3abaa45171a63dd6e72865d2ee7c08c583523720ec035cfda9c8c941717a8d"
+      },
+      {
+        "path": "chrome-320-required-error.png",
+        "sha256": "90393785e72d724e70c68209b01490b79fc67d546b44597cc28df18bde12d837"
+      },
+      {
+        "path": "chrome-320-required-error.txt",
+        "sha256": "8fe7e5745977b9734a75af0540bf4635dfa94e046f5359984fc3abd8b3de547f"
+      },
+      {
+        "path": "chrome-320-service-summary.png",
+        "sha256": "ddc0355faaf0c6d31e84373c785150337250f4db0333f066d374486cc500c482"
+      },
+      {
+        "path": "chrome-320-service-summary.txt",
+        "sha256": "cb7137aca21eb2de2b9d06c3c859f8b4d102684c954081afddd394283ddea18a"
+      },
+      {
+        "path": "E3.sqlite",
+        "sha256": "70a9419e93cc50ef48140887a5da19a225faed746fcac7c3ae89a8ff60dd48dc"
+      },
+      {
+        "path": "msedge-1366-about-menu.png",
+        "sha256": "2580740cf8ab9efcf9193be1a1e982b9e53b3706d5aed54e088a684c5418afad"
+      },
+      {
+        "path": "msedge-1366-about-menu.txt",
+        "sha256": "11de5b1a587824bee09e9f5950cc217c55d54e9a283466a039d216fc9bb422c5"
+      },
+      {
+        "path": "msedge-1366-discard-confirmation.png",
+        "sha256": "bcccdec83c768fc0e980a679603b5ce2518d9aa7370eb776ee151325a66005f8"
+      },
+      {
+        "path": "msedge-1366-discard-confirmation.txt",
+        "sha256": "281a52f230698f50fd3194e213c8e953d816888a7913670119d927ba0005d5ff"
+      },
+      {
+        "path": "msedge-1366-E3-connections.png",
+        "sha256": "7127cae7b67bdb21e5b1aa7a4fb7fa256c2f205bc83eb2c6ae76cea511883f9c"
+      },
+      {
+        "path": "msedge-1366-E3-connections.txt",
+        "sha256": "81a5cb82e921ea539b0859d33398e66c6fa284de6a37a7612e1c3a76ee938e18"
+      },
+      {
+        "path": "msedge-1366-E3-populated-inventory.png",
+        "sha256": "14d20b92e38a0f4f28b6df586e9013834c8f2c49d7158fbf919fa1c480125651"
+      },
+      {
+        "path": "msedge-1366-E3-populated-inventory.txt",
+        "sha256": "5aba050326517d7c1736081789be1272132fa4b9f20c91911a1852e25daa73d9"
+      },
+      {
+        "path": "msedge-1366-E3-support.png",
+        "sha256": "5dcba04a74d5e8fe9a95971cba8f36f084bce7e083c29b33033871ae9c15dcb6"
+      },
+      {
+        "path": "msedge-1366-E3-support.txt",
+        "sha256": "c8129d50fd81548f6ba3d5c9a4f10e2b73437caae53fe06eb331fa8b364761d5"
+      },
+      {
+        "path": "msedge-1366-edit-details.png",
+        "sha256": "e27aec6c68130fe2a3a59eea07d8b104056d7ffe952a3ee85eb891211f2ced8c"
+      },
+      {
+        "path": "msedge-1366-edit-details.txt",
+        "sha256": "53eb2fa1b542bafaa869389fbe1aa48629289cc23fa885121326ea409fcca4b8"
+      },
+      {
+        "path": "msedge-1366-file-menu.png",
+        "sha256": "80dbf3649b843fbc0298e931e3dd827ec1e451e21897695913f779fb03e82d92"
+      },
+      {
+        "path": "msedge-1366-file-menu.txt",
+        "sha256": "b851bf41603dc4a716741708e660a5961ddc078e0f83837e47d72ea046b40f25"
+      },
+      {
+        "path": "msedge-1366-first-use.png",
+        "sha256": "cbe451f200ecd67cecddb810618ba2b0ada7880f2a36158cb7e06ebe903f7aa8"
+      },
+      {
+        "path": "msedge-1366-first-use.txt",
+        "sha256": "d511e06ea06cbcf332282862fd2f830d3e3f7b24246ba0b57929a46f696444a0"
+      },
+      {
+        "path": "msedge-1366-help-dialog.png",
+        "sha256": "1fc98f5f7ee305cc62a05ff9cf0fd9b374f5cdc23ca1f106283dbfacc9f98f03"
+      },
+      {
+        "path": "msedge-1366-help-dialog.txt",
+        "sha256": "e4241da953064c597d4a3a8e36a51c165e439689f3c1431669a0f5306203d680"
+      },
+      {
+        "path": "msedge-1366-inline-child.png",
+        "sha256": "b69b88d276704b4ac1a406526d38497f9d24f1bf1425de10b0440d914d7eff17"
+      },
+      {
+        "path": "msedge-1366-inline-child.txt",
+        "sha256": "db7e2091b56fd616f1b806f8248085849ef2ba47341710655c8cfd17d74b4720"
+      },
+      {
+        "path": "msedge-1366-inventory.png",
+        "sha256": "04e0c61489628f691e423aa9d3d28b0b3f256dfb557cbf9e52e3b43ca12d3984"
+      },
+      {
+        "path": "msedge-1366-inventory.txt",
+        "sha256": "6b79397e485039cb493e092b261bee019a87973a341b5ca3ccb70e3f7bbdccd4"
+      },
+      {
+        "path": "msedge-1366-license-dialog.png",
+        "sha256": "93f94f2dd4ce260d4d6eb9f76707d6996ebae92de02372e0beddba0045940fd6"
+      },
+      {
+        "path": "msedge-1366-license-dialog.txt",
+        "sha256": "9f23df08542e97e9dbc54128a94dc4148761876ef9898106741bbbd034779b5a"
+      },
+      {
+        "path": "msedge-1366-picker-query-miss.png",
+        "sha256": "9d03d605b15ffc79c9796d7a23c46987866d55332fde24d443aafcb6b34f326b"
+      },
+      {
+        "path": "msedge-1366-picker-query-miss.txt",
+        "sha256": "b5c3cffc732ef4e16562c123f00ff731d5c4cedc39f73562ddc0189c61fb3a4f"
+      },
+      {
+        "path": "msedge-1366-reference-picker.png",
+        "sha256": "87a1031eca257e4a542e2779f8b5070ff7f7ecd16b36798b5eeb6db2c106b1cd"
+      },
+      {
+        "path": "msedge-1366-reference-picker.txt",
+        "sha256": "2b3abaa45171a63dd6e72865d2ee7c08c583523720ec035cfda9c8c941717a8d"
+      },
+      {
+        "path": "msedge-1366-required-error.png",
+        "sha256": "49bfa7fca739e13a8003bc9809a96d48a31eaa538b94c26c395d5f1453f86ad0"
+      },
+      {
+        "path": "msedge-1366-required-error.txt",
+        "sha256": "8fe7e5745977b9734a75af0540bf4635dfa94e046f5359984fc3abd8b3de547f"
+      },
+      {
+        "path": "msedge-1366-service-summary.png",
+        "sha256": "b84d35c0be0e6385c8f944a7f4d29d19398d9a3ff5e139b8e6686b8d40e58977"
+      },
+      {
+        "path": "msedge-1366-service-summary.txt",
+        "sha256": "fe21bf7e107b1a92e8d927c15705fff91c3ca35a188a9dbd53f0eff59415164a"
+      },
+      {
+        "path": "msedge-320-about-menu.png",
+        "sha256": "82b52ced741c671f6998febf0202923d1ed34af1760cb4a36e909e98614bfe20"
+      },
+      {
+        "path": "msedge-320-about-menu.txt",
+        "sha256": "11de5b1a587824bee09e9f5950cc217c55d54e9a283466a039d216fc9bb422c5"
+      },
+      {
+        "path": "msedge-320-discard-confirmation.png",
+        "sha256": "3defabe4a3bbbf08926546e8e201135d8ea31b917aa74de251455ffb3ab07fe5"
+      },
+      {
+        "path": "msedge-320-discard-confirmation.txt",
+        "sha256": "281a52f230698f50fd3194e213c8e953d816888a7913670119d927ba0005d5ff"
+      },
+      {
+        "path": "msedge-320-E3-connections.png",
+        "sha256": "0d7398fc664987d7ea56cd93f782ef9c7cb76fd69086eeb38d74fb13906497cd"
+      },
+      {
+        "path": "msedge-320-E3-connections.txt",
+        "sha256": "81a5cb82e921ea539b0859d33398e66c6fa284de6a37a7612e1c3a76ee938e18"
+      },
+      {
+        "path": "msedge-320-E3-populated-inventory.png",
+        "sha256": "6a5ab7809875c46d83b776297679746544b1f2b768133a806766bd9546e31112"
+      },
+      {
+        "path": "msedge-320-E3-populated-inventory.txt",
+        "sha256": "b1c630872de1f845cf228bedf76de5262a6de287ed17573139000170976e0189"
+      },
+      {
+        "path": "msedge-320-E3-support.png",
+        "sha256": "da40bc0c4af691d5c9231a3cec547e98880db9010117328abb7b0f33d8e6fd98"
+      },
+      {
+        "path": "msedge-320-E3-support.txt",
+        "sha256": "c8129d50fd81548f6ba3d5c9a4f10e2b73437caae53fe06eb331fa8b364761d5"
+      },
+      {
+        "path": "msedge-320-edit-details.png",
+        "sha256": "eb622204b6d1814865b9f166994702ed3599ea2cd84af24468cfbba22f6bd0b1"
+      },
+      {
+        "path": "msedge-320-edit-details.txt",
+        "sha256": "53eb2fa1b542bafaa869389fbe1aa48629289cc23fa885121326ea409fcca4b8"
+      },
+      {
+        "path": "msedge-320-file-menu.png",
+        "sha256": "a9ebda881d3f59cf974a61574d67b478df1224949f9cef313a4c1db98dccd1a9"
+      },
+      {
+        "path": "msedge-320-file-menu.txt",
+        "sha256": "b851bf41603dc4a716741708e660a5961ddc078e0f83837e47d72ea046b40f25"
+      },
+      {
+        "path": "msedge-320-first-use.png",
+        "sha256": "241b08c63b2f7886b818a792b49b721b5f7af16dfe4ff95c13c6bb091faf8952"
+      },
+      {
+        "path": "msedge-320-first-use.txt",
+        "sha256": "d511e06ea06cbcf332282862fd2f830d3e3f7b24246ba0b57929a46f696444a0"
+      },
+      {
+        "path": "msedge-320-help-dialog.png",
+        "sha256": "dd8013abfaeb54c89386ca709aa45850358298ed6f66c3d2fb446345fa73871b"
+      },
+      {
+        "path": "msedge-320-help-dialog.txt",
+        "sha256": "e4241da953064c597d4a3a8e36a51c165e439689f3c1431669a0f5306203d680"
+      },
+      {
+        "path": "msedge-320-inline-child.png",
+        "sha256": "14e88902e7870b7c7e5188fcad8445e25eabf08038af20e6609392578ffd8817"
+      },
+      {
+        "path": "msedge-320-inline-child.txt",
+        "sha256": "db7e2091b56fd616f1b806f8248085849ef2ba47341710655c8cfd17d74b4720"
+      },
+      {
+        "path": "msedge-320-inventory.png",
+        "sha256": "744113ddd54c1c3a60263b076bfe0b7f007dd1f8c4451a2ee02c052c4f834933"
+      },
+      {
+        "path": "msedge-320-inventory.txt",
+        "sha256": "42bc5f89640ac8df97aa05fba43cc5f603efe009a785861905fbf26b9e68b731"
+      },
+      {
+        "path": "msedge-320-license-dialog.png",
+        "sha256": "b74aaddd64f0c7108f38dfea34aacf6a4788d984c1d7ae1614bd1752b76600c3"
+      },
+      {
+        "path": "msedge-320-license-dialog.txt",
+        "sha256": "9f23df08542e97e9dbc54128a94dc4148761876ef9898106741bbbd034779b5a"
+      },
+      {
+        "path": "msedge-320-picker-query-miss.png",
+        "sha256": "53d6d8e85c2aa4e79de56f1ca4a1eb7756c9e08b852b662bd7407755ac35aa7d"
+      },
+      {
+        "path": "msedge-320-picker-query-miss.txt",
+        "sha256": "b5c3cffc732ef4e16562c123f00ff731d5c4cedc39f73562ddc0189c61fb3a4f"
+      },
+      {
+        "path": "msedge-320-reference-picker.png",
+        "sha256": "8202c1e69afa8b2d2dc8367aa40141eb4b0c0ff05194b8e6d99d68d949319959"
+      },
+      {
+        "path": "msedge-320-reference-picker.txt",
+        "sha256": "2b3abaa45171a63dd6e72865d2ee7c08c583523720ec035cfda9c8c941717a8d"
+      },
+      {
+        "path": "msedge-320-required-error.png",
+        "sha256": "d005bf895fe37b3656de01560aafc1d26b32864336722a5e9bfa5e1c0ee768e2"
+      },
+      {
+        "path": "msedge-320-required-error.txt",
+        "sha256": "8fe7e5745977b9734a75af0540bf4635dfa94e046f5359984fc3abd8b3de547f"
+      },
+      {
+        "path": "msedge-320-service-summary.png",
+        "sha256": "213aa1c1e0645075e71ec46875981b0b7ccc108b87338afb87e7e6883b2186ce"
+      },
+      {
+        "path": "msedge-320-service-summary.txt",
+        "sha256": "cb7137aca21eb2de2b9d06c3c859f8b4d102684c954081afddd394283ddea18a"
+      }
+    ],
+    "qualification": "Actual screenshots and rendered copy; bounded state inventory, not native/AT/human certification."
+  },
+  "inspection": "Root inspected all four host/width contact sheets and full-size selected capture/zoom originals. Desktop/narrow state families retain task hierarchy, full identity, readable errors and reachable controls. No new clipping, horizontal document overflow or contradictory state observed in this bounded sample.",
+  "limits": "64 screenshots across16 state families are not an exhaustive visual certification of every conditional exception state or human comfort. Actual200/400browser zoom is separately exercised in the full gate.",
+  "historical_collection_setup_errors": [
+    "File menu selector initially also matched About; corrected selector, no app change.",
+    "Edit visible text had typed accessible name Edit service; corrected automation locator, no app change."
+  ],
+  "binding": "Historical 64-state collection on the recorded HTML, not a recapture of the final candidate. Final affected regressions and root visual inspection are recorded separately below.",
+  "final_affected_review": {
+    "source_epoch": "d77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6",
+    "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
+    "regression_evidence": "history/visual-fixes-evidence.json",
+    "assessment": "Root inspected actual GREEN320px Chrome expanded Data issues,320px Edge route corrective cue and1366px Chrome completed import receipt. Primary prose, technical witness and Review action remain readable; route cue and focus outline fit the editor; count copy matches singular values.12 browser regressions and6 count golden tests passed, then final410unit/972browser gate passed. This is software review, not human acceptance.",
+    "independent_review": "Final bounded coverage closure remains separate; do not infer it from author evidence."
+  }
+}

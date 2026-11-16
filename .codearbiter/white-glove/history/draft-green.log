@@ -1,0 +1,25 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-drafts.spec.ts
+
+
+Running 12 tests using 2 workers
+
+(node:32880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chrome] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (866ms)
+  ok  1 [msedge] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (873ms)
+  ok  3 [chrome] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (681ms)
+  ok  4 [msedge] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (710ms)
+  ok  5 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (691ms)
+  ok  6 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (686ms)
+  ok  7 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (697ms)
+  ok  8 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (698ms)
+  ok  9 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (742ms)
+  ok 10 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (754ms)
+  ok 11 [chrome] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (590ms)
+  ok 12 [msedge] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (613ms)
+
+  12 passed (5.0s)

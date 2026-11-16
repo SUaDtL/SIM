@@ -1,0 +1,1095 @@
+{
+  "boundedTrials": 32,
+  "htmlSha256": "bcd63331fd2de0ad2f0c271d613bcc57166546ecf981ace9cd691e1954976ff9",
+  "finalHtmlSha256": "bcd63331fd2de0ad2f0c271d613bcc57166546ecf981ace9cd691e1954976ff9",
+  "rows": [
+    {
+      "channel": "chrome",
+      "trial": 0,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 819.0037352554912,
+          "y": -317.36915167276766
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 819.0037352554912,
+          "y": -317.36915167276766
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 1,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 0,
+          "y": -12.787500000000023
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 218.89415661971316,
+          "y": -817.0121607437857
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 641.3495651573459,
+          "y": 413.93543230164994
+        },
+        "zoom": 0.20014953549777129,
+        "pan": {
+          "x": 681.1782594942658,
+          "y": 267.6034393164487
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 2,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": -246,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -823.2436014179309,
+          "y": -356.45335548008245
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 802.8797376676803,
+          "y": 399.69462124338463
+        },
+        "zoom": 0.22417194359035605,
+        "pan": {
+          "x": 685.2417194359035,
+          "y": 265.9142352666746
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 3,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 250.21249999999998
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 481.74697088481105,
+          "y": 1077.4458405220996
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 250.21249999999998
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 481.74697088481105,
+          "y": 1077.4458405220996
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 4,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": -246,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -826.986984081203,
+          "y": 41.622918515104175
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 795.9667048899438,
+          "y": 318.15797431989586
+        },
+        "zoom": 0.21388323453657646,
+        "pan": {
+          "x": 683,
+          "y": 267.91931439434126
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 5,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 0,
+          "y": -12.787500000000023
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -498.17459436856007,
+          "y": -312.3923856712703
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 782.0441880246542,
+          "y": 327.5699706684472
+        },
+        "zoom": 0.218608493955228,
+        "pan": {
+          "x": 683.0394627504111,
+          "y": 268.02799536097024
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 6,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": -246,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -691.4569288651966,
+          "y": 692.441040730379
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 772.9838477782064,
+          "y": 186.6141955756355
+        },
+        "zoom": 0.22220382295586852,
+        "pan": {
+          "x": 683,
+          "y": 265.8886496984263
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 7,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 0,
+          "y": -12.787499999999909
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -356.2315317793617,
+          "y": 642.1917885323321
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 755.9403018333468,
+          "y": 131.81750627042732
+        },
+        "zoom": 0.2252308536976341,
+        "pan": {
+          "x": 683,
+          "y": 265.9280010980693
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 0,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1776.9167769960934,
+          "y": 60.90207062820011
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1776.9167769960934,
+          "y": 60.90207062820011
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 1,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1044.1821303652591,
+          "y": -31.79455006794666
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1044.1821303652591,
+          "y": -31.79455006794666
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 2,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 692.3552270722092,
+          "y": 760.2096483141775
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 692.3552270722092,
+          "y": 760.2096483141775
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 3,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 682.9999999999999,
+          "y": 262.99999999999994
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1071.0075852533505,
+          "y": 594.9885439364068
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 682.9999999999999,
+          "y": 262.99999999999994
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1071.0075852533505,
+          "y": 594.9885439364068
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 4,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300.0000000000001
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 818.2231221350371,
+          "y": 1105.7153201624715
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300.0000000000001
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 818.2231221350371,
+          "y": 1105.7153201624715
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 5,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683.0000000000001,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1216.7770046617848,
+          "y": -48.48306252634842
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683.0000000000001,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1216.7770046617848,
+          "y": -48.48306252634842
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 6,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1648.6796995364384,
+          "y": 87.30461561658706
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1648.6796995364384,
+          "y": 87.30461561658706
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "chrome",
+      "trial": 7,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1272.0926310482405,
+          "y": -228.48782589456482
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1272.0926310482405,
+          "y": -228.48782589456482
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 0,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1437.8186023455771,
+          "y": 575.2959418973501
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1437.8186023455771,
+          "y": 575.2959418973501
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 1,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 250.21249999999998
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 848.1388766705685,
+          "y": -134.09375225959946
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 250.21249999999998
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 848.1388766705685,
+          "y": -134.09375225959946
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 2,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": -246,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -520.1908874680108,
+          "y": -585.1043394527071
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 738.6927368674865,
+          "y": 445.6840041154139
+        },
+        "zoom": 0.22342832440550156,
+        "pan": {
+          "x": 683,
+          "y": 265.90456821727156
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 3,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 0,
+          "y": -12.787500000000023
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 71.25428447934519,
+          "y": -494.97743459271084
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 666.8284405268471,
+          "y": 363.68810354335
+        },
+        "zoom": 0.22307987771905796,
+        "pan": {
+          "x": 681.2788014983119,
+          "y": 265.90003841034775
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 4,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 887.7936864900302,
+          "y": 950.372185257676
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 887.7936864900302,
+          "y": 950.372185257676
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 5,
+      "settled": false,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 250.21250000000003
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1143.1689676778208,
+          "y": 290.6472909029383
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 250.21250000000003
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1143.1689676778208,
+          "y": 290.6472909029383
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 6,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": -246.00000000000006,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": -711.2864193738687,
+          "y": -213.7250720419097
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 771.5510764458036,
+          "y": 365.5846626360154
+        },
+        "zoom": 0.20934671641923797,
+        "pan": {
+          "x": 683,
+          "y": 267.81497447764247
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 7,
+      "settled": false,
+      "hit": false,
+      "drift": true,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 0,
+          "y": -12.787500000000009
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 586.3888631850883,
+          "y": -118.90763823935295
+        },
+        "width": 0,
+        "height": 0
+      },
+      "imminent": {
+        "point": {
+          "x": 570.8067952844071,
+          "y": 286.03986666456063
+        },
+        "zoom": 0.2104619185924037,
+        "pan": {
+          "x": 683,
+          "y": 265.73600494170125
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 0,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1242.6380719723638,
+          "y": 1012.5255939366549
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1242.6380719723638,
+          "y": 1012.5255939366549
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 1,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1249.129461043032,
+          "y": -225.1436740905018
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1249.129461043032,
+          "y": -225.1436740905018
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 2,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1790.0658090157858,
+          "y": 807.8253907728398
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1790.0658090157858,
+          "y": 807.8253907728398
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 3,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1015.0341984152035,
+          "y": -506.8480241167256
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1015.0341984152035,
+          "y": -506.8480241167256
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 4,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 608.0381942090901,
+          "y": -325.1330541907505
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 608.0381942090901,
+          "y": -325.1330541907505
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 5,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1179.9411518148856,
+          "y": 727.0654979060679
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1179.9411518148856,
+          "y": 727.0654979060679
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 6,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1756.0659807723132,
+          "y": -269.2275973767056
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 1120,
+          "y": 300
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1756.0659807723132,
+          "y": -269.2275973767056
+        },
+        "width": 1366,
+        "height": 526
+      }
+    },
+    {
+      "channel": "msedge",
+      "trial": 7,
+      "settled": true,
+      "hit": true,
+      "drift": false,
+      "before": {
+        "id": "service-9",
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1007.486316565964,
+          "y": -144.93084178250257
+        },
+        "width": 1366,
+        "height": 526
+      },
+      "imminent": {
+        "point": {
+          "x": 683,
+          "y": 263
+        },
+        "zoom": 1.1,
+        "pan": {
+          "x": 1007.486316565964,
+          "y": -144.93084178250257
+        },
+        "width": 1366,
+        "height": 526
+      }
+    }
+  ]
+}

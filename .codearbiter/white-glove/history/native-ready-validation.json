@@ -1,0 +1,38 @@
+{
+  "SPEC-WHITE-GLOVE": {
+    "artifact_id": "SPEC-WHITE-GLOVE",
+    "authority": {
+      "authority_verified": false,
+      "diagnostic": "AUTHORITY_UNVERIFIED",
+      "state": "draft",
+      "trust_model": "cooperative workflow attestation"
+    },
+    "diagnostics": null,
+    "gate": "ready",
+    "kind": "spec",
+    "model_sha256": "bc4a9b862c4a4e74997274a6808db20431bf73c62093151e58afe292d1809504",
+    "normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+    "path": ".codearbiter/specs/white-glove.html",
+    "revision": 2,
+    "symbol_count": 34,
+    "valid": true
+  },
+  "PLAN-WHITE-GLOVE": {
+    "artifact_id": "PLAN-WHITE-GLOVE",
+    "authority": {
+      "authority_verified": false,
+      "diagnostic": "AUTHORITY_UNVERIFIED",
+      "state": "draft",
+      "trust_model": "cooperative workflow attestation"
+    },
+    "diagnostics": null,
+    "gate": "ready",
+    "kind": "plan",
+    "model_sha256": "b4880cbaf28c22294c24543d2993b1146eb20cdc8ca918920fe7cea61f31ae61",
+    "normative_sha256": "cf62cf32c27db3402bd7b48b0781973e997e6b471e6ae1884b47c03ed7ba87a1",
+    "path": ".codearbiter/plans/white-glove.html",
+    "revision": 32,
+    "symbol_count": 12,
+    "valid": true
+  }
+}

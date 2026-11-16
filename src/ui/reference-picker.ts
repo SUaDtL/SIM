@@ -13,16 +13,26 @@ export interface ReferencePickerOptions {
   readonly allowNone?: boolean;
   /** Explain the caller's empty-value semantics; ordinary reference clearing keeps its default. */
   readonly noneLabel?: string;
+  /** The caller can explain why its complete eligible option set is empty. */
+  readonly emptyMessage?: string;
   readonly onSelect: (value: string) => void;
   readonly isCurrent?: () => boolean;
   readonly returnFocus: HTMLElement;
+  readonly onDraftChanged?: () => void;
   /** The child uses the normal validated write path. No write happens merely by opening it. */
-  readonly create?: (query: string, complete: (value: string) => void, back: () => void) => HTMLElement;
+  readonly create?: (
+    query: string,
+    complete: (value: string) => void,
+    back: () => void,
+    trackDraft: (read: () => boolean) => void,
+  ) => HTMLElement;
 }
 
 export interface ReferencePicker {
   close(): void;
   refresh(): void;
+  hasPendingDraft(): boolean;
+  revealPendingDraft(): void;
 }
 
 /** Discovery is pure and preserves caller order and identity, including duplicate display names. */
@@ -42,6 +52,8 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   let closed = false;
   let page = 0;
   let inChild = false;
+  let childDraft: (() => boolean) | null = null;
+  const hasPendingDraft = (): boolean => !closed && inChild && (childDraft?.() ?? false);
   const query = el("input", {
     type: "search",
     "aria-label": `Search ${ctx.label}`,
@@ -51,6 +63,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   });
   const results = el("ul", { class: "picker-results", "data-testid": "picker-results" });
   const count = el("p", { class: "hint", role: "status", "data-testid": "picker-count" });
+  const assignment = el("p", { class: "picker-current hint", "data-testid": "picker-current" });
   const message = el("p", { class: "hint", role: "status", "data-testid": "picker-message" });
   const child = el("div", { class: "picker-child", "data-testid": "picker-child" });
   child.hidden = true;
@@ -66,6 +79,8 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     closed = true;
     if (dialog.open) dialog.close();
     dialog.remove();
+    childDraft = null;
+    ctx.onDraftChanged?.();
     if (ctx.returnFocus.isConnected) ctx.returnFocus.focus({ preventScroll: true });
     else if (ctx.returnFocus.id && (ctx.isCurrent?.() ?? true)) {
       document.getElementById(ctx.returnFocus.id)?.focus({ preventScroll: true });
@@ -103,12 +118,14 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   const back = (): void => {
     if (closed) return;
     inChild = false;
+    childDraft = null;
     child.replaceChildren();
     child.hidden = true;
     searchBody.hidden = false;
     create.hidden = ctx.create === undefined;
     render();
     query.focus();
+    ctx.onDraftChanged?.();
   };
   const create = button(`Create new ${ctx.label}`, () => {
     if (!ctx.create || !current() || inChild) return;
@@ -119,9 +136,12 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     child.replaceChildren(
       button("Back to existing records", back, { class: "subtle" }),
       el("p", { class: "hint" }, "This shared record remains available if you later cancel the parent task."),
-      ctx.create(query.value, choose, back),
+      ctx.create(query.value, choose, back, (read) => {
+        childDraft = read;
+      }),
     );
     child.querySelector<HTMLElement>("input, select, textarea")?.focus();
+    ctx.onDraftChanged?.();
   });
   create.hidden = ctx.create === undefined;
 
@@ -143,6 +163,8 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
         },
       );
       select.append(el("span", { class: "picker-option-name" }, item.label));
+      if (item.value === ctx.selectedValue)
+        select.append(el("span", { class: "picker-current-badge", "aria-hidden": "true" }, "Current assignment"));
       if (item.detail) select.append(el("small", { class: "picker-option-detail" }, item.detail));
       return el("li", {}, select);
     });
@@ -165,12 +187,20 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
         el(
           "li",
           { class: "empty" },
-          ctx.create
-            ? "No matching records. Try another name or create one."
-            : "No matching records. Try another name.",
+          available.length === 0
+            ? (ctx.emptyMessage ??
+                (ctx.create
+                  ? "No records recorded yet. Create one to continue."
+                  : "No records are available. Close this picker to continue."))
+            : ctx.create
+              ? "No matching records. Try another name or create one."
+              : "No matching records. Try another name.",
         ),
       );
     results.replaceChildren(...rows);
+    const selected = available.find((item) => item.value === ctx.selectedValue);
+    assignment.textContent = selected ? `Current assignment: ${selected.label}` : "";
+    assignment.hidden = !selected;
     count.textContent =
       discovered.total === 0
         ? "0 matching records."
@@ -226,9 +256,19 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     create,
     child,
   );
+  searchBody.prepend(assignment);
   document.body.append(dialog);
   render();
   dialog.showModal();
   query.focus();
-  return { close, refresh: render };
+  return {
+    close,
+    refresh: render,
+    hasPendingDraft,
+    revealPendingDraft: () => {
+      if (!hasPendingDraft()) return;
+      message.textContent = "Finish Create and use, or cancel this shared record before applying or saving the parent.";
+      child.querySelector<HTMLElement>("input, select, textarea")?.focus();
+    },
+  };
 }

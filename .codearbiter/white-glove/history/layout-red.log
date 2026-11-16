@@ -1,0 +1,580 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-layout.spec.ts --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts
+
+
+Running 16 tests using 2 workers
+
+(node:31952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport (473ms)
+  x   2 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport (467ms)
+(node:61836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:53116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   3 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport (465ms)
+(node:57348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   4 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport (455ms)
+(node:46856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport (448ms)
+(node:11432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   6 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport (450ms)
+(node:1200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   7 [chrome] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll (1.0s)
+(node:56948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [msedge] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll (815ms)
+(node:4688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   9 [chrome] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away (5.8s)
+(node:60276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  10 [msedge] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away (5.8s)
+(node:65816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  11 [chrome] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library (30.1s)
+(node:54408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  12 [msedge] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library (30.1s)
+(node:49400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  13 [chrome] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search (30.1s)
+(node:55104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  14 [msedge] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search (30.1s)
+(node:68304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  15 [chrome] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it (720ms)
+  x  16 [msedge] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it (692ms)
+
+
+  1) [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1366
+    Received:    1515.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1600
+    Received:    1749.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1024
+    Received:    1173.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [msedge] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 768
+    Received:    1192.296875
+
+      57 |     expect(rect).not.toBeNull();
+      58 |     expect(rect!.y).toBeGreaterThanOrEqual(0);
+    > 59 |     expect(rect!.y + rect!.height).toBeLessThanOrEqual(768);
+         |                                    ^
+      60 |   }
+      61 |   const searchBefore = await picker.getByTestId("picker-query").boundingBox();
+      62 |   const scroll = await picker.getByTestId("picker-results").evaluate((node) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:59:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [msedge] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').locator('[data-picker-value="1"]')
+    Expected substring: "Current assignment"
+    Received string:    "Operations"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('record-picker').locator('[data-picker-value="1"]') with timeout 5000ms
+      - waiting for getByTestId('record-picker').locator('[data-picker-value="1"]')
+        14 × locator resolved to <button type="button" aria-current="true" class="picker-option" data-picker-value="1">…</button>
+           - unexpected value "Operations"
+
+
+      76 |   const current = picker.locator('[data-picker-value="1"]');
+      77 |   await expect(current).toHaveAttribute("aria-current", "true");
+    > 78 |   await expect(current).toContainText("Current assignment");
+         |                         ^
+      79 |   await picker.getByTestId("picker-query").fill("Organization 030");
+      80 |   await expect(picker.getByTestId("picker-current")).toHaveText("Current assignment: Operations");
+      81 |   await expect(picker.locator('[data-picker-value="1"]')).toHaveCount(0);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:78:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [msedge] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('list-panel').getByRole('button', { name: 'Add service', exact: true })
+
+
+      91 |   await page.goto(simUrl);
+      92 |   await expect(page.getByTestId("sqlite-version")).toBeAttached();
+    > 93 |   await page.getByTestId("list-panel").getByRole("button", { name: "Add service", exact: true }).click();
+         |                                                                                                  ^
+      94 |   await expect(page.getByRole("button", { name: "Start from an existing service", exact: true })).toHaveCount(0);
+      95 |   await expect(page.getByTestId("editor")).toContainText("No services recorded yet");
+      96 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:93:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [msedge] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').getByRole('tab', { name: 'connections', exact: true })
+
+
+       98 |   await orders(page, { allDependencies: true });
+       99 |   await editSelected(page);
+    > 100 |   await page.getByTestId("editor").getByRole("tab", { name: "connections", exact: true }).click();
+          |                                                                                           ^
+      101 |   await page.getByRole("button", { name: "Choose Depends on service", exact: true }).click();
+      102 |   const picker = page.getByTestId("record-picker");
+      103 |   await expect(picker.getByTestId("picker-results")).toContainText("No eligible service records");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:100:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [msedge] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 146.109375
+    Received:   138.890625
+
+      118 |   expect(detail).not.toBeNull();
+      119 |   expect(actions).not.toBeNull();
+    > 120 |   expect(detail!.width).toBeGreaterThan(actions!.width);
+          |                         ^
+      121 |   expect(actions!.y).toBeGreaterThanOrEqual(detail!.y + detail!.height);
+      122 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      123 |   await row.getByRole("button", { name: /^Connection details for Identity/ }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:120:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1366
+    Received:    1515.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-291f1-ual-1366px-desktop-viewport-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1600
+    Received:    1749.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-f00ef-ual-1600px-desktop-viewport-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1024
+    Received:    1173.078125
+
+      35 |       }));
+      36 |     expect(bounds.left).toBeGreaterThanOrEqual(0);
+    > 37 |     expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+         |                          ^
+      38 |     expect(bounds.document).toBeLessThanOrEqual(bounds.viewport);
+      39 |     await menu.getByRole("button", { name: "Copy support information", exact: true }).focus();
+      40 |     await page.keyboard.press("Escape");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:37:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG01-Ab-74324-ual-1024px-desktop-viewport-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chrome] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 768
+    Received:    1192.296875
+
+      57 |     expect(rect).not.toBeNull();
+      58 |     expect(rect!.y).toBeGreaterThanOrEqual(0);
+    > 59 |     expect(rect!.y + rect!.height).toBeLessThanOrEqual(768);
+         |                                    ^
+      60 |   }
+      61 |   const searchBefore = await picker.getByTestId("picker-query").boundingBox();
+      62 |   const scroll = await picker.getByTestId("picker-results").evaluate((node) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:59:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG02-po-a934b-on-while-its-results-scroll-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chrome] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').locator('[data-picker-value="1"]')
+    Expected substring: "Current assignment"
+    Received string:    "Operations"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('record-picker').locator('[data-picker-value="1"]') with timeout 5000ms
+      - waiting for getByTestId('record-picker').locator('[data-picker-value="1"]')
+        14 × locator resolved to <button type="button" aria-current="true" class="picker-option" data-picker-value="1">…</button>
+           - unexpected value "Operations"
+
+
+      76 |   const current = picker.locator('[data-picker-value="1"]');
+      77 |   await expect(current).toHaveAttribute("aria-current", "true");
+    > 78 |   await expect(current).toContainText("Current assignment");
+         |                         ^
+      79 |   await picker.getByTestId("picker-query").fill("Organization 030");
+      80 |   await expect(picker.getByTestId("picker-current")).toHaveText("Current assignment: Operations");
+      81 |   await expect(picker.locator('[data-picker-value="1"]')).toHaveCount(0);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:78:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG03-cu-ed60e-s-filtering-and-paging-away-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [chrome] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('list-panel').getByRole('button', { name: 'Add service', exact: true })
+
+
+      91 |   await page.goto(simUrl);
+      92 |   await expect(page.getByTestId("sqlite-version")).toBeAttached();
+    > 93 |   await page.getByTestId("list-panel").getByRole("button", { name: "Add service", exact: true }).click();
+         |                                                                                                  ^
+      94 |   await expect(page.getByRole("button", { name: "Start from an existing service", exact: true })).toHaveCount(0);
+      95 |   await expect(page.getByTestId("editor")).toContainText("No services recorded yet");
+      96 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:93:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [chrome] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').getByRole('tab', { name: 'connections', exact: true })
+
+
+       98 |   await orders(page, { allDependencies: true });
+       99 |   await editSelected(page);
+    > 100 |   await page.getByTestId("editor").getByRole("tab", { name: "connections", exact: true }).click();
+          |                                                                                           ^
+      101 |   await page.getByRole("button", { name: "Choose Depends on service", exact: true }).click();
+      102 |   const picker = page.getByTestId("record-picker");
+      103 |   await expect(picker.getByTestId("picker-results")).toContainText("No eligible service records");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:100:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG06-al-d1206--asking-for-a-futile-search-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [chrome] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 146.109375
+    Received:   138.890625
+
+      118 |   expect(detail).not.toBeNull();
+      119 |   expect(actions).not.toBeNull();
+    > 120 |   expect(detail!.width).toBeGreaterThan(actions!.width);
+          |                         ^
+      121 |   expect(actions!.y).toBeGreaterThanOrEqual(detail!.y + detail!.height);
+      122 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      123 |   await row.getByRole("button", { name: /^Connection details for Identity/ }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:120:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-red-artifacts\white-glove-layout-WG07-na-2adb2-secondary-action-follows-it-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16 failed
+    [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport 
+    [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport 
+    [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport 
+    [msedge] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll 
+    [msedge] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away 
+    [msedge] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library 
+    [msedge] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search 
+    [msedge] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it 
+    [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport 
+    [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport 
+    [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport 
+    [chrome] › e2e\white-glove-layout.spec.ts:44:1 › WG02 populated picker keeps search close count paging and creation while its results scroll 
+    [chrome] › e2e\white-glove-layout.spec.ts:74:1 › WG03 current assignment is visible before focus and survives filtering and paging away 
+    [chrome] › e2e\white-glove-layout.spec.ts:89:1 › WG06 first service creation does not offer reuse from an empty library 
+    [chrome] › e2e\white-glove-layout.spec.ts:97:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search 
+    [chrome] › e2e\white-glove-layout.spec.ts:107:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it 

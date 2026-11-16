@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM white-glove execution plan · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-WHITE-GLOVE</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/white-glove.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM white-glove execution plan</h1><p class="deck">Root integrates on codex/sim-white-glove from90d04afe; owns shared editor/picker/CSS, CI, all builds and PR. A bounded map author may own map source/new tests; independent scout reconciles action inventory. One follow-up PR; no merge/release. Native OS picker restriction from prior control attempt is not retried through another route; actual browser beforeunload can be isolated full-app proof, separate from physical browser UI.</p><div class="meta"><span>PLAN-WHITE-GLOVE</span><span>Revision 38 · schema 0.3.2</span><span>12 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-WHITE-GLOVE</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:TASK-WP0 -->
+<article class="record" id="TASK-WP0" data-ca-symbol="TASK-WP0" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP0">TASK-WP0</a><h3>WP0 white-glove work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP0</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#WG09">SPEC-WHITE-GLOVE#WG09</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP0</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>.github/workflows/ci.yml</code></td></tr><tr><td>modify</td><td><code>playwright.config.ts</code></td></tr><tr><td>create</td><td><code>scripts/verification-artifact.ts</code></td></tr><tr><td>create</td><td><code>tests/unit/verification-artifact.test.ts</code></td></tr><tr><td>modify</td><td><code>.gitignore</code></td></tr><tr><td>modify</td><td><code>.prettierignore</code></td></tr><tr><td>create</td><td><code>tests/unit/verification-crypto.test.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Baseline receiving source/tree and actual executable retained with hash. Verification artifact workflow and retention helper implemented with2passing checks. Local progress only; hosted artifact retrieval and complete UAT accounting remain WP5 proof, not certified by DONE. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;tests/unit/verification-artifact.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T13:17:31Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>a8b718619e161fc9faebfd3f95663d1d3fe3bca8cd11ca516196f35ac5616417</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\artifact-unit.log</div><div class="field"><span class="label">Summary</span>2 candidate retention checks passed: byte/checksum identity and failed-outcome preservation; stale source candidate refusal. Original baseline gate2nodeclick failures/726passes retained; focused4host rerunpassed.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:37Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>ee72195be39b58142236b4214e01c73a9dd2f0e14937346cd55bb40d0518afc4</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:03Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>ee72195be39b58142236b4214e01c73a9dd2f0e14937346cd55bb40d0518afc4</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP0 -->
+
+<!-- CA:BEGIN:TASK-WP1 -->
+<article class="record" id="TASK-WP1" data-ca-symbol="TASK-WP1" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP1">TASK-WP1</a><h3>WP1 white-glove work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#WG04">SPEC-WHITE-GLOVE#WG04</a></li><li><a href="../specs/white-glove.html#WG08">SPEC-WHITE-GLOVE#WG08</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP0">TASK-WP0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/reference-picker.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-drafts.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Read exact packet scope. Reproduce actual-app failures before fixes. Implement coherent bounded changes with explicit evidence and retain old safeguards.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/white-glove-drafts.spec.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T14:33:05Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>fba8327d9867471ec5a62d08c1242b9f5aac3eb4b99e519f2b6e33c61ce01c4d</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\draft-green.log</div><div class="field"><span class="label">Summary</span>12 Chrome/Edge actual child-loss and contextual baseline tests passed; finalgate2 passed these rows. Fullgate overall remains failed and retained.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:37Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>a32329d5fe2ba0ec50c908eba424a08fba5218287451554cd489955b5d41b545</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:03Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>a32329d5fe2ba0ec50c908eba424a08fba5218287451554cd489955b5d41b545</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP1 -->
+
+<!-- CA:BEGIN:TASK-WP2 -->
+<article class="record" id="TASK-WP2" data-ca-symbol="TASK-WP2" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP2">TASK-WP2</a><h3>WP2 white-glove work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP2</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#WG01">SPEC-WHITE-GLOVE#WG01</a></li><li><a href="../specs/white-glove.html#WG02">SPEC-WHITE-GLOVE#WG02</a></li><li><a href="../specs/white-glove.html#WG07">SPEC-WHITE-GLOVE#WG07</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP0">TASK-WP0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP2</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/app.css</code></td></tr><tr><td>modify</td><td><code>src/ui/reference-picker.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-layout.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Read exact packet scope. Reproduce actual-app failures before fixes. Implement coherent bounded changes with explicit evidence and retain old safeguards.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/usability-layout.spec.ts&#34;,&#34;--grep&#34;,&#34;actual browser zoom 400&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T14:33:07Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6a66f6090b4b4e449857d5aea837a239222a70d4492aa86c969531709add0030</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-green.log</div><div class="field"><span class="label">Summary</span>Original layout controls pass scoped checks; actual400percent longoption RED in bothhosts fixed with whole-dialog shortheight scrolling, unchanged assertions2hosts GREEN. Original globalgate6fail retained.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:37Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>30e47c1db2cb488e076a4c46e36daaf6ea5e8dc4f39fea31babc2ff2b875c03e</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:03Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>30e47c1db2cb488e076a4c46e36daaf6ea5e8dc4f39fea31babc2ff2b875c03e</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP2 -->
+
+<!-- CA:BEGIN:TASK-WP3 -->
+<article class="record" id="TASK-WP3" data-ca-symbol="TASK-WP3" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP3">TASK-WP3</a><h3>WP3 white-glove work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP3</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#WG03">SPEC-WHITE-GLOVE#WG03</a></li><li><a href="../specs/white-glove.html#WG06">SPEC-WHITE-GLOVE#WG06</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP2">TASK-WP2</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP3</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/reference-picker.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-layout.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Current-assignment and actionable empty-state implementation complete. Local progress only; original6globalfailures retained; latestscoped4pass. Finalglobalgate and qualification remain WP5. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/readiness-shell.spec.ts&#34;,&#34;e2e/workflow-coherence.spec.ts&#34;,&#34;--grep&#34;,&#34;R09|opening readable legacy&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T14:33:10Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>140b9cbd6821db2f83211220f76b328fe3d8c3ab7318687b34089d5d07ad6427</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\contract-green.log</div><div class="field"><span class="label">Summary</span>4hostcases pass after correcting query-miss fixture to contain eligible Identity and retaining raw legacy details assertions behind Technical details. New WG06 trueempty/universe cases also passed in finalgate2; finalglobalgate pending.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:38Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6ab69089b246026b007de2cbfd2ec65fc04ebf15e8b9747fd7b3aed92d7bd512</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:04Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6ab69089b246026b007de2cbfd2ec65fc04ebf15e8b9747fd7b3aed92d7bd512</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP3 -->
+
+<!-- CA:BEGIN:TASK-WP4 -->
+<article class="record" id="TASK-WP4" data-ca-symbol="TASK-WP4" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP4">TASK-WP4</a><h3>WP4 white-glove work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP4</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#WG05">SPEC-WHITE-GLOVE#WG05</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP0">TASK-WP0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP4</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-map.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/white-glove-capture.spec.ts&#34;,&#34;e2e/white-glove-map.spec.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T14:33:08Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\map-capture-build6-final.log</div><div class="field"><span class="label">Summary</span>8 WG05 directional/network/cycle/fit/readback hostcases pass; finalgate2 passed WG05. Capture additional defects fixed; broader qualification remains WP5.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:38Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:04Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP4 -->
+
+<!-- CA:BEGIN:TASK-WP5 -->
+<article class="record" id="TASK-WP5" data-ca-symbol="TASK-WP5" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-WP5">TASK-WP5</a><h3>WP5 white-glove work</h3><span class="badge">IN_PROGRESS</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP5</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/white-glove.html#UAT-ALL">SPEC-WHITE-GLOVE#UAT-ALL</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-WP1">TASK-WP1</a></li><li><a href="#TASK-WP2">TASK-WP2</a></li><li><a href="#TASK-WP3">TASK-WP3</a></li><li><a href="#TASK-WP4">TASK-WP4</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP5</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>create</td><td><code>src/ui/data-issues.ts</code></td></tr><tr><td>create</td><td><code>src/ui/data-issues.test.ts</code></td></tr><tr><td>modify</td><td><code>src/map/export.ts</code></td></tr><tr><td>modify</td><td><code>src/map/svg.ts</code></td></tr><tr><td>modify</td><td><code>src/map/export.test.ts</code></td></tr><tr><td>create</td><td><code>e2e/helpers/white-glove.ts</code></td></tr><tr><td>create</td><td><code>e2e/helpers/white-glove-capture.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-entities.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-session.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-workflows.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-residual.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-density.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-capture.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-completion.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/action-navigation.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/readiness-shell.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/workflow-coherence.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/usability-layout.spec.ts</code></td></tr><tr><td>create</td><td><code>.codearbiter/white-glove/EXECUTION-STATUS.json</code></td></tr><tr><td>modify</td><td><code>e2e/map.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/recovery.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/helpers/runtime-audit.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-boundaries.spec.ts</code></td></tr><tr><td>create</td><td><code>e2e/white-glove-visual-fixes.spec.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/import-dialog.ts</code></td></tr><tr><td>create</td><td><code>src/ui/import-dialog.test.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/app.css</code></td></tr><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert only this scoped follow-up; preserve prior source and unrelated dirty work.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>IN_PROGRESS</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>1</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T14:33:12Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>dcb8c2b23bb5414085b7dee08c6759d9e63705399760dd2b7d9094c8931f45f0</div><div class="field"><span class="label">Reported outcome</span>fail</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\final-gate-2.log</div><div class="field"><span class="label">Summary</span>399unit tests passed;936of942browsercases passed,6failed (R09 oldemptyfixture, real400percent clippedlongresult, legacy rawcode presentationexpectation), bothhosts. ExactfullJSON/artifacts retained final-gate-2-artifacts; corrections scopedgreen; completefinalgate stillrequired.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T15:50:38Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>645d4a91a92e40f2f94dbd8838ab52cd74b14d35f62ae07804e479e9866e30e1</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-6.log</div><div class="field"><span class="label">Summary</span>410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T16:41:05Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>7ce336ab44935b7e228f396c18fb946b5117563bcd45bf07d45d3148a81e3084</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/white-glove/history/final-gate-8.log</div><div class="field"><span class="label">Summary</span>410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-WP5 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-WP0 -->
+<article class="record" id="CP-WP0" data-ca-symbol="CP-WP0" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP0">CP-WP0</a><h3>WP0 local progress</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP0">TASK-WP0</a></li></ul></div></article>
+<!-- CA:END:CP-WP0 -->
+
+<!-- CA:BEGIN:CP-WP1 -->
+<article class="record" id="CP-WP1" data-ca-symbol="CP-WP1" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP1">CP-WP1</a><h3>WP1 local progress</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP0">CP-WP0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP1">TASK-WP1</a></li></ul></div></article>
+<!-- CA:END:CP-WP1 -->
+
+<!-- CA:BEGIN:CP-WP2 -->
+<article class="record" id="CP-WP2" data-ca-symbol="CP-WP2" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP2">CP-WP2</a><h3>WP2 local progress</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP0">CP-WP0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP2">TASK-WP2</a></li></ul></div></article>
+<!-- CA:END:CP-WP2 -->
+
+<!-- CA:BEGIN:CP-WP3 -->
+<article class="record" id="CP-WP3" data-ca-symbol="CP-WP3" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP3">CP-WP3</a><h3>WP3 local progress</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP2">CP-WP2</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP3">TASK-WP3</a></li></ul></div></article>
+<!-- CA:END:CP-WP3 -->
+
+<!-- CA:BEGIN:CP-WP4 -->
+<article class="record" id="CP-WP4" data-ca-symbol="CP-WP4" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP4">CP-WP4</a><h3>WP4 local progress</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP0">CP-WP0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP4">TASK-WP4</a></li></ul></div></article>
+<!-- CA:END:CP-WP4 -->
+
+<!-- CA:BEGIN:CP-WP5 -->
+<article class="record" id="CP-WP5" data-ca-symbol="CP-WP5" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP5">CP-WP5</a><h3>WP5 local progress</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP1">CP-WP1</a></li><li><a href="#CP-WP2">CP-WP2</a></li><li><a href="#CP-WP3">CP-WP3</a></li><li><a href="#CP-WP4">CP-WP4</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation/evidence accounting reported complete; tests, review and release separately reported.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-WP5">TASK-WP5</a></li></ul></div></article>
+<!-- CA:END:CP-WP5 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>90d04afe422804b1922417cdc719dd7ff2e4dec8</div><div class="field"><span class="label">Observed date</span>2026-11-16</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: cf62cf32c27db3402bd7b48b0781973e997e6b471e6ae1884b47c03ed7ba87a1<br>Model SHA-256: 48c756fa345da4be0d4894020d286312bfa8f3013539df8bb646ab286d6628f0</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-WHITE-GLOVE",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "TASK-WP0": [
+        {
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "tests/unit/verification-artifact.test.ts"
+          ],
+          "criterion_subject_sha256": "985b398402eed6918088c252bf41830bb2fbd556720c2d4f6af0a4b91378cdd0",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T13:17:31Z",
+          "recording_operation_id": "white-glove-artifact-unit",
+          "scoped_inputs_sha256": "a8b718619e161fc9faebfd3f95663d1d3fe3bca8cd11ca516196f35ac5616417",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\artifact-unit.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "2 candidate retention checks passed: byte/checksum identity and failed-outcome preservation; stale source candidate refusal. Original baseline gate2nodeclick failures/726passes retained; focused4host rerunpassed.",
+          "task_subject_sha256": "48e3b6e5847a0847255091cdfa9ba3bfd4a93b47a40d712d575e0fce866fff1b"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "985b398402eed6918088c252bf41830bb2fbd556720c2d4f6af0a4b91378cdd0",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:37Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP0",
+          "scoped_inputs_sha256": "ee72195be39b58142236b4214e01c73a9dd2f0e14937346cd55bb40d0518afc4",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "f0ba695c4c58cef1229caa752619c17260a06760c26fb3bba6a33e4aab73382b"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "b39d57e04031a2a7d5c6bb0e26c08d5fdb2aac1eeb13066968a5174748786910",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:03Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP0",
+          "scoped_inputs_sha256": "ee72195be39b58142236b4214e01c73a9dd2f0e14937346cd55bb40d0518afc4",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "f0ba695c4c58cef1229caa752619c17260a06760c26fb3bba6a33e4aab73382b"
+        }
+      ],
+      "TASK-WP1": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/white-glove-drafts.spec.ts"
+          ],
+          "criterion_subject_sha256": "c074842f834cbd84465b2bfa9a87daedc957f0051f82da5aff67611d80d6de0f",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T14:33:05Z",
+          "recording_operation_id": "white-glove-scoped-check-WP1",
+          "scoped_inputs_sha256": "fba8327d9867471ec5a62d08c1242b9f5aac3eb4b99e519f2b6e33c61ce01c4d",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\draft-green.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "12 Chrome/Edge actual child-loss and contextual baseline tests passed; finalgate2 passed these rows. Fullgate overall remains failed and retained.",
+          "task_subject_sha256": "035a3d3802c72c31f6d5dea2f67bfe216f1316f3d7c2fd5f924fbd9dd7095c41"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "c074842f834cbd84465b2bfa9a87daedc957f0051f82da5aff67611d80d6de0f",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:37Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP1",
+          "scoped_inputs_sha256": "a32329d5fe2ba0ec50c908eba424a08fba5218287451554cd489955b5d41b545",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "035a3d3802c72c31f6d5dea2f67bfe216f1316f3d7c2fd5f924fbd9dd7095c41"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "8194c9984c1676a370fcb30b4a141d1b5016af8a80a10636135b9678cf229b1a",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:03Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP1",
+          "scoped_inputs_sha256": "a32329d5fe2ba0ec50c908eba424a08fba5218287451554cd489955b5d41b545",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "035a3d3802c72c31f6d5dea2f67bfe216f1316f3d7c2fd5f924fbd9dd7095c41"
+        }
+      ],
+      "TASK-WP2": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/usability-layout.spec.ts",
+            "--grep",
+            "actual browser zoom 400"
+          ],
+          "criterion_subject_sha256": "cf2b6b8f2017b12de9f4b4d71a36c40a53bd8f8d3f9dac9d1af8372c68eb345e",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T14:33:07Z",
+          "recording_operation_id": "white-glove-scoped-check-WP2",
+          "scoped_inputs_sha256": "6a66f6090b4b4e449857d5aea837a239222a70d4492aa86c969531709add0030",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\zoom-green.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "Original layout controls pass scoped checks; actual400percent longoption RED in bothhosts fixed with whole-dialog shortheight scrolling, unchanged assertions2hosts GREEN. Original globalgate6fail retained.",
+          "task_subject_sha256": "f3567770ae3507adc7b19c573c3e2845e920b89a84a44a23965e6b4a9b8088f3"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "cf2b6b8f2017b12de9f4b4d71a36c40a53bd8f8d3f9dac9d1af8372c68eb345e",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:37Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP2",
+          "scoped_inputs_sha256": "30e47c1db2cb488e076a4c46e36daaf6ea5e8dc4f39fea31babc2ff2b875c03e",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "f3567770ae3507adc7b19c573c3e2845e920b89a84a44a23965e6b4a9b8088f3"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "30e579422e00a7e21eb982a2907203ceb055f7a59897a2930441a20a78a2b77b",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:03Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP2",
+          "scoped_inputs_sha256": "30e47c1db2cb488e076a4c46e36daaf6ea5e8dc4f39fea31babc2ff2b875c03e",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "f3567770ae3507adc7b19c573c3e2845e920b89a84a44a23965e6b4a9b8088f3"
+        }
+      ],
+      "TASK-WP3": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/readiness-shell.spec.ts",
+            "e2e/workflow-coherence.spec.ts",
+            "--grep",
+            "R09|opening readable legacy"
+          ],
+          "criterion_subject_sha256": "41d25140a88b74e255dea5daaa2fd30298b8a37249b5e0586b32398b0b317b5d",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T14:33:10Z",
+          "recording_operation_id": "white-glove-scoped-check-WP3",
+          "scoped_inputs_sha256": "140b9cbd6821db2f83211220f76b328fe3d8c3ab7318687b34089d5d07ad6427",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\contract-green.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "4hostcases pass after correcting query-miss fixture to contain eligible Identity and retaining raw legacy details assertions behind Technical details. New WG06 trueempty/universe cases also passed in finalgate2; finalglobalgate pending.",
+          "task_subject_sha256": "81e526caecace2ddf1fde0fac497b8a2f9a113a5717c1f3d7861dbca27ccd4bc"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "41d25140a88b74e255dea5daaa2fd30298b8a37249b5e0586b32398b0b317b5d",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:38Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP3",
+          "scoped_inputs_sha256": "6ab69089b246026b007de2cbfd2ec65fc04ebf15e8b9747fd7b3aed92d7bd512",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "81e526caecace2ddf1fde0fac497b8a2f9a113a5717c1f3d7861dbca27ccd4bc"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "7b422eb53addd5bcfb7a25eaf1733f38399b781d37bc1c495546dcfcd234fba2",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:04Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP3",
+          "scoped_inputs_sha256": "6ab69089b246026b007de2cbfd2ec65fc04ebf15e8b9747fd7b3aed92d7bd512",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "81e526caecace2ddf1fde0fac497b8a2f9a113a5717c1f3d7861dbca27ccd4bc"
+        }
+      ],
+      "TASK-WP4": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/white-glove-capture.spec.ts",
+            "e2e/white-glove-map.spec.ts"
+          ],
+          "criterion_subject_sha256": "8fd8d500b9dfc66805bb397862f4931b2c8d8785e7feaa8a755e486cef60dee8",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T14:33:08Z",
+          "recording_operation_id": "white-glove-scoped-check-WP4",
+          "scoped_inputs_sha256": "526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\map-capture-build6-final.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "8 WG05 directional/network/cycle/fit/readback hostcases pass; finalgate2 passed WG05. Capture additional defects fixed; broader qualification remains WP5.",
+          "task_subject_sha256": "4de387045abb91901af5005648a0cbdba043ac4fcf3f95e65838a23051e74c49"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "8fd8d500b9dfc66805bb397862f4931b2c8d8785e7feaa8a755e486cef60dee8",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:38Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP4",
+          "scoped_inputs_sha256": "526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "4de387045abb91901af5005648a0cbdba043ac4fcf3f95e65838a23051e74c49"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "48c41399986eff52615397ea4f40c82da156def3feca616ea6f9f750be39d2f2",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:04Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP4",
+          "scoped_inputs_sha256": "526cd336a0df8293667deb825814d8e325382a4e9bf9a48545d23a1f30b27284",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "4de387045abb91901af5005648a0cbdba043ac4fcf3f95e65838a23051e74c49"
+        }
+      ],
+      "TASK-WP5": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "criterion_subject_sha256": "849949b509f718847dfd1e169b49e85e1eccce9d9b3201ce79559a335fed2218",
+          "cwd": ".",
+          "exit_code": 1,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "fail",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T14:33:12Z",
+          "recording_operation_id": "white-glove-full-gate-2-failure",
+          "scoped_inputs_sha256": "dcb8c2b23bb5414085b7dee08c6759d9e63705399760dd2b7d9094c8931f45f0",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\final-gate-2.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "399unit tests passed;936of942browsercases passed,6failed (R09 oldemptyfixture, real400percent clippedlongresult, legacy rawcode presentationexpectation), bothhosts. ExactfullJSON/artifacts retained final-gate-2-artifacts; corrections scopedgreen; completefinalgate stillrequired.",
+          "task_subject_sha256": "0b3947ca2dcb17a5507828077d911330c5a9686a7186d4e167a355578c3b22bf"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "849949b509f718847dfd1e169b49e85e1eccce9d9b3201ce79559a335fed2218",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T15:50:38Z",
+          "recording_operation_id": "white-glove-final-gate-6-WP5",
+          "scoped_inputs_sha256": "645d4a91a92e40f2f94dbd8838ab52cd74b14d35f62ae07804e479e9866e30e1",
+          "source": ".codearbiter/white-glove/history/final-gate-6.log",
+          "source_normative_sha256": "76fbc6c25b1bf2d64829ed6602e7fc2c901b6cce00dae01f48081d1646629cd8",
+          "summary": "410unit tests and972Chrome/Edge browser executions passed, no failures/skips/flaky;9.2min. Frozen source029116ad..., HTML7992f973... . Previous genuine REDs and setup corrections remain retained. Local caller-reported verification, not exact-head hosted/native/human qualification.",
+          "task_subject_sha256": "4206108742177bf88baf98af7c9a9442f3810c44f69a33c894e9bbc54fbb23d0"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "7135c686774a745cd86e7d7c665d2994efbde7474fca29c7eda6b6484e987cad",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T16:41:05Z",
+          "recording_operation_id": "white-glove-final-gate-8-WP5",
+          "scoped_inputs_sha256": "7ce336ab44935b7e228f396c18fb946b5117563bcd45bf07d45d3148a81e3084",
+          "source": ".codearbiter/white-glove/history/final-gate-8.log",
+          "source_normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+          "summary": "410unit and972Chrome/Edge browser executions passed with no failures/skips/flaky on frozen sourced77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6, HTML523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8. Exact one-already-present preview copy regression follows genuine4/4RED; IMP07 retains all domain/readback/Undo assertions with the exact corrected summary oracle. Failed gate7 is preserved. Local verification, not hosted/native/human acceptance.",
+          "task_subject_sha256": "4206108742177bf88baf98af7c9a9442f3810c44f69a33c894e9bbc54fbb23d0"
+        }
+      ]
+    },
+    "tasks": {
+      "TASK-WP0": {
+        "evidence_refs": [],
+        "reason": "Baseline receiving source/tree and actual executable retained with hash. Verification artifact workflow and retention helper implemented with2passing checks. Local progress only; hosted artifact retrieval and complete UAT accounting remain WP5 proof, not certified by DONE. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP1": {
+        "evidence_refs": [],
+        "reason": "Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP2": {
+        "evidence_refs": [],
+        "reason": "Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP3": {
+        "evidence_refs": [],
+        "reason": "Current-assignment and actionable empty-state implementation complete. Local progress only; original6globalfailures retained; latestscoped4pass. Finalglobalgate and qualification remain WP5. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP4": {
+        "evidence_refs": [],
+        "reason": "Local implementation complete, supported by named scoped browser evidence. Fullgate failure, independent review, native/human and hosted qualification are not certified by this progress state. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-WP5": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "IN_PROGRESS"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "48c756fa345da4be0d4894020d286312bfa8f3013539df8bb646ab286d6628f0",
+    "normative_sha256": "cf62cf32c27db3402bd7b48b0781973e997e6b471e6ae1884b47c03ed7ba87a1",
+    "symbol_count": 12
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+      "observed_date": "2026-11-16",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP0",
+        "tasks": [
+          "TASK-WP0"
+        ],
+        "title": "WP0 local progress"
+      },
+      {
+        "depends_on": [
+          "CP-WP0"
+        ],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP1",
+        "tasks": [
+          "TASK-WP1"
+        ],
+        "title": "WP1 local progress"
+      },
+      {
+        "depends_on": [
+          "CP-WP0"
+        ],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP2",
+        "tasks": [
+          "TASK-WP2"
+        ],
+        "title": "WP2 local progress"
+      },
+      {
+        "depends_on": [
+          "CP-WP2"
+        ],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP3",
+        "tasks": [
+          "TASK-WP3"
+        ],
+        "title": "WP3 local progress"
+      },
+      {
+        "depends_on": [
+          "CP-WP0"
+        ],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP4",
+        "tasks": [
+          "TASK-WP4"
+        ],
+        "title": "WP4 local progress"
+      },
+      {
+        "depends_on": [
+          "CP-WP1",
+          "CP-WP2",
+          "CP-WP3",
+          "CP-WP4"
+        ],
+        "exit": "Implementation/evidence accounting reported complete; tests, review and release separately reported.",
+        "id": "CP-WP5",
+        "tasks": [
+          "TASK-WP5"
+        ],
+        "title": "WP5 local progress"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [],
+    "spec_ref": {
+      "artifact_id": "SPEC-WHITE-GLOVE",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674"
+    },
+    "summary": "Root integrates on codex/sim-white-glove from90d04afe; owns shared editor/picker/CSS, CI, all builds and PR. A bounded map author may own map source/new tests; independent scout reconciles action inventory. One follow-up PR; no merge/release. Native OS picker restriction from prior control attempt is not retried through another route; actual browser beforeunload can be isolated full-app proof, separate from physical browser UI.",
+    "tasks": [
+      {
+        "checkpoint": "CP-WP0",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#WG09"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP0",
+        "id": "TASK-WP0",
+        "paths": [
+          {
+            "action": "modify",
+            "path": ".github/workflows/ci.yml"
+          },
+          {
+            "action": "modify",
+            "path": "playwright.config.ts"
+          },
+          {
+            "action": "create",
+            "path": "scripts/verification-artifact.ts"
+          },
+          {
+            "action": "create",
+            "path": "tests/unit/verification-artifact.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": ".gitignore"
+          },
+          {
+            "action": "modify",
+            "path": ".prettierignore"
+          },
+          {
+            "action": "create",
+            "path": "tests/unit/verification-crypto.test.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress."
+        ],
+        "title": "WP0 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP1",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#WG04",
+          "SPEC-WHITE-GLOVE#WG08"
+        ],
+        "depends_on": [
+          "TASK-WP0"
+        ],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP1",
+        "id": "TASK-WP1",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/reference-picker.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-drafts.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Read exact packet scope. Reproduce actual-app failures before fixes. Implement coherent bounded changes with explicit evidence and retain old safeguards."
+        ],
+        "title": "WP1 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP2",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#WG01",
+          "SPEC-WHITE-GLOVE#WG02",
+          "SPEC-WHITE-GLOVE#WG07"
+        ],
+        "depends_on": [
+          "TASK-WP0"
+        ],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP2",
+        "id": "TASK-WP2",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/app.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/reference-picker.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-layout.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Read exact packet scope. Reproduce actual-app failures before fixes. Implement coherent bounded changes with explicit evidence and retain old safeguards."
+        ],
+        "title": "WP2 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP3",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#WG03",
+          "SPEC-WHITE-GLOVE#WG06"
+        ],
+        "depends_on": [
+          "TASK-WP2"
+        ],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP3",
+        "id": "TASK-WP3",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/reference-picker.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-layout.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress."
+        ],
+        "title": "WP3 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP4",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#WG05"
+        ],
+        "depends_on": [
+          "TASK-WP0"
+        ],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP4",
+        "id": "TASK-WP4",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-map.spec.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress."
+        ],
+        "title": "WP4 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP5",
+        "criterion_refs": [
+          "SPEC-WHITE-GLOVE#UAT-ALL"
+        ],
+        "depends_on": [
+          "TASK-WP1",
+          "TASK-WP2",
+          "TASK-WP3",
+          "TASK-WP4"
+        ],
+        "done_when": [
+          "All assigned implementation/evidence-accounting work complete; missing native/human acceptance remains reported, not certified."
+        ],
+        "execution_scope": "CP-WP5",
+        "id": "TASK-WP5",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/ui/data-issues.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/ui/data-issues.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/export.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/svg.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/export.test.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/helpers/white-glove.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/helpers/white-glove-capture.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-entities.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-session.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-workflows.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-residual.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-density.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-capture.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-completion.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/action-navigation.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/readiness-shell.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/workflow-coherence.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/usability-layout.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": ".codearbiter/white-glove/EXECUTION-STATUS.json"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/map.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/recovery.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/helpers/runtime-audit.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-boundaries.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/white-glove-visual-fixes.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/import-dialog.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/ui/import-dialog.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/app.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          }
+        ],
+        "rollback": "Revert only this scoped follow-up; preserve prior source and unrelated dirty work.",
+        "steps": [
+          "Implement the original work package using its maintained criteria. Replace initial test-file placeholders with the actual bounded test families. Preserve genuine REDs and fixture corrections; capture/readback, reference freshness, readable diagnostics and short-viewport defects discovered by integrated UAT are within stabilization. Native/human acceptance and exact hosted artifact retrieval remain distinct from local implementation progress."
+        ],
+        "title": "WP5 white-glove work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Current regression, retained app contracts and full gate pass; case ledger records honest scope/blocks.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "SIM white-glove execution plan"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/white-glove.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 38,
+  "schema_version": "0.3.2",
+  "slug": "white-glove"
+}
+</script>
+</body></html>

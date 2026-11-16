@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { wasm } from "../tests/helpers/sqlite";
+import { observeRuntime } from "./helpers/runtime-audit";
 
 const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 interface Files {
@@ -64,6 +65,8 @@ test("refuses external changes, retains work, and saves to a separate target", a
 });
 
 test("recovery preserves applied content, excludes draft text, and reopens after reload", async ({ page }) => {
+  const audit = observeRuntime(page);
+  await audit.check("before-recovery-adapter");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   await page.evaluate(() => {
     (window as unknown as Files).selected = "recovery.sqlite";
@@ -86,6 +89,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   }
   await expect(page.getByTestId("dataset-status")).toContainText("Changes not saved to file");
   const retained = await files(page, "recovery.sqlite");
+  await audit.check("applied-recovery-adapter");
   await editSelected(page);
   await page.getByTestId("editor").getByLabel("Name").fill("Unapplied text");
   // Retry is now offered for an actual failed recovery, not as a permanent no-op.
@@ -101,6 +105,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   });
   await page.getByRole("button", { name: "Retry recovery" }).click();
   await expect(page.getByTestId("recovery-status")).toContainText("Recovery copy updated");
+  await audit.check("recovery-adapter-retry");
   const db = await openDataset(new Uint8Array(await files(page, "recovery.sqlite")), { wasm });
   try {
     expect(db.exec("SELECT name FROM network")[0]?.values).toEqual([["Synthetic recovery network"]]);
@@ -109,6 +114,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   }
   // A fresh page loses all session state; only the retained file bytes recover the dataset.
   await page.reload();
+  await audit.check("fresh-session-before-explicit-recovery-open");
   await page.evaluate((bytes) => {
     const w = window as unknown as Files;
     w.files["recovered.sqlite"] = bytes;
@@ -118,6 +124,7 @@ test("recovery preserves applied content, excludes draft text, and reopens after
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await expect(page.getByTestId("entity-list").getByText("Synthetic recovery network")).toBeVisible();
   await expect(page.getByTestId("draft-status")).toBeEmpty();
+  await audit.check("explicit-recovery-adapter-open");
 });
 
 test("rejects file aliases and retains a failed recovery for retry", async ({ page }) => {

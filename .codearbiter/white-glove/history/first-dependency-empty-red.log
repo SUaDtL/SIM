@@ -1,0 +1,96 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-layout.spec.ts --grep first service creation --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red --reporter=list
+
+
+Running 2 tests using 2 workers
+
+(node:17784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (5.6s)
+  x  2 [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (5.6s)
+
+
+  1) [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').getByTestId('picker-results')
+    Expected substring: "Close this picker to continue"
+    Received string:    "No assignmentNo service records recorded yet. Create one to continue."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('record-picker').getByTestId('picker-results') with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByTestId('picker-results')
+        14 × locator resolved to <ul class="picker-results" data-testid="picker-results">…</ul>
+           - unexpected value "No assignmentNo service records recorded yet. Create one to continue."
+
+
+       96 |   await page.getByRole("button", { name: "Choose Depends on service", exact: true }).click();
+       97 |   const picker = page.getByTestId("record-picker");
+    >  98 |   await expect(picker.getByTestId("picker-results")).toContainText("Close this picker to continue");
+          |                                                      ^
+       99 |   await expect(picker.getByTestId("picker-results")).not.toContainText("Create one");
+      100 |   await expect(picker.getByRole("button", { name: /^Create new/ })).toHaveCount(0);
+      101 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:98:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('record-picker').getByTestId('picker-results')
+    Expected substring: "Close this picker to continue"
+    Received string:    "No assignmentNo service records recorded yet. Create one to continue."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('record-picker').getByTestId('picker-results') with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByTestId('picker-results')
+        14 × locator resolved to <ul class="picker-results" data-testid="picker-results">…</ul>
+           - unexpected value "No assignmentNo service records recorded yet. Create one to continue."
+
+
+       96 |   await page.getByRole("button", { name: "Choose Depends on service", exact: true }).click();
+       97 |   const picker = page.getByTestId("record-picker");
+    >  98 |   await expect(picker.getByTestId("picker-results")).toContainText("Close this picker to continue");
+          |                                                      ^
+       99 |   await expect(picker.getByTestId("picker-results")).not.toContainText("Create one");
+      100 |   await expect(picker.getByRole("button", { name: /^Create new/ })).toHaveCount(0);
+      101 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:98:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-red\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+    [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 

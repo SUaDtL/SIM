@@ -1,0 +1,23 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-boundaries.spec.ts e2e/recovery.spec.ts --grep GATE01|actual oversized|recovery preserves --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\boundaries-green --reporter=list
+
+
+Running 6 tests using 4 workers
+
+(node:16748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:57720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [msedge] › e2e\white-glove-boundaries.spec.ts:15:1 › DOC03 actual oversized disk file is refused without reading it or losing the current draft (981ms)
+  ok 2 [chrome] › e2e\white-glove-boundaries.spec.ts:15:1 › DOC03 actual oversized disk file is refused without reading it or losing the current draft (1.0s)
+  ok 6 [chrome] › e2e\white-glove-boundaries.spec.ts:63:1 › GATE01 GATE02 child import scenario capture and fresh-session boundaries remain offline and storage-free (1.7s)
+  ok 5 [msedge] › e2e\white-glove-boundaries.spec.ts:63:1 › GATE01 GATE02 child import scenario capture and fresh-session boundaries remain offline and storage-free (1.8s)
+  ok 4 [chrome] › e2e\recovery.spec.ts:67:1 › recovery preserves applied content, excludes draft text, and reopens after reload (4.4s)
+  ok 3 [msedge] › e2e\recovery.spec.ts:67:1 › recovery preserves applied content, excludes draft text, and reopens after reload (4.6s)
+
+  6 passed (5.6s)

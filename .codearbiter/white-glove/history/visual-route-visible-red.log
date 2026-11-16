@@ -1,0 +1,218 @@
+
+Running 4 tests using 2 workers
+
+(node:60244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px (1.2s)
+(node:73268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px (1.2s)
+(node:14372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px (1.1s)
+  x  4 [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px (1.2s)
+
+
+  1) [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 497.53125
+    Received:    492.890625
+
+      178 |     for (const rect of [...geometry.textRects, geometry.outline]) {
+      179 |       expect.soft(rect.left).toBeGreaterThanOrEqual(geometry.visible.left - 1);
+    > 180 |       expect.soft(rect.top).toBeGreaterThanOrEqual(geometry.visible.top - 1);
+          |                             ^
+      181 |       expect.soft(rect.right).toBeLessThanOrEqual(geometry.visible.right + 1);
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:29
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "bottom": 526.890625,
+    +     "left": 26,
+    +     "right": 159.109375,
+    +     "top": 510.890625,
+    +   },
+    + ]
+
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+    > 184 |     expect(geometry.overlapping).toEqual([]);
+          |                                  ^
+      185 |     await editor.getByRole("button", { name: "Cancel route", exact: true }).click();
+      186 |     expect(await savedSnapshot(page)).toEqual(before);
+      187 |   });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:184:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "bottom": 489.375,
+    +     "left": 325,
+    +     "right": 722.734375,
+    +     "top": 473.375,
+    +   },
+    + ]
+
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+    > 184 |     expect(geometry.overlapping).toEqual([]);
+          |                                  ^
+      185 |     await editor.getByRole("button", { name: "Cancel route", exact: true }).click();
+      186 |     expect(await savedSnapshot(page)).toEqual(before);
+      187 |   });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:184:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 497.53125
+    Received:    492.890625
+
+      178 |     for (const rect of [...geometry.textRects, geometry.outline]) {
+      179 |       expect.soft(rect.left).toBeGreaterThanOrEqual(geometry.visible.left - 1);
+    > 180 |       expect.soft(rect.top).toBeGreaterThanOrEqual(geometry.visible.top - 1);
+          |                             ^
+      181 |       expect.soft(rect.right).toBeLessThanOrEqual(geometry.visible.right + 1);
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:29
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "bottom": 526.890625,
+    +     "left": 26,
+    +     "right": 159.109375,
+    +     "top": 510.890625,
+    +   },
+    + ]
+
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+    > 184 |     expect(geometry.overlapping).toEqual([]);
+          |                                  ^
+      185 |     await editor.getByRole("button", { name: "Cancel route", exact: true }).click();
+      186 |     expect(await savedSnapshot(page)).toEqual(before);
+      187 |   });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:184:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "bottom": 489.375,
+    +     "left": 325,
+    +     "right": 722.734375,
+    +     "top": 473.375,
+    +   },
+    + ]
+
+      182 |       expect.soft(rect.bottom).toBeLessThanOrEqual(geometry.visible.bottom + 1);
+      183 |     }
+    > 184 |     expect(geometry.overlapping).toEqual([]);
+          |                                  ^
+      185 |     await editor.getByRole("button", { name: "Cancel route", exact: true }).click();
+      186 |     expect(await savedSnapshot(page)).toEqual(before);
+      187 |   });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:184:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-route-visible-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 

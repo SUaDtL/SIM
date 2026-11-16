@@ -1,0 +1,21 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/readiness-shell.spec.ts e2e/workflow-coherence.spec.ts --grep R09|opening readable legacy --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\contract-green --reporter=list
+
+
+Running 4 tests using 4 workers
+
+(node:58620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chrome] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue (848ms)
+  ok 3 [chrome] › e2e\readiness-shell.spec.ts:59:1 › R09 no-create dependency picker does not promise an unavailable creation action (938ms)
+  ok 1 [msedge] › e2e\readiness-shell.spec.ts:59:1 › R09 no-create dependency picker does not promise an unavailable creation action (917ms)
+  ok 4 [msedge] › e2e\workflow-coherence.spec.ts:92:1 › opening readable legacy data reports its existing semantic issue (1.0s)
+
+  4 passed (2.0s)

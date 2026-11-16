@@ -15,7 +15,8 @@ jobs:
   check:
     # Windows runners ship both Microsoft Edge and Google Chrome, the e2e browsers.
     runs-on: windows-2025
-    timeout-minutes: 30
+    # The expanded stateful acceptance journeys include repeated SQLite readback.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -26,4 +27,28 @@ jobs:
           node-version: 24.18.0
 
       - run: npm ci
-      - run: npm run check
+      - name: Run the full gate
+        id: check
+        run: |
+          npm run check 2>&1 | Tee-Object -FilePath check.log
+          exit $LASTEXITCODE
+
+      - name: Retain the checked candidate identity
+        if: always()
+        env:
+          CHECK_OUTCOME: ${{ steps.check.outcome }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/verification-artifact.ts
+
+      # Reuse the already-adopted, pinned release-workflow uploader. This is
+      # bounded verification evidence, not a GitHub Release or distribution link.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sim-verification-${{ github.sha }}
+          path: |
+            verification/
+            check.log
+            test-results/
+          if-no-files-found: error
+          retention-days: 7

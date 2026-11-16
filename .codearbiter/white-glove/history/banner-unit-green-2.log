@@ -1,0 +1,13 @@
+
+> sim@0.1.0 test
+> vitest run src/map/export.test.ts src/map/svg.test.ts
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+
+ Test Files  2 passed (2)
+      Tests  19 passed (19)
+   Start at  08:35:22
+   Duration  120ms (transform 47%, import 29%, tests 14%, worker 9%)
+

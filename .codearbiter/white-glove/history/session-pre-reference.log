@@ -1,0 +1,171 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-session.spec.ts --reporter=line,json --output=C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference
+
+
+Running 52 tests using 2 workers
+
+
+(node:28920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/52] [msedge] › e2e\white-glove-session.spec.ts:131:3 › WG-UAT BOOT03 dirty Support survives Help button Escape and nested notices with exact scroll and caret
+[2/52] [chrome] › e2e\white-glove-session.spec.ts:131:3 › WG-UAT BOOT03 dirty Support survives Help button Escape and nested notices with exact scroll and caret
+[3/52] [chrome] › e2e\white-glove-session.spec.ts:131:3 › WG-UAT BOOT03 dirty Connections survives Help button Escape and nested notices with exact scroll and caret
+[4/52] [msedge] › e2e\white-glove-session.spec.ts:131:3 › WG-UAT BOOT03 dirty Connections survives Help button Escape and nested notices with exact scroll and caret
+[5/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 1366px uses truthful fallback (clipboard adapter)
+[6/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 1366px uses truthful fallback (clipboard adapter)
+[7/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 1366px uses truthful fallback (clipboard adapter)
+[8/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 1366px uses truthful fallback (clipboard adapter)
+[9/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 1024px uses truthful fallback (clipboard adapter)
+[10/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 1024px uses truthful fallback (clipboard adapter)
+[11/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 1024px uses truthful fallback (clipboard adapter)
+[12/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 1024px uses truthful fallback (clipboard adapter)
+[13/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 320px uses truthful fallback (clipboard adapter)
+[14/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy success at 320px uses truthful fallback (clipboard adapter)
+[15/52] [chrome] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 320px uses truthful fallback (clipboard adapter)
+[16/52] [msedge] › e2e\white-glove-session.spec.ts:202:5 › WG-UAT BOOT04 support copy refusal at 320px uses truthful fallback (clipboard adapter)
+[17/52] [chrome] › e2e\white-glove-session.spec.ts:246:3 › WG-UAT BOOT05 complete offline notices scroll to their end and return by keyboard to About
+[18/52] [msedge] › e2e\white-glove-session.spec.ts:246:3 › WG-UAT BOOT05 complete offline notices scroll to their end and return by keyboard to About
+[19/52] [chrome] › e2e\white-glove-session.spec.ts:246:3 › WG-UAT BOOT05 complete offline notices scroll to their end and return by keyboard to Help
+[20/52] [msedge] › e2e\white-glove-session.spec.ts:246:3 › WG-UAT BOOT05 complete offline notices scroll to their end and return by keyboard to Help
+[21/52] [chrome] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Cancel name retains the exact dirty dataset and parent draft
+[22/52] [msedge] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Cancel name retains the exact dirty dataset and parent draft
+[23/52] [chrome] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Empty name retains the exact dirty dataset and parent draft
+[24/52] [msedge] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Empty name retains the exact dirty dataset and parent draft
+[25/52] [chrome] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Stay retains the exact dirty dataset and parent draft
+[26/52] [msedge] › e2e\white-glove-session.spec.ts:288:3 › WG-UAT DOC01 New Stay retains the exact dirty dataset and parent draft
+[27/52] [chrome] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 text Open is refused before losing the actual pending task
+[28/52] [msedge] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 text Open is refused before losing the actual pending task
+[29/52] [chrome] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 corrupt Open is refused before losing the actual pending task
+[30/52] [msedge] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 corrupt Open is refused before losing the actual pending task
+[31/52] [chrome] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 unsupported Open is refused before losing the actual pending task
+[32/52] [msedge] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 unsupported Open is refused before losing the actual pending task
+[33/52] [chrome] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 unsafe identity Open is refused before losing the actual pending task
+[34/52] [msedge] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 unsafe identity Open is refused before losing the actual pending task
+[35/52] [chrome] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 foreign key Open is refused before losing the actual pending task
+[36/52] [msedge] › e2e\white-glove-session.spec.ts:346:3 › WG-UAT DOC03 foreign key Open is refused before losing the actual pending task
+[37/52] [chrome] › e2e\white-glove-session.spec.ts:371:1 › WG-UAT DOC03 oversized file metadata refuses before reading bytes or touching the draft (size adapter)
+[38/52] [msedge] › e2e\white-glove-session.spec.ts:371:1 › WG-UAT DOC03 oversized file metadata refuses before reading bytes or touching the draft (size adapter)
+[39/52] [chrome] › e2e\white-glove-session.spec.ts:442:1 › WG-UAT DOC04 Rename Undo Redo preserves filename identity and the reopened briefing title
+[40/52] [msedge] › e2e\white-glove-session.spec.ts:442:1 › WG-UAT DOC04 Rename Undo Redo preserves filename identity and the reopened briefing title
+[41/52] [chrome] › e2e\white-glove-session.spec.ts:463:1 › WG-UAT DOC06 direct Save downloads the complete staged scalar support and connection aggregate in one Undo step
+[42/52] [msedge] › e2e\white-glove-session.spec.ts:463:1 › WG-UAT DOC06 direct Save downloads the complete staged scalar support and connection aggregate in one Undo step
+[43/52] [chrome] › e2e\white-glove-session.spec.ts:503:3 › WG-UAT DOC13 Control+S repeat is one prevented browser action and an open modal owns its task
+[44/52] [chrome] › e2e\white-glove-session.spec.ts:503:3 › WG-UAT DOC13 Meta+S repeat is one prevented browser action and an open modal owns its task
+[45/52] [msedge] › e2e\white-glove-session.spec.ts:503:3 › WG-UAT DOC13 Control+S repeat is one prevented browser action and an open modal owns its task
+[46/52] [chrome] › e2e\white-glove-session.spec.ts:571:1 › WG-UAT DOC16 caveat change clear refusal Undo Redo and retained captures agree with reopened data
+[47/52] [msedge] › e2e\white-glove-session.spec.ts:503:3 › WG-UAT DOC13 Meta+S repeat is one prevented browser action and an open modal owns its task
+[48/52] [msedge] › e2e\white-glove-session.spec.ts:571:1 › WG-UAT DOC16 caveat change clear refusal Undo Redo and retained captures agree with reopened data
+[49/52] [chrome] › e2e\white-glove-session.spec.ts:636:1 › WG-UAT REC10 missing native APIs promise a manual copy and reopen its actual fallback bytes
+[50/52] [chrome] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey
+[51/52] [msedge] › e2e\white-glove-session.spec.ts:636:1 › WG-UAT REC10 missing native APIs promise a manual copy and reopen its actual fallback bytes
+[52/52] [msedge] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey
+  1) [chrome] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey 
+
+    ValidationError: The service name must be at most 200 characters.
+
+       at ..\src\domain\validate.ts:41
+
+      39 |   if (!name) throw new ValidationError("REQUIRED", field, `The ${field} is required.`);
+      40 |   if (name.length > MAX_NAME_LENGTH) {
+    > 41 |     throw new ValidationError("TOO_LONG", field, `The ${field} must be at most ${String(MAX_NAME_LENGTH)} characters.`);
+         |           ^
+      42 |   }
+      43 |   return name;
+      44 | }
+        at cleanName (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\validate.ts:41:11)
+        at unchangedName (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:1731:62)
+        at Repository.service (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:785:18)
+        at Repository.createService (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:699:20)
+        at from (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:680:12)
+        at keyboardDensityFixture (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:679:25)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:715:31
+
+    Test timeout of 90000ms exceeded while running "afterEach" hook.
+
+      44 | });
+      45 |
+    > 46 | test.afterEach(async ({ page }, info) => {
+         |      ^
+      47 |   const record = observations.get(page);
+      48 |   const htmlAfter = digest(await readFile(htmlPath));
+      49 |   const image = info.outputPath("session-state.png");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:46:6
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: session-state (image/png) ───────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-chrome\attachments\session-state-2ea360977afdb19d623e4f2f7831213f24cc3324.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-chrome\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2) [msedge] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey 
+
+    ValidationError: The service name must be at most 200 characters.
+
+       at ..\src\domain\validate.ts:41
+
+      39 |   if (!name) throw new ValidationError("REQUIRED", field, `The ${field} is required.`);
+      40 |   if (name.length > MAX_NAME_LENGTH) {
+    > 41 |     throw new ValidationError("TOO_LONG", field, `The ${field} must be at most ${String(MAX_NAME_LENGTH)} characters.`);
+         |           ^
+      42 |   }
+      43 |   return name;
+      44 | }
+        at cleanName (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\validate.ts:41:11)
+        at unchangedName (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:1731:62)
+        at Repository.service (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:785:18)
+        at Repository.createService (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\src\domain\repository.ts:699:20)
+        at from (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:680:12)
+        at keyboardDensityFixture (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:679:25)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:715:31
+
+    Test timeout of 90000ms exceeded while running "afterEach" hook.
+
+      44 | });
+      45 |
+    > 46 | test.afterEach(async ({ page }, info) => {
+         |      ^
+      47 |   const record = observations.get(page);
+      48 |   const htmlAfter = digest(await readFile(htmlPath));
+      49 |   const image = info.outputPath("session-state.png");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:46:6
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: session-state (image/png) ───────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-msedge\attachments\session-state-5cece410cb3ccbef321d3ff033a77b0114f8ef12.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-msedge\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-pre-reference\white-glove-session-WG-UAT-a86a9-ply-Save-and-return-journey-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2 failed
+    [msedge] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey 
+    [chrome] › e2e\white-glove-session.spec.ts:710:1 › WG-UAT UX01 one keyboard-only Find edit inline-create relate Apply Save and return journey 
+  50 passed (1.9m)

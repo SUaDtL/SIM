@@ -1,0 +1,131 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-layout.spec.ts e2e/white-glove-drafts.spec.ts --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts
+
+
+Running 28 tests using 4 workers
+
+(node:43756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport (535ms)
+  ok  1 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1366px desktop viewport (560ms)
+  ok  5 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport (385ms)
+  ok  3 [chrome] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (1.1s)
+  ok  4 [msedge] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (1.2s)
+  ok  7 [chrome] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport (387ms)
+  ok  6 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1600px desktop viewport (867ms)
+  ok  8 [chrome] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (756ms)
+  ok 11 [msedge] › e2e\white-glove-layout.spec.ts:21:3 › WG01 About remains inside the actual 1024px desktop viewport (421ms)
+  ok  9 [msedge] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (810ms)
+  ok 10 [chrome] › e2e\white-glove-layout.spec.ts:42:1 › WG02 populated picker keeps search close count paging and creation while its results scroll (879ms)
+  ok 12 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (714ms)
+  ok 14 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (750ms)
+  ok 13 [msedge] › e2e\white-glove-layout.spec.ts:42:1 › WG02 populated picker keeps search close count paging and creation while its results scroll (903ms)
+  ok 15 [chrome] › e2e\white-glove-layout.spec.ts:72:1 › WG03 current assignment is visible before focus and survives filtering and paging away (804ms)
+  ok 16 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (833ms)
+  ok 17 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (755ms)
+  ok 18 [msedge] › e2e\white-glove-layout.spec.ts:72:1 › WG03 current assignment is visible before focus and survives filtering and paging away (834ms)
+  ok 20 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (788ms)
+  ok 21 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (772ms)
+  ok 23 [chrome] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (618ms)
+  ok 24 [msedge] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (628ms)
+  x  19 [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (5.4s)
+(node:54688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  22 [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (5.4s)
+(node:40824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 25 [chrome] › e2e\white-glove-layout.spec.ts:96:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search (716ms)
+  ok 27 [chrome] › e2e\white-glove-layout.spec.ts:109:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it (637ms)
+  ok 26 [msedge] › e2e\white-glove-layout.spec.ts:96:1 › WG06 all-linked choices explain ineligibility rather than asking for a futile search (757ms)
+  ok 28 [msedge] › e2e\white-glove-layout.spec.ts:109:1 › WG07 narrow relationship content gets the reading width and the secondary action follows it (590ms)
+
+
+  1) [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('button', { name: 'Start from an existing service', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('button', { name: 'Start from an existing service', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Start from an existing service', exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      91 |   await page.getByLabel("Show", { exact: true }).selectOption("service");
+      92 |   await page.getByTestId("list-panel").getByRole("button", { name: "Add service", exact: true }).click();
+    > 93 |   await expect(page.getByRole("button", { name: "Start from an existing service", exact: true })).toHaveCount(0);
+         |                                                                                                   ^
+      94 |   await expect(page.getByTestId("editor")).toContainText("No services recorded yet");
+      95 | });
+      96 | test("WG06 all-linked choices explain ineligibility rather than asking for a futile search", async ({ page }) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:93:99
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('button', { name: 'Start from an existing service', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('button', { name: 'Start from an existing service', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Start from an existing service', exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      91 |   await page.getByLabel("Show", { exact: true }).selectOption("service");
+      92 |   await page.getByTestId("list-panel").getByRole("button", { name: "Add service", exact: true }).click();
+    > 93 |   await expect(page.getByRole("button", { name: "Start from an existing service", exact: true })).toHaveCount(0);
+         |                                                                                                   ^
+      94 |   await expect(page.getByTestId("editor")).toContainText("No services recorded yet");
+      95 | });
+      96 | test("WG06 all-linked choices explain ineligibility rather than asking for a futile search", async ({ page }) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-layout.spec.ts:93:99
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\layout-green-artifacts\white-glove-layout-WG06-fi-2a64f-reuse-from-an-empty-library-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+    [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library 
+  26 passed (11.9s)

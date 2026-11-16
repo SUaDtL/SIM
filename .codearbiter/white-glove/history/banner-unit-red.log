@@ -1,0 +1,31 @@
+
+> sim@0.1.0 test
+> vitest run src/map/export.test.ts
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+ ❯ src/map/export.test.ts (11 tests | 1 failed) 5ms
+   ❯ export banner (11)
+     × wraps complete legal caveats at readable size inside a tall capture's classification bands 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/map/export.test.ts > export banner > wraps complete legal caveats at readable size inside a tall capture's classification bands
+AssertionError: expected 0 to be greater than 1
+ ❯ src/map/export.test.ts:31:26
+     29|     }, (line, size) => line.length * size * 0.6, 1600);
+     30|     const lines = frame.bannerLines ?? [];
+     31|     expect(lines.length).toBeGreaterThan(1);
+       |                          ^
+     32|     expect(lines.map((line) => line.text).join(" ")).toBe(text);
+     33|     expect(lines.every((line) => line.text.length * line.size * 0.6 <=…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  08:31:59
+   Duration  128ms (transform 50%, import 26%, tests 14%, worker 10%)
+

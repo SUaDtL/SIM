@@ -1,0 +1,13 @@
+
+> sim@0.1.0 test
+> vitest run tests/unit/verification-artifact.test.ts
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  09:15:16
+   Duration  137ms (transform 39%, tests 35%, import 19%, worker 6%)
+

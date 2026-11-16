@@ -1,0 +1,750 @@
+
+Running 12 tests using 2 workers
+
+(node:57644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px (1.3s)
+  x   2 [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px (1.3s)
+(node:52036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   3 [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px (30.1s)
+(node:63148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   4 [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px (30.2s)
+(node:51356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px (16.5s)
+(node:58072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   6 [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px (16.6s)
+(node:65420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   7 [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px (1.3s)
+(node:60904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px (1.4s)
+(node:62296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   9 [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px (30.1s)
+(node:53064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  10 [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px (30.2s)
+(node:44056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  11 [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px (16.5s)
+  x  12 [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px (16.6s)
+
+
+  1) [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 180
+    Received:    0
+
+      84 |     });
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+    > 86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+         |                                         ^
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:86:41
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 243.60000000000002
+    Received:    3166.3125
+
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+    > 87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+         |                                          ^
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:87:42
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 3419.546875
+    Received:    239.234375
+
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+    > 88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+         |                                       ^
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+      91 |     await expect(review).toBeInViewport({ ratio: 1 });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:88:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').locator('details.connection-actions').filter({ has: getByTestId('editor').getByRole('button', { name: 'Edit route to Identity', exact: true, includeHidden: true }) }).locator('summary')
+
+
+      121 |       .filter({ has: editor.getByRole("button", { name: "Edit route to Identity", exact: true, includeHidden: true }) })
+      122 |       .locator("summary")
+    > 123 |       .click();
+          |        ^
+      124 |     await action.click();
+      125 |     const route = editor.getByRole("combobox", { name: "Route for Identity", exact: true });
+      126 |     await route.selectOption("");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:123:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Data issues', exact: true })
+    Expected substring: "1 current data issue. Showing 1–1."
+    Received string:    "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Data issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Data issues">…</dialog>
+           - unexpected value "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+
+
+      178 |     await openDatasetFile(page, data.bytes, "visual-copy.sqlite");
+      179 |     const issueDialog = await issues(page);
+    > 180 |     await expect.soft(issueDialog).toContainText("1 current data issue. Showing 1–1.");
+          |                                    ^
+      181 |     await issueDialog.getByRole("button", { name: "Close", exact: true }).click();
+      182 |     await openFileMenu(page);
+      183 |     await page.getByRole("button", { name: "Import CSV", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:36
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Import CSV', exact: true })
+    Expected substring: "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise."
+    Received string:    "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not \"invalid\".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network \"Amber\" is already in the dataset.Previous rowsNext rowsImportCancel"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Import CSV', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true })
+        14 × locator resolved to <dialog open="" class="import-dialog" aria-labelledby="import-title">…</dialog>
+           - unexpected value "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not "invalid".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network "Amber" is already in the dataset.Previous rowsNext rowsImportCancel"
+
+
+      207 |     await expect
+      208 |       .soft(dialog)
+    > 209 |       .toContainText(
+          |        ^
+      210 |         "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.",
+      211 |       );
+      212 |     await dialog.getByRole("button", { name: "Import", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:209:8
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+    Expected: "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file."
+    Received: "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+        14 × locator resolved to <p data-testid="receipt-summary">Added 1 record or links; 1 already-present rows; …</p>
+           - unexpected value "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+
+
+      218 |     await expect
+      219 |       .soft(receipt.getByTestId("receipt-summary"))
+    > 220 |       .toHaveText(
+          |        ^
+      221 |         "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.",
+      222 |       );
+      223 |     const pending = page.waitForEvent("download");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:220:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 180
+    Received:    145.75
+
+      84 |     });
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+    > 86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+         |                                         ^
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:86:41
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 493.65625
+    Received:    296.984375
+
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+    > 88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+         |                                       ^
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+      91 |     await expect(review).toBeInViewport({ ratio: 1 });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:88:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').locator('details.connection-actions').filter({ has: getByTestId('editor').getByRole('button', { name: 'Edit route to Identity', exact: true, includeHidden: true }) }).locator('summary')
+
+
+      121 |       .filter({ has: editor.getByRole("button", { name: "Edit route to Identity", exact: true, includeHidden: true }) })
+      122 |       .locator("summary")
+    > 123 |       .click();
+          |        ^
+      124 |     await action.click();
+      125 |     const route = editor.getByRole("combobox", { name: "Route for Identity", exact: true });
+      126 |     await route.selectOption("");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:123:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Data issues', exact: true })
+    Expected substring: "1 current data issue. Showing 1–1."
+    Received string:    "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Data issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Data issues">…</dialog>
+           - unexpected value "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+
+
+      178 |     await openDatasetFile(page, data.bytes, "visual-copy.sqlite");
+      179 |     const issueDialog = await issues(page);
+    > 180 |     await expect.soft(issueDialog).toContainText("1 current data issue. Showing 1–1.");
+          |                                    ^
+      181 |     await issueDialog.getByRole("button", { name: "Close", exact: true }).click();
+      182 |     await openFileMenu(page);
+      183 |     await page.getByRole("button", { name: "Import CSV", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:36
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Import CSV', exact: true })
+    Expected substring: "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise."
+    Received string:    "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not \"invalid\".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network \"Amber\" is already in the dataset.Previous rowsNext rowsImportCancel"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Import CSV', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true })
+        14 × locator resolved to <dialog open="" class="import-dialog" aria-labelledby="import-title">…</dialog>
+           - unexpected value "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not "invalid".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network "Amber" is already in the dataset.Previous rowsNext rowsImportCancel"
+
+
+      207 |     await expect
+      208 |       .soft(dialog)
+    > 209 |       .toContainText(
+          |        ^
+      210 |         "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.",
+      211 |       );
+      212 |     await dialog.getByRole("button", { name: "Import", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:209:8
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+    Expected: "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file."
+    Received: "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+        14 × locator resolved to <p data-testid="receipt-summary">Added 1 record or links; 1 already-present rows; …</p>
+           - unexpected value "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+
+
+      218 |     await expect
+      219 |       .soft(receipt.getByTestId("receipt-summary"))
+    > 220 |       .toHaveText(
+          |        ^
+      221 |         "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.",
+      222 |       );
+      223 |     const pending = page.waitForEvent("download");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:220:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 180
+    Received:    0
+
+      84 |     });
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+    > 86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+         |                                         ^
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:86:41
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 243.60000000000002
+    Received:    3166.3125
+
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+    > 87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+         |                                          ^
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:87:42
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 3419.546875
+    Received:    239.234375
+
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+    > 88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+         |                                       ^
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+      91 |     await expect(review).toBeInViewport({ ratio: 1 });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:88:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-dbdf5-rimary-readability-at-320px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').locator('details.connection-actions').filter({ has: getByTestId('editor').getByRole('button', { name: 'Edit route to Identity', exact: true, includeHidden: true }) }).locator('summary')
+
+
+      121 |       .filter({ has: editor.getByRole("button", { name: "Edit route to Identity", exact: true, includeHidden: true }) })
+      122 |       .locator("summary")
+    > 123 |       .click();
+          |        ^
+      124 |     await action.click();
+      125 |     const route = editor.getByRole("combobox", { name: "Route for Identity", exact: true });
+      126 |     await route.selectOption("");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:123:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-de9b9-its-corrective-cue-at-320px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Data issues', exact: true })
+    Expected substring: "1 current data issue. Showing 1–1."
+    Received string:    "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Data issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Data issues">…</dialog>
+           - unexpected value "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+
+
+      178 |     await openDatasetFile(page, data.bytes, "visual-copy.sqlite");
+      179 |     const issueDialog = await issues(page);
+    > 180 |     await expect.soft(issueDialog).toContainText("1 current data issue. Showing 1–1.");
+          |                                    ^
+      181 |     await issueDialog.getByRole("button", { name: "Close", exact: true }).click();
+      182 |     await openFileMenu(page);
+      183 |     await page.getByRole("button", { name: "Import CSV", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:36
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Import CSV', exact: true })
+    Expected substring: "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise."
+    Received string:    "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not \"invalid\".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network \"Amber\" is already in the dataset.Previous rowsNext rowsImportCancel"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Import CSV', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true })
+        14 × locator resolved to <dialog open="" class="import-dialog" aria-labelledby="import-title">…</dialog>
+           - unexpected value "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not "invalid".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network "Amber" is already in the dataset.Previous rowsNext rowsImportCancel"
+
+
+      207 |     await expect
+      208 |       .soft(dialog)
+    > 209 |       .toContainText(
+          |        ^
+      210 |         "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.",
+      211 |       );
+      212 |     await dialog.getByRole("button", { name: "Import", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:209:8
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+    Expected: "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file."
+    Received: "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+        14 × locator resolved to <p data-testid="receipt-summary">Added 1 record or links; 1 already-present rows; …</p>
+           - unexpected value "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+
+
+      218 |     await expect
+      219 |       .soft(receipt.getByTestId("receipt-summary"))
+    > 220 |       .toHaveText(
+          |        ^
+      221 |         "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.",
+      222 |       );
+      223 |     const pending = page.waitForEvent("download");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:220:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 180
+    Received:    145.75
+
+      84 |     });
+      85 |     await evidence(page, info, "expanded-issue", geometry);
+    > 86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+         |                                         ^
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+      88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:86:41
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 493.65625
+    Received:    296.984375
+
+      86 |     expect.soft(geometry.primary.width).toBeGreaterThanOrEqual(Math.min(180, geometry.row.width * 0.75));
+      87 |     expect.soft(geometry.primary.height).toBeLessThanOrEqual(geometry.lineHeight * 12);
+    > 88 |     expect.soft(geometry.technical.y).toBeGreaterThanOrEqual(geometry.primary.bottom);
+         |                                       ^
+      89 |     const review = row.getByRole("button", { name: "Review Orders", exact: true });
+      90 |     await review.scrollIntoViewIfNeeded();
+      91 |     await expect(review).toBeInViewport({ ratio: 1 });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:88:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-b6319-imary-readability-at-1366px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('editor').locator('details.connection-actions').filter({ has: getByTestId('editor').getByRole('button', { name: 'Edit route to Identity', exact: true, includeHidden: true }) }).locator('summary')
+
+
+      121 |       .filter({ has: editor.getByRole("button", { name: "Edit route to Identity", exact: true, includeHidden: true }) })
+      122 |       .locator("summary")
+    > 123 |       .click();
+          |        ^
+      124 |     await action.click();
+      125 |     const route = editor.getByRole("combobox", { name: "Route for Identity", exact: true });
+      126 |     await route.selectOption("");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:123:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-c154d-ts-corrective-cue-at-1366px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Data issues', exact: true })
+    Expected substring: "1 current data issue. Showing 1–1."
+    Received string:    "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Data issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Data issues">…</dialog>
+           - unexpected value "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.Orders (Amber) depends on Identity (Blue). Amber Blue guard does not provide a valid route between these networks. Its joined networks are: Amber, Copper. Review the connection route.Technical detailsCDS_ROUTE · service_dependency · 1:2: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+
+
+      178 |     await openDatasetFile(page, data.bytes, "visual-copy.sqlite");
+      179 |     const issueDialog = await issues(page);
+    > 180 |     await expect.soft(issueDialog).toContainText("1 current data issue. Showing 1–1.");
+          |                                    ^
+      181 |     await issueDialog.getByRole("button", { name: "Close", exact: true }).click();
+      182 |     await openFileMenu(page);
+      183 |     await page.getByRole("button", { name: "Import CSV", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:180:36
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Import CSV', exact: true })
+    Expected substring: "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise."
+    Received string:    "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not \"invalid\".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network \"Amber\" is already in the dataset.Previous rowsNext rowsImportCancel"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "soft toContainText" getByRole('dialog', { name: 'Import CSV', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true })
+        14 × locator resolved to <dialog open="" class="import-dialog" aria-labelledby="import-title">…</dialog>
+           - unexpected value "Import CSVFill in one CSV file per template and choose them together; rows may refer to records in other files or already in the dataset. Records that already exist are left as they are.Download templatesNetworks templateOrganizations templateCategories templateApplications templateServices templateCross-domain solutions templateSupport tiers templateConsuming organizations templateService dependencies templateCSV filesnetworks.csv: Networks, 4 rowsunreadable.csv: Row 1: A quoted value is never closed. This file will not be imported.Import will add 1 network.Preview handling: UNCLASSIFIED. Current dataset: UNCLASSIFIED; its marking has not changed. This preview includes recognized incoming markings even on held or rejected rows. Unreadable files and unrecognized markings need source review. Receipt classification: UNCLASSIFIED.Download preview receipt1 row look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.Rows 1–1 of 1networks.csv row 5: Looks like host data: held-synthetic.example.testPrevious rowsNext rowsImport these rows anyway1 row will not be importedRows 1–1 of 1networks.csv row 4: Kind must be internal or external, not "invalid".Previous rowsNext rows1 row already in the dataset, left as they areRows 1–1 of 1networks.csv row 3: Network "Amber" is already in the dataset.Previous rowsNext rowsImportCancel"
+
+
+      207 |     await expect
+      208 |       .soft(dialog)
+    > 209 |       .toContainText(
+          |        ^
+      210 |         "1 row looks like an IP address or host name, which SIM is not meant to hold. It is left out unless you choose otherwise.",
+      211 |       );
+      212 |     await dialog.getByRole("button", { name: "Import", exact: true }).click();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:209:8
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+    Expected: "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file."
+    Received: "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).getByRole('region', { name: 'Last import receipt', exact: true }).getByTestId('receipt-summary')
+        14 × locator resolved to <p data-testid="receipt-summary">Added 1 record or links; 1 already-present rows; …</p>
+           - unexpected value "Added 1 record or links; 1 already-present rows; 1 rejected rows; 1 host-like rows held; 1 unreadable file."
+
+
+      218 |     await expect
+      219 |       .soft(receipt.getByTestId("receipt-summary"))
+    > 220 |       .toHaveText(
+          |        ^
+      221 |         "Added 1 record or link; 1 already-present row; 1 rejected row; 1 host-like row held; 1 unreadable file.",
+      222 |       );
+      223 |     const pending = page.waitForEvent("download");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:220:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\visual-fixes-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12 failed
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 320px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 320px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:51:3 › COV-WG-UX08-ISSUE-GRID expanded technical witness preserves primary readability at 1366px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:106:3 › COV-WG-UX08-ROUTE-SPACING focused route outline stays clear of its corrective cue at 1366px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:173:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 

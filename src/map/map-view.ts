@@ -1,6 +1,7 @@
 import cytoscape, { type Core, type NodeCollection, type NodeSingular } from "cytoscape";
 import fcose from "cytoscape-fcose";
 import type { History, NodePosition, Snapshot } from "../domain/types";
+import { bannerText } from "../db/markings";
 import { button, el, option } from "../ui/dom";
 import {
   buildGraph,
@@ -451,19 +452,22 @@ export function createMapView(ctx: MapViewContext): MapView {
     applyView();
   });
   focusTools.append(highlight, clearHighlight);
+  const expandFocus = button("Expand focus", () => {
+    if (focus && focus.kind !== "network-connections") {
+      focus = { ...focus, depth: focus.depth + 1 };
+      applyView();
+      fitMap();
+      if (expandFocus.disabled) fitFocus.focus({ preventScroll: true });
+    }
+  });
+  const fitFocus = button("Fit focus", () => {
+    fitMap();
+  });
   const focusActions = el(
     "div",
     { class: "map-tools map-focus-actions", role: "group", "aria-label": "Current focus" },
-    button("Expand focus", () => {
-      if (focus) {
-        focus = { ...focus, depth: focus.depth + 1 };
-        applyView();
-        fitMap();
-      }
-    }),
-    button("Fit focus", () => {
-      fitMap();
-    }),
+    expandFocus,
+    fitFocus,
     button("Back from focus", () => {
       const prior = focusReturn;
       focusReturn = null;
@@ -727,6 +731,15 @@ export function createMapView(ctx: MapViewContext): MapView {
     filtersTitle.textContent = activeFilters === 0 ? "Filters" : `Filters (${String(activeFilters)})`;
     const chain: Chain | null = chainRoot === null ? null : traceChain(graph, chainRoot);
     const membership = focus ? focusGraph(graph, focus) : null;
+    // Boundary focus already includes every recorded crossing; depth has no meaning there.
+    // Directed focus can expand only when another hop adds a logical dependency, including
+    // the closing edge of a cycle even if its endpoints are already visible.
+    const nextMembership =
+      focus && focus.kind !== "network-connections" ? focusGraph(graph, { ...focus, depth: focus.depth + 1 }) : null;
+    const canExpand =
+      membership !== null && nextMembership !== null && nextMembership.dependencies.size > membership.dependencies.size;
+    expandFocus.hidden = focus?.kind === "network-connections";
+    expandFocus.disabled = !canExpand;
     if (selected && membership && !membership.visible.has(selected.data.id)) {
       selectedLabel.textContent = `Selected: ${findName(selected)} (outside current focus)`;
     }
@@ -740,7 +753,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         ? new Set<string>()
         : filterGraph(snapshot, graph, filter);
     focusStatus.textContent = membership
-      ? `${membership.label}. Strict inventory filters are suspended during focus; Back restores them.`
+      ? `${membership.label}. ${focus?.kind !== "network-connections" && !canExpand ? "No further recorded dependencies to show in this direction. " : ""}Strict inventory filters are suspended during focus; Back restores them.`
       : focusNotice;
     cy.batch(() => {
       cy.elements().forEach((e) => {
@@ -955,7 +968,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     };
     const frame = layoutFrame(
       cy.width() * 2,
-      captureContent(source.name, source.unsaved),
+      { ...captureContent(source.name, source.unsaved), banner: bannerText(marking, caveat) },
       (text, size, bold) => measure(text, `${bold ? "bold " : ""}${String(size)}px "Segoe UI", system-ui, sans-serif`),
       cy.height() * 2,
     );
@@ -978,7 +991,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       const { capturedName, marking, caveat, frame } = prepareExport();
       let rendered: Promise<Blob>;
       try {
-        applyZoom(true);
+        applyZoom(true, 2);
         rendered = Promise.resolve(cy.png({ output: "blob-promise", bg: MAP_BACKGROUND, full: false, scale: 2 }));
       } finally {
         applyZoom();
@@ -1003,7 +1016,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       const { capturedName, marking, caveat, frame, measure } = prepareExport();
       let scene: SvgScene;
       try {
-        applyZoom(true);
+        applyZoom(true, 2);
         scene = sceneFromMap(cy, 2, measure);
       } finally {
         applyZoom();
@@ -1018,18 +1031,19 @@ export function createMapView(ctx: MapViewContext): MapView {
     }
   }
 
-  /** Fit labels to the zoom. Exporting keeps each service label readable at twice screen size. */
+  /** Reveal labels for layout/capture; capture retains structural text at its actual render scale. */
 
-  function applyZoom(exporting = false): void {
-    // An export renders at twice the size, so its labels need half the growth.
+  function applyZoom(exporting = false, labelScale = 1): void {
+    // Layout preparation retains its existing geometry. A real 2x capture also
+    // scales the minimum label pixels, preserving the UI's font rather than halving it.
     const zoom = cy.zoom() * (exporting ? 2 : 1);
     // A model-space growth cap becomes unreadable on wide maps. Preserve the
     // screen-space minimum at every zoom; stored node positions stay unchanged.
     const grow = (base: number, min: number) => Math.max(base, min / zoom);
     cy.batch(() => {
       cy.nodes(".service").toggleClass("quiet", !exporting && 16 * zoom < MIN_SERVICE_LABEL_PX);
-      cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX));
-      cy.nodes(".cds").style("font-size", grow(16, MIN_CDS_LABEL_PX));
+      cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX * labelScale));
+      cy.nodes(".cds").style("font-size", grow(16, MIN_CDS_LABEL_PX * labelScale));
     });
   }
 
@@ -1048,6 +1062,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function fitMap(): void {
+    // Focus controls can change the canvas height in this same event. Measure
+    // that layout before fitting instead of waiting for ResizeObserver's frame.
+    cy.resize();
     cy.fit(
       cy.elements().filter((item) => item.visible()),
       FIT_MARGIN,

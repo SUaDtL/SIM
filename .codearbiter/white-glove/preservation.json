@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-16T16:41:00.746565+00:00",
+  "preexisting_paths": 83,
+  "unchanged_whole_file_hashes": 82,
+  "append_only_diagnostic_prefix": {
+    "bytes": 17855,
+    "sha256": "dfb5defa4fd5ba585033edd7211605e67d6b36df2aa4957a5631f2032288357b",
+    "matches_original": true
+  },
+  "baseline_path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\baseline.json",
+  "baseline_sha256": "3d09d55451724121e1a2f6dad756a35756e145ca61ec276bc8fa3ef1a14cdb59",
+  "verification": "Native PowerShell SHA256 whole-file reads and bounded prefix read; all preexisting payload bytes preserved. No reset, stash or broad staging."
+}

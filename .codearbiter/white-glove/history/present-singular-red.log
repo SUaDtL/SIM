@@ -1,0 +1,178 @@
+
+Running 4 tests using 2 workers
+
+(node:52668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px (5.9s)
+  x  2 [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px (5.9s)
+(node:73188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px (6.0s)
+  x  4 [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px (5.9s)
+
+
+  1) [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+    Expected: "1 row already in the dataset, left unchanged"
+    Received: "1 row already in the dataset, left as they are"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+        14 × locator resolved to <summary>1 row already in the dataset, left as they are</summary>
+           - unexpected value "1 row already in the dataset, left as they are"
+
+
+      216 |     ]);
+      217 |     await expect(dialog.getByTestId("import-summary")).toHaveText("Import will add 1 network.");
+    > 218 |     await expect(dialog.locator("summary").filter({ hasText: /^1 row already in the dataset/ })).toHaveText(
+          |                                                                                                  ^
+      219 |       "1 row already in the dataset, left unchanged",
+      220 |     );
+      221 |     await expect(dialog.getByRole("group", { name: "Rejected rows", exact: true })).toContainText("networks.csv row 4");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:218:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+    Expected: "1 row already in the dataset, left unchanged"
+    Received: "1 row already in the dataset, left as they are"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+        14 × locator resolved to <summary>1 row already in the dataset, left as they are</summary>
+           - unexpected value "1 row already in the dataset, left as they are"
+
+
+      216 |     ]);
+      217 |     await expect(dialog.getByTestId("import-summary")).toHaveText("Import will add 1 network.");
+    > 218 |     await expect(dialog.locator("summary").filter({ hasText: /^1 row already in the dataset/ })).toHaveText(
+          |                                                                                                  ^
+      219 |       "1 row already in the dataset, left unchanged",
+      220 |     );
+      221 |     await expect(dialog.getByRole("group", { name: "Rejected rows", exact: true })).toContainText("networks.csv row 4");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:218:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+    Expected: "1 row already in the dataset, left unchanged"
+    Received: "1 row already in the dataset, left as they are"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+        14 × locator resolved to <summary>1 row already in the dataset, left as they are</summary>
+           - unexpected value "1 row already in the dataset, left as they are"
+
+
+      216 |     ]);
+      217 |     await expect(dialog.getByTestId("import-summary")).toHaveText("Import will add 1 network.");
+    > 218 |     await expect(dialog.locator("summary").filter({ hasText: /^1 row already in the dataset/ })).toHaveText(
+          |                                                                                                  ^
+      219 |       "1 row already in the dataset, left unchanged",
+      220 |     );
+      221 |     await expect(dialog.getByRole("group", { name: "Rejected rows", exact: true })).toContainText("networks.csv row 4");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:218:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-01074--use-singular-copy-at-320px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+    Expected: "1 row already in the dataset, left unchanged"
+    Received: "1 row already in the dataset, left as they are"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Import CSV', exact: true }).locator('summary').filter({ hasText: /^1 row already in the dataset/ })
+        14 × locator resolved to <summary>1 row already in the dataset, left as they are</summary>
+           - unexpected value "1 row already in the dataset, left as they are"
+
+
+      216 |     ]);
+      217 |     await expect(dialog.getByTestId("import-summary")).toHaveText("Import will add 1 network.");
+    > 218 |     await expect(dialog.locator("summary").filter({ hasText: /^1 row already in the dataset/ })).toHaveText(
+          |                                                                                                  ^
+      219 |       "1 row already in the dataset, left unchanged",
+      220 |     );
+      221 |     await expect(dialog.getByRole("group", { name: "Rejected rows", exact: true })).toContainText("networks.csv row 4");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-visual-fixes.spec.ts:218:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\present-singular-red\white-glove-visual-fixes-C-850e9-use-singular-copy-at-1366px-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+    [msedge] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 320px 
+    [chrome] › e2e\white-glove-visual-fixes.spec.ts:189:3 › COV-WG-UX10-SINGULAR one issue and one of each import count use singular copy at 1366px 

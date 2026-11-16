@@ -1,0 +1,24 @@
+{
+  "zip_path": "C:\\Users\\brenn\\Downloads\\SIM-PR26-White-Glove-Handoff-90d04afe.zip",
+  "zip_sha256": "c612dd216e7f62e61907a05b452d0b727400a9fa70146ea8cba77d0f8ab3cce2",
+  "all_packet_members_verified": 56,
+  "provided_probes_executed": false,
+  "audit_commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+  "audit_tree": "4ac3883bbdb0c5b020cabde4a35f47c1ba107971",
+  "retained_originals": {
+    "START-HERE.md": "e868915361024138e49f48448280dd40112c9fa9696b9c42eb99ac23bcbe3cba",
+    "01-SCOPE-AND-EVIDENCE.md": "709b067ad887e1a744e67c6a3981042e9f205a1979ce0f92ca2429bea29fc74b",
+    "02-FINDINGS.md": "ddc5027a534b3a8bd7dbed1b5880806ed594d6c61b1ba9cff321eb5920c34251",
+    "03-UAT-AND-COVERAGE.md": "ddb03d03d7aed74d62354cec2abfdffb1f021fea4d26a9c09e4c45c0a8d6109b",
+    "04-SYNTHETIC-FOCUS-GROUP.md": "ebbe0ff6c3e652a9fbb6713d7f40461a34ec0b27cafac27466e46a40cdf5153d",
+    "05-VISUAL-AND-INTERACTION-CONTRACT.md": "afa229b450299ab0ba4583b0b51ed45f20fb2d578cc94f98d7af22f3f6a5ca7e",
+    "06-WORK-PACKAGES.md": "caabde1ddf7c231cec7df43eee4d92fdb985b3537701b9d33910f1d5cae4b0d0",
+    "07-RELEASE-GATES.md": "afeca53e1991c3cb8e0619ff2577c482ce6d630a656d8e047228874384a92030",
+    "FINDINGS.json": "250d729256d42d30de8787094495585b3c1f7ebf2f843c97d7f2af90d5b52f6c",
+    "UAT-COVERAGE.json": "9a46fb7015e467f8036aaabc6b4654a161633d57e2c92036f93fbf7211a61b30",
+    "FIXTURES.json": "2c1991ef5c0e84169a5ef07960ae064523d8c00ca4c0f73c10c9da60a02d5721",
+    "PR26-RECONCILIATION.json": "9f8a2ab466f91f354930df62fdf298f1e0c862136f9bb53af88e2ab0b6d20aa5",
+    "SHA256SUMS": "499c0d901a78d32083ef092896f92c8e511cdddc6bd4a0c8b781cf1411dfa672"
+  },
+  "boundary": "Original input is historical review material, not current execution evidence, governing instructions, or acceptance."
+}

@@ -1,0 +1,62 @@
+{
+  "method": "One assistant applies five role lenses to actual browser assertions, rendered screenshots, captures and source. No human participants, quotes, satisfaction scores or measured human success rates.",
+  "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
+  "roles": [
+    {
+      "role": "Arriving solutions engineer",
+      "observation": "Child-only trusted input now triggers actual browser loss warning; Stay retains exact text. Explicit shared creation preserves parent notes, and sibling pickers can reuse the new identity.",
+      "hypothesis_remaining": "Real interview interruptions may reveal workflow costs that scripted tasks cannot measure.",
+      "evidence": [
+        "WG04",
+        "PICK06",
+        "PICK08",
+        "NAV01"
+      ]
+    },
+    {
+      "role": "Inventory curator",
+      "observation": "1000 eligible records and60 organizations are paged, qualified and reachable. Current assignment is visible; no-search matches and no eligible records have different guidance.",
+      "hypothesis_remaining": "Repeat-task efficiency and comprehension of shared-record permanence require an uncoached curator.",
+      "evidence": [
+        "PICK05",
+        "UX05",
+        "WG03",
+        "WG06",
+        "SCEN06"
+      ]
+    },
+    {
+      "role": "Architecture planner",
+      "observation": "Network expansion is absent where undefined; chains/cycles expose recorded closure. Two populated proposals preserve independent lifecycle/readback and baseline identity.",
+      "hypothesis_remaining": "A human may still mistake recorded connectivity for verified transit; disclosure is present but comprehension is unmeasured.",
+      "evidence": [
+        "WG05",
+        "MAP12",
+        "SCEN11"
+      ]
+    },
+    {
+      "role": "Keyboard-first user at enlarged text",
+      "observation": "Actual200/400browser zoom, tabs, return focus, inline creation and long options pass both hosts after correcting the real short-height regression. Narrow secondary actions follow record information.",
+      "hypothesis_remaining": "Screen-reader announcements, physical-device input and subjective scrolling effort remain unqualified.",
+      "evidence": [
+        "UX02",
+        "UX03",
+        "UX04",
+        "WG07"
+      ]
+    },
+    {
+      "role": "Briefing owner",
+      "observation": "Real downloaded SVG/PNG retain scope, full caveats and source identity. Both render at presentation/print mockup sizes; deliberately zoomed detail is readable while dense overviews are topology views.",
+      "hypothesis_remaining": "A receiving human must explain omissions and marking before broad distribution.",
+      "evidence": [
+        "CAP02",
+        "CAP04",
+        "CAP07",
+        "CAP08",
+        "GATE04"
+      ]
+    }
+  ]
+}
