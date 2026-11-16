@@ -8,6 +8,8 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Public README, user guide, contributing and security docs, and a GitHub Pages deployment of the current `main` build.
+
 - Dataset renaming with Undo, persistent paginated data-issue review, keyboard Save, offline build/support identity and an accessible startup failure shell.
 - Bundled offline workflow Help, persistent qualified editor identity, a live map legend and visible scope/hidden-dependency disclosure.
 - Complete paginated CSV reconciliation and session-local completed-import receipts with downloadable diagnostics, source/classification metadata and spreadsheet formula protection.

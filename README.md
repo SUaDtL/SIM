@@ -1,166 +1,76 @@
 # SIM: Service Integration Map
 
-Inventory the services each network domain (e.g. NIPR, SIPR, DEV) provides and consumes,
-who provides and supports them, and see how they connect, including cross-domain paths
-through CDS and external SaaS. SIM is one HTML file that runs offline in Edge or Chrome
-straight from disk; your data lives in a local `.sqlite` file.
+[![ci](https://github.com/SUaDtL/SIM/actions/workflows/ci.yml/badge.svg)](https://github.com/SUaDtL/SIM/actions/workflows/ci.yml)
+
+Inventory the services each network domain (for example NIPR, SIPR or DEV) provides and
+consumes, who provides and supports them, and see how they connect, including cross-domain
+paths through CDS and external SaaS.
+
+SIM is one self-contained HTML file. It has no server, no account and no network access.
+Your data lives in a local SQLite (`.sqlite`) file that you open and save yourself.
+
+**Use it now: <https://suadtl.github.io/SIM/>** (Edge or Chrome recommended)
+
+## How it works
+
+- **Local-only.** The page makes no network requests after it loads. A Content Security
+  Policy (`connect-src 'none'`) forbids them, and the test suite fails on any request that is
+  not `file:`. There is no telemetry, update check, CDN or remote font.
+- **Your data stays in your file.** SIM reads and writes a `.sqlite` database you choose.
+  Nothing is stored in browser storage and nothing is uploaded. Clearing the browser loses
+  nothing; a dataset is just a file you keep, back up and share like any other.
+- **Chrome and Edge** can open and save the file in place (File System Access API). Other
+  browsers fall back to upload and download.
+- **Hosted copy or your own copy.** The GitHub Pages site is the same single file that is
+  published with each [release](https://github.com/SUaDtL/SIM/releases). For sensitive
+  environments, download the release `sim-<version>.html` and its SHA-256, verify it, and open
+  it from disk; it behaves identically offline.
 
 ## Quick start
 
-Open the SIM HTML file supplied for your version in Edge or Chrome by double-clicking it.
-No server, installation or internet is needed. The published release and a development
-candidate can differ: check **About and demo** for the version, full source build and date,
-and verify the supplied SHA-256 before evaluating a candidate. A source merge does not update
-an existing release download. Follow the qualification status accompanying the exact file.
-Use **File → Rename dataset** to name the enterprise, then **Save file** (Ctrl+S or Command+S)
-to an approved, durable `.sqlite` location. Save As changes the file name separately.
-Open **Help** for a bundled first-map example, map vocabulary, and Apply/Save/recovery guidance.
-Help preserves your unfinished draft. **About and demo → Licenses and notices** contains the
-project terms and the full license/attribution texts for the bundled runtime dependencies.
+1. Open the [hosted app](https://suadtl.github.io/SIM/) or a downloaded `sim.html`.
+2. **File → New** (or try the demo under **About and demo**), then **File → Rename dataset**.
+3. **Inventory → Services → Add service** to record services and their dependencies.
+4. Switch to **Map** to see how they connect; capture it as PNG or SVG.
+5. **Save file** (Ctrl+S) to a durable `.sqlite` location. Open it again later with **Open**.
 
-For developers building from source:
+Open **Help** inside the app for a first-map example and vocabulary. The full workflow
+reference is in the [user guide](docs/user-guide.md).
+
+## Data handling
+
+SIM is not a classification-aware system and does not guarantee a dataset contains no
+sensitive data. Text that looks like an IP address or host name triggers a confirmation
+warning, and the banner shows the highest marking present, but you are responsible for what
+you enter and where you store the file. Demo and test data are fictional and UNCLASSIFIED.
+Opened `.sqlite` files are treated as untrusted and validated (header, application id,
+integrity, size cap of 100 MB).
+
+## Build from source
+
+Requires Node 24.
 
 ```sh
 npm ci
 npm run build      # produces dist/sim.html
-```
-
-## Add and connect services
-
-Open **Inventory**, choose **Services**, then **Add service**, even in an empty dataset.
-Select an existing record to read its summary; choose **Edit** (or F2) to change it.
-In a reference field, use **Choose** to search qualified records or create and use a
-missing record without losing the service form. The child dialog is one level
-deep. Cancel or Escape leaves the parent intact. An explicitly created shared record
-has its own Undo step and remains if you later cancel the service.
-
-Stage support assignments, consuming organizations and outgoing service dependencies
-alongside the service fields. **Add service** creates the initial aggregate in one step;
-**Apply changes** updates an existing aggregate in one step. **Discard changes** restores
-the existing service. Save file applies a valid active draft before writing the file.
-Details, Connections and Support share that same draft. Apply reveals errors in the
-relevant section. Cancel follows the unapplied-work decision before returning to inspection.
-The editor keeps the record name and network visible on every tab, including the source
-and destination context when creating a similar service. Projected summaries distinguish
-outgoing dependencies from incoming **Used by** service counts.
-Host-like text requires confirmation of the exact current payload; editing it withdraws
-the old acknowledgement.
-
-Finish adding or explicitly cancel each open consumer, dependency or route task before
-Apply or Save. These operations retain unfinished input and focus its completion action.
-Inspecting a staged connection shows its pending state; it does not read back an older saved route.
-As-Is means the current recorded enterprise, including applied edits not yet saved to file.
-File status describes whether that current state has reached the chosen file.
-
-Outgoing dependencies describe what this service needs. Incoming dependencies belong to
-their consuming service; use **Edit incoming dependency** to navigate to that owner.
-Organizational consumption is separate. **Edit route** changes a staged dependency
-without removing it first. A cross-network connection may have no CDS; selecting a CDS
-requires it to join both endpoints' networks. Rehoming services validates the resulting
-incoming and outgoing routes. Existing legacy issues are retained until explicitly repaired.
-**File → Review data issues** keeps the complete paginated issue list available after other edits,
-with links to the affected records. Opening a file or reviewing its issues does not repair it.
-
-**Create similar service** starts an independent draft from the selected service;
-**Start from an existing service** offers the same choice within Add. Choose the destination
-network explicitly. Descriptive fields, classification, foundational flag and shared
-references are prefilled. Support assignments and notes are copied only if selected.
-Consumers, dependency routes and positions are not copied; the source remains unchanged.
-
-## Find, inspect and return
-
-**Find on map** offers partial, case-insensitive results with record type and network
-or scenario identity. Use the explicit result buttons to distinguish matching names.
-Reference inspection opens a read-only peek without applying the parent draft. Reverse
-relations show recorded provider, support, consumer, application, category and route roles.
-**Edit** in a peek follows a reference through the unapplied-work decision.
-**Back** restores navigation context, including filters and framing; Undo changes data.
-Choosing Stay leaves the current task intact.
-
-To-Be and Compare inspectors retain their projected origin and are read-only.
-**Edit As-Is** reveals the real baseline service. Changing View or removing a planned
-origin closes stale projected inspection. Connection rows and map route segments open
-the same connection inspector, including unresolved-route provenance.
-
-## Ask a map question and capture it
-
-Select a service and use **Depends on** or **Used by** for direct providers or consumers.
-**Expand focus** follows another hop in the chosen direction. Select a network and use
-**Network connections** to keep complete boundary routes and their remote endpoints.
-Focus temporarily suspends inventory filters; **Back** restores them and the prior framing.
-Focus, Fit and Back do not change saved node positions or create Undo steps.
-
-**Capture** saves a PNG directly; **Capture options → Export SVG** saves a vector image.
-Both capture the current view with scope, legend and the
-full dataset or projection marking, including higher classifications outside the focus.
-The visible legend explains consumer-to-provider arrows and unverified connectivity.
-Scope disclosure counts hidden foundational dependencies and names active filters/focus;
-detached captures retain those omissions, the current-viewport boundary and the same caveat.
-Display-only curve offsets reduce links crossing unrelated nodes or labels without changing
-recorded endpoints or saved positions. This is bounded avoidance, not a complete obstacle router.
-Caption and classification sizes account for map height and wrapping, targeting readable
-annotations when the whole capture fits a 1280×720 slide. Check your actual presentation or
-print size; this does not guarantee human readability of every map label.
-With an unapplied draft, choose **Capture current view**, **Apply and capture**, or Cancel.
-An export failure after Apply retains the applied change and its Undo step.
-The visible export status reports progress, cancellation or failure. Inventory and Map
-are separate workspaces. Switching between them retains the editor draft; **Return to draft**
-restores it. Fit changes framing; **Layout → Re-layout** changes saved positions with Undo.
-
-**File** contains New, Open, Save As, CSV import, banner caveat and recovery controls.
-Save file, Undo/Redo and document/recovery status remain visible. **About** contains the
-SQLite version and fictional demo. Inventory, relationship and picker results have bounded
-pages, counts and local search. At very short zoomed viewports the page scrolls to the editor;
-the classification banners remain visible and the editor keeps its own scroll body.
-
-## Reconcile CSV imports
-
-**File → Import CSV** previews additions, already-present rows and rejected or host-like rows.
-Diagnostics use bounded pages so every row remains reachable. **Download preview receipt**
-retains the complete file/row/reason report, including files that could not be read.
-After importing, reopen Import CSV and expand **Last import receipt** to review or download
-the most recent completed import. Choose corrected files for another preview and retry.
-Cancelling a preview leaves that completed receipt intact. It describes the completed import
-even if you later Undo it; it is not a live count of the current dataset.
-
-Receipts stay in memory for the originating dataset session and clear on New/Open/demo or restart.
-Downloads include source and classification metadata, including higher recognized incoming
-markings on rejected rows; unreadable or unrecognized input cannot be fully assessed.
-Handle source CSV and diagnostics according to their actual classification. Warning notes
-are not extra imported rows, and additions count records/links rather than guaranteed whole-row successes.
-
-## Recovery and external file changes
-
-In Chrome or Edge with native file access, **File → Choose recovery file** enables an optional
-separate `.sqlite` snapshot. Choose a location suitable for the dataset's classification.
-Applied edits update that file after a short pause; unapplied form text is excluded.
-The recovery status reports successful updates or failures independently of Save file.
-Use **Retry recovery** after a failure, or choose another file. **Stop recovery** stops
-future writes and retains the existing copy. Recovery is off again when you switch datasets
-or restart SIM; no file handles or dataset bytes are kept in browser storage.
-
-After a crash, use **Open** to select the recovery `.sqlite` file and **Save As** to retain
-the recovered dataset separately. One latest snapshot is retained, without a backup history.
-An update already writing when recovery is stopped can finish. Edits made just before a crash
-or an interrupted write may be absent. Recovery does not guarantee power-loss durability.
-
-Before a native file write, SIM checks its contents against the opened or last-written bytes.
-Files over the 100 MiB dataset limit are refused before reading their bytes, including
-Open, existing Save As targets and externally enlarged files checked before overwrite.
-If another program changed the file, SIM refuses to overwrite it and retains your current work;
-use **Save As** to a separate location or reopen the external version. This check is best effort:
-another process can still write between the check and commit. SIM does not lock other programs
-or merge their changes. The download fallback supports manual copies rather than automatic recovery.
-
-## Development
-
-```sh
+npm run dev        # Vite dev server for development only
 npm run check      # typecheck, lint, format, build, unit and e2e tests
 ```
 
-See [AGENTS.md](AGENTS.md) for all commands, layout and rules, and
-[CHANGELOG.md](CHANGELOG.md) for changes.
+`npm run e2e` drives the installed Microsoft Edge and Google Chrome against the built file
+from `file://`. See [AGENTS.md](AGENTS.md) for layout, module boundaries and rules, and
+[CONTRIBUTING.md](CONTRIBUTING.md) to contribute.
+
+## Releases and hosting
+
+- Every merge to `main` that passes CI is deployed to GitHub Pages by
+  [`pages.yml`](.github/workflows/pages.yml). The page footer in **About and demo** shows the
+  version, commit and build date.
+- Releases are started by hand from `main` ([`release.yml`](.github/workflows/release.yml)) and
+  publish `sim-<version>.html` with its SHA-256. See [CHANGELOG.md](CHANGELOG.md).
+- Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](LICENSE). Bundled runtime dependencies keep their own licenses,
+shown in the app under **About and demo → Licenses and notices**.
