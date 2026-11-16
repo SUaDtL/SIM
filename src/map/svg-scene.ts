@@ -46,7 +46,9 @@ function nodeLabel(n: NodeSingular, measure: Measure): SvgLabel | null {
   const lines = wrap(value, number(n, "text-max-width"), font, measure);
   // The map's own label box places the text, so the export puts it where the screen does.
   const box = n.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true });
-  const lineHeight = size * 1.2;
+  // Match the renderer's line spacing. An independently enlarged SVG block can
+  // collide with the adjacent heading even when the live label boxes are clear.
+  const lineHeight = size * number(n, "line-height");
   const blockHeight = lines.length * lineHeight;
   return {
     lines,

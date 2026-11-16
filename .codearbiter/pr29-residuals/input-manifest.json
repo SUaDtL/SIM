@@ -1,0 +1,11 @@
+{
+  "source_packet": "SIM-PR29-White-Glove-Handoff-8b1bc5a0.zip",
+  "sha256": "56dea0bff2ceda25caa769a4146c5048cc88e4b9e79fdd5a353bb2dec004f784",
+  "zip_members": 167,
+  "verified_file_entries": 165,
+  "packet_verification_checks": 246,
+  "packet_verification_exit_code": 0,
+  "reviewed_main": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+  "audited_html_sha256": "8517d22a9f4ac6899097b178a25d6ca10c1ef10dd326252d2a5207f991da48aa",
+  "qualification": "Packet integrity is not product acceptance. Six supplied findings were independently reproduced on installed Windows browsers."
+}

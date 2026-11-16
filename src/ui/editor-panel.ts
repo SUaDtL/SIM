@@ -33,6 +33,8 @@ export interface EditorContext {
   /** The editor opened, saved or closed an item; the list should update its highlight. */
   selectionChanged(): void;
   draftChanged?(): void;
+  /** An explicit successful Apply or discard resolved this editor draft. */
+  draftResolved?(draftId: number): void;
   requestServiceOnNetwork?(networkId: number): void;
   requestNavigate?(target: { type: EntityType; id: number; changeId?: number }, intent: "peek" | "edit"): void;
   requestDependency?(
@@ -50,6 +52,7 @@ interface EditorViewContext {
   editing: boolean;
   section: string;
   scrollTop: number;
+  sectionScroll?: Record<string, number>;
   summary: RecordSummaryViewContext | undefined;
 }
 
@@ -71,6 +74,7 @@ export interface EditorPanel {
   hasPendingDraft(): boolean;
   pendingDraftLabel(): string;
   applyActiveDraft(): boolean;
+  activeDraftId(): number;
   discardActiveDraft(): void;
   inspectProjected(
     node: GraphNode,
@@ -107,10 +111,15 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   let activePicker: ReturnType<typeof openReferencePicker> | null = null;
   let editing = false;
   let activeSection = "details";
+  let draftId = 0;
+  const sectionScroll = new Map<string, number>();
   const relationViews = new Map<string, { query: string; page: number }>();
   const routeIntents = new Map<number, number | null>();
   let sectionErrors = new Set<string>();
   function showSection(section: string): void {
+    const body = element.querySelector<HTMLElement>(".editor-body");
+    const changed = activeSection !== section;
+    if (changed && body) sectionScroll.set(activeSection, body.scrollTop);
     activeSection = section;
     for (const panel of element.querySelectorAll<HTMLElement>("[data-editor-section]"))
       panel.hidden = panel.dataset["editorSection"] !== section;
@@ -121,6 +130,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const key = tab.dataset["editSection"] ?? "details";
       tab.textContent = `${key[0]?.toUpperCase() ?? ""}${key.slice(1)}${sectionErrors.has(key) ? " (error)" : ""}`;
     }
+    if (changed && body) body.scrollTop = sectionScroll.get(section) ?? 0;
   }
 
   function inspect(
@@ -214,7 +224,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function focusSection(): void {
-    element.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+    (
+      element.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]') ??
+      element.querySelector<HTMLElement>(".record-summary-heading h2")
+    )?.focus();
   }
 
   function readSection(): SummarySection {
@@ -340,8 +353,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
 
   function discardActiveDraft(): void {
     if (!current) return;
+    const resolved = draftId;
     if (current.id !== null && descriptor(current.type).get(ctx.repo(), current.id) === undefined) close();
     else open(current.type, current.id, "Unapplied changes discarded.", activeSection);
+    ctx.draftResolved?.(resolved);
   }
 
   function inspectProjected(
@@ -579,6 +594,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function close(): void {
+    draftId++;
     activePicker?.close();
     activePicker = null;
     editing = false;
@@ -598,6 +614,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function open(type: EntityType, id: number | null, noticeText = "", section = "details"): void {
+    const owner = ++draftId;
+    sectionScroll.clear();
     activePicker?.close();
     activePicker = null;
     editing = true;
@@ -795,6 +813,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
             throw error;
           }
           inspect(type, id, "Scenario changes applied.");
+          ctx.draftResolved?.(owner);
           return true;
         }
         if (type === "service" && serviceDraft) {
@@ -890,11 +909,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               : "No changes to apply.",
             id === null ? "overview" : readSection(),
           );
+          ctx.draftResolved?.(owner);
           return true;
         }
         const savedId = d.save(ctx.repo(), id, input, { confirmSensitive });
         inspect(type, savedId, `${d.label} ${id === null ? "added" : "changes applied"}.`);
         ctx.selectionChanged();
+        ctx.draftResolved?.(owner);
         return true;
       } catch (error) {
         if (error instanceof SensitiveInputWarning) {
@@ -1906,11 +1927,13 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       const view = summary ? captureRecordSummaryView(summary) : undefined;
       const scrollTop = element.scrollTop;
       const restoreFocus = summary?.contains(document.activeElement) ?? false;
+      const headingFocused = summary?.querySelector("h2") === document.activeElement;
       if (current.id !== null && descriptor(current.type).get(ctx.repo(), current.id) !== undefined) {
         inspect(current.type, current.id, notice, view?.section, false, view);
         element.scrollTop = scrollTop;
         const next = element.querySelector<HTMLElement>(".record-summary");
         if (next && view) restoreRecordSummaryView(next, view, { focus: restoreFocus });
+        if (headingFocused) next?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
       } else close();
       return;
     }
@@ -1956,6 +1979,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ? activeSection
         : (element.querySelector<HTMLElement>(".record-summary")?.dataset["summarySection"] ?? "overview"),
       scrollTop: (editing ? (element.querySelector<HTMLElement>(".editor-body") ?? element) : element).scrollTop,
+      sectionScroll: Object.fromEntries(sectionScroll),
       summary: captureRecordSummaryView(element.querySelector<HTMLElement>(".record-summary") ?? element),
     }),
     restoreViewContext: (view) => {
@@ -1969,7 +1993,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           false,
           view.summary,
         );
+      sectionScroll.clear();
+      for (const [section, scroll] of Object.entries(view.sectionScroll ?? {})) sectionScroll.set(section, scroll);
       (editing ? (element.querySelector<HTMLElement>(".editor-body") ?? element) : element).scrollTop = view.scrollTop;
+      if (editing) sectionScroll.set(activeSection, view.scrollTop);
       const summary = element.querySelector<HTMLElement>(".record-summary");
       if (summary && view.summary) restoreRecordSummaryView(summary, view.summary, { focus: true });
     },
@@ -1982,6 +2009,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     hasPendingDraft,
     pendingDraftLabel,
     applyActiveDraft,
+    activeDraftId: () => draftId,
     discardActiveDraft,
     revealScenarioChange: (changeId) => scenarioBuilder?.revealChange(changeId) ?? false,
     inspectProjected,

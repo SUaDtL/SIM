@@ -483,6 +483,9 @@ export function createMapView(ctx: MapViewContext): MapView {
   };
   const pendingJobs: PlacementJob[] = [];
   let exporting = false;
+  // Feedback belongs to its session. An already frozen image still completes
+  // with its original frame and name after a dataset replacement.
+  let exportEpoch = 0;
   const strength: Record<History, number> = { none: 0, merge: 1, own: 2 };
 
   /**
@@ -824,6 +827,9 @@ export function createMapView(ctx: MapViewContext): MapView {
         `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
       ...(focus ? [focusGraph(graph, focus).label] : []),
       ...(focusNotice ? [focusNotice] : []),
+      ...(chainRoot !== null
+        ? ["Selected-chain captions are prioritized; captures include other context captions where space permits."]
+        : []),
       ...(visibleDependencies.size === 0
         ? [total === 0 ? "No dependencies recorded." : "No dependency links are visible in this scope."]
         : []),
@@ -975,7 +981,8 @@ export function createMapView(ctx: MapViewContext): MapView {
     return { capturedName, marking, caveat, frame, measure };
   }
 
-  function finishExport(format: "PNG" | "SVG"): void {
+  function finishExport(format: "PNG" | "SVG", epoch: number): void {
+    if (epoch !== exportEpoch) return;
     exporting = false;
     element.setAttribute("aria-busy", "false");
     if (exportStatus.textContent === `Exporting ${format}…`) exportStatus.textContent = `${format} export cancelled.`;
@@ -985,8 +992,10 @@ export function createMapView(ctx: MapViewContext): MapView {
   /** Freeze the source and pixel render before awaiting browser image decoding or encoding. */
   async function exportView(): Promise<void> {
     if (!beginExport("PNG")) return;
+    const epoch = exportEpoch;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
+      if (epoch !== exportEpoch) return;
       if (!hasVisibleNodes()) return;
       const { capturedName, marking, caveat, frame } = prepareExport();
       let rendered: Promise<Blob>;
@@ -999,19 +1008,21 @@ export function createMapView(ctx: MapViewContext): MapView {
       const map = await rendered;
       const image = await frameWithBanner(map, marking, caveat, frame);
       ctx.saveImage(image, "png", capturedName);
-      exportStatus.textContent = "PNG download started.";
+      if (epoch === exportEpoch) exportStatus.textContent = "PNG download started.";
     } catch {
-      exportStatus.textContent = "Could not export PNG. Try again.";
+      if (epoch === exportEpoch) exportStatus.textContent = "Could not export PNG. Try again.";
     } finally {
-      finishExport("PNG");
+      finishExport("PNG", epoch);
     }
   }
 
   /** Freeze SVG scene and frame from the same current viewport without changing saved positions. */
   async function exportVector(): Promise<void> {
     if (!beginExport("SVG")) return;
+    const epoch = exportEpoch;
     try {
       if ((await ctx.resolveCapture()) === "cancel") return;
+      if (epoch !== exportEpoch) return;
       if (!hasVisibleNodes()) return;
       const { capturedName, marking, caveat, frame, measure } = prepareExport();
       let scene: SvgScene;
@@ -1023,11 +1034,11 @@ export function createMapView(ctx: MapViewContext): MapView {
       }
       const image = new Blob([svgDocument(scene, marking, caveat, frame)], { type: "image/svg+xml" });
       ctx.saveImage(image, "svg", capturedName);
-      exportStatus.textContent = "SVG download started.";
+      if (epoch === exportEpoch) exportStatus.textContent = "SVG download started.";
     } catch {
-      exportStatus.textContent = "Could not export SVG. Try again.";
+      if (epoch === exportEpoch) exportStatus.textContent = "Could not export SVG. Try again.";
     } finally {
-      finishExport("SVG");
+      finishExport("SVG", epoch);
     }
   }
 
@@ -1040,11 +1051,131 @@ export function createMapView(ctx: MapViewContext): MapView {
     // A model-space growth cap becomes unreadable on wide maps. Preserve the
     // screen-space minimum at every zoom; stored node positions stay unchanged.
     const grow = (base: number, min: number) => Math.max(base, min / zoom);
+    const networkFont = grow(20, MIN_NETWORK_LABEL_PX * labelScale);
+    const cdsFont = grow(16, MIN_CDS_LABEL_PX * labelScale);
+    const display = !exporting || labelScale === 2;
+    const detail = focus !== null || chainRoot !== null;
+    const captureDetail = exporting && labelScale === 2 && detail;
+    const serviceFont = display && detail ? grow(16, MIN_SERVICE_LABEL_PX * labelScale) : 16;
     cy.batch(() => {
-      cy.nodes(".service").toggleClass("quiet", !exporting && 16 * zoom < MIN_SERVICE_LABEL_PX);
-      cy.nodes(".network").style("font-size", grow(20, MIN_NETWORK_LABEL_PX * labelScale));
-      cy.nodes(".cds").style("font-size", grow(16, MIN_CDS_LABEL_PX * labelScale));
+      // Overview captures keep the current view's service-label priority.
+      // An explicitly detailed question also admits context captions where they
+      // fit; layout preparation reveals every caption for spacing calculations.
+      cy.nodes(".service").toggleClass(
+        "quiet",
+        display && focus === null && !captureDetail && 16 * cy.zoom() < MIN_SERVICE_LABEL_PX,
+      );
+      // A focused question must retain its few endpoint identities, including
+      // those outside the selected network, at a readable screen size.
+      cy.nodes(".service").style({
+        "font-size": serviceFont,
+        "text-max-width": display && detail ? (140 * serviceFont) / 16 : 140,
+      });
+      cy.nodes(".network").style({
+        "font-size": networkFont,
+        "text-max-width": display ? (400 * networkFont) / 20 : 400,
+        // A displaced endpoint caption must not resize its parent container and
+        // move a heading that was already placed. Nodes still define the box.
+        "compound-sizing-wrt-labels": display && detail ? "exclude" : "include",
+      });
+      cy.nodes(".cds").style({ "font-size": cdsFont, "text-max-width": display ? (280 * cdsFont) / 16 : 280 });
     });
+    // Layout measures the original geometry. Real screen/capture headings use
+    // the same display-only offsets, so PNG and SVG read the computed label box.
+    if (display) separateLabels();
+    else
+      cy.nodes(".network, .cds, .service").forEach((node) => {
+        node.style({ "text-margin-x": 0, "text-margin-y": node.hasClass("network") ? -4 : 4 });
+      });
+  }
+
+  /** Move visible captions, never nodes, a short distance from their natural anchor. */
+  function separateLabels(): void {
+    cy.nodes(".network, .cds, .service").forEach((node) => {
+      node.style({ "text-margin-x": 0, "text-margin-y": node.hasClass("network") ? -4 : 4 });
+    });
+    const headings = cy
+      .nodes(".network, .cds, .service")
+      .filter(
+        (node) =>
+          node.visible() &&
+          (!node.hasClass("service") || focus !== null || chainRoot !== null) &&
+          String(node.style("label") as unknown) !== "",
+      );
+    const occupied: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    const zoom = cy.zoom();
+    const extent = cy.extent();
+    const gap = 4 / zoom;
+    // Network headings define the overview; CDS headings yield next, then the
+    // focused endpoint captions. Stable IDs
+    // break ties, so repeated Fit does not walk labels away from their anchors.
+    const ordered = headings
+      .map((node) => node as NodeSingular)
+      .sort(
+        (a, b) =>
+          (b.hasClass("network") ? 3 : b.hasClass("cds") ? 2 : b.hasClass("chain") ? 1 : 0) -
+            (a.hasClass("network") ? 3 : a.hasClass("cds") ? 2 : a.hasClass("chain") ? 1 : 0) ||
+          a.position().y - b.position().y ||
+          a.id().localeCompare(b.id()),
+      );
+    for (const node of ordered) {
+      const box = node.boundingBox({
+        includeNodes: false,
+        includeEdges: false,
+        includeLabels: true,
+        includeOverlays: false,
+      });
+      const direction = node.hasClass("network") ? -1 : 1;
+      const optional =
+        node.hasClass("service") &&
+        focus === null &&
+        node.id() !== chainRoot &&
+        !node.hasClass("chain") &&
+        !node.hasClass("hover");
+      // Optional context stays close enough to its own glyph to remain an
+      // annotation, rather than spreading quiet names across the whole map.
+      const radius = optional ? Math.min(80, 2 * (box.y2 - box.y1) * zoom) : 80;
+      const candidates: { x: number; y: number }[] = [];
+      // At most an 80 px displacement, independent of map scale. Keep a network
+      // title above its container and a CDS title below its own diamond.
+      for (let y = 0; y <= 80; y += 8)
+        for (let x = -80; x <= 80; x += 8)
+          if (x * x + y * y <= radius * radius) candidates.push({ x, y: y * direction });
+      // Prefer keeping a network heading close above its own box rather than
+      // floating it into the network in the row above.
+      const verticalPenalty = node.hasClass("network") ? 4 : 1;
+      candidates.sort(
+        (a, b) =>
+          a.x * a.x + verticalPenalty * a.y * a.y - b.x * b.x - verticalPenalty * b.y * b.y ||
+          Math.abs(a.x) - Math.abs(b.x) ||
+          a.x - b.x,
+      );
+      const at = (offset: { x: number; y: number }) => ({
+        x1: box.x1 + offset.x / zoom,
+        x2: box.x2 + offset.x / zoom,
+        y1: box.y1 + offset.y / zoom,
+        y2: box.y2 + offset.y / zoom,
+      });
+      const free = candidates.find((candidate) => {
+        const b = at(candidate);
+        if (optional && (b.x1 < extent.x1 || b.y1 < extent.y1 || b.x2 > extent.x2 || b.y2 > extent.y2)) return false;
+        return occupied.every(
+          (a) => b.x1 >= a.x2 + gap || b.x2 + gap <= a.x1 || b.y1 >= a.y2 + gap || b.y2 + gap <= a.y1,
+        );
+      });
+      // Context names are useful in a detailed capture only while they fit.
+      // Never remove a current-question endpoint to make room for dimmed context.
+      if (!free && optional) {
+        node.addClass("quiet");
+        continue;
+      }
+      const offset = free ?? { x: 0, y: 0 };
+      node.style({
+        "text-margin-x": offset.x / zoom,
+        "text-margin-y": (node.hasClass("network") ? -4 : 4) + offset.y / zoom,
+      });
+      occupied.push(at(offset));
+    }
   }
 
   /** Lay out with every label in place, so spacing leaves room for labels hidden while zoomed out. */
@@ -1351,6 +1482,10 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function reset(): void {
+    ++exportEpoch;
+    exporting = false;
+    exportStatus.textContent = "";
+    element.setAttribute("aria-busy", "false");
     ++navigationIntent;
     pendingVisibleNode = null;
     focus = null;

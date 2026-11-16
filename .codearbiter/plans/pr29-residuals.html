@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM post-PR29 execution plan · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-PR29-RESIDUALS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/pr29-residuals.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM post-PR29 execution plan</h1><p class="deck">Root integrates from main8b1bc5a0 on codex/sim-pr29-residuals, owns all builds, notices/docs, governance, commits and one follow-up PR. P1 owns editor/workspace, P2 scenario/domain removal, P3 map including session export-feedback reset API coordinated with P1. No merge/release. Earlier EXCL-001 not-hosted wording predates owner-approved static Pages distribution; keep current publisher and no dataset backend. Preserve original180 evidence and later delivery addendum.</p><div class="meta"><span>PLAN-PR29-RESIDUALS</span><span>Revision 23 · schema 0.3.2</span><span>12 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-PR29-RESIDUALS</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:TASK-P0 -->
+<article class="record" id="TASK-P0" data-ca-symbol="TASK-P0" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P0">TASK-P0</a><h3>P0 post-PR29 work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-P0</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#BASELINE">SPEC-PR29-RESIDUALS#BASELINE</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P0</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>e2e/fixtures/pr29</code></td></tr><tr><td>create</td><td><code>e2e/helpers/pr29.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Receiving identity, preservation and all six defect reproductions captured. Follow-up tasks implement fixes; no acceptance or release inferred. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;C:\\Users\\brenn\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe&#34;,&#34;tools/verify_packet.py&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T21:45:26Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>550903edb5a0945dd76c572304d30ff36b8d638c65c3f4c0168fcff317bd6699</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>C:\Users\brenn\AppData\Local\Temp\sim-pr29-residual-20261116-9jznxnn9\work</div><div class="field"><span class="label">Summary</span>Packet246 integrity checks pass. Main8b1bc5a0/treeE194 and auditedHTML8517 verified; original83 dirty paths preserved. Six meaningful REDs reproduced: interaction6fail Edge/Chrome, map8fail four sizes both, scenarioChrome4to2, notices2unit and browser failures. Baseline defects are not successful product acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P0 -->
+
+<!-- CA:BEGIN:TASK-P1 -->
+<article class="record" id="TASK-P1" data-ca-symbol="TASK-P1" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P1">TASK-P1</a><h3>P1 post-PR29 work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-P1</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#A01">SPEC-PR29-RESIDUALS#A01</a></li><li><a href="../specs/pr29-residuals.html#A02">SPEC-PR29-RESIDUALS#A02</a></li><li><a href="../specs/pr29-residuals.html#A03">SPEC-PR29-RESIDUALS#A03</a></li><li><a href="../specs/pr29-residuals.html#A04">SPEC-PR29-RESIDUALS#A04</a></li><li><a href="../specs/pr29-residuals.html#A05">SPEC-PR29-RESIDUALS#A05</a></li><li><a href="../specs/pr29-residuals.html#A06">SPEC-PR29-RESIDUALS#A06</a></li><li><a href="../specs/pr29-residuals.html#A15">SPEC-PR29-RESIDUALS#A15</a></li><li><a href="../specs/pr29-residuals.html#A16">SPEC-PR29-RESIDUALS#A16</a></li><li><a href="../specs/pr29-residuals.html#A17">SPEC-PR29-RESIDUALS#A17</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-P0">TASK-P0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P1</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/editor-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>create</td><td><code>e2e/pr29-interaction.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=4&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T22:47:44Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>5dd8a2464d194bdc3eaa7c0c933147c378fa66fba52f3bda7e40937729c7e876</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/pr29-residuals/local-gate.json</div><div class="field"><span class="label">Summary</span>Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P1 -->
+
+<!-- CA:BEGIN:TASK-P2 -->
+<article class="record" id="TASK-P2" data-ca-symbol="TASK-P2" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P2">TASK-P2</a><h3>P2 post-PR29 work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-P2</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#A07">SPEC-PR29-RESIDUALS#A07</a></li><li><a href="../specs/pr29-residuals.html#A08">SPEC-PR29-RESIDUALS#A08</a></li><li><a href="../specs/pr29-residuals.html#A09">SPEC-PR29-RESIDUALS#A09</a></li><li><a href="../specs/pr29-residuals.html#A10">SPEC-PR29-RESIDUALS#A10</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-P0">TASK-P0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P2</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/scenario-changes.ts</code></td></tr><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr><tr><td>create</td><td><code>e2e/pr29-scenario.spec.ts</code></td></tr><tr><td>create</td><td><code>src/domain/scenario-removal.test.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=4&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T22:47:45Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>746843089a4daf25ecb500c3f3c5704cc9ffac8370b4510081769457687e3eec</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/pr29-residuals/local-gate.json</div><div class="field"><span class="label">Summary</span>Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P2 -->
+
+<!-- CA:BEGIN:TASK-P3 -->
+<article class="record" id="TASK-P3" data-ca-symbol="TASK-P3" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P3">TASK-P3</a><h3>P3 post-PR29 work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-P3</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#A11">SPEC-PR29-RESIDUALS#A11</a></li><li><a href="../specs/pr29-residuals.html#A12">SPEC-PR29-RESIDUALS#A12</a></li><li><a href="../specs/pr29-residuals.html#A13">SPEC-PR29-RESIDUALS#A13</a></li><li><a href="../specs/pr29-residuals.html#A14">SPEC-PR29-RESIDUALS#A14</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-P0">TASK-P0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P3</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map</code></td></tr><tr><td>create</td><td><code>e2e/pr29-map.spec.ts</code></td></tr><tr><td>modify</td><td><code>e2e/layout-quality.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=4&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T22:47:46Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>5c46399618a84c5afb306b0b98d53e5cd2c24b7ef56144853dd0ab815b477fd5</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/pr29-residuals/local-gate.json</div><div class="field"><span class="label">Summary</span>Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P3 -->
+
+<!-- CA:BEGIN:TASK-P4 -->
+<article class="record" id="TASK-P4" data-ca-symbol="TASK-P4" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P4">TASK-P4</a><h3>P4 post-PR29 work</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-P4</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#A18">SPEC-PR29-RESIDUALS#A18</a></li><li><a href="../specs/pr29-residuals.html#A19">SPEC-PR29-RESIDUALS#A19</a></li><li><a href="../specs/pr29-residuals.html#A20">SPEC-PR29-RESIDUALS#A20</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-P0">TASK-P0</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P4</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>scripts/runtime-notices.ts</code></td></tr><tr><td>modify</td><td><code>tests/unit/runtime-notices.test.ts</code></td></tr><tr><td>modify</td><td><code>README.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=4&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T22:47:47Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6385ad7cb92a742bffccc0a4a4d89be7b2b44179994fa4275c1d04ec0f3980c5</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>.codearbiter/pr29-residuals/local-gate.json</div><div class="field"><span class="label">Summary</span>Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P4 -->
+
+<!-- CA:BEGIN:TASK-P5 -->
+<article class="record" id="TASK-P5" data-ca-symbol="TASK-P5" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-P5">TASK-P5</a><h3>P5 post-PR29 work</h3><span class="badge">IN_PROGRESS</span></div><div class="field"><span class="label">Checkpoint</span>CP-P5</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/pr29-residuals.html#A21">SPEC-PR29-RESIDUALS#A21</a></li><li><a href="../specs/pr29-residuals.html#A22">SPEC-PR29-RESIDUALS#A22</a></li><li><a href="../specs/pr29-residuals.html#A23">SPEC-PR29-RESIDUALS#A23</a></li><li><a href="../specs/pr29-residuals.html#A24">SPEC-PR29-RESIDUALS#A24</a></li><li><a href="../specs/pr29-residuals.html#A25">SPEC-PR29-RESIDUALS#A25</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#TASK-P1">TASK-P1</a></li><li><a href="#TASK-P2">TASK-P2</a></li><li><a href="#TASK-P3">TASK-P3</a></li><li><a href="#TASK-P4">TASK-P4</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-P5</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>create</td><td><code>.codearbiter/pr29-residuals</code></td></tr><tr><td>modify</td><td><code>README.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>IN_PROGRESS</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=4&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-16T22:47:48Z</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>attempted_unassessed</div><div class="field"><span class="label">Scope reason</span>source_scope_unassessed</div><div class="field"><span class="label">Source</span>.codearbiter/pr29-residuals/acceptance.json</div><div class="field"><span class="label">Summary</span>Full local software gate passes, original180 mapping preserved without missing tests. P5 remains IN_PROGRESS: new candidate hosted retrieval pending; real native file/recovery, actual screen reader and uncoached participants not completed. No merge/release.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-P5 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-P0 -->
+<article class="record" id="CP-P0" data-ca-symbol="CP-P0" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P0">CP-P0</a><h3>P0 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P0">TASK-P0</a></li></ul></div></article>
+<!-- CA:END:CP-P0 -->
+
+<!-- CA:BEGIN:CP-P1 -->
+<article class="record" id="CP-P1" data-ca-symbol="CP-P1" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P1">CP-P1</a><h3>P1 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-P0">CP-P0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P1">TASK-P1</a></li></ul></div></article>
+<!-- CA:END:CP-P1 -->
+
+<!-- CA:BEGIN:CP-P2 -->
+<article class="record" id="CP-P2" data-ca-symbol="CP-P2" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P2">CP-P2</a><h3>P2 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-P0">CP-P0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P2">TASK-P2</a></li></ul></div></article>
+<!-- CA:END:CP-P2 -->
+
+<!-- CA:BEGIN:CP-P3 -->
+<article class="record" id="CP-P3" data-ca-symbol="CP-P3" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P3">CP-P3</a><h3>P3 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-P0">CP-P0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P3">TASK-P3</a></li></ul></div></article>
+<!-- CA:END:CP-P3 -->
+
+<!-- CA:BEGIN:CP-P4 -->
+<article class="record" id="CP-P4" data-ca-symbol="CP-P4" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P4">CP-P4</a><h3>P4 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-P0">CP-P0</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P4">TASK-P4</a></li></ul></div></article>
+<!-- CA:END:CP-P4 -->
+
+<!-- CA:BEGIN:CP-P5 -->
+<article class="record" id="CP-P5" data-ca-symbol="CP-P5" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-P5">CP-P5</a><h3>P5 local checkpoint</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-P1">CP-P1</a></li><li><a href="#CP-P2">CP-P2</a></li><li><a href="#CP-P3">CP-P3</a></li><li><a href="#CP-P4">CP-P4</a></li></ul></div><div class="field"><span class="label">Exit</span>Implementation and evidence reported separately from acceptance/release.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-P5">TASK-P5</a></li></ul></div></article>
+<!-- CA:END:CP-P5 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe</div><div class="field"><span class="label">Observed date</span>2026-11-16</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: d21b4accf5b01a94b669c984193b4b743c32691746d838fb9ea4f19880d82966<br>Model SHA-256: f1efb1ff7196030116fdb1bf12ff146eb1698f897bd2bb3dcf40b8d3b563ef1d</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-PR29-RESIDUALS",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "TASK-P0": [
+        {
+          "argv": [
+            "C:\\Users\\brenn\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+            "tools/verify_packet.py"
+          ],
+          "criterion_subject_sha256": "03bdfdab835a7e45b6884638f0ce699d88ac91d49152807f8faabd6545e5b62d",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T21:45:26Z",
+          "recording_operation_id": "pr29-progress-task-check-P0",
+          "scoped_inputs_sha256": "550903edb5a0945dd76c572304d30ff36b8d638c65c3f4c0168fcff317bd6699",
+          "source": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-pr29-residual-20261116-9jznxnn9\\work",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Packet246 integrity checks pass. Main8b1bc5a0/treeE194 and auditedHTML8517 verified; original83 dirty paths preserved. Six meaningful REDs reproduced: interaction6fail Edge/Chrome, map8fail four sizes both, scenarioChrome4to2, notices2unit and browser failures. Baseline defects are not successful product acceptance.",
+          "task_subject_sha256": "8eda1fc1600cbedb5025784076e87e776d05198700d17c9429b4665b1bf31d81"
+        }
+      ],
+      "TASK-P1": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=4"
+          ],
+          "criterion_subject_sha256": "a35849d76bf3b994ba3826e6fedf0e1c9504def5c02b87889ff83fce6c210414",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T22:47:44Z",
+          "recording_operation_id": "pr29-final-task-check-P1",
+          "scoped_inputs_sha256": "5dd8a2464d194bdc3eaa7c0c933147c378fa66fba52f3bda7e40937729c7e876",
+          "source": ".codearbiter/pr29-residuals/local-gate.json",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.",
+          "task_subject_sha256": "b70956f80c00ecb31424c5be5129d4d855d52c5e32e575623e3ba432be2523e5"
+        }
+      ],
+      "TASK-P2": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=4"
+          ],
+          "criterion_subject_sha256": "88912933969092f2ba4c01d5a35e0c62df68242b6afe4e3f87e2ffc107b14b12",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T22:47:45Z",
+          "recording_operation_id": "pr29-final-task-check-P2",
+          "scoped_inputs_sha256": "746843089a4daf25ecb500c3f3c5704cc9ffac8370b4510081769457687e3eec",
+          "source": ".codearbiter/pr29-residuals/local-gate.json",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.",
+          "task_subject_sha256": "a3e3dce4d1d68e9cd58a5d989b9c4c9fa9b72bdb26f2c304fbaaa6948df43d44"
+        }
+      ],
+      "TASK-P3": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=4"
+          ],
+          "criterion_subject_sha256": "fd0680694b716787739a90f19468b165e46d22dfa3e751a0e99e10ebc5e31ea9",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T22:47:46Z",
+          "recording_operation_id": "pr29-final-task-check-P3",
+          "scoped_inputs_sha256": "5c46399618a84c5afb306b0b98d53e5cd2c24b7ef56144853dd0ab815b477fd5",
+          "source": ".codearbiter/pr29-residuals/local-gate.json",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.",
+          "task_subject_sha256": "da68943bc5656c21da78171d3a57daae148e2d609acbe2feb10b0a39535677ad"
+        }
+      ],
+      "TASK-P4": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=4"
+          ],
+          "criterion_subject_sha256": "a34b1a108a67a51f15ca19b87b4c9db9472c0df3f2b05095a5e2c4655359a835",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T22:47:47Z",
+          "recording_operation_id": "pr29-final-task-check-P4",
+          "scoped_inputs_sha256": "6385ad7cb92a742bffccc0a4a4d89be7b2b44179994fa4275c1d04ec0f3980c5",
+          "source": ".codearbiter/pr29-residuals/local-gate.json",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Current frozen source:432 unit/1038 installed Windows Edge+Chrome executions pass, no skips/flakes/errors. Actual source/candidate/report identities retained. Scoped software criteria pass; original capture assertions preserved. This is not native/AT/human or hosted delivery acceptance.",
+          "task_subject_sha256": "c149f34ca5047c3768162ddd25b37bd4c13b9a6241926eee092ed6fb52392e9d"
+        }
+      ],
+      "TASK-P5": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=4"
+          ],
+          "criterion_subject_sha256": "9e7cb918ddc87030aa20d392a0e73a58b53363b175bb1039645ad91229fd30a3",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-16T22:47:48Z",
+          "recording_operation_id": "pr29-final-task-check-P5",
+          "scope_unassessed_reason": "source_scope_unassessed",
+          "source": ".codearbiter/pr29-residuals/acceptance.json",
+          "source_normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+          "summary": "Full local software gate passes, original180 mapping preserved without missing tests. P5 remains IN_PROGRESS: new candidate hosted retrieval pending; real native file/recovery, actual screen reader and uncoached participants not completed. No merge/release.",
+          "task_subject_sha256": "937aa51b272b2f1daba9e9619d6d1c7f339e29895bad394ee3b8684d44027abe"
+        }
+      ]
+    },
+    "tasks": {
+      "TASK-P0": {
+        "evidence_refs": [],
+        "reason": "Receiving identity, preservation and all six defect reproductions captured. Follow-up tasks implement fixes; no acceptance or release inferred. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-P1": {
+        "evidence_refs": [],
+        "reason": "Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-P2": {
+        "evidence_refs": [],
+        "reason": "Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-P3": {
+        "evidence_refs": [],
+        "reason": "Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-P4": {
+        "evidence_refs": [],
+        "reason": "Assigned implementation and scoped software evidence complete. Full local gate passes. Final hosted delivery and native/AT/human receiving remain separately open in P5. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-P5": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "IN_PROGRESS"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "f1efb1ff7196030116fdb1bf12ff146eb1698f897bd2bb3dcf40b8d3b563ef1d",
+    "normative_sha256": "d21b4accf5b01a94b669c984193b4b743c32691746d838fb9ea4f19880d82966",
+    "symbol_count": 12
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+      "observed_date": "2026-11-16",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P0",
+        "tasks": [
+          "TASK-P0"
+        ],
+        "title": "P0 local checkpoint"
+      },
+      {
+        "depends_on": [
+          "CP-P0"
+        ],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P1",
+        "tasks": [
+          "TASK-P1"
+        ],
+        "title": "P1 local checkpoint"
+      },
+      {
+        "depends_on": [
+          "CP-P0"
+        ],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P2",
+        "tasks": [
+          "TASK-P2"
+        ],
+        "title": "P2 local checkpoint"
+      },
+      {
+        "depends_on": [
+          "CP-P0"
+        ],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P3",
+        "tasks": [
+          "TASK-P3"
+        ],
+        "title": "P3 local checkpoint"
+      },
+      {
+        "depends_on": [
+          "CP-P0"
+        ],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P4",
+        "tasks": [
+          "TASK-P4"
+        ],
+        "title": "P4 local checkpoint"
+      },
+      {
+        "depends_on": [
+          "CP-P1",
+          "CP-P2",
+          "CP-P3",
+          "CP-P4"
+        ],
+        "exit": "Implementation and evidence reported separately from acceptance/release.",
+        "id": "CP-P5",
+        "tasks": [
+          "TASK-P5"
+        ],
+        "title": "P5 local checkpoint"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [],
+    "spec_ref": {
+      "artifact_id": "SPEC-PR29-RESIDUALS",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333"
+    },
+    "summary": "Root integrates from main8b1bc5a0 on codex/sim-pr29-residuals, owns all builds, notices/docs, governance, commits and one follow-up PR. P1 owns editor/workspace, P2 scenario/domain removal, P3 map including session export-feedback reset API coordinated with P1. No merge/release. Earlier EXCL-001 not-hosted wording predates owner-approved static Pages distribution; keep current publisher and no dataset backend. Preserve original180 evidence and later delivery addendum.",
+    "tasks": [
+      {
+        "checkpoint": "CP-P0",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#BASELINE"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P0",
+        "id": "TASK-P0",
+        "paths": [
+          {
+            "action": "create",
+            "path": "e2e/fixtures/pr29"
+          },
+          {
+            "action": "create",
+            "path": "e2e/helpers/pr29.ts"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P0 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-P1",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#A01",
+          "SPEC-PR29-RESIDUALS#A02",
+          "SPEC-PR29-RESIDUALS#A03",
+          "SPEC-PR29-RESIDUALS#A04",
+          "SPEC-PR29-RESIDUALS#A05",
+          "SPEC-PR29-RESIDUALS#A06",
+          "SPEC-PR29-RESIDUALS#A15",
+          "SPEC-PR29-RESIDUALS#A16",
+          "SPEC-PR29-RESIDUALS#A17"
+        ],
+        "depends_on": [
+          "TASK-P0"
+        ],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P1",
+        "id": "TASK-P1",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/editor-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/pr29-interaction.spec.ts"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P1 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-P2",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#A07",
+          "SPEC-PR29-RESIDUALS#A08",
+          "SPEC-PR29-RESIDUALS#A09",
+          "SPEC-PR29-RESIDUALS#A10"
+        ],
+        "depends_on": [
+          "TASK-P0"
+        ],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P2",
+        "id": "TASK-P2",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/scenario-changes.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/pr29-scenario.spec.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/domain/scenario-removal.test.ts"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P2 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-P3",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#A11",
+          "SPEC-PR29-RESIDUALS#A12",
+          "SPEC-PR29-RESIDUALS#A13",
+          "SPEC-PR29-RESIDUALS#A14"
+        ],
+        "depends_on": [
+          "TASK-P0"
+        ],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P3",
+        "id": "TASK-P3",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map"
+          },
+          {
+            "action": "create",
+            "path": "e2e/pr29-map.spec.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/layout-quality.spec.ts"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P3 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-P4",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#A18",
+          "SPEC-PR29-RESIDUALS#A19",
+          "SPEC-PR29-RESIDUALS#A20"
+        ],
+        "depends_on": [
+          "TASK-P0"
+        ],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P4",
+        "id": "TASK-P4",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "scripts/runtime-notices.ts"
+          },
+          {
+            "action": "modify",
+            "path": "tests/unit/runtime-notices.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "README.md"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P4 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-P5",
+        "criterion_refs": [
+          "SPEC-PR29-RESIDUALS#A21",
+          "SPEC-PR29-RESIDUALS#A22",
+          "SPEC-PR29-RESIDUALS#A23",
+          "SPEC-PR29-RESIDUALS#A24",
+          "SPEC-PR29-RESIDUALS#A25"
+        ],
+        "depends_on": [
+          "TASK-P1",
+          "TASK-P2",
+          "TASK-P3",
+          "TASK-P4"
+        ],
+        "done_when": [
+          "Assigned implementation/evidence accounting complete. Native, assistive and real participant acceptance remain separate when unavailable."
+        ],
+        "execution_scope": "CP-P5",
+        "id": "TASK-P5",
+        "paths": [
+          {
+            "action": "create",
+            "path": ".codearbiter/pr29-residuals"
+          },
+          {
+            "action": "modify",
+            "path": "README.md"
+          }
+        ],
+        "rollback": "Revert scoped follow-up only; preserve all unrelated dirty work and merged behavior.",
+        "steps": [
+          "Implement exact packet contract with failing regressions first; preserve earlier safeguards and record real evidence."
+        ],
+        "title": "P5 post-PR29 work",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Full current gate and targeted regressions pass; explicit case evidence distinguishes native, adapter, visual and human outcomes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "SIM post-PR29 execution plan"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/pr29-residuals.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 23,
+  "schema_version": "0.3.2",
+  "slug": "pr29-residuals"
+}
+</script>
+</body></html>

@@ -1,0 +1,57 @@
+{
+  "format": "sim.post-pr29.delivery-baseline/v1",
+  "observed_at": "2026-11-16T21:48:30.010147+00:00",
+  "main_commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+  "audited_candidate_sha256": "8517d22a9f4ac6899097b178a25d6ca10c1ef10dd326252d2a5207f991da48aa",
+  "pages": {
+    "url": "https://suadtl.github.io/SIM/",
+    "http_status": 200,
+    "sha256": "848cff82128eba64b4639b1abc2fb24b5bd7edd12834bf8fdcb5fa9ea96bf5ed",
+    "compiled_commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+    "qualification": "Actual HTTP response and About build metadata inspected. Static checked-main preview; different compiled timestamp/checkout from retained PR29 candidate. No new publication performed.",
+    "recent_runs": [
+      {
+        "id": 43933341422,
+        "head_sha": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+        "conclusion": "success",
+        "html_url": "https://github.com/SUaDtL/SIM/actions/runs/43933341422"
+      },
+      {
+        "id": 43907661039,
+        "head_sha": "2b528c15db23eef0c222bc25c3a95e68c0097c7f",
+        "conclusion": "skipped",
+        "html_url": "https://github.com/SUaDtL/SIM/actions/runs/43907661039"
+      },
+      {
+        "id": 43906260951,
+        "head_sha": "2b528c15db23eef0c222bc25c3a95e68c0097c7f",
+        "conclusion": "success",
+        "html_url": "https://github.com/SUaDtL/SIM/actions/runs/43906260951"
+      }
+    ]
+  },
+  "releases": [
+    {
+      "tag_name": "v0.1.0",
+      "published_at": "2026-11-12T14:49:32Z",
+      "url": "https://github.com/SUaDtL/SIM/releases/tag/v0.1.0",
+      "assets": [
+        {
+          "name": "sim-0.1.0.html",
+          "digest": "sha256:b905392b0104c6f44af3958445b2e2a543f6812cc4a9fa9c4b052f0a4fdd6123",
+          "download_url": "https://github.com/SUaDtL/SIM/releases/download/v0.1.0/sim-0.1.0.html"
+        },
+        {
+          "name": "sim-0.1.0.html.sha256",
+          "digest": "sha256:654abf12d121d46973f1ef96738890daf9280a5a0cf67cce78772fcf7e26ca8b",
+          "download_url": "https://github.com/SUaDtL/SIM/releases/download/v0.1.0/sim-0.1.0.html.sha256"
+        }
+      ]
+    }
+  ],
+  "native_capability": {
+    "windows_helper_initialization": "passed",
+    "available_apps_inventory": "observed",
+    "native_file_acceptance": "not performed on new candidate; no inherited user acceptance transferred. Previous URL-target verification restriction remains respected. Permission refusals cannot be fabricated or automated through prohibited security prompts."
+  }
+}

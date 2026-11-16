@@ -1,0 +1,505 @@
+{
+  "original_paths": 83,
+  "checked": [
+    {
+      "path": ".codearbiter/gate-events.log",
+      "unchanged": false,
+      "original_bytes_retained": true,
+      "classification": "expected append-only hook audit growth"
+    },
+    {
+      "path": ".codearbiter/last-checkpoint",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/after-connections-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/after-connections-320.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/after-inventory-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/after-inventory-320.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/before-connections-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/interaction-polish/visuals/before-services-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/baseline-1024.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/baseline-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/editor-1366.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/validation-320.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/zoom400-footer.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/usability-redesign/visuals/zoom400-picker.png",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-0018D2A4733C2A5CE81B52F2D8FAEC39.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-093BF62382E31CE8AED9E5CA7EF65997.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-15EA20B48F2FDC3989FE26231B9842B9.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-16E9E1D1E040D1CEC679A06501641EF4.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-18CC2523708A3865B8889584AB0FBD35.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-223CCE490297E1976B94138253D06779.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-2C354DB0A4287C443B695621D75FC0E0.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-2DD94B38F4A769F363C251F9AE343BB1.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-2E7DCAFA8F5AC61DD083C77B6B7E10FE.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-2FC8BD3FB53E1E60B6AE5875C79D7207.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-335E77C41EA6A4BBBB2B71913E64C88D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-3F755472921A709034A9F306D16A6E3C.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-3FFDC44CC1DF02726BEBE110D93A2218.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-48B5F9F1DC693A00327670956A8EDD38.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-4C2624EDDEFBB94D6A7B9C99F03C3E39.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-4D8AC8E0B428946BC72F9856BF6D15CB.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-4E36619C48B8AA08FE51EC6F1F88729D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-4E9119E5A445E6296DBB7B04F3089EAE.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-5015E3719B8C0AF84562388C236148CB.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-558058DEB941EE8B8ED8A42A7DBF20E6.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-56F74FDA07D20F251C66F86B3DE20848.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-56FC478BF3D41FF6C944F8CDB8E03765.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-5907E8BAF4DEB44C71E5DD3884D7756A.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-59653482C15FEE2852F24EA366D3772F.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-619FD2AD1E113A24871CE6737EAEDC34.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-66941919E46AF54C5E1FD4CCFBEFD336.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-69904A7D8D9D5033571A03A18D246D5E.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-6AA768C87B0F607D05965A70A7AA2DF3.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-6B079B769844526F91694D69ECC8DAE9.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-6B4D660E39FC5DFAD5A0ABA9E901D792.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-6C3955AA776DED7EDE0C2408D3B33046.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-6D5B56DD2171B77965A11970DDC42E1D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-765BF2C2941BAF5876251CAB0CF64FCB.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-79DF29799DD5881F6E7034561C5B3134.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-7AB032734DDD5ED8743A25B0D27A4E98.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-80361BEB23D44E3D9A49394EA3EF9D94.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-806CED2A241C73E7532D03CCB0962F7D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-891A574623097EE5476563EC34BA2015.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-8A7B2FD0AAFCF51AB548688D4FAA00D7.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-8C2A2347C5B50AFF969CEF9535507406.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-925CBE7E142ECE601E8E74FF4B952D8D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-9280685693B02D60B33F17BAB48F10AD.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-957A1BBCA87DBAB268EB227ABEE80EF7.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-982097E0781E04B13C7F18321630004D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-9AA5E9780F46D720583E273C4139C737.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-A152C22691CA9451DCBB392B71947A38.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-A7ED55032F616F510059A781CD7339AA.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-A8EC728331575E1D02F7202CA00EDCC7.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-AD03C3493CBFC6FFDDC712AAA159655D.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-B15BF719CE286C69BAE5D076C03C9095.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-B1816041010CC861DC37840335E7D0A8.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-B362F5CF47344EB72CBD0AD5403D7800.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-BA0B79AAEC59508B9DBDFC2E08B1FD5B.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-BAB202391E25E506A83B6AE989D866CE.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-C1FCC24A6ADDE57CA0D15196880A5C08.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-C79AFDF5564EA593E45B6FD67CB73BD4.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-D68E865A05B6EFAA3405208949386464.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-E0AA6B63996521D60651903901E181A6.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-E1BBA955CFD24C6B71D25F3BEBC5C69E.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-E9EA1E780D104DCE00BF0562713A0B3A.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-EAA431E9D74E3A3EB2DA78FF61CCD849.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-EC6C04E69FB305B64AFD1424E1825683.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F072A2D75A8AE5CC5D8ACAC8983F8393.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F3B6687B271727ADC3300987F88B8228.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F461CE1724B356F8B231A789A0A959BD.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F7C9A574C445C04CCCE1728E78642789.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F7CDF6801227387ACE6D9F1689BF1CB8.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-F81C968EE83B057DD8D26B11DC148419.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    },
+    {
+      "path": ".codearbiter/views/work/WORK-FD5B6091DAA815062084C5F9A1B8E7F6.html",
+      "unchanged": true,
+      "original_bytes_retained": true,
+      "classification": "preserved"
+    }
+  ],
+  "original_dist_backup": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-pr29-residual-20261116-9jznxnn9\\work\\previous-dist.html",
+  "native_recovery_store": "Preserved .codearbiter/.artifacts local recovery metadata; not staged or removed."
+}

@@ -23,6 +23,7 @@ interface Metrics {
   services: number;
   crossings: number;
   labelOverlaps: number;
+  headingOverlaps: number;
   networkOverlaps: number;
   cdsInsideNetworks: number;
   /** Smallest on-screen size of a network label. */
@@ -108,6 +109,18 @@ function measure(page: Page): Promise<Metrics> {
       }
     }
     const cds = cy.nodes().filter((n) => n.data("entity") === "cds");
+    const headings = [...networks, ...cds]
+      .filter((node) => node.visible())
+      .map((node) =>
+        node.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true, includeOverlays: false }),
+      );
+    let headingOverlaps = 0;
+    for (let i = 0; i < headings.length; i++)
+      for (let j = i + 1; j < headings.length; j++) {
+        const a = headings[i];
+        const b = headings[j];
+        if (a && b && overlap(a, b)) headingOverlaps++;
+      }
     const cdsInsideNetworks = cds.filter((c) =>
       boxes.some((b) => overlap(c.boundingBox({ includeLabels: false }), b)),
     ).length;
@@ -119,6 +132,7 @@ function measure(page: Page): Promise<Metrics> {
       services: leaves.filter((n) => n.data("entity") === "service").length,
       crossings,
       labelOverlaps,
+      headingOverlaps,
       networkOverlaps,
       cdsInsideNetworks,
       networkLabelPx: Math.min(...networks.map(px)),
@@ -181,6 +195,7 @@ test("keeps a spike-sized map readable: few crossings and label overlaps, no ove
     // The spike measured 19-23 crossings and 16-19 label overlaps at this size; fail if layout gets worse.
     expect(m.crossings).toBeLessThanOrEqual(25);
     expect(m.labelOverlaps).toBeLessThanOrEqual(3);
+    expect(m.headingOverlaps).toBe(0);
     expect(m.networkOverlaps).toBe(0);
     expect(m.cdsInsideNetworks).toBe(0);
     expect(m.tinyLabels).toBe(0);

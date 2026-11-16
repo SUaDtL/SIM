@@ -1,0 +1,1268 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM post-PR29 residual stabilization · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-PR29-RESIDUALS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/pr29-residuals.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM post-PR29 residual stabilization</h1><p class="deck">Fix six source-bound residual defects and reconcile delivery and acceptance without erasing earlier evidence.</p><div class="meta"><span>SPEC-PR29-RESIDUALS</span><span>Revision 1 · schema 0.3.2</span><span>82 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INTENT-RESIDUALS -->
+<article class="record" id="INTENT-RESIDUALS" data-ca-symbol="INTENT-RESIDUALS" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INTENT-RESIDUALS">INTENT-RESIDUALS</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>sprint</div><div class="field"><span class="label">Outcome</span>Predictable interaction ownership, explicit scenario consequences, legible view-only headings, correct notices and truthful exact-artifact qualification.</div><div class="field"><span class="label">Problem</span>The post-PR29 packet demonstrates six remaining usability defects and ambiguous main-preview/release wording.</div></article>
+<!-- CA:END:INTENT-RESIDUALS -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-RESIDUALS -->
+<article class="record" id="SCOPE-RESIDUALS" data-ca-symbol="SCOPE-RESIDUALS" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>Implement all six supplied findings and DELIVERY01 in one dedicated follow-up branch and PR. Preserve earlier workflows and acceptance evidence; provide exact local checkpoints.</div></article>
+<!-- CA:END:SCOPE-RESIDUALS -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:EXCL-EXPANSION -->
+<article class="record" id="EXCL-EXPANSION" data-ca-symbol="EXCL-EXPANSION" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#EXCL-EXPANSION">EXCL-EXPANSION</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No new discovery capability, framework/dependency/schema expansion, background browser storage, merge/tag/release, invented native/AT/human acceptance.</div></article>
+<!-- CA:END:EXCL-EXPANSION -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APPROACH-RESIDUALS -->
+<article class="record" id="APPROACH-RESIDUALS" data-ca-symbol="APPROACH-RESIDUALS" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APPROACH-RESIDUALS">APPROACH-RESIDUALS</a><h3>Approach</h3></div><div class="field"><span class="label">Choice</span>Use existing editor/repository/map mechanisms and bounded typed contracts. Reproduce before repair, one owner per shared module, root owns builds/integration.</div><div class="field"><span class="label">Tradeoff</span>Display-only map adjustments preserve saved coordinates; narrow consequence checks preserve unrelated drafts; statuses owned by operation/session rather than text matching.</div></article>
+<!-- CA:END:APPROACH-RESIDUALS -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2><span class="missing">None recorded</span></section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:BASELINE -->
+<article class="record" id="BASELINE" data-ca-symbol="BASELINE" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#BASELINE">BASELINE</a><h3>Preserved receiving identity</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-BASELINE -->
+<article class="record" id="SC-BASELINE" data-ca-symbol="SC-BASELINE" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-BASELINE">SC-BASELINE</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.</div><div class="field"><span class="label">When</span>Verify packet, main tree and exact audited HTML; reproduce six findings on installed Windows browsers.</div></article>
+<!-- CA:END:SC-BASELINE -->
+</div><div class="field"><span class="label">Statement</span>Verify packet, main tree and exact audited HTML; reproduce six findings on installed Windows browsers. Expected: Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-BASELINE -->
+<article class="record" id="VER-BASELINE" data-ca-symbol="VER-BASELINE" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-BASELINE">VER-BASELINE</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-BASELINE -->
+</div></article>
+<!-- CA:END:BASELINE -->
+
+<!-- CA:BEGIN:A01 -->
+<article class="record" id="A01" data-ca-symbol="A01" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A01">A01</a><h3>First section visit</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>First meaningful heading/field visible; draft unchanged.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A01 -->
+<article class="record" id="SC-A01" data-ca-symbol="SC-A01" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A01">SC-A01</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>First meaningful heading/field visible; draft unchanged.</div><div class="field"><span class="label">When</span>Type at the bottom of Details, then enter Support and Connections by pointer and keyboard.</div></article>
+<!-- CA:END:SC-A01 -->
+</div><div class="field"><span class="label">Statement</span>Type at the bottom of Details, then enter Support and Connections by pointer and keyboard. Expected: First meaningful heading/field visible; draft unchanged.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A01 -->
+<article class="record" id="VER-A01" data-ca-symbol="VER-A01" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A01">VER-A01</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>First meaningful heading/field visible; draft unchanged.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A01 -->
+</div></article>
+<!-- CA:END:A01 -->
+
+<!-- CA:BEGIN:A02 -->
+<article class="record" id="A02" data-ca-symbol="A02" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A02">A02</a><h3>Revisit and Back</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Section-specific or deliberately reset position; no offset borrowed from a different panel.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A02 -->
+<article class="record" id="SC-A02" data-ca-symbol="SC-A02" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A02">SC-A02</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Section-specific or deliberately reset position; no offset borrowed from a different panel.</div><div class="field"><span class="label">When</span>Scroll each section, inspect a reference, use Back and revisit sections.</div></article>
+<!-- CA:END:SC-A02 -->
+</div><div class="field"><span class="label">Statement</span>Scroll each section, inspect a reference, use Back and revisit sections. Expected: Section-specific or deliberately reset position; no offset borrowed from a different panel.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A02 -->
+<article class="record" id="VER-A02" data-ca-symbol="VER-A02" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A02">VER-A02</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Section-specific or deliberately reset position; no offset borrowed from a different panel.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A02 -->
+</div></article>
+<!-- CA:END:A02 -->
+
+<!-- CA:BEGIN:A03 -->
+<article class="record" id="A03" data-ca-symbol="A03" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A03">A03</a><h3>Validation takes precedence</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Relevant section and completion/error control revealed; no blanket reset hiding it.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A03 -->
+<article class="record" id="SC-A03" data-ca-symbol="SC-A03" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A03">SC-A03</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Relevant section and completion/error control revealed; no blanket reset hiding it.</div><div class="field"><span class="label">When</span>Create an error and an unfinished route/consumer; Apply from another section.</div></article>
+<!-- CA:END:SC-A03 -->
+</div><div class="field"><span class="label">Statement</span>Create an error and an unfinished route/consumer; Apply from another section. Expected: Relevant section and completion/error control revealed; no blanket reset hiding it.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A03 -->
+<article class="record" id="VER-A03" data-ca-symbol="VER-A03" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A03">VER-A03</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Relevant section and completion/error control revealed; no blanket reset hiding it.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A03 -->
+</div></article>
+<!-- CA:END:A03 -->
+
+<!-- CA:BEGIN:A04 -->
+<article class="record" id="A04" data-ca-symbol="A04" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A04">A04</a><h3>Fail then fix</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Persisted intended data; no stale failed-Apply message.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A04 -->
+<article class="record" id="SC-A04" data-ca-symbol="SC-A04" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A04">SC-A04</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Persisted intended data; no stale failed-Apply message.</div><div class="field"><span class="label">When</span>Refuse Save through invalid field or unfinished connection, fix, Apply, Save.</div></article>
+<!-- CA:END:SC-A04 -->
+</div><div class="field"><span class="label">Statement</span>Refuse Save through invalid field or unfinished connection, fix, Apply, Save. Expected: Persisted intended data; no stale failed-Apply message.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A04 -->
+<article class="record" id="VER-A04" data-ca-symbol="VER-A04" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A04">VER-A04</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Persisted intended data; no stale failed-Apply message.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A04 -->
+</div></article>
+<!-- CA:END:A04 -->
+
+<!-- CA:BEGIN:A05 -->
+<article class="record" id="A05" data-ca-symbol="A05" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A05">A05</a><h3>Preserve real unrelated failures</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Accurate partial success; unresolved error not cleared by unrelated input.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A05 -->
+<article class="record" id="SC-A05" data-ca-symbol="SC-A05" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A05">SC-A05</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Accurate partial success; unresolved error not cleared by unrelated input.</div><div class="field"><span class="label">When</span>Cause Apply success followed by file/export failure; repair only one condition.</div></article>
+<!-- CA:END:SC-A05 -->
+</div><div class="field"><span class="label">Statement</span>Cause Apply success followed by file/export failure; repair only one condition. Expected: Accurate partial success; unresolved error not cleared by unrelated input.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A05 -->
+<article class="record" id="VER-A05" data-ca-symbol="VER-A05" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A05">VER-A05</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Accurate partial success; unresolved error not cleared by unrelated input.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A05 -->
+</div></article>
+<!-- CA:END:A05 -->
+
+<!-- CA:BEGIN:A06 -->
+<article class="record" id="A06" data-ca-symbol="A06" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A06">A06</a><h3>Session feedback</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Status reset or source-qualified; no implication that old output represents the new dataset.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A06 -->
+<article class="record" id="SC-A06" data-ca-symbol="SC-A06" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A06">SC-A06</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Status reset or source-qualified; no implication that old output represents the new dataset.</div><div class="field"><span class="label">When</span>Complete export, New/Open/demo, and a delayed old-session export.</div></article>
+<!-- CA:END:SC-A06 -->
+</div><div class="field"><span class="label">Statement</span>Complete export, New/Open/demo, and a delayed old-session export. Expected: Status reset or source-qualified; no implication that old output represents the new dataset.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A06 -->
+<article class="record" id="VER-A06" data-ca-symbol="VER-A06" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A06">VER-A06</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Status reset or source-qualified; no implication that old output represents the new dataset.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A06 -->
+</div></article>
+<!-- CA:END:A06 -->
+
+<!-- CA:BEGIN:A07 -->
+<article class="record" id="A07" data-ca-symbol="A07" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A07">A07</a><h3>Dependent proposal review</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Exact consequences visible before commit; no premature collateral removal.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A07 -->
+<article class="record" id="SC-A07" data-ca-symbol="SC-A07" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A07">SC-A07</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Exact consequences visible before commit; no premature collateral removal.</div><div class="field"><span class="label">When</span>Remove an added target referenced by one or more merge proposals.</div></article>
+<!-- CA:END:SC-A07 -->
+</div><div class="field"><span class="label">Statement</span>Remove an added target referenced by one or more merge proposals. Expected: Exact consequences visible before commit; no premature collateral removal.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A07 -->
+<article class="record" id="VER-A07" data-ca-symbol="VER-A07" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A07">VER-A07</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Exact consequences visible before commit; no premature collateral removal.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A07 -->
+</div></article>
+<!-- CA:END:A07 -->
+
+<!-- CA:BEGIN:A08 -->
+<article class="record" id="A08" data-ca-symbol="A08" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A08">A08</a><h3>Cancel and one Undo</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Cancel preserves all; one Undo restores the accepted removal set.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A08 -->
+<article class="record" id="SC-A08" data-ca-symbol="SC-A08" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A08">SC-A08</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Cancel preserves all; one Undo restores the accepted removal set.</div><div class="field"><span class="label">When</span>Cancel the consequence step, then accept it; Undo and Redo.</div></article>
+<!-- CA:END:SC-A08 -->
+</div><div class="field"><span class="label">Statement</span>Cancel the consequence step, then accept it; Undo and Redo. Expected: Cancel preserves all; one Undo restores the accepted removal set.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A08 -->
+<article class="record" id="VER-A08" data-ca-symbol="VER-A08" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A08">VER-A08</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Cancel preserves all; one Undo restores the accepted removal set.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A08 -->
+</div></article>
+<!-- CA:END:A08 -->
+
+<!-- CA:BEGIN:A09 -->
+<article class="record" id="A09" data-ca-symbol="A09" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A09">A09</a><h3>Stale consequence plan</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Replan/refuse stale intent; no unreviewed dependent changes removed.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A09 -->
+<article class="record" id="SC-A09" data-ca-symbol="SC-A09" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A09">SC-A09</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Replan/refuse stale intent; no unreviewed dependent changes removed.</div><div class="field"><span class="label">When</span>Change relevant proposal set between plan presentation and acceptance using a controlled event.</div></article>
+<!-- CA:END:SC-A09 -->
+</div><div class="field"><span class="label">Statement</span>Change relevant proposal set between plan presentation and acceptance using a controlled event. Expected: Replan/refuse stale intent; no unreviewed dependent changes removed.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A09 -->
+<article class="record" id="VER-A09" data-ca-symbol="VER-A09" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A09">VER-A09</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Replan/refuse stale intent; no unreviewed dependent changes removed.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A09 -->
+</div></article>
+<!-- CA:END:A09 -->
+
+<!-- CA:BEGIN:A10 -->
+<article class="record" id="A10" data-ca-symbol="A10" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A10">A10</a><h3>Unrelated draft retained</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A10 -->
+<article class="record" id="SC-A10" data-ca-symbol="SC-A10" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A10">SC-A10</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.</div><div class="field"><span class="label">When</span>Have pending scenario metadata/builder input while removing another committed change.</div></article>
+<!-- CA:END:SC-A10 -->
+</div><div class="field"><span class="label">Statement</span>Have pending scenario metadata/builder input while removing another committed change. Expected: Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A10 -->
+<article class="record" id="VER-A10" data-ca-symbol="VER-A10" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A10">VER-A10</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A10 -->
+</div></article>
+<!-- CA:END:A10 -->
+
+<!-- CA:BEGIN:A11 -->
+<article class="record" id="A11" data-ca-symbol="A11" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A11">A11</a><h3>Pinned arrangement</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Readable/separable network and CDS headings; compare actual native fonts.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A11 -->
+<article class="record" id="SC-A11" data-ca-symbol="SC-A11" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A11">SC-A11</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Readable/separable network and CDS headings; compare actual native fonts.</div><div class="field"><span class="label">When</span>Open provided demo arrangement and Fit at 1024x768, 1366x768, 1600x1000, 1920x1080.</div></article>
+<!-- CA:END:SC-A11 -->
+</div><div class="field"><span class="label">Statement</span>Open provided demo arrangement and Fit at 1024x768, 1366x768, 1600x1000, 1920x1080. Expected: Readable/separable network and CDS headings; compare actual native fonts.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A11 -->
+<article class="record" id="VER-A11" data-ca-symbol="VER-A11" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A11">VER-A11</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Readable/separable network and CDS headings; compare actual native fonts.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A11 -->
+</div></article>
+<!-- CA:END:A11 -->
+
+<!-- CA:BEGIN:A12 -->
+<article class="record" id="A12" data-ca-symbol="A12" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A12">A12</a><h3>Repeat initial layout</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>No reliance on one favorable random layout; title bounds and visual review pass.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A12 -->
+<article class="record" id="SC-A12" data-ca-symbol="SC-A12" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A12">SC-A12</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>No reliance on one favorable random layout; title bounds and visual review pass.</div><div class="field"><span class="label">When</span>Open fictional demo repeatedly from fresh sessions and inspect laptop Fit.</div></article>
+<!-- CA:END:SC-A12 -->
+</div><div class="field"><span class="label">Statement</span>Open fictional demo repeatedly from fresh sessions and inspect laptop Fit. Expected: No reliance on one favorable random layout; title bounds and visual review pass.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A12 -->
+<article class="record" id="VER-A12" data-ca-symbol="VER-A12" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A12">VER-A12</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>No reliance on one favorable random layout; title bounds and visual review pass.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A12 -->
+</div></article>
+<!-- CA:END:A12 -->
+
+<!-- CA:BEGIN:A13 -->
+<article class="record" id="A13" data-ca-symbol="A13" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A13">A13</a><h3>No data-side layout changes</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>No unwanted position/history/save-state mutations; endpoints and markings intact.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A13 -->
+<article class="record" id="SC-A13" data-ca-symbol="SC-A13" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A13">SC-A13</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>No unwanted position/history/save-state mutations; endpoints and markings intact.</div><div class="field"><span class="label">When</span>Resize, zoom, focus, return and capture the same arrangement.</div></article>
+<!-- CA:END:SC-A13 -->
+</div><div class="field"><span class="label">Statement</span>Resize, zoom, focus, return and capture the same arrangement. Expected: No unwanted position/history/save-state mutations; endpoints and markings intact.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A13 -->
+<article class="record" id="VER-A13" data-ca-symbol="VER-A13" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A13">VER-A13</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>No unwanted position/history/save-state mutations; endpoints and markings intact.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A13 -->
+</div></article>
+<!-- CA:END:A13 -->
+
+<!-- CA:BEGIN:A14 -->
+<article class="record" id="A14" data-ca-symbol="A14" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A14">A14</a><h3>Capture legibility</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A14 -->
+<article class="record" id="SC-A14" data-ca-symbol="SC-A14" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A14">SC-A14</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.</div><div class="field"><span class="label">When</span>PNG/SVG for As-Is, To-Be, Compare and focus at briefing scale.</div></article>
+<!-- CA:END:SC-A14 -->
+</div><div class="field"><span class="label">Statement</span>PNG/SVG for As-Is, To-Be, Compare and focus at briefing scale. Expected: No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A14 -->
+<article class="record" id="VER-A14" data-ca-symbol="VER-A14" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A14">VER-A14</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A14 -->
+</div></article>
+<!-- CA:END:A14 -->
+
+<!-- CA:BEGIN:A15 -->
+<article class="record" id="A15" data-ca-symbol="A15" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A15">A15</a><h3>Generic Add focus</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Meaningful focus remains in summary; F2 continues when appropriate.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A15 -->
+<article class="record" id="SC-A15" data-ca-symbol="SC-A15" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A15">SC-A15</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Meaningful focus remains in summary; F2 continues when appropriate.</div><div class="field"><span class="label">When</span>Add organization and each other non-service entity using keyboard.</div></article>
+<!-- CA:END:SC-A15 -->
+</div><div class="field"><span class="label">Statement</span>Add organization and each other non-service entity using keyboard. Expected: Meaningful focus remains in summary; F2 continues when appropriate.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A15 -->
+<article class="record" id="VER-A15" data-ca-symbol="VER-A15" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A15">VER-A15</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Meaningful focus remains in summary; F2 continues when appropriate.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A15 -->
+</div></article>
+<!-- CA:END:A15 -->
+
+<!-- CA:BEGIN:A16 -->
+<article class="record" id="A16" data-ca-symbol="A16" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A16">A16</a><h3>Apply and Cancel focus</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Completion/return focus intentional; raw draft retained when staying.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A16 -->
+<article class="record" id="SC-A16" data-ca-symbol="SC-A16" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A16">SC-A16</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Completion/return focus intentional; raw draft retained when staying.</div><div class="field"><span class="label">When</span>Apply changes and cancel a clean/dirty editor; exercise Stay.</div></article>
+<!-- CA:END:SC-A16 -->
+</div><div class="field"><span class="label">Statement</span>Apply changes and cancel a clean/dirty editor; exercise Stay. Expected: Completion/return focus intentional; raw draft retained when staying.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A16 -->
+<article class="record" id="VER-A16" data-ca-symbol="VER-A16" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A16">VER-A16</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Completion/return focus intentional; raw draft retained when staying.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A16 -->
+</div></article>
+<!-- CA:END:A16 -->
+
+<!-- CA:BEGIN:A17 -->
+<article class="record" id="A17" data-ca-symbol="A17" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A17">A17</a><h3>No focus stealing</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Focus only changes for an intentional user transition or error reveal.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A17 -->
+<article class="record" id="SC-A17" data-ca-symbol="SC-A17" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A17">SC-A17</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Focus only changes for an intentional user transition or error reveal.</div><div class="field"><span class="label">When</span>Background relation refresh while typing, service-section restoration, reference peek return.</div></article>
+<!-- CA:END:SC-A17 -->
+</div><div class="field"><span class="label">Statement</span>Background relation refresh while typing, service-section restoration, reference peek return. Expected: Focus only changes for an intentional user transition or error reveal.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A17 -->
+<article class="record" id="VER-A17" data-ca-symbol="VER-A17" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A17">VER-A17</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Focus only changes for an intentional user transition or error reveal.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A17 -->
+</div></article>
+<!-- CA:END:A17 -->
+
+<!-- CA:BEGIN:A18 -->
+<article class="record" id="A18" data-ca-symbol="A18" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A18">A18</a><h3>Notice file selection</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Real notices retained, maintenance source excluded, absent required license fails build.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A18 -->
+<article class="record" id="SC-A18" data-ca-symbol="SC-A18" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A18">SC-A18</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Real notices retained, maintenance source excluded, absent required license fails build.</div><div class="field"><span class="label">When</span>Fixture packages with real LICENSE/NOTICE/AUTHORS and license-update.mjs.</div></article>
+<!-- CA:END:SC-A18 -->
+</div><div class="field"><span class="label">Statement</span>Fixture packages with real LICENSE/NOTICE/AUTHORS and license-update.mjs. Expected: Real notices retained, maintenance source excluded, absent required license fails build.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A18 -->
+<article class="record" id="VER-A18" data-ca-symbol="VER-A18" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A18">VER-A18</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Real notices retained, maintenance source excluded, absent required license fails build.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A18 -->
+</div></article>
+<!-- CA:END:A18 -->
+
+<!-- CA:BEGIN:A19 -->
+<article class="record" id="A19" data-ca-symbol="A19" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A19">A19</a><h3>Rendered notices</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>No executable maintenance source; text escaping and all required attribution remain.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A19 -->
+<article class="record" id="SC-A19" data-ca-symbol="SC-A19" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A19">SC-A19</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>No executable maintenance source; text escaping and all required attribution remain.</div><div class="field"><span class="label">When</span>Inspect and keyboard-close offline notices page.</div></article>
+<!-- CA:END:SC-A19 -->
+</div><div class="field"><span class="label">Statement</span>Inspect and keyboard-close offline notices page. Expected: No executable maintenance source; text escaping and all required attribution remain.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A19 -->
+<article class="record" id="VER-A19" data-ca-symbol="VER-A19" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A19">VER-A19</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>No executable maintenance source; text escaping and all required attribution remain.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A19 -->
+</div></article>
+<!-- CA:END:A19 -->
+
+<!-- CA:BEGIN:A20 -->
+<article class="record" id="A20" data-ca-symbol="A20" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A20">A20</a><h3>Build and distribution distinction</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Docs label preview/main vs released download accurately; no unauthorized tag/release.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A20 -->
+<article class="record" id="SC-A20" data-ca-symbol="SC-A20" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A20">SC-A20</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Docs label preview/main vs released download accurately; no unauthorized tag/release.</div><div class="field"><span class="label">When</span>Compare public release metadata, Pages deployment and candidate identity.</div></article>
+<!-- CA:END:SC-A20 -->
+</div><div class="field"><span class="label">Statement</span>Compare public release metadata, Pages deployment and candidate identity. Expected: Docs label preview/main vs released download accurately; no unauthorized tag/release.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A20 -->
+<article class="record" id="VER-A20" data-ca-symbol="VER-A20" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A20">VER-A20</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Docs label preview/main vs released download accurately; no unauthorized tag/release.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A20 -->
+</div></article>
+<!-- CA:END:A20 -->
+
+<!-- CA:BEGIN:A21 -->
+<article class="record" id="A21" data-ca-symbol="A21" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A21">A21</a><h3>Prior workflow preservation</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A21 -->
+<article class="record" id="SC-A21" data-ca-symbol="SC-A21" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A21">SC-A21</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.</div><div class="field"><span class="label">When</span>Replay important routes from the 154 independent checks and existing repository suite.</div></article>
+<!-- CA:END:SC-A21 -->
+</div><div class="field"><span class="label">Statement</span>Replay important routes from the 154 independent checks and existing repository suite. Expected: Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A21 -->
+<article class="record" id="VER-A21" data-ca-symbol="VER-A21" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A21">VER-A21</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A21 -->
+</div></article>
+<!-- CA:END:A21 -->
+
+<!-- CA:BEGIN:A22 -->
+<article class="record" id="A22" data-ca-symbol="A22" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A22">A22</a><h3>Native file acceptance</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A22 -->
+<article class="record" id="SC-A22" data-ca-symbol="SC-A22" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A22">SC-A22</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.</div><div class="field"><span class="label">When</span>Use approved Windows Edge/Chrome and exact standalone HTML with real OS files.</div></article>
+<!-- CA:END:SC-A22 -->
+</div><div class="field"><span class="label">Statement</span>Use approved Windows Edge/Chrome and exact standalone HTML with real OS files. Expected: Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A22 -->
+<article class="record" id="VER-A22" data-ca-symbol="VER-A22" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A22">VER-A22</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A22 -->
+</div></article>
+<!-- CA:END:A22 -->
+
+<!-- CA:BEGIN:A23 -->
+<article class="record" id="A23" data-ca-symbol="A23" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A23">A23</a><h3>Real zoom and assistive technology</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>No clipped required actions; sensible announcements, order and focus; report exact limitations.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A23 -->
+<article class="record" id="SC-A23" data-ca-symbol="SC-A23" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A23">SC-A23</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>No clipped required actions; sensible announcements, order and focus; report exact limitations.</div><div class="field"><span class="label">When</span>Exercise real 200/400-percent zoom, keyboard-only task and a supported screen reader.</div></article>
+<!-- CA:END:SC-A23 -->
+</div><div class="field"><span class="label">Statement</span>Exercise real 200/400-percent zoom, keyboard-only task and a supported screen reader. Expected: No clipped required actions; sensible announcements, order and focus; report exact limitations.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A23 -->
+<article class="record" id="VER-A23" data-ca-symbol="VER-A23" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A23">VER-A23</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>No clipped required actions; sensible announcements, order and focus; report exact limitations.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A23 -->
+</div></article>
+<!-- CA:END:A23 -->
+
+<!-- CA:BEGIN:A24 -->
+<article class="record" id="A24" data-ca-symbol="A24" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A24">A24</a><h3>Uncoached receiving engineer</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A24 -->
+<article class="record" id="SC-A24" data-ca-symbol="SC-A24" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A24">SC-A24</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.</div><div class="field"><span class="label">When</span>Use the participant protocol with an arriving solutions engineer and a briefing recipient.</div></article>
+<!-- CA:END:SC-A24 -->
+</div><div class="field"><span class="label">Statement</span>Use the participant protocol with an arriving solutions engineer and a briefing recipient. Expected: Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A24 -->
+<article class="record" id="VER-A24" data-ca-symbol="VER-A24" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A24">VER-A24</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A24 -->
+</div></article>
+<!-- CA:END:A24 -->
+
+<!-- CA:BEGIN:A25 -->
+<article class="record" id="A25" data-ca-symbol="A25" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#A25">A25</a><h3>Exact delivered artifact</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Explicit supplied post-PR29 handoff.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Report and acceptance tied to exact build; release only with owner authority.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-RESIDUALS">SCOPE-RESIDUALS</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-A25 -->
+<article class="record" id="SC-A25" data-ca-symbol="SC-A25" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-A25">SC-A25</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.</div><div class="field"><span class="label">Then</span>Report and acceptance tied to exact build; release only with owner authority.</div><div class="field"><span class="label">When</span>Build final candidate; hash and read back retained/downloaded bytes; run intended delivery path.</div></article>
+<!-- CA:END:SC-A25 -->
+</div><div class="field"><span class="label">Statement</span>Build final candidate; hash and read back retained/downloaded bytes; run intended delivery path. Expected: Report and acceptance tied to exact build; release only with owner authority.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-A25 -->
+<article class="record" id="VER-A25" data-ca-symbol="VER-A25" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-A25">VER-A25</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.</div><div class="field"><span class="label">Oracle</span>Report and acceptance tied to exact build; release only with owner authority.</div><div class="field"><span class="label">Planned target</span>Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations.</div></article>
+<!-- CA:END:VER-A25 -->
+</div></article>
+<!-- CA:END:A25 -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe</div><div class="field"><span class="label">Observed date</span>2026-11-16</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/**</li><li>e2e/**</li><li>scripts/runtime-notices.ts</li><li>tests/**</li><li>README.md</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333<br>Model SHA-256: 2cdbaf931bded7aefc996cbafd7c35daf3131a681c1e96ab48563319a1b5ee1b</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-PR29-RESIDUALS",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "2cdbaf931bded7aefc996cbafd7c35daf3131a681c1e96ab48563319a1b5ee1b",
+    "normative_sha256": "261e1cede9193490ff5c3e6ffa24b941fc32a200a0fa1268176dc034a87ae333",
+    "symbol_count": 82
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "choice": "Use existing editor/repository/map mechanisms and bounded typed contracts. Reproduce before repair, one owner per shared module, root owns builds/integration.",
+      "id": "APPROACH-RESIDUALS",
+      "tradeoff": "Display-only map adjustments preserve saved coordinates; narrow consequence checks preserve unrelated drafts; statuses owned by operation/session rather than text matching."
+    },
+    "baseline": {
+      "commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+      "observed_date": "2026-11-16",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "constraints": [],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence."
+        ],
+        "id": "BASELINE",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-BASELINE",
+            "then": "Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.",
+            "when": "Verify packet, main tree and exact audited HTML; reproduce six findings on installed Windows browsers."
+          }
+        ],
+        "statement": "Verify packet, main tree and exact audited HTML; reproduce six findings on installed Windows browsers. Expected: Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.",
+        "title": "Preserved receiving identity",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-BASELINE",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Retain source/byte identity, negative evidence, unrelated 83 paths and prior acceptance evidence.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "First meaningful heading/field visible; draft unchanged."
+        ],
+        "id": "A01",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A01",
+            "then": "First meaningful heading/field visible; draft unchanged.",
+            "when": "Type at the bottom of Details, then enter Support and Connections by pointer and keyboard."
+          }
+        ],
+        "statement": "Type at the bottom of Details, then enter Support and Connections by pointer and keyboard. Expected: First meaningful heading/field visible; draft unchanged.",
+        "title": "First section visit",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A01",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "First meaningful heading/field visible; draft unchanged.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Section-specific or deliberately reset position; no offset borrowed from a different panel."
+        ],
+        "id": "A02",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A02",
+            "then": "Section-specific or deliberately reset position; no offset borrowed from a different panel.",
+            "when": "Scroll each section, inspect a reference, use Back and revisit sections."
+          }
+        ],
+        "statement": "Scroll each section, inspect a reference, use Back and revisit sections. Expected: Section-specific or deliberately reset position; no offset borrowed from a different panel.",
+        "title": "Revisit and Back",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A02",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Section-specific or deliberately reset position; no offset borrowed from a different panel.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Relevant section and completion/error control revealed; no blanket reset hiding it."
+        ],
+        "id": "A03",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A03",
+            "then": "Relevant section and completion/error control revealed; no blanket reset hiding it.",
+            "when": "Create an error and an unfinished route/consumer; Apply from another section."
+          }
+        ],
+        "statement": "Create an error and an unfinished route/consumer; Apply from another section. Expected: Relevant section and completion/error control revealed; no blanket reset hiding it.",
+        "title": "Validation takes precedence",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A03",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Relevant section and completion/error control revealed; no blanket reset hiding it.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Persisted intended data; no stale failed-Apply message."
+        ],
+        "id": "A04",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A04",
+            "then": "Persisted intended data; no stale failed-Apply message.",
+            "when": "Refuse Save through invalid field or unfinished connection, fix, Apply, Save."
+          }
+        ],
+        "statement": "Refuse Save through invalid field or unfinished connection, fix, Apply, Save. Expected: Persisted intended data; no stale failed-Apply message.",
+        "title": "Fail then fix",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A04",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Persisted intended data; no stale failed-Apply message.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Accurate partial success; unresolved error not cleared by unrelated input."
+        ],
+        "id": "A05",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A05",
+            "then": "Accurate partial success; unresolved error not cleared by unrelated input.",
+            "when": "Cause Apply success followed by file/export failure; repair only one condition."
+          }
+        ],
+        "statement": "Cause Apply success followed by file/export failure; repair only one condition. Expected: Accurate partial success; unresolved error not cleared by unrelated input.",
+        "title": "Preserve real unrelated failures",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A05",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Accurate partial success; unresolved error not cleared by unrelated input.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Status reset or source-qualified; no implication that old output represents the new dataset."
+        ],
+        "id": "A06",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A06",
+            "then": "Status reset or source-qualified; no implication that old output represents the new dataset.",
+            "when": "Complete export, New/Open/demo, and a delayed old-session export."
+          }
+        ],
+        "statement": "Complete export, New/Open/demo, and a delayed old-session export. Expected: Status reset or source-qualified; no implication that old output represents the new dataset.",
+        "title": "Session feedback",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A06",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Status reset or source-qualified; no implication that old output represents the new dataset.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Exact consequences visible before commit; no premature collateral removal."
+        ],
+        "id": "A07",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A07",
+            "then": "Exact consequences visible before commit; no premature collateral removal.",
+            "when": "Remove an added target referenced by one or more merge proposals."
+          }
+        ],
+        "statement": "Remove an added target referenced by one or more merge proposals. Expected: Exact consequences visible before commit; no premature collateral removal.",
+        "title": "Dependent proposal review",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A07",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Exact consequences visible before commit; no premature collateral removal.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Cancel preserves all; one Undo restores the accepted removal set."
+        ],
+        "id": "A08",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A08",
+            "then": "Cancel preserves all; one Undo restores the accepted removal set.",
+            "when": "Cancel the consequence step, then accept it; Undo and Redo."
+          }
+        ],
+        "statement": "Cancel the consequence step, then accept it; Undo and Redo. Expected: Cancel preserves all; one Undo restores the accepted removal set.",
+        "title": "Cancel and one Undo",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A08",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Cancel preserves all; one Undo restores the accepted removal set.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Replan/refuse stale intent; no unreviewed dependent changes removed."
+        ],
+        "id": "A09",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A09",
+            "then": "Replan/refuse stale intent; no unreviewed dependent changes removed.",
+            "when": "Change relevant proposal set between plan presentation and acceptance using a controlled event."
+          }
+        ],
+        "statement": "Change relevant proposal set between plan presentation and acceptance using a controlled event. Expected: Replan/refuse stale intent; no unreviewed dependent changes removed.",
+        "title": "Stale consequence plan",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A09",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Replan/refuse stale intent; no unreviewed dependent changes removed.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded."
+        ],
+        "id": "A10",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A10",
+            "then": "Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.",
+            "when": "Have pending scenario metadata/builder input while removing another committed change."
+          }
+        ],
+        "statement": "Have pending scenario metadata/builder input while removing another committed change. Expected: Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.",
+        "title": "Unrelated draft retained",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A10",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Readable/separable network and CDS headings; compare actual native fonts."
+        ],
+        "id": "A11",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A11",
+            "then": "Readable/separable network and CDS headings; compare actual native fonts.",
+            "when": "Open provided demo arrangement and Fit at 1024x768, 1366x768, 1600x1000, 1920x1080."
+          }
+        ],
+        "statement": "Open provided demo arrangement and Fit at 1024x768, 1366x768, 1600x1000, 1920x1080. Expected: Readable/separable network and CDS headings; compare actual native fonts.",
+        "title": "Pinned arrangement",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A11",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Readable/separable network and CDS headings; compare actual native fonts.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "No reliance on one favorable random layout; title bounds and visual review pass."
+        ],
+        "id": "A12",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A12",
+            "then": "No reliance on one favorable random layout; title bounds and visual review pass.",
+            "when": "Open fictional demo repeatedly from fresh sessions and inspect laptop Fit."
+          }
+        ],
+        "statement": "Open fictional demo repeatedly from fresh sessions and inspect laptop Fit. Expected: No reliance on one favorable random layout; title bounds and visual review pass.",
+        "title": "Repeat initial layout",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A12",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "No reliance on one favorable random layout; title bounds and visual review pass.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "No unwanted position/history/save-state mutations; endpoints and markings intact."
+        ],
+        "id": "A13",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A13",
+            "then": "No unwanted position/history/save-state mutations; endpoints and markings intact.",
+            "when": "Resize, zoom, focus, return and capture the same arrangement."
+          }
+        ],
+        "statement": "Resize, zoom, focus, return and capture the same arrangement. Expected: No unwanted position/history/save-state mutations; endpoints and markings intact.",
+        "title": "No data-side layout changes",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A13",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "No unwanted position/history/save-state mutations; endpoints and markings intact.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "No heading/caption collisions; deliberate viewport cropping remains distinct from clipping."
+        ],
+        "id": "A14",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A14",
+            "then": "No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.",
+            "when": "PNG/SVG for As-Is, To-Be, Compare and focus at briefing scale."
+          }
+        ],
+        "statement": "PNG/SVG for As-Is, To-Be, Compare and focus at briefing scale. Expected: No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.",
+        "title": "Capture legibility",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A14",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Meaningful focus remains in summary; F2 continues when appropriate."
+        ],
+        "id": "A15",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A15",
+            "then": "Meaningful focus remains in summary; F2 continues when appropriate.",
+            "when": "Add organization and each other non-service entity using keyboard."
+          }
+        ],
+        "statement": "Add organization and each other non-service entity using keyboard. Expected: Meaningful focus remains in summary; F2 continues when appropriate.",
+        "title": "Generic Add focus",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A15",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Meaningful focus remains in summary; F2 continues when appropriate.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Completion/return focus intentional; raw draft retained when staying."
+        ],
+        "id": "A16",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A16",
+            "then": "Completion/return focus intentional; raw draft retained when staying.",
+            "when": "Apply changes and cancel a clean/dirty editor; exercise Stay."
+          }
+        ],
+        "statement": "Apply changes and cancel a clean/dirty editor; exercise Stay. Expected: Completion/return focus intentional; raw draft retained when staying.",
+        "title": "Apply and Cancel focus",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A16",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Completion/return focus intentional; raw draft retained when staying.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Focus only changes for an intentional user transition or error reveal."
+        ],
+        "id": "A17",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A17",
+            "then": "Focus only changes for an intentional user transition or error reveal.",
+            "when": "Background relation refresh while typing, service-section restoration, reference peek return."
+          }
+        ],
+        "statement": "Background relation refresh while typing, service-section restoration, reference peek return. Expected: Focus only changes for an intentional user transition or error reveal.",
+        "title": "No focus stealing",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A17",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Focus only changes for an intentional user transition or error reveal.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Real notices retained, maintenance source excluded, absent required license fails build."
+        ],
+        "id": "A18",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A18",
+            "then": "Real notices retained, maintenance source excluded, absent required license fails build.",
+            "when": "Fixture packages with real LICENSE/NOTICE/AUTHORS and license-update.mjs."
+          }
+        ],
+        "statement": "Fixture packages with real LICENSE/NOTICE/AUTHORS and license-update.mjs. Expected: Real notices retained, maintenance source excluded, absent required license fails build.",
+        "title": "Notice file selection",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A18",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Real notices retained, maintenance source excluded, absent required license fails build.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "No executable maintenance source; text escaping and all required attribution remain."
+        ],
+        "id": "A19",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A19",
+            "then": "No executable maintenance source; text escaping and all required attribution remain.",
+            "when": "Inspect and keyboard-close offline notices page."
+          }
+        ],
+        "statement": "Inspect and keyboard-close offline notices page. Expected: No executable maintenance source; text escaping and all required attribution remain.",
+        "title": "Rendered notices",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A19",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "No executable maintenance source; text escaping and all required attribution remain.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Docs label preview/main vs released download accurately; no unauthorized tag/release."
+        ],
+        "id": "A20",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A20",
+            "then": "Docs label preview/main vs released download accurately; no unauthorized tag/release.",
+            "when": "Compare public release metadata, Pages deployment and candidate identity."
+          }
+        ],
+        "statement": "Compare public release metadata, Pages deployment and candidate identity. Expected: Docs label preview/main vs released download accurately; no unauthorized tag/release.",
+        "title": "Build and distribution distinction",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A20",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Docs label preview/main vs released download accurately; no unauthorized tag/release.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved."
+        ],
+        "id": "A21",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A21",
+            "then": "Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.",
+            "when": "Replay important routes from the 154 independent checks and existing repository suite."
+          }
+        ],
+        "statement": "Replay important routes from the 154 independent checks and existing repository suite. Expected: Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.",
+        "title": "Prior workflow preservation",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A21",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure."
+        ],
+        "id": "A22",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A22",
+            "then": "Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.",
+            "when": "Use approved Windows Edge/Chrome and exact standalone HTML with real OS files."
+          }
+        ],
+        "statement": "Use approved Windows Edge/Chrome and exact standalone HTML with real OS files. Expected: Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.",
+        "title": "Native file acceptance",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A22",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "No clipped required actions; sensible announcements, order and focus; report exact limitations."
+        ],
+        "id": "A23",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A23",
+            "then": "No clipped required actions; sensible announcements, order and focus; report exact limitations.",
+            "when": "Exercise real 200/400-percent zoom, keyboard-only task and a supported screen reader."
+          }
+        ],
+        "statement": "Exercise real 200/400-percent zoom, keyboard-only task and a supported screen reader. Expected: No clipped required actions; sensible announcements, order and focus; report exact limitations.",
+        "title": "Real zoom and assistive technology",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A23",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "No clipped required actions; sensible announcements, order and focus; report exact limitations.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants."
+        ],
+        "id": "A24",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A24",
+            "then": "Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.",
+            "when": "Use the participant protocol with an arriving solutions engineer and a briefing recipient."
+          }
+        ],
+        "statement": "Use the participant protocol with an arriving solutions engineer and a briefing recipient. Expected: Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.",
+        "title": "Uncoached receiving engineer",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A24",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Explicit supplied post-PR29 handoff."
+        },
+        "guarantees": [
+          "Report and acceptance tied to exact build; release only with owner authority."
+        ],
+        "id": "A25",
+        "intent_refs": [
+          "SCOPE-RESIDUALS"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Identified offline candidate and fictional fixtures; relevant host/participant prerequisites explicitly recorded.",
+            "id": "SC-A25",
+            "then": "Report and acceptance tied to exact build; release only with owner authority.",
+            "when": "Build final candidate; hash and read back retained/downloaded bytes; run intended delivery path."
+          }
+        ],
+        "statement": "Build final candidate; hash and read back retained/downloaded bytes; run intended delivery path. Expected: Report and acceptance tied to exact build; release only with owner authority.",
+        "title": "Exact delivered artifact",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-A25",
+          "method": "automated_and_review",
+          "negative_control": "Original audited failures must fail relevant assertions. Missing environment or human evidence remains blocked, not passed.",
+          "oracle": "Report and acceptance tied to exact build; release only with owner authority.",
+          "planned_target": "Scoped regression tests and post-PR29 acceptance evidence; native/AT/human checks require actual observations."
+        }
+      }
+    ],
+    "decisions": [],
+    "governs": [
+      "src/**",
+      "e2e/**",
+      "scripts/runtime-notices.ts",
+      "tests/**",
+      "README.md"
+    ],
+    "intent": {
+      "caller": "sprint",
+      "id": "INTENT-RESIDUALS",
+      "outcome": "Predictable interaction ownership, explicit scenario consequences, legible view-only headings, correct notices and truthful exact-artifact qualification.",
+      "problem": "The post-PR29 packet demonstrates six remaining usability defects and ambiguous main-preview/release wording."
+    },
+    "non_goals": [
+      {
+        "id": "EXCL-EXPANSION",
+        "statement": "No new discovery capability, framework/dependency/schema expansion, background browser storage, merge/tag/release, invented native/AT/human acceptance."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-RESIDUALS",
+        "statement": "Implement all six supplied findings and DELIVERY01 in one dedicated follow-up branch and PR. Preserve earlier workflows and acceptance evidence; provide exact local checkpoints."
+      }
+    ],
+    "sections": [],
+    "sources": [],
+    "summary": "Fix six source-bound residual defects and reconcile delivery and acceptance without erasing earlier evidence.",
+    "title": "SIM post-PR29 residual stabilization"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/pr29-residuals.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 1,
+  "schema_version": "0.3.2",
+  "slug": "pr29-residuals"
+}
+</script>
+</body></html>

@@ -1,0 +1,71 @@
+{
+  "enterprise": {
+    "original_sha256": "8947383289289b37434ab344176460605b905a69a46dbc55a3ab944f13b44044",
+    "sql_sha256": "e8a53efeb7c220e816c9bdde1214afad3293d2b0b4944499deee6ac8543f1485",
+    "all_table_rows_equal": true,
+    "all_schema_objects_equal": true,
+    "foreign_key_check": "passed",
+    "tables": {
+      "application": 1,
+      "category": 1,
+      "cds": 1,
+      "cds_network": 2,
+      "meta": 2,
+      "network": 3,
+      "org_consumes": 1,
+      "organization": 3,
+      "scenario": 1,
+      "scenario_change": 0,
+      "service": 6,
+      "service_dependency": 4,
+      "support_assignment": 1
+    },
+    "sql_js_full_equivalence": true
+  },
+  "four-change-scenario": {
+    "original_sha256": "ba7dda68ac536fbb087b99dc95ff91c5b4038dd9b8138098b71edfaa2b589f88",
+    "sql_sha256": "cea608689521289441ab8d675d0da3d0eb53abbced2c3875011cd01d56ad12cc",
+    "all_table_rows_equal": true,
+    "all_schema_objects_equal": true,
+    "foreign_key_check": "passed",
+    "tables": {
+      "application": 1,
+      "category": 1,
+      "cds": 1,
+      "cds_network": 2,
+      "meta": 2,
+      "network": 3,
+      "org_consumes": 1,
+      "organization": 3,
+      "scenario": 1,
+      "scenario_change": 4,
+      "service": 6,
+      "service_dependency": 4,
+      "support_assignment": 1
+    },
+    "sql_js_full_equivalence": true
+  },
+  "demo-arrangement": {
+    "original_sha256": "e199937278d9feb462ed752e76f82734a818e5c7f7604145434d90d2546dcb46",
+    "sql_sha256": "80efa8bc0c6cf4b83cfe66a4dc7c32a659af021643fa70650d02fb4b40746cd4",
+    "all_table_rows_equal": true,
+    "all_schema_objects_equal": true,
+    "foreign_key_check": "passed",
+    "tables": {
+      "application": 2,
+      "category": 4,
+      "cds": 3,
+      "cds_network": 7,
+      "meta": 3,
+      "network": 7,
+      "org_consumes": 7,
+      "organization": 8,
+      "scenario": 0,
+      "scenario_change": 0,
+      "service": 92,
+      "service_dependency": 112,
+      "support_assignment": 24
+    },
+    "sql_js_full_equivalence": true
+  }
+}

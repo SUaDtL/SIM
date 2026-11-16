@@ -91,6 +91,10 @@ export interface DeletePlan {
   readonly signature: string;
   readonly blockers: readonly { readonly type: DeleteEntityType; readonly id: number; readonly label: string }[];
 }
+export interface ScenarioChangeRemovalPlan {
+  readonly changes: readonly ScenarioChange[];
+  readonly signature: string;
+}
 export interface ScenarioNameCollision {
   readonly key: string;
   readonly message: string;
@@ -1107,8 +1111,35 @@ export class Repository {
     });
   }
 
-  /** Remove a change; merges into a service the change added go with it. */
-  removeScenarioChange(id: number): void {
+  /** Mirror the scenario-local foreign-key cascade without writing or depending on unrelated drafts. */
+  planRemoveScenarioChange(id: number): ScenarioChangeRemovalPlan {
+    const selected = this.listScenarioChanges().find((change) => change.id === id);
+    if (!selected) throw new ValidationError("NOT_FOUND", "scenario change", "The proposed change no longer exists.");
+    const all = this.listScenarioChanges(selected.scenarioId);
+    const removed = new Set([id]);
+    // Follow the actual FK, including safely admitted legacy chains, rather than assuming every target is an add.
+    let previousSize = 0;
+    while (removed.size !== previousSize) {
+      previousSize = removed.size;
+      for (const change of all) {
+        if (change.kind === "merge" && change.intoChangeId !== null && removed.has(change.intoChangeId)) {
+          removed.add(change.id);
+        }
+      }
+    }
+    const changes = all.filter((change) => removed.has(change.id));
+    return { changes, signature: JSON.stringify(changes) };
+  }
+
+  /** Remove one change and its dependent merges as one Undo step; recheck a reviewed consequence set. */
+  removeScenarioChange(id: number, signature?: string): void {
+    if (signature !== undefined && this.planRemoveScenarioChange(id).signature !== signature) {
+      throw new ValidationError(
+        "STALE",
+        "scenario change",
+        "The removal consequences changed. Review the proposed changes again before confirming.",
+      );
+    }
     this.write(() => {
       this.update("DELETE FROM scenario_change WHERE id = ?", [id], "scenario change");
     }, "scenario change");

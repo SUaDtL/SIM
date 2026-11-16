@@ -1,0 +1,13 @@
+{
+  "repository": "SUaDtL/SIM",
+  "main_commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+  "tree": "e194cc2c02f456ee3925afd53f028bd8ce7e8d5a",
+  "rechecked_utc": "2026-11-16T19:53:33.726758+00:00",
+  "main_unchanged": true,
+  "source": "GitHub branches/main response; read-only",
+  "artifact_id": 14254470965,
+  "artifact_run": 43918980935,
+  "artifact_source_commit": "6fbc96d0a325b33e614ddec0e4a596973c66d9f6",
+  "html_sha256": "8517d22a9f4ac6899097b178a25d6ca10c1ef10dd326252d2a5207f991da48aa",
+  "artifact_source_tree_matches_main": true
+}
