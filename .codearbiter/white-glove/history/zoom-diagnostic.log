@@ -1,0 +1,82 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/usability-layout.spec.ts --grep actual browser zoom 400 --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic --reporter=list
+
+
+Running 2 tests using 2 workers
+
+(node:53848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access (2.2s)
+  x  2 [msedge] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access (2.6s)
+
+
+  1) [msedge] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 203
+    Received:    270.5
+
+      129 |   expect(box.y).toBeGreaterThanOrEqual(-1);
+      130 |   expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+    > 131 |   expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+          |                              ^
+      132 | }
+      133 |
+      134 | async function noHorizontalOverflow(page: Page): Promise<void> {
+        at contained (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:131:30)
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:188:3)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:257:7
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 202
+    Received:    269.75
+
+      129 |   expect(box.y).toBeGreaterThanOrEqual(-1);
+      130 |   expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+    > 131 |   expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+          |                              ^
+      132 | }
+      133 |
+      134 | async function noHorizontalOverflow(page: Page): Promise<void> {
+        at contained (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:131:30)
+        at exerciseLayout (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:188:3)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\usability-layout.spec.ts:257:7
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\zoom-diagnostic\usability-layout-T11-T12-a-a7df5-s-editing-and-picker-access-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access 
+    [chrome] › e2e\usability-layout.spec.ts:222:3 › T11/T12: actual browser zoom 400 percent preserves editing and picker access 

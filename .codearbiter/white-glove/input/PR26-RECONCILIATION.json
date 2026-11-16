@@ -1,0 +1,83 @@
+{
+  "note": "Selective reconciliation based on inspected current source. Exact legacy ID ordering must be checked against the prior register; no uninspected finding is claimed closed.",
+  "items": [
+    {
+      "prior_id": "R01/R02",
+      "title": "Unfinished relation/route work",
+      "current_observation": "Current save path refuses relationIntent/routeIntents and reveals the completion action. Predicate positives exercised; integrated Apply/Save journey not rerun.",
+      "disposition": "Source improvement verified; integrated open"
+    },
+    {
+      "prior_id": "R03",
+      "title": "Pending connection inspection",
+      "current_observation": "Workspace accepts a pending snapshot/label/scope from the invoking editor. Full inspector journey not rerun.",
+      "disposition": "Source improvement verified; integrated open"
+    },
+    {
+      "prior_id": "R04",
+      "title": "Focus target removed",
+      "current_observation": "applyView now clears invalid focus and restores unfocused framing. Pure helper returning an empty set is not a reopened defect.",
+      "disposition": "Source improvement verified; integrated open"
+    },
+    {
+      "prior_id": "R05",
+      "title": "Old published artifact",
+      "current_observation": "Do not assume merge updates release. PR26 explicitly separated release qualification; exact new artifact is required here.",
+      "disposition": "Carry forward distribution check; do not duplicate as a new code bug"
+    },
+    {
+      "prior_id": "R06",
+      "title": "Dataset rename",
+      "current_observation": "Rename action, repository call, visible status and Save/Undo path are present.",
+      "disposition": "Source improvement verified; integrated open"
+    },
+    {
+      "prior_id": "R07/R08",
+      "title": "Provider/parent wording",
+      "current_observation": "PR26 reports corrected provider and parent task wording; child callback source uses actual parent noun.",
+      "disposition": "Partially source-verified; integrated open"
+    },
+    {
+      "prior_id": "R09",
+      "title": "Impossible create instruction",
+      "current_observation": "Current picker omits create advice when creation is unavailable. WG06 concerns the remaining empty-universe advice, not the same fixed claim.",
+      "disposition": "Component fix verified; residual separately identified"
+    },
+    {
+      "prior_id": "R10/R11/R12",
+      "title": "Proposed summaries and exact change selection",
+      "current_observation": "Current projected summary uses structured read-only summary and changeId-qualified navigation. Searchable scenario paths still require integrated UAT.",
+      "disposition": "Source improvement verified; integrated open"
+    },
+    {
+      "prior_id": "R13/R14/R15/R16/R17",
+      "title": "Other prior runtime/feedback cases",
+      "current_observation": "Do not infer exact individual closure solely from the PR narrative. Reconcile the original register and run its retained regressions.",
+      "disposition": "Receiving agent reconciliation required"
+    },
+    {
+      "prior_id": "R18",
+      "title": "As-Is terminology",
+      "current_observation": "Current README describes current recorded enterprise, including applied changes not yet saved.",
+      "disposition": "Documentation improvement verified"
+    },
+    {
+      "prior_id": "R19",
+      "title": "Boot failure",
+      "current_observation": "Current boot().catch renders visible preservation guidance and build information.",
+      "disposition": "Source improvement verified; fault-injection open"
+    },
+    {
+      "prior_id": "R20",
+      "title": "Build identity",
+      "current_observation": "Current About renders source/build/data-format information and Copy support information. WG01 concerns placement, not absence.",
+      "disposition": "Source improvement verified; full artifact qualification open"
+    },
+    {
+      "prior_id": "G01-G07",
+      "title": "Enterprise-discovery capability backlog",
+      "current_observation": "Evidence/uncertainty, open questions and broader planning/reconciliation features remain separate product decisions. Do not add them as hidden scope to this UAT correction pass.",
+      "disposition": "Deferred feature work; not new release regressions"
+    }
+  ]
+}

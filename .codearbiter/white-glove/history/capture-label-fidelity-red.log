@@ -1,0 +1,88 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-capture.spec.ts --grep structural labels --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts
+
+
+Running 2 tests using 2 workers
+
+(node:68692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture (1.4s)
+  x  2 [msedge] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture (1.5s)
+
+
+  1) [msedge] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture 
+
+    Error: Amber
+    UNCLASSIFIED
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 25.9
+    Received:    12.998675534969237
+
+      272 |     const captured = svg.mapText.find((row) => row.text.replace(/\s/g, "") === label.label.replace(/\s/g, ""));
+      273 |     expect(captured, label.label).toBeDefined();
+    > 274 |     expect(captured?.naturalPixelFontSize ?? 0, label.label).toBeGreaterThanOrEqual(label.screenPixels * 2 - 0.1);
+          |                                                              ^
+      275 |   }
+      276 |   await assertReadOnly(page, info, fixture.snapshot);
+      277 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-capture.spec.ts:274:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture 
+
+    Error: Amber
+    UNCLASSIFIED
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 25.9
+    Received:    12.998675534969237
+
+      272 |     const captured = svg.mapText.find((row) => row.text.replace(/\s/g, "") === label.label.replace(/\s/g, ""));
+      273 |     expect(captured, label.label).toBeDefined();
+    > 274 |     expect(captured?.naturalPixelFontSize ?? 0, label.label).toBeGreaterThanOrEqual(label.screenPixels * 2 - 0.1);
+          |                                                              ^
+      275 |   }
+      276 |   await assertReadOnly(page, info, fixture.snapshot);
+      277 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-capture.spec.ts:274:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-label-fidelity-red-artifacts\white-glove-capture-CAP02--89df7-size-in-a-two-times-capture-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture 
+    [chrome] › e2e\white-glove-capture.spec.ts:251:1 › CAP02 structural labels preserve their on-screen font size in a two-times capture 

@@ -1,0 +1,17 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/action-navigation.spec.ts --grep Workspace draft Escape|Actual right-edge
+
+
+Running 4 tests using 2 workers
+
+(node:72552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › e2e\action-navigation.spec.ts:138:1 › Actual right-edge node click remains visible after opening its inspector without moving the node (671ms)
+  ok 2 [msedge] › e2e\action-navigation.spec.ts:138:1 › Actual right-edge node click remains visible after opening its inspector without moving the node (736ms)
+  ok 3 [chrome] › e2e\action-navigation.spec.ts:205:1 › Workspace draft Escape retains the current record, draft and retry focus (795ms)
+  ok 4 [msedge] › e2e\action-navigation.spec.ts:205:1 › Workspace draft Escape retains the current record, draft and retry focus (943ms)
+
+  4 passed (2.4s)

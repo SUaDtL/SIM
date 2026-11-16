@@ -1,0 +1,596 @@
+{
+  "as_of": "2026-11-16T17:17:45.006606+00:00",
+  "candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
+  "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
+  "findings": [
+    {
+      "original": {
+        "id": "WG01",
+        "title": "About menu extends outside the desktop viewport",
+        "priority": "P1",
+        "category": "visual / navigation",
+        "evidence_level": "browser layout reproduction",
+        "integration_status": "Reproduce in built application before closure",
+        "severity": "Major usability defect",
+        "observed": "At 1366 x 768, the 320-pixel About menu begins at x=1189.80 and ends at x=1509.80, 143.80 pixels past the right edge. The document expands to 1510 pixels. The same right-edge overflow occurred at 1024 and 1600 pixels.",
+        "method": "Exact current CSS and menu controller with a source-matched main header DOM. Synthetic support information; not the running main.ts application.",
+        "impact": "Support information and right-hand portions of actions are clipped unless the user discovers horizontal page scrolling. It looks unfinished in a routine desktop task.",
+        "steps": [
+          "Open the exact candidate at 1366 x 768 or 1600 x 1000.",
+          "Open About and demo at the right of the document toolbar.",
+          "Check every edge of the popover, its actions, and document scroll width. Repeat with browser zoom and long build/browser strings."
+        ],
+        "fix": "Use viewport-aware placement for floating menus. Right-align the trailing About menu or use an appropriate anchored/popover placement with fallbacks and a bounded scroll body. Preserve menu dismissal and native file activation. Do not globally move every menu to an arbitrary fixed coordinate.",
+        "acceptance": [
+          "Every open menu and action fits the viewport or an intentional bounded scroll container.",
+          "Opening a menu does not introduce horizontal document scrolling.",
+          "Keyboard focus remains visible; Escape returns to the invoker; choosing an action executes once."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/app.css",
+            "locator": "File/menu positioning rules near lines 650-695 and responsive rules near 1750",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/app.css"
+          },
+          {
+            "path": "src/main.ts",
+            "locator": "boot(): trailing About and demo details element",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/main.ts"
+          },
+          {
+            "path": "src/ui/menu-dismissal.ts",
+            "locator": "installMenuDismissal",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/menu-dismissal.ts"
+          }
+        ],
+        "evidence": [
+          "evidence/component-results.json#measurements.about_widths",
+          "evidence/screenshots/about-menu-1366.png"
+        ],
+        "checks": [
+          "O02",
+          "C17",
+          "C18"
+        ],
+        "work_package": "WP2"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-layout.spec.ts",
+        "layout-red.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG02",
+        "title": "Populated pickers bury creation, count, and paging while search scrolls away",
+        "priority": "P1",
+        "category": "inline creation / long collections",
+        "evidence_level": "browser component reproduction",
+        "integration_status": "Current picker behavior executed; app journey still open",
+        "severity": "Major usability friction",
+        "observed": "With 25 organizations, the initial 20-result page has a 1660-pixel scroll height inside a 704-pixel dialog. Create new organization starts at y=1629.30 in a 768-pixel viewport. At the bottom, search is at y=-845 and Close picker at y=-901. The count and pagination are also below the initial visible results.",
+        "method": "Unchanged reference-picker.ts and dom.ts, exact current app.css, real Chromium interactions, synthetic option provider.",
+        "impact": "The user must scroll away from search to discover inline creation and then scroll back to change a search. The mandatory Create and use workflow exists but is unnecessarily hard to discover when the enterprise grows.",
+        "steps": [
+          "Use a provider or support picker with at least 25 records.",
+          "Inspect its first viewport without using browser automation to scroll an off-screen button into view.",
+          "Scroll to Create new, then try to refine the search or close with the pointer."
+        ],
+        "fix": "Give the picker a stable heading/search area, a bounded independently scrolling result list, and stable count/paging/create actions. Keep creation secondary but visible when supported. Do not show Create for unsupported entity types. Preserve exact identity, cancellation, one-level child forms, and parent draft state.",
+        "acceptance": [
+          "Search, Close, result count, and supported Create remain reachable without scrolling through every result.",
+          "The result list, not the whole dialog, owns routine browsing scroll.",
+          "Keyboard paging and focus do not jump to unrelated controls; all matches remain reachable.",
+          "At small heights, retain usable focus/reflow rather than consuming all space with fixed chrome."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/reference-picker.ts",
+            "locator": "searchBody, pagination, create, dialog.append",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/reference-picker.ts"
+          },
+          {
+            "path": "src/ui/app.css",
+            "locator": "dialog and picker-results rules",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/app.css"
+          }
+        ],
+        "evidence": [
+          "evidence/component-results.json#measurements.picker_initial",
+          "evidence/component-results.json#measurements.picker_scrolled",
+          "evidence/screenshots/picker-current-state-1366.png",
+          "evidence/screenshots/picker-create-at-bottom-1366.png"
+        ],
+        "checks": [
+          "O01",
+          "C04",
+          "C05",
+          "C10",
+          "C11",
+          "C19"
+        ],
+        "work_package": "WP2"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-layout.spec.ts",
+        "layout-red.log",
+        "zoom-diagnostic.log",
+        "zoom-green.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG03",
+        "title": "The currently assigned picker option has no visible selected treatment",
+        "priority": "P2",
+        "category": "asset reuse / selection clarity",
+        "evidence_level": "browser component reproduction",
+        "integration_status": "Current component executed",
+        "severity": "Moderate usability defect",
+        "observed": "Option 2 has aria-current=true, but its foreground, background, border, weight, shadow, outline and decoration are identical to the adjacent unselected option. No checkmark or Current assignment text is rendered.",
+        "method": "Computed-style comparison plus screenshot of the actual picker component; not an assistive-technology certification.",
+        "impact": "A user reviewing an existing shared asset cannot visually identify the current assignment. Reuse becomes repeated searching and re-confirmation.",
+        "steps": [
+          "Open a picker whose selectedValue corresponds to a visible record.",
+          "Compare the current row with adjacent rows before moving focus or the pointer.",
+          "Repeat when the current assignment is on a later result page and when the query hides it."
+        ],
+        "fix": "Add a visible, non-color-only Current assignment indicator and a restrained selection treatment. Keep current assignment, keyboard focus, and hover distinct. A compact current-assignment summary can remain visible when search/page results exclude it.",
+        "acceptance": [
+          "The existing assignment is recognizable without relying on color alone.",
+          "Screen-reader selected/current semantics remain truthful.",
+          "Typing or highlighting never commits a replacement. Clearing remains explicit."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/reference-picker.ts",
+            "locator": "render(): aria-current attribute and row contents",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/reference-picker.ts"
+          },
+          {
+            "path": "src/ui/app.css",
+            "locator": "picker-option styling has no current-assignment state",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/app.css"
+          }
+        ],
+        "evidence": [
+          "evidence/component-results.json#measurements.picker_initial",
+          "evidence/screenshots/picker-current-state-1366.png"
+        ],
+        "checks": [
+          "O01",
+          "C02",
+          "C03",
+          "C09"
+        ],
+        "work_package": "WP3"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-layout.spec.ts",
+        "layout-red.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG04",
+        "title": "Child-only creation input is outside the page-loss guard",
+        "priority": "P1",
+        "category": "draft safety",
+        "evidence_level": "source trace plus extracted-predicate execution",
+        "integration_status": "Native reload/close reproduction REQUIRED",
+        "severity": "High-risk gap; not a claimed native data-loss reproduction",
+        "observed": "hasPendingDraft checks parent scalars, service aggregates, relationIntent, routeIntents and scenario intent, but not active child creation values. Child-form input only invalidates confirmation. Workspace delegates its pending predicate to the editor, and beforeunload checks that predicate plus committed unsaved work. In a controlled clean-parent state, child-only input leaves the predicate false.",
+        "method": "Current editor, workspace and main source traced; unchanged hasPendingDraft excerpt executed with controlled state. No full-app native unload was executed.",
+        "impact": "After saving a dataset, a user can edit only a new organization/network inside a picker while the outer loss guard still considers the session clean. A browser reload/close may lose that unfinished input without the intended warning.",
+        "steps": [
+          "Open a saved, clean synthetic dataset and edit an existing service without modifying it.",
+          "Open its provider picker, enter child creation, and type a new organization name. Do not Create and use.",
+          "Verify the parent and saved dataset remain unchanged.",
+          "Reload or close the browser with an actual user activation and observe the beforeunload behavior. Dismiss any loss prompt and verify child text remains."
+        ],
+        "fix": "Include meaningful child creation work in the session loss guard through an explicit picker/child draft contract. Do not automatically create or persist the shared record from a generic Save. Explicit child Cancel/Back must remain deliberate cancellation, and closing the parent/session must resolve the child. Never persist drafts to browser storage as a shortcut.",
+        "acceptance": [
+          "A meaningful child-only edit participates in browser loss protection.",
+          "A clean untouched picker does not produce spurious warnings.",
+          "Explicit child cancellation writes nothing and clears only that child intent.",
+          "Completed Create and use remains its own shared-record commit and Undo step."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/editor-panel.ts",
+            "locator": "hasPendingDraft and referenceControls child input listener",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/editor-panel.ts"
+          },
+          {
+            "path": "src/ui/workspace.ts",
+            "locator": "returned hasPendingDraft delegate",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/workspace.ts"
+          },
+          {
+            "path": "src/main.ts",
+            "locator": "hasUnsavedEdits and beforeunload handler",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/main.ts"
+          }
+        ],
+        "evidence": [
+          "evidence/draft-predicate-results.json"
+        ],
+        "checks": [],
+        "work_package": "WP1"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-drafts.spec.ts",
+        "draft-red-arranged.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG05",
+        "title": "Expand focus is offered for a network view whose depth is ignored",
+        "priority": "P2",
+        "category": "map action relevance",
+        "evidence_level": "pure production module execution plus UI source trace",
+        "integration_status": "Confirm visible control in candidate",
+        "severity": "Moderate functional UX defect",
+        "observed": "focusGraph produces identical network-connections results at depths 1, 2 and 100. The UI renders Expand focus whenever any focus exists; its handler increments depth, applies the view and fits again. The network-connections branch never reads depth.",
+        "method": "Exact current focus.ts executed on a synthetic logical graph. Current map-view.ts handler and visibility branches read. No Cytoscape render executed.",
+        "impact": "A solutions engineer can repeatedly click an enabled expansion action that cannot expand the question. Reframing can look like work occurred even though membership did not change.",
+        "steps": [
+          "Select a network with boundary dependencies and enter Network connections.",
+          "Record the visible logical dependencies. Click Expand focus.",
+          "Observe membership and the control state. Repeat on a service focus that has reached the end of its directed chain."
+        ],
+        "fix": "Hide or disable expansion for network-connections under the current semantics. For directed service focus, make closure exhaustion understandable. Do not invent a new traversal interpretation merely to make the existing button do something.",
+        "acceptance": [
+          "No enabled Expand action is offered where expansion is undefined.",
+          "Depends on and Used by continue to follow the correct direction and logical dependencies.",
+          "A shared CDS or provider never pulls in unrelated consumers accidentally.",
+          "Fit/focus remain view-only and never change saved positions or data history."
+        ],
+        "sources": [
+          {
+            "path": "src/map/focus.ts",
+            "locator": "network-connections branch versus directed depth traversal",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/map/focus.ts"
+          },
+          {
+            "path": "src/map/map-view.ts",
+            "locator": "focusActions creation near lines 450-480; focusActions.hidden near 724",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/map/map-view.ts"
+          }
+        ],
+        "evidence": [
+          "evidence/focus-results.json#observations.networkExpansion"
+        ],
+        "checks": [
+          "F01",
+          "F02",
+          "F03",
+          "F04",
+          "F05"
+        ],
+        "work_package": "WP4"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-map.spec.ts",
+        "map-red.log",
+        "map-terminal-focus-red.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG06",
+        "title": "Empty reuse pickers still suggest a search that cannot succeed",
+        "priority": "P2",
+        "category": "empty states / reuse",
+        "evidence_level": "component execution plus caller source trace",
+        "integration_status": "Verify first-service journey in candidate",
+        "severity": "Moderate onboarding friction",
+        "observed": "An empty required picker without creation says No matching records. Try another name. The New service editor always inserts Start from an existing service, even when listServices() is empty. The source-service picker has no creation operation.",
+        "method": "Zero-record picker executed; Start from an existing service caller read in current editor source.",
+        "impact": "A first-time user is sent into a dead end and told to keep searching an empty library. This is distinct from the earlier fixed instruction that falsely offered creation.",
+        "steps": [
+          "Start the first service in a completely empty dataset.",
+          "Choose Start from an existing service.",
+          "Observe that no query can yield a source service. Also inspect all-used/none-eligible relationship pickers."
+        ],
+        "fix": "Distinguish empty library, zero eligible records, and no query matches. Suppress or explain unavailable reuse actions. Use caller-specific guidance such as No services recorded yet; create your first service normally. Keep inline Create only where it is actually supported.",
+        "acceptance": [
+          "Every empty state offers an achievable next step.",
+          "Search advice is used for no-match searches, not an empty option universe.",
+          "Existing-asset reuse remains prominent when a reusable record exists."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/editor-panel.ts",
+            "locator": "New service: unconditional Start from an existing service action near 1035",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/editor-panel.ts"
+          },
+          {
+            "path": "src/ui/reference-picker.ts",
+            "locator": "render(): discovered.total===0 guidance",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/reference-picker.ts"
+          }
+        ],
+        "evidence": [
+          "evidence/component-results.json#C01"
+        ],
+        "checks": [
+          "C01"
+        ],
+        "work_package": "WP3"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-layout.spec.ts",
+        "eligible-red.log",
+        "first-service-red.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG07",
+        "title": "Narrow connection rows give the action more space than the relationship",
+        "priority": "P2",
+        "category": "responsive aesthetics / information density",
+        "evidence_level": "browser component visual observation",
+        "integration_status": "Repeat in full inspector at real zoom",
+        "severity": "Moderate readability issue; not a claimed WCAG failure",
+        "observed": "At 320 CSS pixels, a 271-pixel connection row allocates 152.53 pixels to Connection details and 108.47 pixels to the identity/detail column. A normal long enterprise service name and route description require a row about 189.95 pixels high.",
+        "method": "Actual relationship-collection component and current CSS, inside the production summary wrapper class with synthetic long names. Not the complete record-summary application.",
+        "impact": "Relationship information becomes a narrow stack of words while the secondary action dominates the row. Scanning dense enterprise connectivity is slow and visually unbalanced.",
+        "steps": [
+          "Inspect a service with 20 or more long qualified connection names.",
+          "Use a narrow viewport or actual browser zoom that produces a narrow inspector.",
+          "Read identities, networks and routes without horizontally panning; compare content width to action width."
+        ],
+        "fix": "At narrow container widths, stack secondary actions beneath relationship information or use a compact contextual affordance with a clear accessible name. Preserve readable typography and network qualification. Do not solve this by shrinking text or dropping identity context.",
+        "acceptance": [
+          "Identity and route information get the primary reading width.",
+          "Long names remain readable, not an artificial single-word column.",
+          "Keyboard actions remain discoverable and reachable without hover.",
+          "No horizontal content loss is introduced."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/relationship-collection.ts",
+            "locator": "relationship-detail and relationship-actions row structure",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/relationship-collection.ts"
+          },
+          {
+            "path": "src/ui/app.css",
+            "locator": "relationship-row two-column rule",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/app.css"
+          }
+        ],
+        "evidence": [
+          "evidence/component-results.json#measurements.narrow_collection",
+          "evidence/screenshots/relationship-density-320.png"
+        ],
+        "checks": [
+          "O03",
+          "C15",
+          "C16"
+        ],
+        "work_package": "WP2"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-layout.spec.ts",
+        "layout-red.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG08",
+        "title": "Contextual network defaults are counted as user edits before typing",
+        "priority": "P2",
+        "category": "creation workflow consistency",
+        "evidence_level": "source trace plus extracted-predicate execution",
+        "integration_status": "Integrated Cancel/Save reproduction REQUIRED",
+        "severity": "Moderate workflow inconsistency",
+        "observed": "open(service,null) captures defaults from the first network as baseValues. openServiceOnNetwork then changes the selected network without reseeding the clean baseline. The exact dirty predicate is false for untouched first-network defaults and true for untouched context on a different network. Workspace routes Cancel through pending-work resolution.",
+        "method": "Current creation/default and navigation source read; current dirty predicate executed with corresponding controlled field values.",
+        "impact": "An untouched context-prefilled form can immediately show unapplied work and demand an Apply/Discard decision. Choosing Apply then has no service name. The same action behaves differently depending on network ordering.",
+        "steps": [
+          "Create two networks and save the fixture.",
+          "Inspect the second network and choose Add service on this network.",
+          "Do not type or change any control. Inspect the draft status and press Cancel.",
+          "Compare with creating on the first network. Then type a meaningful name and confirm ordinary draft protection remains."
+        ],
+        "fix": "Establish a contextual initial draft baseline after applying deliberate creation defaults. Keep actual user changes and copied-service intent distinct. Do not erase explicit classification or foundational overrides.",
+        "acceptance": [
+          "Untouched contextual defaults do not force a loss decision.",
+          "The first meaningful user edit becomes pending.",
+          "Cancel returns to the originating network and view context.",
+          "Create similar service retains its explicit source/destination review contract."
+        ],
+        "sources": [
+          {
+            "path": "src/ui/editor-panel.ts",
+            "locator": "openServiceOnNetwork; open baseValues; hasPendingDraft",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/editor-panel.ts"
+          },
+          {
+            "path": "src/ui/forms.ts",
+            "locator": "service.values first-network defaults",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/forms.ts"
+          },
+          {
+            "path": "src/ui/workspace.ts",
+            "locator": "openServiceOnNetwork and requestCancel",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/src/ui/workspace.ts"
+          }
+        ],
+        "evidence": [
+          "evidence/draft-predicate-results.json"
+        ],
+        "checks": [],
+        "work_package": "WP1"
+      },
+      "disposition": "fixed with current local integrated regression evidence",
+      "evidence": [
+        "white-glove-drafts.spec.ts",
+        "draft-red-arranged.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    },
+    {
+      "original": {
+        "id": "WG09",
+        "title": "The exact post-PR-26 executable is not retained as a retrievable CI artifact",
+        "priority": "P0",
+        "category": "verification / delivery",
+        "evidence_level": "connector and workflow verification",
+        "integration_status": "Blocks this requested integrated UAT, not evidence of an application failure",
+        "severity": "Release-qualification evidence gap",
+        "observed": "The current CI workflow builds and tests but has no artifact-upload step. The checked PR run artifact list returned empty. This session could not retrieve a current built HTML, access the disconnected desktop/browser, or navigate file:// in the cloud browser due administrator policy.",
+        "method": "Current ci.yml read; GitHub Actions artifact API checked; connected-device availability checked; cloud file navigation attempt recorded.",
+        "impact": "A source merge and a reported green gate cannot be independently inspected as the exact distributed application. Full-feature interaction, actual exports, native file operations and release aesthetics remain unverified here.",
+        "steps": [
+          "Build an exact clean candidate with the declared toolchain.",
+          "Retain dist/sim.html, SHA-256, full source/tree identity, build metadata, test reports and relevant traces/screenshots.",
+          "Retrieve that retained artifact and exercise it offline in the supported browser channels."
+        ],
+        "fix": "Retain a bounded CI verification artifact from the checked subject, without automatically publishing a release. Separate candidate retention, artifact qualification, and authorized public release. Record and compare hashes on the file actually used.",
+        "acceptance": [
+          "The candidate HTML can be retrieved and its identity verified independently.",
+          "No production/runtime dependency or telemetry is introduced.",
+          "Native file tests, integrated UAT, synthetic review and real user validation are separately reported.",
+          "Do not label this packet or existing CI as complete user acceptance."
+        ],
+        "sources": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "locator": "check job: checkout/setup/npm ci/npm run check only",
+            "url": "https://github.com/SUaDtL/SIM/blob/90d04afe422804b1922417cdc719dd7ff2e4dec8/.github/workflows/ci.yml"
+          },
+          {
+            "path": "GitHub Actions artifacts",
+            "locator": "run 43762954206",
+            "url": "https://github.com/SUaDtL/SIM/actions/runs/43762954206"
+          }
+        ],
+        "evidence": [
+          "evidence/verification-boundaries.json"
+        ],
+        "checks": [],
+        "work_package": "WP0"
+      },
+      "disposition": "implementation fixed; hosted retrieval proof pending",
+      "evidence": [
+        "verification-artifact.test.ts",
+        "artifact-unit-bound.log"
+      ],
+      "current_gate": "local-gate.json",
+      "limitations": "OS/native, assistive technology, participant and broad release acceptance are not inferred from this disposition."
+    }
+  ],
+  "additional_integrated_defects": [
+    {
+      "id": "CAP07",
+      "symptom": "Long caveat clipped in SVG and squeezed in PNG",
+      "correction": "Shared measured banner wrapping; widen tall caption canvas without stretching map."
+    },
+    {
+      "id": "CAP02",
+      "symptom": "Capture feedback changes canvas height and captured scope",
+      "correction": "Reserve feedback line space before the first capture."
+    },
+    {
+      "id": "MAP12",
+      "symptom": "Fit uses stale canvas height after focus control changes",
+      "correction": "Resize Cytoscape before fit."
+    },
+    {
+      "id": "CAP08",
+      "symptom": "Structural labels halve their relative font at two-times capture scale",
+      "correction": "Scale the structural label minimum with actual export scale."
+    },
+    {
+      "id": "UX01",
+      "symptom": "Sibling pickers cannot see an explicitly created shared record",
+      "correction": "Read current eligible repository identities while retaining the parent aggregate."
+    },
+    {
+      "id": "UX10",
+      "symptom": "Legacy issue presentation exposes raw witnesses as primary text",
+      "correction": "Readable qualified issue description with optional Technical details."
+    },
+    {
+      "id": "WG02-short-viewport",
+      "symptom": "At400percent a139px option is clipped by a48px nested result pane",
+      "correction": "Restore whole-dialog scrolling on very short viewports; unchanged original assertions pass."
+    }
+  ],
+  "review_followups": [
+    {
+      "id": "CRYPTO-WG-API",
+      "implementation": "Use shared approved WebCrypto SHA256; preserve all original assertions and fixtures.",
+      "verification": "history/crypto-api-red.log; history/crypto-api-green.log; history/crypto-parity-report.json; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "ARTIFACT-ASYNC-BYTES",
+      "implementation": "Retain captured checked bytes across async hashing rather than recopying a mutable path.",
+      "verification": "history/artifact-async-bytes-red.log; tests/unit/verification-artifact.test.ts; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "COV-WG-IMP11",
+      "implementation": "Same dataset import, Undo and Redo exact snapshots and persisted manual placement.",
+      "verification": "e2e/map.spec.ts; history/import-history-current.log; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "WG06-first-service-dependency",
+      "implementation": "Do not suggest unavailable inline creation when service dependency library is empty.",
+      "verification": "history/first-dependency-empty-red.log; history/first-dependency-empty-green.log; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "COV-WG-UX08-ISSUE-GRID",
+      "implementation": "Keep primary explanation, raw technical witness and Review action in readable full-width stacked rows.",
+      "verification": "history/visual-fixes-evidence.json; e2e/white-glove-visual-fixes.spec.ts; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "COV-WG-UX08-ROUTE-SPACING",
+      "implementation": "Scroll corrective route cue and focused control into the editor with room for focus outline.",
+      "verification": "history/visual-fixes-evidence.json; e2e/white-glove-visual-fixes.spec.ts; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "COV-WG-UX10-SINGULAR",
+      "implementation": "Format zero, one and many import/issue counts correctly with golden oracles.",
+      "verification": "history/visual-fixes-evidence.json; src/ui/import-dialog.test.ts; local-gate.json",
+      "independent_disposition": "pending final aggregate at this snapshot"
+    },
+    {
+      "id": "COV-WG-UX10-PRESENT-SINGULAR",
+      "implementation": "Use count-invariant left unchanged for already-present preview rows; assert the actual one-row summary in all four host/width cases.",
+      "verification": "history/present-singular-red.log; e2e/white-glove-visual-fixes.spec.ts; local-gate.json",
+      "independent_disposition": "pending affected final aggregate at this precommit snapshot"
+    }
+  ]
+}

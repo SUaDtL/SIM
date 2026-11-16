@@ -1,0 +1,82 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-capture.spec.ts --grep MAP12 E2 --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts
+
+
+Running 2 tests using 2 workers
+
+(node:62748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas (1.3s)
+  x  2 [msedge] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas (1.3s)
+
+
+  1) [msedge] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas 
+
+    Error: service-9
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 516
+    Received:    560.8892281388893
+
+      256 |     expect(endpoint.position.x, endpoint.id).toBeLessThanOrEqual(geometry.width);
+      257 |     expect(endpoint.position.y, endpoint.id).toBeGreaterThanOrEqual(0);
+    > 258 |     expect(endpoint.position.y, endpoint.id).toBeLessThanOrEqual(geometry.height);
+          |                                              ^
+      259 |   }
+      260 |   await assertReadOnly(page, info, fixture.snapshot);
+      261 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-capture.spec.ts:258:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas 
+
+    Error: service-9
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 516
+    Received:    560.8892281388893
+
+      256 |     expect(endpoint.position.x, endpoint.id).toBeLessThanOrEqual(geometry.width);
+      257 |     expect(endpoint.position.y, endpoint.id).toBeGreaterThanOrEqual(0);
+    > 258 |     expect(endpoint.position.y, endpoint.id).toBeLessThanOrEqual(geometry.height);
+          |                                              ^
+      259 |   }
+      260 |   await assertReadOnly(page, info, fixture.snapshot);
+      261 | });
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-capture.spec.ts:258:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\capture-focus-red-artifacts\white-glove-capture-MAP12--26597--controls-resize-the-canvas-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas 
+    [chrome] › e2e\white-glove-capture.spec.ts:221:1 › MAP12 E2 network focus fits every logical endpoint after its controls resize the canvas 

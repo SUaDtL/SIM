@@ -1,0 +1,172 @@
+{
+  "route": "CRYPTO-WG-API",
+  "scope": "Test/evidence infrastructure only; shared helper implementation owned by root",
+  "characterization": "Parent-reported prior 399 unit and 960 browser pass; this unit makes no new browser claim",
+  "sourceParityCommand": "node WORK/crypto-replace.cjs --verify",
+  "sourceParityExit": 0,
+  "sourceParityLog": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\crypto-parity-source.log",
+  "sourceParity": [
+    {
+      "file": "e2e/helpers/white-glove-capture.ts",
+      "chains": 2,
+      "aliases": 0,
+      "replacements": 3,
+      "unchangedExpectCalls": 0,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-capture.spec.ts",
+      "chains": 2,
+      "aliases": 0,
+      "replacements": 3,
+      "unchangedExpectCalls": 61,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-completion.spec.ts",
+      "chains": 0,
+      "aliases": 1,
+      "replacements": 8,
+      "unchangedExpectCalls": 71,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-entities.spec.ts",
+      "chains": 3,
+      "aliases": 0,
+      "replacements": 4,
+      "unchangedExpectCalls": 68,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-residual.spec.ts",
+      "chains": 2,
+      "aliases": 0,
+      "replacements": 3,
+      "unchangedExpectCalls": 93,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-session.spec.ts",
+      "chains": 0,
+      "aliases": 1,
+      "replacements": 4,
+      "unchangedExpectCalls": 157,
+      "entireSourceParityUnderNamedReplacements": true
+    },
+    {
+      "file": "e2e/white-glove-workflows.spec.ts",
+      "chains": 1,
+      "aliases": 0,
+      "replacements": 2,
+      "unchangedExpectCalls": 118,
+      "entireSourceParityUnderNamedReplacements": true
+    }
+  ],
+  "unchangedExpectCalls": 568,
+  "originalSourceSnapshot": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\crypto-parity-before",
+  "beforeHashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "7BA5806F66DA2CF708525712B404EDD58A369791E3674B2314F7847958DB1FEC",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\helpers\\white-glove-capture.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "23EA9345665AF59A1F93825ED40244C542FAF33C331E13EB937410EFA2305BF1",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-capture.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "1F26F2EF3320FB24201158D838067D439E05EE5EA0FADE6BE5C045E9593E2398",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-completion.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "057F723F9150E6D786A3205256517D475A290F23AE27C7574D087A2E6547EB84",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-entities.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "EA3FEBBA2E5F8A7A9F87D96FE9CD4E8E13BAE5263F4D3310C2AEA1682ECD0B92",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-residual.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "F2F16AEBE2B808769AABADDE694ADBC641889D33ED3044007DB1D064F0C4FAE1",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-session.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "A29C61E54F7B057CAE848D0DE89003E53C864DDE6F18CC34234CFF9D784CB65A",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-workflows.spec.ts"
+    }
+  ],
+  "afterHashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "65A75F5B2AD78CF8B7E2025CAA6781AE0EC080F5EEC508D6B277733D059AD376",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\helpers\\white-glove-capture.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "96662BD8A3B866F5483945CA608BBD29624A169D4FE39D0F15F1AACD8A194B82",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-capture.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "8E5EE287B584BD9D610FA060FCDF8E3854A62AF37FA040E1896EEFD396B42E0F",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-completion.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "4A2D8376F76AC7B56BA5932BB28768B6DB394BB26CE50548921F33ED46C09C56",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-entities.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "D6852547C6F082C9C13CEC47AB0441158CD85FF57D7069C325198AFE1E4359B4",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-residual.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "875AFF5DC76AFCDB3A2FCEBED48B4E841AC0C95354547D8391F9647991E954C2",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-session.spec.ts"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "34C3B6CE1A8414817A0305F566C7488F19570C4909D0B12D7119481B8D7C3104",
+      "Path": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM\\e2e\\white-glove-workflows.spec.ts"
+    }
+  ],
+  "changes": [
+    "Node createHash SHA256+hex chains -> await shared sha256 with identical input expressions",
+    "Two local digest aliases removed and callers directly await shared sha256",
+    "Completion and residual evidence beforeEach callbacks become async"
+  ],
+  "preserved": [
+    "All expect assertions and thresholds",
+    "Every fixture and repository write",
+    "Real capture/download seams and boundaries",
+    "Exact raw byte and JSON string hashing inputs",
+    "Lower-case hex comparison contracts",
+    "Original candidate/image/fixture SHA oracles remain retained as historical evidence"
+  ],
+  "checks": [
+    {
+      "command": "npx tsc --noEmit",
+      "exit": 0
+    },
+    {
+      "command": "npx eslint <seven owned paths>",
+      "exit": 0
+    },
+    {
+      "command": "npx prettier --check <seven owned paths>",
+      "exit": 0
+    }
+  ],
+  "browserRuns": "None in this parity unit; root owns next fullgate4",
+  "productionWrites": "None",
+  "currentCandidateObserved": "989746ed4de16f9418f066fe2a2ef753043b88fb107561a22f4e67d3e787230b"
+}

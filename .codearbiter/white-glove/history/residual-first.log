@@ -1,0 +1,101 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-residual.spec.ts --project chrome --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts
+
+
+Running 14 tests using 1 worker
+
+(node:62512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chrome] › e2e\white-glove-residual.spec.ts:110:1 › REL03 scalar and support warning bind the fresh complete aggregate and saved values (1.2s)
+  ok  2 [chrome] › e2e\white-glove-residual.spec.ts:143:3 › NAV03 Open reference for editing from a dirty aggregate honors Stay (1.2s)
+  ok  3 [chrome] › e2e\white-glove-residual.spec.ts:143:3 › NAV03 Open reference for editing from a dirty aggregate honors Discard and continue (960ms)
+  ok  4 [chrome] › e2e\white-glove-residual.spec.ts:143:3 › NAV03 Open reference for editing from a dirty aggregate honors Apply and continue (1.1s)
+  ok  5 [chrome] › e2e\white-glove-residual.spec.ts:186:1 › SCEN03 author Retire in the UI, inspect Compare, and round-trip Save Undo Redo (1.4s)
+  ok  6 [chrome] › e2e\white-glove-residual.spec.ts:214:1 › SCEN10 a later baseline collision is diagnosed without blocking an unrelated accepted edit (1.4s)
+  ok  7 [chrome] › e2e\white-glove-residual.spec.ts:244:1 › SCEN08 changed scenario metadata and Add anyway payload cannot reuse a stale acknowledgement (1.6s)
+  ok  8 [chrome] › e2e\white-glove-residual.spec.ts:274:1 › PICK11 a connected stale child submission cannot write after ordinary parent navigation (1.1s)
+  ok  9 [chrome] › e2e\white-glove-residual.spec.ts:313:1 › IMP06 replacing acknowledged CSV bytes and toggling the option require a fresh reviewed plan (1.1s)
+  ok 10 [chrome] › e2e\white-glove-residual.spec.ts:358:1 › CDS checklist reaches all 47 networks and retains exact joins across paging and search (1.1s)
+  ok 11 [chrome] › e2e\white-glove-residual.spec.ts:401:3 › CAP05 PNG handoff failure retains applied data and a real retry downloads valid bytes (945ms)
+  ok 12 [chrome] › e2e\white-glove-residual.spec.ts:401:3 › CAP05 SVG handoff failure retains applied data and a real retry downloads valid bytes (927ms)
+  x  13 [chrome] › e2e\white-glove-residual.spec.ts:469:1 › MAP16 missing endpoint files are rejected before graph admission and retain the current draft (600ms)
+(node:73160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  14 [chrome] › e2e\white-glove-residual.spec.ts:494:1 › MAP16 admitted semantic route issues stay explicit while duplicate-name graph navigation stays bounded (5.8s)
+
+
+  1) [chrome] › e2e\white-glove-residual.spec.ts:469:1 › MAP16 missing endpoint files are rejected before graph admission and retain the current draft 
+
+    Error: no such table: dependency
+
+      474 |   const invalid = await fixture((_repo, db) => {
+      475 |     db.run("PRAGMA foreign_keys=OFF");
+    > 476 |     db.run("UPDATE dependency SET provider_service_id=999 WHERE consumer_service_id=1");
+          |        ^
+      477 |   });
+      478 |   await select(page, "service", 1);
+      479 |   await editSelected(page);
+        at g.handleError (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\node_modules\sql.js\dist\sql-wasm.js:92:173)
+        at g.run (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\node_modules\sql.js\dist\sql-wasm.js:87:480)
+        at prepare (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-residual.spec.ts:476:8)
+        at fixture (C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-residual.spec.ts:36:5)
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-residual.spec.ts:474:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-b9ff4-nd-retain-the-current-draft-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-b9ff4-nd-retain-the-current-draft-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-b9ff4-nd-retain-the-current-draft-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-b9ff4-nd-retain-the-current-draft-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\white-glove-residual.spec.ts:494:1 › MAP16 admitted semantic route issues stay explicit while duplicate-name graph navigation stays bounded 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Data issues', exact: true })
+    Expected substring: "Identity"
+    Received string:    "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.CDS ROUTE — Orders: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog', { name: 'Data issues', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Data issues', exact: true })
+        14 × locator resolved to <dialog open="" aria-label="Data issues">…</dialog>
+           - unexpected value "Data issuesThese existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.1 current data issues. Showing 1–1.CDS ROUTE — Orders: route 1(1) -> 2(2) via 1 [1,3]Review OrdersPrevious issuesNext issuesClose"
+
+
+      505 |   const issues = page.getByRole("dialog", { name: "Data issues", exact: true });
+      506 |   await expect(issues).toContainText("Orders");
+    > 507 |   await expect(issues).toContainText("Identity");
+          |                        ^
+      508 |   await issues.getByRole("button", { name: "Close", exact: true }).click();
+      509 |   await showMap(page);
+      510 |   const graph = await page.getByTestId("map-canvas").evaluate((node) => {
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-residual.spec.ts:507:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-501cf-ph-navigation-stays-bounded-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-501cf-ph-navigation-stays-bounded-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-501cf-ph-navigation-stays-bounded-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\residual-first-artifacts\white-glove-residual-MAP16-501cf-ph-navigation-stays-bounded-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chrome] › e2e\white-glove-residual.spec.ts:469:1 › MAP16 missing endpoint files are rejected before graph admission and retain the current draft 
+    [chrome] › e2e\white-glove-residual.spec.ts:494:1 › MAP16 admitted semantic route issues stay explicit while duplicate-name graph navigation stays bounded 
+  12 passed (21.8s)

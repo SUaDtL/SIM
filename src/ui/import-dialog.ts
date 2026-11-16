@@ -92,12 +92,22 @@ function notes(list: readonly RowNote[], title: string): HTMLElement {
 
 const rows = (n: number) => `${String(n)} ${n === 1 ? "row" : "rows"}`;
 
+export function describeImportReceiptCounts(counts: ReturnType<typeof importReceiptCounts>): string {
+  return (
+    `Added ${String(counts.added)} ${counts.added === 1 ? "record or link" : "records or links"}; ` +
+    `${String(counts.present)} already-present ${counts.present === 1 ? "row" : "rows"}; ` +
+    `${String(counts.rejected)} rejected ${counts.rejected === 1 ? "row" : "rows"}; ` +
+    `${String(counts.held)} host-like ${counts.held === 1 ? "row" : "rows"} held; ` +
+    `${String(counts.unreadable)} unreadable ${counts.unreadable === 1 ? "file" : "files"}.`
+  );
+}
+
+export function describeFlaggedRows(count: number): string {
+  return `${rows(count)} ${count === 1 ? "looks" : "look"} like an IP address or host name, which SIM is not meant to hold. ${count === 1 ? "It is" : "They are"} left out unless you choose otherwise.`;
+}
+
 function receiptContent(receipt: ImportReceipt, download: () => void): HTMLElement {
-  const counts = importReceiptCounts(receipt);
-  const summary =
-    `Added ${String(counts.added)} ${counts.added === 1 ? "record" : "records"} or links; ` +
-    `${String(counts.present)} already-present rows; ${String(counts.rejected)} rejected rows; ` +
-    `${String(counts.held)} host-like rows held; ${String(counts.unreadable)} unreadable ${counts.unreadable === 1 ? "file" : "files"}.`;
+  const summary = describeImportReceiptCounts(importReceiptCounts(receipt));
   const fileList = el("ul", { class: "import-files" });
   for (const file of receipt.files)
     fileList.append(
@@ -382,7 +392,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
       }),
     ];
     flaggedWarning.hidden = result.report.flagged.length === 0;
-    flaggedSummary.textContent = `${rows(result.report.flagged.length)} look like an IP address or host name, which SIM is not meant to hold. They are left out unless you choose otherwise.`;
+    flaggedSummary.textContent = describeFlaggedRows(result.report.flagged.length);
     flaggedNotes.replaceChildren(
       ...(result.report.flagged.length > 0 ? [notes(result.report.flagged, "Host-like rows")] : []),
     );
@@ -398,7 +408,7 @@ export function openImportDialog(ctx: ImportDialogContext): void {
         el(
           "details",
           {},
-          el("summary", {}, `${rows(result.report.present.length)} already in the dataset, left as they are`),
+          el("summary", {}, `${rows(result.report.present.length)} already in the dataset, left unchanged`),
           notes(result.report.present, "Already-present rows"),
         ),
       );

@@ -100,6 +100,31 @@ async function contained(page: Page, locator: Locator): Promise<void> {
   await locator.scrollIntoViewIfNeeded();
   const box = await locator.boundingBox();
   const viewport = await page.evaluate(() => ({ width: innerWidth, height: innerHeight }));
+  if (box && (box.y < -1 || box.y + box.height > viewport.height + 1)) {
+    await test.info().attach("control-viewport-failure", {
+      body: JSON.stringify(
+        await locator.evaluate((node) => ({
+          text: node.textContent,
+          htmlTag: node.tagName,
+          box: node.getBoundingClientRect().toJSON() as Record<string, number>,
+          viewport: { width: innerWidth, height: innerHeight },
+          ancestors: [
+            ...(function* () {
+              for (let at = node.parentElement; at; at = at.parentElement) yield at;
+            })(),
+          ].map((at) => ({
+            tag: at.tagName,
+            class: at.className,
+            box: at.getBoundingClientRect().toJSON() as Record<string, number>,
+            scrollTop: at.scrollTop,
+            scrollHeight: at.scrollHeight,
+            clientHeight: at.clientHeight,
+          })),
+        })),
+      ),
+      contentType: "application/json",
+    });
+  }
   expect(box).not.toBeNull();
   if (!box) throw new Error("Visible control has no layout box");
   expect(box.x).toBeGreaterThanOrEqual(-1);

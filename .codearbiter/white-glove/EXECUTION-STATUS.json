@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-16T17:17:45.006606+00:00",
+  "scope": "Post-PR26 white-glove stabilization and honest180-case accounting",
+  "branch": "codex/sim-white-glove",
+  "receiving_commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+  "candidate": {
+    "candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
+    "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+    "source_tree": "31700541a031960217652bcbb892700154ea2863",
+    "source_modified": true,
+    "platform": "win32 10.0.26200",
+    "node": "v24.18.0",
+    "ci_run_id": null,
+    "pull_request_head": null,
+    "actualWorkers": 2
+  },
+  "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
+  "local_check": {
+    "exit_code": 0,
+    "unit_pass": 426,
+    "browser_pass": 972
+  },
+  "uat_results": "uat-results.json",
+  "independent_review": "UI final8 aggregate passed with zero findings. Affected CI source security review passed; current ledger/coverage and exact staged crypto rebind are being completed. This record does not predict the final aggregate.",
+  "delivery": "UI implementation is committed locally at b9afdf26. PR27/28 main is merged in the working tree and the CI integration gate passed. Integration merge commit, push, PR and exact-head hosted artifact retrieval have not happened at this collection point; their actual later identities belong in the final PR and local handoff.",
+  "release_recommendation": "Review candidate only. Native, AT, participant and receiving acceptance remain qualified. No merge/tag/release is authorized. Existing main Pages publishing remains unchanged and will run after an owner-authorized main merge with successful CI.",
+  "governance_owner": "PLAN-WHITE-GLOVE and its native work items; this is derived verification evidence, not a second progress ledger.",
+  "ui_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+  "upstream_main": "2b528c15db23eef0c222bc25c3a95e68c0097c7f"
+}

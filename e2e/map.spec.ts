@@ -15,7 +15,7 @@ import {
 } from "./helpers/map-controls";
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { toCsv } from "../src/import/csv";
@@ -490,12 +490,23 @@ test("places new services and networks without moving anything already placed", 
   expect(watch.errors).toEqual([]);
 });
 
-test("a majority-fresh CSV batch preserves manually arranged existing leaves", async ({ page }) => {
+test("a majority-fresh CSV batch preserves manually arranged existing leaves", async ({ page }, info) => {
   const watch = await load(page);
   await arranged(page);
   const initial = await readMap(page);
   await drag(page, initial, byLabel(initial, "Email").position, { x: 55, y: 35 });
   const before = placed(await readMap(page));
+  const readback = async (name: string) => {
+    const bytes = await save(page);
+    writeFileSync(info.outputPath(`${name}.sqlite`), bytes);
+    const db = await openDataset(bytes, { wasm });
+    try {
+      return new Repository(db).snapshot();
+    } finally {
+      db.close();
+    }
+  };
+  const beforeSnapshot = await readback("arranged-before-import");
   const rows = Array.from({ length: 12 }, (_, index) => [
     `New service ${String(index + 1)}`,
     "SIPR",
@@ -525,6 +536,29 @@ test("a majority-fresh CSV batch preserves manually arranged existing leaves", a
   await expect(page.getByTestId("map-summary")).toContainText("18 services");
   const after = placed(await readMap(page));
   expect(near(Object.fromEntries(Object.entries(after).filter(([label]) => label in before)), before, 1e-6)).toBe(true);
+  const importedSnapshot = await readback("arranged-imported");
+  expect(importedSnapshot.services).toHaveLength(18);
+  // New layout coordinates are persisted at the repository's declared tenth-unit
+  // precision. Redo restores those exact saved coordinates, not unsaved fcose floats.
+  const expectedRedo = { ...before };
+  for (const service of importedSnapshot.services.filter(
+    (row) => !beforeSnapshot.services.some((old) => old.id === row.id),
+  )) {
+    const saved = importedSnapshot.positions.find(
+      (position) => position.entity === "service" && position.id === service.id,
+    );
+    expect(saved, `Saved position for ${service.name}`).toBeDefined();
+    if (!saved) throw new Error("Imported service position missing");
+    expectedRedo[service.name] = { x: saved.x, y: saved.y };
+  }
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("6 services");
+  expect(await readback("arranged-import-undone")).toEqual(beforeSnapshot);
+  expect(near(placed(await readMap(page)), before, 1e-6)).toBe(true);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(page.getByTestId("map-summary")).toContainText("18 services");
+  expect(await readback("arranged-import-redone")).toEqual(importedSnapshot);
+  expect(near(placed(await readMap(page)), expectedRedo, 1e-6)).toBe(true);
   expect(watch.errors).toEqual([]);
 });
 

@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>SIM post-PR26 white-glove stabilization · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">SPEC-WHITE-GLOVE</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-intent">Intent</a><a href="#group-scope">Scope</a><a href="#group-non_goals">Non goals</a><a href="#group-approach">Approach</a><a href="#group-constraints">Constraints</a><a href="#group-decisions">Decisions</a><a href="#group-criteria">Criteria</a><a href="#group-open_decisions">Open decisions</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../plans/white-glove.html">Open companion implementation plan</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / spec</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>SIM post-PR26 white-glove stabilization</h1><p class="deck">Repair verified WG01–WG08, retain a retrievable checked candidate for WG09, reconcile and execute the integrated acceptance inventory, preserve explicit qualification limits.</p><div class="meta"><span>SPEC-WHITE-GLOVE</span><span>Revision 2 · schema 0.3.2</span><span>34 addressable records</span></div></header><section class="group" id="group-intent"><a class="back" href="#main-content">Top</a><h2>Intent</h2>
+<!-- CA:BEGIN:INTENT-WHITE-GLOVE -->
+<article class="record" id="INTENT-WHITE-GLOVE" data-ca-symbol="INTENT-WHITE-GLOVE" data-ca-kind="intent"><div class="record-head"><a class="id" href="#INTENT-WHITE-GLOVE">INTENT-WHITE-GLOVE</a><h3>Intent</h3></div><div class="field"><span class="label">Caller</span>sprint</div><div class="field"><span class="label">Outcome</span>Coherent existing workflows and reviewable exact offline candidate with honest per-case coverage and outstanding acceptance.</div><div class="field"><span class="label">Problem</span>The source-bound white-glove packet identifies remaining lost-child awareness, phantom context drafts, picker/menu/row friction, meaningless expansion, and missing retrievable candidate evidence.</div></article>
+<!-- CA:END:INTENT-WHITE-GLOVE -->
+</section><section class="group" id="group-scope"><a class="back" href="#main-content">Top</a><h2>Scope</h2>
+<!-- CA:BEGIN:SCOPE-WHITE-GLOVE -->
+<article class="record" id="SCOPE-WHITE-GLOVE" data-ca-symbol="SCOPE-WHITE-GLOVE" data-ca-kind="scope"><div class="record-head"><a class="id" href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a><h3>Scope</h3></div><div class="field"><span class="label">Statement</span>One dedicated follow-up branch and PR from merged main90d04afe. Preserve prior stabilization, provide local checkpoints and exact candidate/evidence. Root integrates shared picker/editor contracts and owns all builds.</div></article>
+<!-- CA:END:SCOPE-WHITE-GLOVE -->
+</section><section class="group" id="group-non_goals"><a class="back" href="#main-content">Top</a><h2>Non goals</h2>
+<!-- CA:BEGIN:EXCL-EXPANSION -->
+<article class="record" id="EXCL-EXPANSION" data-ca-symbol="EXCL-EXPANSION" data-ca-kind="non_goals"><div class="record-head"><a class="id" href="#EXCL-EXPANSION">EXCL-EXPANSION</a><h3>Non goals</h3></div><div class="field"><span class="label">Statement</span>No new discovery capabilities G01–G07, framework/dependency/schema expansion, browser dataset storage, hidden autosave, telemetry, merge/tag/release, invented native or human evidence.</div></article>
+<!-- CA:END:EXCL-EXPANSION -->
+</section><section class="group" id="group-approach"><a class="back" href="#main-content">Top</a><h2>Approach</h2>
+<!-- CA:BEGIN:APPROACH-WHITE-GLOVE -->
+<article class="record" id="APPROACH-WHITE-GLOVE" data-ca-symbol="APPROACH-WHITE-GLOVE" data-ca-kind="approach"><div class="record-head"><a class="id" href="#APPROACH-WHITE-GLOVE">APPROACH-WHITE-GLOVE</a><h3>Approach</h3></div><div class="field"><span class="label">Choice</span>Use existing DOM/picker/editor/repository mechanisms with bounded explicit contracts; reproduce each defect before repair; retain machine evidence and practical local checkpoints.</div><div class="field"><span class="label">Tradeoff</span>Maintain existing interaction semantics and one staged parent aggregate; shared-child creation remains an explicit separate write.</div></article>
+<!-- CA:END:APPROACH-WHITE-GLOVE -->
+</section><section class="group" id="group-constraints"><a class="back" href="#main-content">Top</a><h2>Constraints</h2><span class="missing">None recorded</span></section><section class="group" id="group-decisions"><a class="back" href="#main-content">Top</a><h2>Decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-criteria"><a class="back" href="#main-content">Top</a><h2>Criteria</h2>
+<!-- CA:BEGIN:WG01 -->
+<article class="record" id="WG01" data-ca-symbol="WG01" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG01">WG01</a><h3>About menu extends outside the desktop viewport</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>About actions remain inside the viewport and reachable by pointer and keyboard.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG01 -->
+<article class="record" id="SC-WG01" data-ca-symbol="SC-WG01" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG01">SC-WG01</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Desktop1366/1600/1024 and narrow/zoomed workspace</div><div class="field"><span class="label">Then</span>Panel bounds fit; essential controls remain reachable without horizontal document overflow.</div><div class="field"><span class="label">When</span>Open About, Help and notices, dismiss and return focus</div></article>
+<!-- CA:END:SC-WG01 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;Every open menu and action fits the viewport or an intentional bounded scroll container.&#34;, &#34;Opening a menu does not introduce horizontal document scrolling.&#34;, &#34;Keyboard focus remains visible; Escape returns to the invoker; choosing an action executes once.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG01 -->
+<article class="record" id="VER-WG01" data-ca-symbol="VER-WG01" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG01">VER-WG01</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Baseline clipped right edge must fail the geometry oracle; narrow/short fallback stays usable.</div><div class="field"><span class="label">Oracle</span>Panel bounds fit; essential controls remain reachable without horizontal document overflow.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-layout.spec.ts; e2e/usability-layout.spec.ts</div></article>
+<!-- CA:END:VER-WG01 -->
+</div></article>
+<!-- CA:END:WG01 -->
+
+<!-- CA:BEGIN:WG02 -->
+<article class="record" id="WG02" data-ca-symbol="WG02" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG02">WG02</a><h3>Populated pickers bury creation, count, and paging while search scrolls away</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Search, count, paging, Close and supported creation stay usable while large results scroll; very short viewports use whole-dialog scrolling.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG02 -->
+<article class="record" id="SC-WG02" data-ca-symbol="SC-WG02" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG02">SC-WG02</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Populated1000-service universe and actual200/400browser zoom</div><div class="field"><span class="label">Then</span>All eligible identities are reachable; long labels remain readable and focused controls fit the visible scroll area.</div><div class="field"><span class="label">When</span>Search/page through identities and reach long options and Create when supported</div></article>
+<!-- CA:END:SC-WG02 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;Search, Close, result count, and supported Create remain reachable without scrolling through every result.&#34;, &#34;The result list, not the whole dialog, owns routine browsing scroll.&#34;, &#34;Keyboard paging and focus do not jump to unrelated controls; all matches remain reachable.&#34;, &#34;At small heights, retain usable focus/reflow rather than consuming all space with fixed chrome.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG02 -->
+<article class="record" id="VER-WG02" data-ca-symbol="VER-WG02" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG02">VER-WG02</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>The original48px nested pane clips a139px option and fails; zero/many results and short-height fallback retain names.</div><div class="field"><span class="label">Oracle</span>All eligible identities are reachable; long labels remain readable and focused controls fit the visible scroll area.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-density.spec.ts; e2e/usability-layout.spec.ts; e2e/white-glove-layout.spec.ts</div></article>
+<!-- CA:END:VER-WG02 -->
+</div></article>
+<!-- CA:END:WG02 -->
+
+<!-- CA:BEGIN:WG03 -->
+<article class="record" id="WG03" data-ca-symbol="WG03" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG03">WG03</a><h3>The currently assigned picker option has no visible selected treatment</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Current assignment has a visible non-color text cue and persistent qualified summary; discovery never assigns implicitly.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG03 -->
+<article class="record" id="SC-WG03" data-ca-symbol="SC-WG03" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG03">SC-WG03</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Existing selected shared reference and multiple result pages</div><div class="field"><span class="label">Then</span>The selected ID and parent draft remain unchanged until an explicit choice; current text remains discoverable.</div><div class="field"><span class="label">When</span>Filter/page away and back, move focus and blur without selection</div></article>
+<!-- CA:END:SC-WG03 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;The existing assignment is recognizable without relying on color alone.&#34;, &#34;Screen-reader selected/current semantics remain truthful.&#34;, &#34;Typing or highlighting never commits a replacement. Clearing remains explicit.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG03 -->
+<article class="record" id="VER-WG03" data-ca-symbol="VER-WG03" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG03">VER-WG03</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Unselected/hovered records must not gain current state; blur/search cannot mutate the assignment.</div><div class="field"><span class="label">Oracle</span>The selected ID and parent draft remain unchanged until an explicit choice; current text remains discoverable.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-layout.spec.ts; e2e/usability-picker.spec.ts</div></article>
+<!-- CA:END:VER-WG03 -->
+</div></article>
+<!-- CA:END:WG03 -->
+
+<!-- CA:BEGIN:WG04 -->
+<article class="record" id="WG04" data-ca-symbol="WG04" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG04">WG04</a><h3>Child-only creation input is outside the page-loss guard</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Meaningful child-only work participates in loss awareness and cannot be silently applied by parent Save.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG04 -->
+<article class="record" id="SC-WG04" data-ca-symbol="SC-WG04" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG04">SC-WG04</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Clean saved positioned dataset and explicit inline child</div><div class="field"><span class="label">Then</span>Real browser beforeunload is observed and exact text survives Stay; no implicit child write; untouched/cancelled controls remain clean.</div><div class="field"><span class="label">When</span>Type only inside the child, attempt reload, Stay, then finish or explicitly cancel</div></article>
+<!-- CA:END:SC-WG04 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;A meaningful child-only edit participates in browser loss protection.&#34;, &#34;A clean untouched picker does not produce spurious warnings.&#34;, &#34;Explicit child cancellation writes nothing and clears only that child intent.&#34;, &#34;Completed Create and use remains its own shared-record commit and Undo step.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG04 -->
+<article class="record" id="VER-WG04" data-ca-symbol="VER-WG04" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG04">VER-WG04</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Parent-only warning is a positive control; untouched/cancelled child does not create a phantom warning; stale owners cannot write.</div><div class="field"><span class="label">Oracle</span>Real browser beforeunload is observed and exact text survives Stay; no implicit child write; untouched/cancelled controls remain clean.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-drafts.spec.ts; e2e/white-glove-session.spec.ts; e2e/white-glove-residual.spec.ts</div></article>
+<!-- CA:END:VER-WG04 -->
+</div></article>
+<!-- CA:END:WG04 -->
+
+<!-- CA:BEGIN:WG05 -->
+<article class="record" id="WG05" data-ca-symbol="WG05" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG05">WG05</a><h3>Expand focus is offered for a network view whose depth is ignored</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Expansion represents another recorded logical hop; undefined network expansion is absent and exhaustion is explicit.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG05 -->
+<article class="record" id="SC-WG05" data-ca-symbol="SC-WG05" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG05">SC-WG05</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Boundary, directed chain, shared-CDS trap and cycle</div><div class="field"><span class="label">Then</span>Exact logical membership, final cycle edge, usable Fit focus, unchanged stored positions and history.</div><div class="field"><span class="label">When</span>Focus/expand/fit and return, then save/read back</div></article>
+<!-- CA:END:SC-WG05 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;No enabled Expand action is offered where expansion is undefined.&#34;, &#34;Depends on and Used by continue to follow the correct direction and logical dependencies.&#34;, &#34;A shared CDS or provider never pulls in unrelated consumers accidentally.&#34;, &#34;Fit/focus remain view-only and never change saved positions or data history.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG05 -->
+<article class="record" id="VER-WG05" data-ca-symbol="VER-WG05" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG05">VER-WG05</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Unrelated shared-CDS traffic stays excluded; exhausted expansion cannot remain enabled; view operations do not write.</div><div class="field"><span class="label">Oracle</span>Exact logical membership, final cycle edge, usable Fit focus, unchanged stored positions and history.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-map.spec.ts; e2e/white-glove-capture.spec.ts</div></article>
+<!-- CA:END:VER-WG05 -->
+</div></article>
+<!-- CA:END:WG05 -->
+
+<!-- CA:BEGIN:WG06 -->
+<article class="record" id="WG06" data-ca-symbol="WG06" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG06">WG06</a><h3>Empty reuse pickers still suggest a search that cannot succeed</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Zero libraries, zero eligibility and zero query matches have distinct feasible guidance; creation copy matches actual capability.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG06 -->
+<article class="record" id="SC-WG06" data-ca-symbol="SC-WG06" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG06">SC-WG06</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>First service, all-linked dependencies and a nonempty search universe</div><div class="field"><span class="label">Then</span>No futile first-service reuse; no unsupported Create promise; Close or supported Create gives a feasible next action.</div><div class="field"><span class="label">When</span>Open reuse and relationship pickers and search without choosing</div></article>
+<!-- CA:END:SC-WG06 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;Every empty state offers an achievable next step.&#34;, &#34;Search advice is used for no-match searches, not an empty option universe.&#34;, &#34;Existing-asset reuse remains prominent when a reusable record exists.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG06 -->
+<article class="record" id="VER-WG06" data-ca-symbol="VER-WG06" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG06">VER-WG06</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>First-service dependency picker with no services cannot promise Create; a true query miss still suggests another search.</div><div class="field"><span class="label">Oracle</span>No futile first-service reuse; no unsupported Create promise; Close or supported Create gives a feasible next action.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-layout.spec.ts; e2e/readiness-shell.spec.ts</div></article>
+<!-- CA:END:VER-WG06 -->
+</div></article>
+<!-- CA:END:WG06 -->
+
+<!-- CA:BEGIN:WG07 -->
+<article class="record" id="WG07" data-ca-symbol="WG07" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG07">WG07</a><h3>Narrow connection rows give the action more space than the relationship</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Narrow relationship rows preserve readable qualified identity before secondary actions without smaller text.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG07 -->
+<article class="record" id="SC-WG07" data-ca-symbol="SC-WG07" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG07">SC-WG07</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Long names and populated connections at narrow width</div><div class="field"><span class="label">Then</span>Full service/network context remains; secondary actions follow the information and remain usable.</div><div class="field"><span class="label">When</span>Read a relationship, inspect details, page and return</div></article>
+<!-- CA:END:SC-WG07 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;Identity and route information get the primary reading width.&#34;, &#34;Long names remain readable, not an artificial single-word column.&#34;, &#34;Keyboard actions remain discoverable and reachable without hover.&#34;, &#34;No horizontal content loss is introduced.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG07 -->
+<article class="record" id="VER-WG07" data-ca-symbol="VER-WG07" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG07">VER-WG07</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>No font shrink, label dropping, one-character reading column or document overflow is accepted.</div><div class="field"><span class="label">Oracle</span>Full service/network context remains; secondary actions follow the information and remain usable.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-layout.spec.ts; e2e/usability-layout.spec.ts; e2e/white-glove-visual-fixes.spec.ts</div></article>
+<!-- CA:END:VER-WG07 -->
+</div></article>
+<!-- CA:END:WG07 -->
+
+<!-- CA:BEGIN:WG08 -->
+<article class="record" id="WG08" data-ca-symbol="WG08" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG08">WG08</a><h3>Contextual network defaults are counted as user edits before typing</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>Contextual defaults establish a clean initial baseline without hiding meaningful edits or explicit copy intent.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG08 -->
+<article class="record" id="SC-WG08" data-ca-symbol="SC-WG08" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG08">SC-WG08</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Second-network contextual Add and ordinary/copy creation controls</div><div class="field"><span class="label">Then</span>Untouched contextual form returns cleanly; meaningful changes still trigger the existing guard and retain data.</div><div class="field"><span class="label">When</span>Cancel untouched contextual creation, then make a meaningful edit</div></article>
+<!-- CA:END:SC-WG08 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;Untouched contextual defaults do not force a loss decision.&#34;, &#34;The first meaningful user edit becomes pending.&#34;, &#34;Cancel returns to the originating network and view context.&#34;, &#34;Create similar service retains its explicit source/destination review contract.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG08 -->
+<article class="record" id="VER-WG08" data-ca-symbol="VER-WG08" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG08">VER-WG08</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Changed scalar/relationship/child intent and Create-similar intent must not be reseeded away as defaults.</div><div class="field"><span class="label">Oracle</span>Untouched contextual form returns cleanly; meaningful changes still trigger the existing guard and retain data.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-drafts.spec.ts; e2e/usability-records.spec.ts</div></article>
+<!-- CA:END:VER-WG08 -->
+</div></article>
+<!-- CA:END:WG08 -->
+
+<!-- CA:BEGIN:WG09 -->
+<article class="record" id="WG09" data-ca-symbol="WG09" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#WG09">WG09</a><h3>The exact post-PR-26 executable is not retained as a retrievable CI artifact</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Supplied post-PR26 white-glove stabilization and qualification packet.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>The exact checked HTML is retained with matching source/tree/PR identity, SHA256 and browser report; retrieval is independently verified.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-WG09 -->
+<article class="record" id="SC-WG09" data-ca-symbol="SC-WG09" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-WG09">SC-WG09</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Completed CI run and its actual generated HTML/report</div><div class="field"><span class="label">Then</span>Retained bytes equal the checked snapshot and report metadata; actual delivery remains separately recorded from local progress.</div><div class="field"><span class="label">When</span>Retain, download, hash-check and open the same artifact offline</div></article>
+<!-- CA:END:SC-WG09 -->
+</div><div class="field"><span class="label">Statement</span>[&#34;The candidate HTML can be retrieved and its identity verified independently.&#34;, &#34;No production/runtime dependency or telemetry is introduced.&#34;, &#34;Native file tests, integrated UAT, synthetic review and real user validation are separately reported.&#34;, &#34;Do not label this packet or existing CI as complete user acceptance.&#34;]</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-WG09 -->
+<article class="record" id="VER-WG09" data-ca-symbol="VER-WG09" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-WG09">VER-WG09</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Stale HTML, different report bytes/tree, dirty-source success and asynchronous source replacement cannot produce mismatched retained bytes.</div><div class="field"><span class="label">Oracle</span>Retained bytes equal the checked snapshot and report metadata; actual delivery remains separately recorded from local progress.</div><div class="field"><span class="label">Planned target</span>scripts/verification-artifact.ts; tests/unit/verification-artifact.test.ts; tests/unit/verification-crypto.test.ts; .github/workflows/ci.yml</div></article>
+<!-- CA:END:VER-WG09 -->
+</div></article>
+<!-- CA:END:WG09 -->
+
+<!-- CA:BEGIN:UAT-ALL -->
+<article class="record" id="UAT-ALL" data-ca-symbol="UAT-ALL" data-ca-kind="criteria"><div class="record-head"><a class="id" href="#UAT-ALL">UAT-ALL</a><h3>Complete evidence accounting for integrated acceptance</h3><span class="badge">must</span></div><div class="field"><span class="label">Applicability</span><div class="fields"><div class="field"><span class="label">Mode</span>unconditional</div><div class="field"><span class="label">Rationale</span>Full packet scope; inaccessible native/assistive/human checks remain explicit qualification blockers.</div></div></div><div class="field"><span class="label">Guarantees</span><ul class="items"><li>All180 original rows and reconciled controls retain their clauses/flags with concrete current assertions, per-host results and honest remaining obligations.</li></ul></div><div class="field"><span class="label">Intent refs</span><ul class="items"><li><a href="#SCOPE-WHITE-GLOVE">SCOPE-WHITE-GLOVE</a></li></ul></div><div class="field"><span class="label">Kind</span>behavior</div><div class="field"><span class="label">Scenarios</span>
+<!-- CA:BEGIN:SC-UAT-ALL -->
+<article class="record" id="SC-UAT-ALL" data-ca-symbol="SC-UAT-ALL" data-ca-kind="scenarios"><div class="record-head"><a class="id" href="#SC-UAT-ALL">SC-UAT-ALL</a><h3>Scenarios</h3></div><div class="field"><span class="label">Given</span>Exact offline candidate, fictional E0-E6 fixtures and original acceptance matrix</div><div class="field"><span class="label">Then</span>Actual runtime/source/fixture/output identity is recorded; partial adapters/source-only/synthetic review never become native or human acceptance.</div><div class="field"><span class="label">When</span>Execute applicable browser journeys and reconcile outputs/readback; review independently and prepare real sessions</div></article>
+<!-- CA:END:SC-UAT-ALL -->
+</div><div class="field"><span class="label">Statement</span>Execute all applicable original 180 UAT cases plus reconciled omissions against an identified offline candidate in installed Chrome/Edge. Record actual assertions/artifacts/readback, per-host outcomes, environment blocks with concrete reasons, and native/adapter/visual/synthetic/human distinctions. Do not mark partial evidence as a full pass. No merge/tag/release.</div><div class="field"><span class="label">Verification</span>
+<!-- CA:BEGIN:VER-UAT-ALL -->
+<article class="record" id="VER-UAT-ALL" data-ca-symbol="VER-UAT-ALL" data-ca-kind="verification"><div class="record-head"><a class="id" href="#VER-UAT-ALL">VER-UAT-ALL</a><h3>Verification</h3></div><div class="field"><span class="label">Evidence state</span>planned</div><div class="field"><span class="label">Method</span>automated_and_review</div><div class="field"><span class="label">Negative control</span>Missing native/AT/participant proof remains explicitly blocked; composed import Undo/Redo cannot be inferred from disjoint fixtures.</div><div class="field"><span class="label">Oracle</span>Actual runtime/source/fixture/output identity is recorded; partial adapters/source-only/synthetic review never become native or human acceptance.</div><div class="field"><span class="label">Planned target</span>e2e/white-glove-*.spec.ts; .codearbiter/white-glove/uat-results.json; participant-protocol.md</div></article>
+<!-- CA:END:VER-UAT-ALL -->
+</div></article>
+<!-- CA:END:UAT-ALL -->
+</section><section class="group" id="group-open_decisions"><a class="back" href="#main-content">Top</a><h2>Open decisions</h2><span class="missing">None recorded</span></section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>90d04afe422804b1922417cdc719dd7ff2e4dec8</div><div class="field"><span class="label">Observed date</span>2026-11-16</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-governs"><a class="back" href="#main-content">Top</a><h2>Governs</h2><ul class="items"><li>src/**</li><li>e2e/**</li><li>scripts/**</li><li>.github/workflows/ci.yml</li><li>README.md</li></ul></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674<br>Model SHA-256: bc4a9b862c4a4e74997274a6808db20431bf73c62093151e58afe292d1809504</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "SPEC-WHITE-GLOVE",
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "bc4a9b862c4a4e74997274a6808db20431bf73c62093151e58afe292d1809504",
+    "normative_sha256": "a1d509be4b952753a7e738d25dd342546514e5def4a7ba527f83ab4e5c8d1674",
+    "symbol_count": 34
+  },
+  "kind": "spec",
+  "normative": {
+    "approach": {
+      "choice": "Use existing DOM/picker/editor/repository mechanisms with bounded explicit contracts; reproduce each defect before repair; retain machine evidence and practical local checkpoints.",
+      "id": "APPROACH-WHITE-GLOVE",
+      "tradeoff": "Maintain existing interaction semantics and one staged parent aggregate; shared-child creation remains an explicit separate write."
+    },
+    "baseline": {
+      "commit": "90d04afe422804b1922417cdc719dd7ff2e4dec8",
+      "observed_date": "2026-11-16",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "constraints": [],
+    "criteria": [
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "About actions remain inside the viewport and reachable by pointer and keyboard."
+        ],
+        "id": "WG01",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Desktop1366/1600/1024 and narrow/zoomed workspace",
+            "id": "SC-WG01",
+            "then": "Panel bounds fit; essential controls remain reachable without horizontal document overflow.",
+            "when": "Open About, Help and notices, dismiss and return focus"
+          }
+        ],
+        "statement": "[\"Every open menu and action fits the viewport or an intentional bounded scroll container.\", \"Opening a menu does not introduce horizontal document scrolling.\", \"Keyboard focus remains visible; Escape returns to the invoker; choosing an action executes once.\"]",
+        "title": "About menu extends outside the desktop viewport",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG01",
+          "method": "automated_and_review",
+          "negative_control": "Baseline clipped right edge must fail the geometry oracle; narrow/short fallback stays usable.",
+          "oracle": "Panel bounds fit; essential controls remain reachable without horizontal document overflow.",
+          "planned_target": "e2e/white-glove-layout.spec.ts; e2e/usability-layout.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Search, count, paging, Close and supported creation stay usable while large results scroll; very short viewports use whole-dialog scrolling."
+        ],
+        "id": "WG02",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Populated1000-service universe and actual200/400browser zoom",
+            "id": "SC-WG02",
+            "then": "All eligible identities are reachable; long labels remain readable and focused controls fit the visible scroll area.",
+            "when": "Search/page through identities and reach long options and Create when supported"
+          }
+        ],
+        "statement": "[\"Search, Close, result count, and supported Create remain reachable without scrolling through every result.\", \"The result list, not the whole dialog, owns routine browsing scroll.\", \"Keyboard paging and focus do not jump to unrelated controls; all matches remain reachable.\", \"At small heights, retain usable focus/reflow rather than consuming all space with fixed chrome.\"]",
+        "title": "Populated pickers bury creation, count, and paging while search scrolls away",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG02",
+          "method": "automated_and_review",
+          "negative_control": "The original48px nested pane clips a139px option and fails; zero/many results and short-height fallback retain names.",
+          "oracle": "All eligible identities are reachable; long labels remain readable and focused controls fit the visible scroll area.",
+          "planned_target": "e2e/white-glove-density.spec.ts; e2e/usability-layout.spec.ts; e2e/white-glove-layout.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Current assignment has a visible non-color text cue and persistent qualified summary; discovery never assigns implicitly."
+        ],
+        "id": "WG03",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Existing selected shared reference and multiple result pages",
+            "id": "SC-WG03",
+            "then": "The selected ID and parent draft remain unchanged until an explicit choice; current text remains discoverable.",
+            "when": "Filter/page away and back, move focus and blur without selection"
+          }
+        ],
+        "statement": "[\"The existing assignment is recognizable without relying on color alone.\", \"Screen-reader selected/current semantics remain truthful.\", \"Typing or highlighting never commits a replacement. Clearing remains explicit.\"]",
+        "title": "The currently assigned picker option has no visible selected treatment",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG03",
+          "method": "automated_and_review",
+          "negative_control": "Unselected/hovered records must not gain current state; blur/search cannot mutate the assignment.",
+          "oracle": "The selected ID and parent draft remain unchanged until an explicit choice; current text remains discoverable.",
+          "planned_target": "e2e/white-glove-layout.spec.ts; e2e/usability-picker.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Meaningful child-only work participates in loss awareness and cannot be silently applied by parent Save."
+        ],
+        "id": "WG04",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Clean saved positioned dataset and explicit inline child",
+            "id": "SC-WG04",
+            "then": "Real browser beforeunload is observed and exact text survives Stay; no implicit child write; untouched/cancelled controls remain clean.",
+            "when": "Type only inside the child, attempt reload, Stay, then finish or explicitly cancel"
+          }
+        ],
+        "statement": "[\"A meaningful child-only edit participates in browser loss protection.\", \"A clean untouched picker does not produce spurious warnings.\", \"Explicit child cancellation writes nothing and clears only that child intent.\", \"Completed Create and use remains its own shared-record commit and Undo step.\"]",
+        "title": "Child-only creation input is outside the page-loss guard",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG04",
+          "method": "automated_and_review",
+          "negative_control": "Parent-only warning is a positive control; untouched/cancelled child does not create a phantom warning; stale owners cannot write.",
+          "oracle": "Real browser beforeunload is observed and exact text survives Stay; no implicit child write; untouched/cancelled controls remain clean.",
+          "planned_target": "e2e/white-glove-drafts.spec.ts; e2e/white-glove-session.spec.ts; e2e/white-glove-residual.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Expansion represents another recorded logical hop; undefined network expansion is absent and exhaustion is explicit."
+        ],
+        "id": "WG05",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Boundary, directed chain, shared-CDS trap and cycle",
+            "id": "SC-WG05",
+            "then": "Exact logical membership, final cycle edge, usable Fit focus, unchanged stored positions and history.",
+            "when": "Focus/expand/fit and return, then save/read back"
+          }
+        ],
+        "statement": "[\"No enabled Expand action is offered where expansion is undefined.\", \"Depends on and Used by continue to follow the correct direction and logical dependencies.\", \"A shared CDS or provider never pulls in unrelated consumers accidentally.\", \"Fit/focus remain view-only and never change saved positions or data history.\"]",
+        "title": "Expand focus is offered for a network view whose depth is ignored",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG05",
+          "method": "automated_and_review",
+          "negative_control": "Unrelated shared-CDS traffic stays excluded; exhausted expansion cannot remain enabled; view operations do not write.",
+          "oracle": "Exact logical membership, final cycle edge, usable Fit focus, unchanged stored positions and history.",
+          "planned_target": "e2e/white-glove-map.spec.ts; e2e/white-glove-capture.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Zero libraries, zero eligibility and zero query matches have distinct feasible guidance; creation copy matches actual capability."
+        ],
+        "id": "WG06",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "First service, all-linked dependencies and a nonempty search universe",
+            "id": "SC-WG06",
+            "then": "No futile first-service reuse; no unsupported Create promise; Close or supported Create gives a feasible next action.",
+            "when": "Open reuse and relationship pickers and search without choosing"
+          }
+        ],
+        "statement": "[\"Every empty state offers an achievable next step.\", \"Search advice is used for no-match searches, not an empty option universe.\", \"Existing-asset reuse remains prominent when a reusable record exists.\"]",
+        "title": "Empty reuse pickers still suggest a search that cannot succeed",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG06",
+          "method": "automated_and_review",
+          "negative_control": "First-service dependency picker with no services cannot promise Create; a true query miss still suggests another search.",
+          "oracle": "No futile first-service reuse; no unsupported Create promise; Close or supported Create gives a feasible next action.",
+          "planned_target": "e2e/white-glove-layout.spec.ts; e2e/readiness-shell.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Narrow relationship rows preserve readable qualified identity before secondary actions without smaller text."
+        ],
+        "id": "WG07",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Long names and populated connections at narrow width",
+            "id": "SC-WG07",
+            "then": "Full service/network context remains; secondary actions follow the information and remain usable.",
+            "when": "Read a relationship, inspect details, page and return"
+          }
+        ],
+        "statement": "[\"Identity and route information get the primary reading width.\", \"Long names remain readable, not an artificial single-word column.\", \"Keyboard actions remain discoverable and reachable without hover.\", \"No horizontal content loss is introduced.\"]",
+        "title": "Narrow connection rows give the action more space than the relationship",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG07",
+          "method": "automated_and_review",
+          "negative_control": "No font shrink, label dropping, one-character reading column or document overflow is accepted.",
+          "oracle": "Full service/network context remains; secondary actions follow the information and remain usable.",
+          "planned_target": "e2e/white-glove-layout.spec.ts; e2e/usability-layout.spec.ts; e2e/white-glove-visual-fixes.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "Contextual defaults establish a clean initial baseline without hiding meaningful edits or explicit copy intent."
+        ],
+        "id": "WG08",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Second-network contextual Add and ordinary/copy creation controls",
+            "id": "SC-WG08",
+            "then": "Untouched contextual form returns cleanly; meaningful changes still trigger the existing guard and retain data.",
+            "when": "Cancel untouched contextual creation, then make a meaningful edit"
+          }
+        ],
+        "statement": "[\"Untouched contextual defaults do not force a loss decision.\", \"The first meaningful user edit becomes pending.\", \"Cancel returns to the originating network and view context.\", \"Create similar service retains its explicit source/destination review contract.\"]",
+        "title": "Contextual network defaults are counted as user edits before typing",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG08",
+          "method": "automated_and_review",
+          "negative_control": "Changed scalar/relationship/child intent and Create-similar intent must not be reseeded away as defaults.",
+          "oracle": "Untouched contextual form returns cleanly; meaningful changes still trigger the existing guard and retain data.",
+          "planned_target": "e2e/white-glove-drafts.spec.ts; e2e/usability-records.spec.ts"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Supplied post-PR26 white-glove stabilization and qualification packet."
+        },
+        "guarantees": [
+          "The exact checked HTML is retained with matching source/tree/PR identity, SHA256 and browser report; retrieval is independently verified."
+        ],
+        "id": "WG09",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Completed CI run and its actual generated HTML/report",
+            "id": "SC-WG09",
+            "then": "Retained bytes equal the checked snapshot and report metadata; actual delivery remains separately recorded from local progress.",
+            "when": "Retain, download, hash-check and open the same artifact offline"
+          }
+        ],
+        "statement": "[\"The candidate HTML can be retrieved and its identity verified independently.\", \"No production/runtime dependency or telemetry is introduced.\", \"Native file tests, integrated UAT, synthetic review and real user validation are separately reported.\", \"Do not label this packet or existing CI as complete user acceptance.\"]",
+        "title": "The exact post-PR-26 executable is not retained as a retrievable CI artifact",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-WG09",
+          "method": "automated_and_review",
+          "negative_control": "Stale HTML, different report bytes/tree, dirty-source success and asynchronous source replacement cannot produce mismatched retained bytes.",
+          "oracle": "Retained bytes equal the checked snapshot and report metadata; actual delivery remains separately recorded from local progress.",
+          "planned_target": "scripts/verification-artifact.ts; tests/unit/verification-artifact.test.ts; tests/unit/verification-crypto.test.ts; .github/workflows/ci.yml"
+        }
+      },
+      {
+        "applicability": {
+          "mode": "unconditional",
+          "rationale": "Full packet scope; inaccessible native/assistive/human checks remain explicit qualification blockers."
+        },
+        "guarantees": [
+          "All180 original rows and reconciled controls retain their clauses/flags with concrete current assertions, per-host results and honest remaining obligations."
+        ],
+        "id": "UAT-ALL",
+        "intent_refs": [
+          "SCOPE-WHITE-GLOVE"
+        ],
+        "kind": "behavior",
+        "obligation": "must",
+        "scenarios": [
+          {
+            "given": "Exact offline candidate, fictional E0-E6 fixtures and original acceptance matrix",
+            "id": "SC-UAT-ALL",
+            "then": "Actual runtime/source/fixture/output identity is recorded; partial adapters/source-only/synthetic review never become native or human acceptance.",
+            "when": "Execute applicable browser journeys and reconcile outputs/readback; review independently and prepare real sessions"
+          }
+        ],
+        "statement": "Execute all applicable original 180 UAT cases plus reconciled omissions against an identified offline candidate in installed Chrome/Edge. Record actual assertions/artifacts/readback, per-host outcomes, environment blocks with concrete reasons, and native/adapter/visual/synthetic/human distinctions. Do not mark partial evidence as a full pass. No merge/tag/release.",
+        "title": "Complete evidence accounting for integrated acceptance",
+        "verification": {
+          "evidence_state": "planned",
+          "id": "VER-UAT-ALL",
+          "method": "automated_and_review",
+          "negative_control": "Missing native/AT/participant proof remains explicitly blocked; composed import Undo/Redo cannot be inferred from disjoint fixtures.",
+          "oracle": "Actual runtime/source/fixture/output identity is recorded; partial adapters/source-only/synthetic review never become native or human acceptance.",
+          "planned_target": "e2e/white-glove-*.spec.ts; .codearbiter/white-glove/uat-results.json; participant-protocol.md"
+        }
+      }
+    ],
+    "decisions": [],
+    "governs": [
+      "src/**",
+      "e2e/**",
+      "scripts/**",
+      ".github/workflows/ci.yml",
+      "README.md"
+    ],
+    "intent": {
+      "caller": "sprint",
+      "id": "INTENT-WHITE-GLOVE",
+      "outcome": "Coherent existing workflows and reviewable exact offline candidate with honest per-case coverage and outstanding acceptance.",
+      "problem": "The source-bound white-glove packet identifies remaining lost-child awareness, phantom context drafts, picker/menu/row friction, meaningless expansion, and missing retrievable candidate evidence."
+    },
+    "non_goals": [
+      {
+        "id": "EXCL-EXPANSION",
+        "statement": "No new discovery capabilities G01–G07, framework/dependency/schema expansion, browser dataset storage, hidden autosave, telemetry, merge/tag/release, invented native or human evidence."
+      }
+    ],
+    "open_decisions": [],
+    "retired_symbols": [],
+    "scope": [
+      {
+        "id": "SCOPE-WHITE-GLOVE",
+        "statement": "One dedicated follow-up branch and PR from merged main90d04afe. Preserve prior stabilization, provide local checkpoints and exact candidate/evidence. Root integrates shared picker/editor contracts and owns all builds."
+      }
+    ],
+    "sections": [],
+    "sources": [],
+    "summary": "Repair verified WG01–WG08, retain a retrievable checked candidate for WG09, reconcile and execute the integrated acceptance inventory, preserve explicit qualification limits.",
+    "title": "SIM post-PR26 white-glove stabilization"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../plans/white-glove.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 2,
+  "schema_version": "0.3.2",
+  "slug": "white-glove"
+}
+</script>
+</body></html>

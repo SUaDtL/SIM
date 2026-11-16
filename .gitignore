@@ -1,5 +1,6 @@
 node_modules/
 dist/
+verification/
 playwright-report/
 test-results/
 *.sqlite
@@ -7,3 +8,6 @@ test-results/
 # codeArbiter local-only metadata
 .codearbiter/.artifacts/
 .codearbiter/.markers/
+blob-report/
+blob-merge/
+job-logs/

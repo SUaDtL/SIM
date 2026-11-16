@@ -38,6 +38,18 @@ async function openDemo(page: Page): Promise<void> {
 }
 async function clickNode(page: Page, label: string, edge = false) {
   const canvas = page.getByTestId("map-canvas");
+  // A newly shown canvas completes ResizeObserver's initial Fit on the next
+  // frame. Click the painted node, not coordinates sampled before that Fit.
+  await canvas.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resolve();
+          });
+        });
+      }),
+  );
   const before = await canvas.evaluate(
     (container, { label, edge }) => {
       const cy = (container as unknown as { _cyreg: { cy: MapCy } })._cyreg.cy;
@@ -62,9 +74,23 @@ async function clickNode(page: Page, label: string, edge = false) {
     },
     { label, edge },
   );
+  await canvas.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resolve();
+          });
+        });
+      }),
+  );
+  const point = await canvas.evaluate((container, id) => {
+    const cy = (container as unknown as { _cyreg: { cy: MapCy } })._cyreg.cy;
+    return cy.getElementById(id).renderedPosition();
+  }, before.id);
   const box = await canvas.boundingBox();
   if (!box) throw new Error("Map canvas missing");
-  await page.mouse.click(box.x + before.position.x, box.y + before.position.y);
+  await page.mouse.click(box.x + point.x, box.y + point.y);
   await expect(
     page.getByTestId("editor").getByRole("heading", { name: `Service: ${label}`, exact: true }),
   ).toBeVisible();

@@ -208,7 +208,8 @@ function edge(e: SvgEdge): string {
 
 /** The scene as a standalone SVG document, with the banner above and below the map. */
 export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | null, frame?: FrameLayout): string {
-  const width = scene.pixelWidth;
+  const mapWidth = scene.pixelWidth;
+  const width = frame?.width ?? mapWidth;
   const band = frame?.bandHeight ?? bandHeight(width);
   const top = frame?.topHeight ?? 0;
   const bottom = frame?.bottomHeight ?? 0;
@@ -217,26 +218,44 @@ export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | 
   const text = bannerText(marking, caveat);
   const banner = (y: number) =>
     tag("rect", { x: 0, y, width, height: band, fill: colors.background }) +
-    tag(
-      "text",
-      {
-        x: width / 2,
-        y: y + band / 2 + band * 0.21,
-        "text-anchor": "middle",
-        "font-family": FONT,
-        "font-size": Math.round(band * 0.6),
-        "font-weight": "bold",
-        fill: colors.text,
-      },
-      escapeXml(text),
-    );
+    (frame?.bannerLines
+      ? frame.bannerLines
+          .map((line) =>
+            tag(
+              "text",
+              {
+                x: width / 2,
+                y: y + line.y,
+                "text-anchor": "middle",
+                "font-family": FONT,
+                "font-size": line.size,
+                "font-weight": "bold",
+                fill: colors.text,
+              },
+              escapeXml(line.text),
+            ),
+          )
+          .join("")
+      : tag(
+          "text",
+          {
+            x: width / 2,
+            y: y + band / 2 + band * 0.21,
+            "text-anchor": "middle",
+            "font-family": FONT,
+            "font-size": Math.round(band * 0.6),
+            "font-weight": "bold",
+            fill: colors.text,
+          },
+          escapeXml(text),
+        ));
   const v = scene.view;
   const map = tag(
     "svg",
     {
-      x: 0,
+      x: (width - mapWidth) / 2,
       y: band + top,
-      width,
+      width: mapWidth,
       height: scene.pixelHeight,
       viewBox: `${num(v.x)} ${num(v.y)} ${num(v.width)} ${num(v.height)}`,
     },

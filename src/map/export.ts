@@ -19,6 +19,8 @@ export interface FrameContent {
   readonly title: string;
   readonly details: readonly string[];
   readonly legend: readonly string[];
+  /** Full marking/caveat, measured with the same font as the capture annotations. */
+  readonly banner?: string;
 }
 
 export interface FrameLine {
@@ -29,8 +31,11 @@ export interface FrameLine {
 }
 
 export interface FrameLayout {
+  /** Extra caption room when needed; the captured map retains its original rectangle. */
+  readonly width?: number;
   /** Enlarged with annotations when preparing a capture for a 1280×720 presentation. */
   readonly bandHeight?: number;
+  readonly bannerLines?: readonly FrameLine[];
   readonly topHeight: number;
   readonly bottomHeight: number;
   readonly topLines: readonly FrameLine[];
@@ -38,7 +43,7 @@ export interface FrameLayout {
 }
 
 /** Shared PNG/SVG frame geometry, with text wrapped within the captured viewport width. */
-export function layoutFrame(
+function frameAtWidth(
   width: number,
   content: FrameContent,
   measure: (text: string, size: number, bold: boolean) => number = (text, size) => text.length * size * 0.6,
@@ -87,8 +92,34 @@ export function layoutFrame(
       ...content.details.map((text) => ({ text, size: 18 * scale, bold: false })),
     ]);
     const bottom = rows(content.legend.map((text) => ({ text, size: 17 * scale, bold: false })));
+    const minimumBand =
+      mapHeight === undefined ? bandHeight(width) : Math.max(bandHeight(width), Math.ceil((17 * scale) / 0.6));
+    const bannerSize = Math.round(minimumBand * 0.6);
+    // A long marking/caveat can break at its delimiter before splitting a word.
+    const separator = content.banner?.indexOf("//") ?? -1;
+    const bannerRows = !content.banner
+      ? []
+      : separator >= 0 && measure(content.banner, bannerSize, true) > maxWidth
+        ? [
+            ...wrap(content.banner.slice(0, separator + 2), bannerSize, true),
+            ...wrap(content.banner.slice(separator + 2), bannerSize, true),
+          ]
+        : wrap(content.banner, bannerSize, true);
+    const bannerLineHeight = Math.ceil(bannerSize * 1.2);
+    const actualBand = Math.max(minimumBand, bannerRows.length * bannerLineHeight + Math.ceil(bannerSize * 0.6));
+    const bannerTop = (actualBand - bannerRows.length * bannerLineHeight) / 2;
     return {
-      ...(mapHeight === undefined ? {} : { bandHeight: Math.max(bandHeight(width), Math.ceil((17 * scale) / 0.6)) }),
+      ...(mapHeight === undefined && !content.banner ? {} : { bandHeight: actualBand }),
+      ...(content.banner
+        ? {
+            bannerLines: bannerRows.map((text, index) => ({
+              text,
+              y: bannerTop + index * bannerLineHeight + bannerSize,
+              size: bannerSize,
+              bold: true,
+            })),
+          }
+        : {}),
       topHeight: top.height,
       bottomHeight: bottom.height,
       topLines: top.lines,
@@ -114,6 +145,29 @@ export function layoutFrame(
   return frame;
 }
 
+/** Keep complete annotations readable without squeezing or shrinking the captured map. */
+export function layoutFrame(
+  width: number,
+  content: FrameContent,
+  measure: (text: string, size: number, bold: boolean) => number = (text, size) => text.length * size * 0.6,
+  mapHeight?: number,
+): FrameLayout {
+  const frame = frameAtWidth(width, content, measure, mapHeight);
+  if (mapHeight === undefined) return frame;
+  const fit = Math.min(
+    1280 / width,
+    720 / (mapHeight + frame.topHeight + frame.bottomHeight + 2 * (frame.bandHeight ?? 0)),
+  );
+  const smallest = Math.min(
+    ...[...frame.topLines, ...frame.bottomLines, ...(frame.bannerLines ?? [])].map((line) => line.size),
+  );
+  if (smallest * fit >= 11.9) return frame;
+  // Growing fonts alone on a narrow portrait can create ever more wrapped rows.
+  // Letterbox that map inside a wider caption canvas instead; its scope and pixels stay intact.
+  const captionWidth = Math.max(width * 2, Math.ceil((mapHeight * 1280) / 720));
+  return { ...frameAtWidth(captionWidth, content, measure, mapHeight), width: captionWidth };
+}
+
 /**
  * Frame a rendered map with the classification banner above and below (security-controls CON-002:
  * the banner appears on every export).
@@ -127,7 +181,8 @@ export async function frameWithBanner(
   const image = await createImageBitmap(map);
   try {
     // A closed ImageBitmap reports zero size, so keep its size first.
-    const { width, height } = image;
+    const { width: mapWidth, height } = image;
+    const width = frame?.width ?? mapWidth;
     const band = frame?.bandHeight ?? bandHeight(width);
     const top = frame?.topHeight ?? 0;
     const bottom = frame?.bottomHeight ?? 0;
@@ -140,7 +195,7 @@ export async function frameWithBanner(
     const text = bannerText(marking, caveat);
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(image, 0, band + top);
+    context.drawImage(image, (width - mapWidth) / 2, band + top);
     const drawLines = (lines: readonly FrameLine[], offset: number) => {
       context.fillStyle = "#1f2933";
       context.textAlign = "left";
@@ -158,10 +213,18 @@ export async function frameWithBanner(
       context.fillStyle = colors.background;
       context.fillRect(0, y, canvas.width, band);
       context.fillStyle = colors.text;
-      context.font = `bold ${String(Math.round(band * 0.6))}px "Segoe UI", system-ui, sans-serif`;
       context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText(text, canvas.width / 2, y + band / 2, canvas.width - band);
+      if (frame?.bannerLines) {
+        context.textBaseline = "alphabetic";
+        for (const line of frame.bannerLines) {
+          context.font = `bold ${String(line.size)}px "Segoe UI", system-ui, sans-serif`;
+          context.fillText(line.text, canvas.width / 2, y + line.y);
+        }
+      } else {
+        context.font = `bold ${String(Math.round(band * 0.6))}px "Segoe UI", system-ui, sans-serif`;
+        context.textBaseline = "middle";
+        context.fillText(text, canvas.width / 2, y + band / 2, canvas.width - band);
+      }
     }
     return await new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {

@@ -1,0 +1,106 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-session.spec.ts --grep shared Support child --reporter=line,json --output=C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed
+
+
+Running 2 tests using 2 workers
+
+
+(node:66360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [msedge] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained
+[2/2] [chrome] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained
+  1) [chrome] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      805 |   await picker.getByTestId("picker-query").fill("Synthetic support child");
+      806 |   const newProvider = picker.getByRole("button", { name: "Synthetic support child", exact: true });
+    > 807 |   await expect(newProvider).toHaveCount(1);
+          |                             ^
+      808 |   await newProvider.click();
+      809 |   await expect(editor.getByLabel("Description", { exact: true })).toHaveValue(
+      810 |     "Retain this exact synthetic shared-reference draft  ",
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:807:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: session-state (image/png) ───────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-chrome\attachments\session-state-0e623f576109027778811b0980228da1cac6681d.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-chrome\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2) [msedge] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('record-picker').getByRole('button', { name: 'Synthetic support child', exact: true })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      805 |   await picker.getByTestId("picker-query").fill("Synthetic support child");
+      806 |   const newProvider = picker.getByRole("button", { name: "Synthetic support child", exact: true });
+    > 807 |   await expect(newProvider).toHaveCount(1);
+          |                             ^
+      808 |   await newProvider.click();
+      809 |   await expect(editor.getByLabel("Description", { exact: true })).toHaveValue(
+      810 |     "Retain this exact synthetic shared-reference draft  ",
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-session.spec.ts:807:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: session-state (image/png) ───────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-msedge\attachments\session-state-2e10dd867818783ec02d9e25678486e22bb9622c.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-msedge\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\session-results-reverse-red-confirmed\white-glove-session-WG-UAT-cca22-with-pending-route-retained-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2 failed
+    [msedge] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained 
+    [chrome] › e2e\white-glove-session.spec.ts:785:1 › WG-UAT UX01 shared Support child is immediately eligible in Provided by and Consumer pickers with pending route retained 

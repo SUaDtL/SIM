@@ -1,0 +1,258 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-map.spec.ts
+
+
+Running 8 tests using 2 workers
+
+(node:63764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chrome] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes (5.7s)
+  x  1 [msedge] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes (5.7s)
+(node:29952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown (5.7s)
+(node:47708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown (5.8s)
+(node:56500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown (5.7s)
+(node:21176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown (5.8s)
+(node:39740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [chrome] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion (5.6s)
+  x  8 [msedge] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion (5.7s)
+
+
+  1) [msedge] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "visible"
+
+
+      101 |   expect(focused.dependencies).toEqual([`${String(data.orders)}-${String(data.identity)}`]);
+      102 |   await page.screenshot({ path: info.outputPath("network-focus.png") });
+    > 103 |   await expect(page.getByRole("button", { name: "Expand focus", exact: true })).toBeHidden();
+          |                                                                                 ^
+      104 |   await page.getByRole("button", { name: "Fit focus", exact: true }).click();
+      105 |   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
+      106 |   expect((await mapState(page)).positions).toEqual(before.positions);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:103:81
+
+    Error Context: test-results\white-glove-map-WG05-netwo-b88fc-ng-complete-boundary-routes-msedge\error-context.md
+
+  2) [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      137 |     if (direction === "Depends on") expect(expanded.services).not.toContain(`service-${String(data.other)}`);
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+    > 139 |     await expect(expand).toBeDisabled();
+          |                          ^
+      140 |     await expect(page.getByTestId("focus-status")).toContainText(
+      141 |       "All recorded dependencies in this direction are shown",
+      142 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:139:26
+
+    Error Context: test-results\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-msedge\error-context.md
+
+  3) [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      137 |     if (direction === "Depends on") expect(expanded.services).not.toContain(`service-${String(data.other)}`);
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+    > 139 |     await expect(expand).toBeDisabled();
+          |                          ^
+      140 |     await expect(page.getByTestId("focus-status")).toContainText(
+      141 |       "All recorded dependencies in this direction are shown",
+      142 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:139:26
+
+    Error Context: test-results\white-glove-map-WG05-Used--b1a01-cal-dependency-can-be-shown-msedge\error-context.md
+
+  4) [msedge] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      160 |   expect((await mapState(page)).dependencies).toHaveLength(3);
+      161 |   expect((await mapState(page)).services).not.toContain(`service-${String(data.other)}`);
+    > 162 |   await expect(expand).toBeDisabled();
+          |                        ^
+      163 |   await expect(page.getByTestId("focus-status")).toContainText("All recorded dependencies in this direction are shown");
+      164 |   expect((await mapState(page)).positions).toEqual(before.positions);
+      165 |   expect(await readback(page, info)).toEqual(data.snapshot);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:162:24
+
+    Error Context: test-results\white-glove-map-WG05-a-dir-c10de-before-reporting-exhaustion-msedge\error-context.md
+
+  5) [chrome] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "visible"
+
+
+      101 |   expect(focused.dependencies).toEqual([`${String(data.orders)}-${String(data.identity)}`]);
+      102 |   await page.screenshot({ path: info.outputPath("network-focus.png") });
+    > 103 |   await expect(page.getByRole("button", { name: "Expand focus", exact: true })).toBeHidden();
+          |                                                                                 ^
+      104 |   await page.getByRole("button", { name: "Fit focus", exact: true }).click();
+      105 |   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
+      106 |   expect((await mapState(page)).positions).toEqual(before.positions);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:103:81
+
+    Error Context: test-results\white-glove-map-WG05-netwo-b88fc-ng-complete-boundary-routes-chrome\error-context.md
+
+  6) [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      137 |     if (direction === "Depends on") expect(expanded.services).not.toContain(`service-${String(data.other)}`);
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+    > 139 |     await expect(expand).toBeDisabled();
+          |                          ^
+      140 |     await expect(page.getByTestId("focus-status")).toContainText(
+      141 |       "All recorded dependencies in this direction are shown",
+      142 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:139:26
+
+    Error Context: test-results\white-glove-map-WG05-Depen-00f53-cal-dependency-can-be-shown-chrome\error-context.md
+
+  7) [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      137 |     if (direction === "Depends on") expect(expanded.services).not.toContain(`service-${String(data.other)}`);
+      138 |     await page.screenshot({ path: info.outputPath("directed-closure.png") });
+    > 139 |     await expect(expand).toBeDisabled();
+          |                          ^
+      140 |     await expect(page.getByTestId("focus-status")).toContainText(
+      141 |       "All recorded dependencies in this direction are shown",
+      142 |     );
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:139:26
+
+    Error Context: test-results\white-glove-map-WG05-Used--b1a01-cal-dependency-can-be-shown-chrome\error-context.md
+
+  8) [chrome] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('button', { name: 'Expand focus', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: 'Expand focus', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Expand focus', exact: true })
+        14 × locator resolved to <button type="button">Expand focus</button>
+           - unexpected value "enabled"
+
+
+      160 |   expect((await mapState(page)).dependencies).toHaveLength(3);
+      161 |   expect((await mapState(page)).services).not.toContain(`service-${String(data.other)}`);
+    > 162 |   await expect(expand).toBeDisabled();
+          |                        ^
+      163 |   await expect(page.getByTestId("focus-status")).toContainText("All recorded dependencies in this direction are shown");
+      164 |   expect((await mapState(page)).positions).toEqual(before.positions);
+      165 |   expect(await readback(page, info)).toEqual(data.snapshot);
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-map.spec.ts:162:24
+
+    Error Context: test-results\white-glove-map-WG05-a-dir-c10de-before-reporting-exhaustion-chrome\error-context.md
+
+  8 failed
+    [msedge] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes 
+    [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+    [msedge] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown 
+    [msedge] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion 
+    [chrome] › e2e\white-glove-map.spec.ts:91:1 › WG05 network focus has no undefined expansion while preserving complete boundary routes 
+    [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Depends on expands only while another logical dependency can be shown 
+    [chrome] › e2e\white-glove-map.spec.ts:112:3 › WG05 Used by expands only while another logical dependency can be shown 
+    [chrome] › e2e\white-glove-map.spec.ts:150:1 › WG05 a directed cycle includes the closing dependency before reporting exhaustion 

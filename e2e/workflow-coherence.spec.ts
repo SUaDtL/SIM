@@ -113,7 +113,10 @@ test("opening readable legacy data reports its existing semantic issue", async (
   await openFileMenu(page);
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   const issues = page.getByRole("dialog", { name: "Data issues", exact: true });
-  await expect(issues).toContainText("ORG CYCLE");
+  await expect(issues).toContainText("The organization hierarchy forms a loop: Ops → Desk → Ops");
+  await expect(issues).toContainText("Choose a parent outside this loop");
+  await issues.getByText("Technical details", { exact: true }).click();
+  await expect(issues).toContainText("ORG_CYCLE");
   await expect(issues).toContainText("parent cycle");
   await expect(issues.getByRole("button", { name: "Review Ops", exact: true })).toBeVisible();
 });

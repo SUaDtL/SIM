@@ -1,0 +1,82 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/map.spec.ts --grep majority-fresh CSV --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green --reporter=list
+
+
+Running 2 tests using 2 workers
+
+(node:46524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves (2.0s)
+  x  2 [msedge] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves (2.0s)
+
+
+  1) [msedge] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      546 |   await expect(page.getByTestId("map-summary")).toContainText("18 services");
+      547 |   expect(await readback("arranged-import-redone")).toEqual(importedSnapshot);
+    > 548 |   expect(near(placed(await readMap(page)), after, 1e-6)).toBe(true);
+          |                                                          ^
+      549 |   expect(watch.errors).toEqual([]);
+      550 | });
+      551 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map.spec.ts:548:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-msedge\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-msedge\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      546 |   await expect(page.getByTestId("map-summary")).toContainText("18 services");
+      547 |   expect(await readback("arranged-import-redone")).toEqual(importedSnapshot);
+    > 548 |   expect(near(placed(await readMap(page)), after, 1e-6)).toBe(true);
+          |                                                          ^
+      549 |   expect(watch.errors).toEqual([]);
+      550 | });
+      551 |
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\map.spec.ts:548:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\..\..\..\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\import-history-green\map-a-majority-fresh-CSV-b-81b2b-ly-arranged-existing-leaves-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [msedge] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves 
+    [chrome] › e2e\map.spec.ts:493:1 › a majority-fresh CSV batch preserves manually arranged existing leaves 

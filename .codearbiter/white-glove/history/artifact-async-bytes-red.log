@@ -1,0 +1,138 @@
+
+> sim@0.1.0 test
+> vitest run tests/unit/verification-artifact.test.ts
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+ ❯ tests/unit/verification-artifact.test.ts (4 tests | 1 failed) 30ms
+   ❯ CI verification candidate (4)
+     × retains the bytes whose digest was checked even if the source is replaced during hashing 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/verification-artifact.test.ts > CI verification candidate > retains the bytes whose digest was checked even if the source is replaced during hashing
+AssertionError: expected Buffer[ 83, 121, 110, 116, 104, …(-64) ] to deeply equal Buffer[ 60, 33, 100, 111, 99, …(-45) ]
+
+- Expected
++ Received
+
+  {
+    "data": [
+-     60,
+-     33,
+-     100,
+-     111,
+-     99,
+-     116,
++     83,
+      121,
+-     112,
++     110,
++     116,
++     104,
+      101,
+-     32,
+-     104,
+-     116,
+-     109,
+-     108,
+-     62,
+-     60,
+      116,
+      105,
+-     116,
+-     108,
++     99,
++     32,
++     114,
+      101,
+-     62,
++     112,
++     108,
+      97,
++     99,
++     101,
++     109,
++     101,
++     110,
++     116,
++     32,
+      97,
++     102,
++     116,
++     101,
++     114,
++     32,
++     115,
++     110,
+      97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     97,
+-     60,
+-     47,
+-     116,
+-     105,
++     112,
++     115,
++     104,
++     111,
+      116,
+-     108,
+-     101,
+-     62,
+    ],
+    "type": "Buffer",
+  }
+
+ ❯ tests/unit/verification-artifact.test.ts:29:52
+     27|     writeFileSync(join(root, "dist/sim.html"), "Synthetic replacement …
+     28|     await pending;
+     29|     expect(readFileSync(join(output, "sim.html"))).toEqual(html);
+       |                                                    ^
+     30|   });
+     31|   it("requires byte-matched browser evidence before claiming a success…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  10:03:20
+   Duration  145ms (tests 51%, transform 29%, import 14%, worker 5%)
+

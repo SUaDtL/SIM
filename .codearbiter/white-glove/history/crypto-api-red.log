@@ -1,0 +1,84 @@
+
+> sim@0.1.0 test
+> vitest run tests/unit/verification-crypto.test.ts
+
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+ ❯ tests/unit/verification-crypto.test.ts (1 test | 1 failed) 3ms
+   × keeps new verification hashing on the approved Web Crypto API (CON-009) 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/verification-crypto.test.ts > keeps new verification hashing on the approved Web Crypto API (CON-009)
+AssertionError: playwright.config.ts: expected 'import { defineConfig } from "@playwr…' not to match /import\s[^;]*\bcreateHash\b[^;]*from\…/
+
+- Expected:
+/import\s[^;]*\bcreateHash\b[^;]*from\s*["']node:crypto["']/
+
++ Received:
+"import { defineConfig } from \"@playwright/test\";
+import { createHash } from \"node:crypto\";
+import { execFileSync } from \"node:child_process\";
+import { existsSync, readFileSync } from \"node:fs\";
+import { platform, release } from \"node:os\";
+
+const candidate = new URL(\"./dist/sim.html\", import.meta.url);
+
+// Uses the installed Edge and Chrome (no browser download), matching what SIM's users run.
+export default defineConfig({
+  testDir: \"e2e\",
+  metadata: {
+    candidate_sha256: existsSync(candidate) ? createHash(\"sha256\").update(readFileSync(candidate)).digest(\"hex\") : null,
+    source_commit: execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { encoding: \"utf8\" }).trim(),
+    source_tree: execFileSync(\"git\", [\"rev-parse\", \"HEAD^{tree}\"], { encoding: \"utf8\" }).trim(),
+    source_modified:
+      execFileSync(
+        \"git\",
+        [
+          \"status\",
+          \"--porcelain\",
+          \"--\",
+          \"src\",
+          \"scripts\",
+          \"e2e\",
+          \"tests\",
+          \"sim.html\",
+          \"vite.config.ts\",
+          \"playwright.config.ts\",
+          \"package.json\",
+          \"package-lock.json\",
+        ],
+        { encoding: \"utf8\" },
+      ).trim() !== \"\",
+    platform: `${platform()} ${release()}`,
+    node: process.version,
+  },
+  reporter: process.env[\"CI\"] ? [[\"list\"], [\"json\", { outputFile: \"test-results/results.json\" }]] : \"list\",
+  use: { screenshot: \"only-on-failure\", trace: \"retain-on-failure\" },
+  forbidOnly: true,
+  // Cap local browser concurrency; CI uses two workers on its smaller Windows runner.
+  workers: process.env[\"CI\"] ? 2 : 4,
+  projects: [
+    { name: \"msedge\", use: { channel: \"msedge\" } },
+    { name: \"chrome\", use: { channel: \"chrome\" } },
+  ],
+});
+"
+
+ ❯ tests/unit/verification-crypto.test.ts:15:87
+     13|   ];
+     14|   for (const path of paths) {
+     15|     expect(readFileSync(new URL(`../../${path}`, import.meta.url), "ut…
+       |                                                                                       ^
+     16|       /import\s[^;]*\bcreateHash\b[^;]*from\s*["']node:crypto["']/,
+     17|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:59:27
+   Duration  112ms (transform 49%, import 26%, tests 14%, worker 11%)
+

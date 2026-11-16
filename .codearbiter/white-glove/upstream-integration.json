@@ -1,0 +1,28 @@
+{
+  "ui_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+  "upstream_main": "2b528c15db23eef0c222bc25c3a95e68c0097c7f",
+  "upstream_prs": [
+    27,
+    28
+  ],
+  "merge_state": "working-tree merge, pending integration commit at collection",
+  "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
+  "local_candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
+  "local_gate": {
+    "unit_passes": 426,
+    "browser_passes": 972,
+    "exit_code": 0
+  },
+  "changed_ci_paths": {
+    ".github/workflows/ci.yml": "ebca1442e7a8df4f1f907a1166837463b7e492d52daea99ae872f11444431d20",
+    "scripts/verification-artifact.ts": "20e38e097f0cfd07f69e6c4b063d79318bf1874abf7bec02203ed0342f264cd1",
+    "playwright.config.ts": "ae55335c746dfb6c968cc538c84ea5b18389015893a1d138764d8b6d57c8a392",
+    ".gitignore": "7f677858b76ca5b66ac7e2603d66f5f2468e8f62b71c039abbbd8c5986f1ccbb",
+    ".prettierignore": "e72009ca37d6869ecf2edc541655f259b33c8e3b948ebba6770b9f6126e4e8ac",
+    "tests/unit/verification-shards.test.ts": "3775fc75850eef47c3a1d7cfab7f5334609f81484185db457c20029f3ee423d0"
+  },
+  "pages_sha256": "895c564d37fa24fb3f385444b95087f6f159127979c43fef31483b3a97e67cd6",
+  "contract": "Preserve ci/check, parallel static/unit jobs, all eight browser shards and main Pages publishing. One immutable Windows-built HTML feeds every browser shard. Latest available attempts, including failed ones, are verified without falling back to older successes. Raw reports, outputs and historical attempts are retained; standard Playwright blob merge is checked against the complete qualified case set before successful candidate retention.",
+  "rehearsal": "Eight actual browser executions across four small rehearsal reports, including honest empty second shards; Windows standard merge and truthful dirty-source refusal. It is not hosted cross-OS qualification.",
+  "remaining": "Complete staged review/merge commit, exact-head hosted matrix, retained artifact download and actual-byte offline receiving checks. Native/AT/human acceptance stays explicit."
+}

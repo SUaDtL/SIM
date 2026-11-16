@@ -1,0 +1,171 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-drafts.spec.ts
+
+
+Running 12 tests using 2 workers
+
+(node:61004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   2 [chrome] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (5.7s)
+  x   1 [msedge] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay (5.7s)
+(node:49196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  3 [chrome] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (796ms)
+  ok  4 [msedge] › e2e\white-glove-drafts.spec.ts:47:1 › WG04 parent-only input also survives a dismissed browser loss warning (786ms)
+  ok  5 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (692ms)
+  ok  6 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched picker leaves a clean parent without a spurious page-loss warning (687ms)
+  ok  7 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (714ms)
+  ok  8 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 untouched child leaves a clean parent without a spurious page-loss warning (718ms)
+  ok  9 [chrome] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (773ms)
+  ok 10 [msedge] › e2e\white-glove-drafts.spec.ts:65:3 › WG04 cancelled child leaves a clean parent without a spurious page-loss warning (769ms)
+  x  11 [chrome] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (5.6s)
+  x  12 [msedge] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin (5.6s)
+
+
+  1) [msedge] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      38 |   });
+      39 |   await page.close({ runBeforeUnload: true });
+    > 40 |   await expect.poll(() => warnings).toBe(1);
+         |                                     ^
+      41 |   expect(page.isClosed()).toBe(false);
+      42 |   await expect(childName).toHaveValue("Uncreated synthetic provider");
+      43 |   await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Orders");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-drafts.spec.ts:40:37
+
+    Error Context: test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-msedge\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [msedge] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('editor-draft-summary')
+    Expected: "No unapplied changes"
+    Received: "Unapplied draft across all sections"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByTestId('editor-draft-summary') with timeout 5000ms
+      - waiting for getByTestId('editor-draft-summary')
+        14 × locator resolved to <p data-testid="editor-draft-summary">Unapplied draft across all sections</p>
+           - unexpected value "Unapplied draft across all sections"
+
+
+       99 |   await page.getByTestId("editor").getByRole("button", { name: "Add service on this network", exact: true }).click();
+      100 |   await expect(page.getByTestId("editor").getByLabel("Network", { exact: true })).toHaveValue("2");
+    > 101 |   await expect(page.getByTestId("editor-draft-summary")).toHaveText("No unapplied changes");
+          |                                                          ^
+      102 |   await page.getByTestId("editor").getByRole("button", { name: "Cancel", exact: true }).click();
+      103 |   await expect(page.getByRole("dialog", { name: "Unapplied changes", exact: true })).toHaveCount(0);
+      104 |   await expect(page.getByTestId("editor").getByRole("heading", { name: "Network: Blue", exact: true })).toBeVisible();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-drafts.spec.ts:101:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-msedge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-msedge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-msedge\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-msedge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      38 |   });
+      39 |   await page.close({ runBeforeUnload: true });
+    > 40 |   await expect.poll(() => warnings).toBe(1);
+         |                                     ^
+      41 |   expect(page.isClosed()).toBe(false);
+      42 |   await expect(childName).toHaveValue("Uncreated synthetic provider");
+      43 |   await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Orders");
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-drafts.spec.ts:40:37
+
+    Error Context: test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-chrome\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\white-glove-drafts-WG04-ch-bc9fc-ad-dialog-and-survives-Stay-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('editor-draft-summary')
+    Expected: "No unapplied changes"
+    Received: "Unapplied draft across all sections"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" getByTestId('editor-draft-summary') with timeout 5000ms
+      - waiting for getByTestId('editor-draft-summary')
+        14 × locator resolved to <p data-testid="editor-draft-summary">Unapplied draft across all sections</p>
+           - unexpected value "Unapplied draft across all sections"
+
+
+       99 |   await page.getByTestId("editor").getByRole("button", { name: "Add service on this network", exact: true }).click();
+      100 |   await expect(page.getByTestId("editor").getByLabel("Network", { exact: true })).toHaveValue("2");
+    > 101 |   await expect(page.getByTestId("editor-draft-summary")).toHaveText("No unapplied changes");
+          |                                                          ^
+      102 |   await page.getByTestId("editor").getByRole("button", { name: "Cancel", exact: true }).click();
+      103 |   await expect(page.getByRole("dialog", { name: "Unapplied changes", exact: true })).toHaveCount(0);
+      104 |   await expect(page.getByTestId("editor").getByRole("heading", { name: "Network: Blue", exact: true })).toBeVisible();
+        at C:\Users\brenn\.codex\worktrees\sim-f26-recovery\SIM\e2e\white-glove-drafts.spec.ts:101:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\white-glove-drafts-WG08-un-63eb6-y-and-returns-to-its-origin-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [msedge] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay 
+    [msedge] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin 
+    [chrome] › e2e\white-glove-drafts.spec.ts:24:1 › WG04 child-only input on a clean saved parent emits a real beforeunload dialog and survives Stay 
+    [chrome] › e2e\white-glove-drafts.spec.ts:90:1 › WG08 untouched contextual creation on the second network cancels cleanly and returns to its origin 
+  8 passed (15.8s)

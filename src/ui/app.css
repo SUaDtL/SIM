@@ -230,6 +230,12 @@ textarea {
 .map-feedback:empty {
   display: none;
 }
+[data-testid="map-export-status"] {
+  min-height: 1.45em;
+}
+[data-testid="map-export-status"]:empty {
+  display: block;
+}
 .find-results {
   max-height: 180px;
   overflow-y: auto;
@@ -427,6 +433,9 @@ fieldset.field {
 .message {
   margin: 2px 0 0;
   color: var(--danger);
+}
+#connection-task-error {
+  margin-bottom: 10px;
 }
 
 .notice {
@@ -672,6 +681,14 @@ textarea:focus-visible {
   display: grid;
   gap: 6px;
   width: min(320px, calc(100vw - 32px));
+  max-height: calc(100dvh - 144px);
+  overflow: auto;
+}
+@media (min-width: 769px) and (min-height: 351px) {
+  .about-menu > .file-menu-actions {
+    left: auto;
+    right: 0;
+  }
 }
 .file-menu-actions > button {
   justify-content: flex-start;
@@ -897,6 +914,12 @@ textarea:focus-visible {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.rows .data-issue-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+.data-issue-row > button {
+  justify-self: start;
+}
 .row-name small,
 .relationship-detail,
 .picker-option-detail {
@@ -975,6 +998,50 @@ dialog::backdrop {
 }
 .reference-picker .picker-header h2 {
   margin: 0;
+}
+.reference-picker[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+.reference-picker > .picker-header,
+.reference-picker > button {
+  flex-shrink: 0;
+}
+.reference-picker > p:empty {
+  display: none;
+}
+.picker-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+.picker-search > :not(.picker-results) {
+  flex-shrink: 0;
+}
+.picker-search > p {
+  margin: 0;
+}
+.picker-search .picker-results {
+  flex: 1 1 auto;
+  min-height: 48px;
+  max-height: 45dvh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+}
+@media (max-height: 351px) {
+  /* A long option must fit the scrollable dialog, rather than a tiny nested pane. */
+  .picker-search {
+    flex-shrink: 0;
+  }
+  .picker-search .picker-results {
+    flex: none;
+    max-height: none;
+    overflow: visible;
+  }
 }
 .picker-option {
   display: flex;
@@ -1606,6 +1673,26 @@ dialog h3 {
 }
 .picker-option-detail {
   font-weight: 400;
+}
+.picker-option[aria-current="true"] {
+  background: #213b49;
+  box-shadow: inset 3px 0 var(--accent);
+}
+.picker-current-badge {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+.relationship-collection {
+  container-type: inline-size;
+}
+@container (max-width: 320px) {
+  .relationship-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .relationship-actions {
+    justify-self: start;
+  }
 }
 .picker-pagination {
   justify-content: flex-end;

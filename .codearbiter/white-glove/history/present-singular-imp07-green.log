@@ -1,0 +1,11 @@
+
+Running 2 tests using 2 workers
+
+(node:32244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › e2e\white-glove-workflows.spec.ts:513:1 › WG-UAT IMP07 existing identities remain unchanged while a reviewed new row imports (1.3s)
+  ok 2 [msedge] › e2e\white-glove-workflows.spec.ts:513:1 › WG-UAT IMP07 existing identities remain unchanged while a reviewed new row imports (1.5s)
+
+  2 passed (2.4s)

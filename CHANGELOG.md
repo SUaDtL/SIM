@@ -26,6 +26,10 @@ All notable changes to SIM are documented here. The format follows
 
 ### Fixed
 
+- Protect unfinished inline shared-record input from page loss, preserve clean contextual creation defaults, and refresh sibling pickers after explicit shared-record creation.
+- Keep About menus, picker controls and qualified relationship rows usable across narrow screens and browser zoom; distinguish current assignments, empty libraries and searches without matches.
+- Remove undefined focus expansion, fit against the current map dimensions, and preserve complete marking bands, viewport scope and structural label size in PNG/SVG captures.
+- Present legacy data issues through readable record names and retain the exact CI-tested HTML with source identity, checksum and browser evidence for independent verification.
 - Preserve readable network and CDS labels on wide maps and at low zoom without changing stored node positions.
 - Retain unfinished connection and route tasks across Apply, Save, navigation, capture, relationship redraws and filtered or paged collections; inspect the actual pending state and preserve post-commit data on presentation failure.
 - Restore usable map scope and framing when focus subjects disappear; distinguish filtered empty views and preserve focus-return history without arrangement writes.

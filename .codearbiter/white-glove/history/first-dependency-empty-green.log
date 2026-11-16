@@ -1,0 +1,15 @@
+
+> sim@0.1.0 e2e
+> playwright test e2e/white-glove-layout.spec.ts --grep first service creation --output C:\Users\brenn\AppData\Local\Temp\sim-white-glove-20261116-q4gwr3nt\work\first-dependency-empty-green --reporter=list
+
+
+Running 2 tests using 2 workers
+
+(node:64168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chrome] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (524ms)
+  ok 1 [msedge] › e2e\white-glove-layout.spec.ts:87:1 › WG06 first service creation does not offer reuse from an empty library (518ms)
+
+  2 passed (1.3s)

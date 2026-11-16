@@ -19,6 +19,32 @@ function cssColors(marking: string): { background: string; text: string } {
 }
 
 describe("export banner", () => {
+  it("wraps complete legal caveats at readable size inside a tall capture's classification bands", () => {
+    const text = "UNCLASSIFIED//SYNTHETIC / FICTIONAL PRACTICE / NOT OPERATIONAL / TRAINING COPY / REVIEW ONLY";
+    const frame = layoutFrame(
+      640,
+      {
+        title: "Synthetic tall capture",
+        details: ["Current recorded enterprise"],
+        legend: ["Recorded dependencies; connectivity is not verified"],
+        banner: text,
+      },
+      (line, size) => line.length * size * 0.6,
+      1600,
+    );
+    const lines = frame.bannerLines ?? [];
+    const outputWidth = frame.width ?? 640;
+    const maxWidth = outputWidth - 2 * Math.max(16, Math.round(outputWidth * 0.025));
+    expect(lines.length).toBeGreaterThan(1);
+    expect(
+      lines
+        .map((line) => line.text)
+        .join("")
+        .replace(/\s/g, ""),
+    ).toBe(text.replace(/\s/g, ""));
+    expect(lines.every((line) => line.text.length * line.size * 0.6 <= maxWidth)).toBe(true);
+    expect(lines.every((line) => line.y - line.size >= 0 && line.y <= (frame.bandHeight ?? 0))).toBe(true);
+  });
   it.each(MARKINGS)("uses the app banner's colors for %s", (marking) => {
     expect(BANNER_COLORS[marking]).toEqual(cssColors(marking));
   });
