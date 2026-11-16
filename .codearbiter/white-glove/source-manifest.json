@@ -1,5 +1,5 @@
 {
-  "source_epoch": "d77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6",
+  "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
   "sha256": {
     "src/build-info.ts": "cb28e5bdea80f40fbce756a33bf3d32ff15765dcdbf23f16106673b00a55be43",
     "src/main.ts": "5543379197619d2ceb566fabfda7efc4c155a221a091540b9d22292fb2aed226",
@@ -154,18 +154,20 @@
     "tests/helpers/csv-export.ts": "b9892718c952a7ef94e163f84f7b284f16d1e5e2b2d6007868db2be42761399a",
     "tests/helpers/sqlite.ts": "9775e01f6d1709bcbb360f79f8c6e3fd9eeb3a1d41aa47e482d9d43ec842e5e1",
     "tests/unit/build-output.test.ts": "03a214ff5ea6b3a75807c668b601a5575a1654a23f1c6bd7641b16d6a5d8e07c",
-    "tests/unit/docs.test.ts": "2994548cbe2ac71ebd9a5bd99bdf3a2811d0ce6259af8e23a4ea8d8897bd3f19",
+    "tests/unit/docs.test.ts": "a0e28e58118e234734af63107103a6662b388d81aad1191947534df00e66be6d",
     "tests/unit/lint-policy.test.ts": "0b41fcc2d6b5db3ad0b5e27108808ae12056a7a66d6f8da16fc37b6d40f9a2e0",
     "tests/unit/readiness-repository.test.ts": "f269a608b228d8eb00e24e79aadc9ac33b12ddadb4c77da3164716cdbd42bcd8",
     "tests/unit/runtime-notices.test.ts": "56e19dde0b292788330735e272da477442d24346b8c2a1c24d0b81440ffd9ae9",
     "tests/unit/verification-artifact.test.ts": "b1ce76de197bcb867eacd941fae86b5fbfdd3dcaa59f08e4a45bf1327fbb6382",
     "tests/unit/verification-crypto.test.ts": "bf24bbb2f9b742a0d4f5cbd1a8cdb26d6de58a192c38ef1d58521cbb79f72a07",
+    "tests/unit/verification-shards.test.ts": "3775fc75850eef47c3a1d7cfab7f5334609f81484185db457c20029f3ee423d0",
     "scripts/runtime-notices.ts": "477d20d8f2502351f86ed9c708668dd10fd41e028496ac4187820aa4be8ab61c",
-    "scripts/verification-artifact.ts": "143c0acc8e72ca885ddec1285c5334da3e4fd9009b0bf416479a6135b9c28794",
-    ".github/workflows/ci.yml": "701484fb4fe0821a198e5b9d09d44b34b301865f79e8401031010dea4d29c76f",
-    "playwright.config.ts": "6eeca4cb26d4ef77670674954fce57f1b4b3bacc9b8a01fdddfd1d3598dab2f7",
-    ".gitignore": "c9a506f6728e6dab06d399cf88b2022cd3b05fa583de0f51394b5901f45a6292",
-    ".prettierignore": "37c1c75c80bcdfb46a96b41135ed0612b23761df410e75a876ef35e2596dd5be",
-    "CHANGELOG.md": "85b1a631d0b33f5af41588f795b5ac427694b0f5d94df31cd360946939a9886d"
+    "scripts/verification-artifact.ts": "20e38e097f0cfd07f69e6c4b063d79318bf1874abf7bec02203ed0342f264cd1",
+    ".github/workflows/ci.yml": "ebca1442e7a8df4f1f907a1166837463b7e492d52daea99ae872f11444431d20",
+    ".github/workflows/pages.yml": "895c564d37fa24fb3f385444b95087f6f159127979c43fef31483b3a97e67cd6",
+    "playwright.config.ts": "ae55335c746dfb6c968cc538c84ea5b18389015893a1d138764d8b6d57c8a392",
+    ".gitignore": "7f677858b76ca5b66ac7e2603d66f5f2468e8f62b71c039abbbd8c5986f1ccbb",
+    ".prettierignore": "e72009ca37d6869ecf2edc541655f259b33c8e3b948ebba6770b9f6126e4e8ac",
+    "CHANGELOG.md": "d0710d0ba09b7713a6a9cc20e1e95cddbde71b42ac746c03f51f6cc6c429e8b4"
   }
 }

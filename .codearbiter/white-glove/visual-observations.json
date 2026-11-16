@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-16T16:41:00.746565+00:00",
+  "as_of": "2026-11-16T17:17:45.006606+00:00",
   "candidate_sha256": "989746ed4de16f9418f066fe2a2ef753043b88fb107561a22f4e67d3e787230b",
   "collection": {
     "html_sha256": "989746ed4de16f9418f066fe2a2ef753043b88fb107561a22f4e67d3e787230b",
@@ -1111,10 +1111,12 @@
   ],
   "binding": "Historical 64-state collection on the recorded HTML, not a recapture of the final candidate. Final affected regressions and root visual inspection are recorded separately below.",
   "final_affected_review": {
-    "source_epoch": "d77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6",
-    "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
+    "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
+    "candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
     "regression_evidence": "history/visual-fixes-evidence.json",
     "assessment": "Root inspected actual GREEN320px Chrome expanded Data issues,320px Edge route corrective cue and1366px Chrome completed import receipt. Primary prose, technical witness and Review action remain readable; route cue and focus outline fit the editor; count copy matches singular values.12 browser regressions and6 count golden tests passed, then final410unit/972browser gate passed. This is software review, not human acceptance.",
-    "independent_review": "Final bounded coverage closure remains separate; do not infer it from author evidence."
+    "independent_review": "Final bounded coverage closure remains separate; do not infer it from author evidence.",
+    "inspected_image_candidate_sha256": "933f5e85797bd724f2f0748afe260f5676ff68a5a0b93d2ddeb076c13bca6b41",
+    "binding": "The specific root-inspected GREEN images belong to the recorded earlier visual-fix build. The unchanged layout assertions passed again on the final9 local HTML; final8 coverage additionally inspected its exact current singular-preview records. No historical image is relabelled a final9 recapture."
   }
 }

@@ -34,8 +34,14 @@ export default defineConfig({
       ).trim() !== "",
     platform: `${platform()} ${release()}`,
     node: process.version,
+    ci_run_id: process.env["GITHUB_RUN_ID"] || null,
+    pull_request_head: process.env["PR_HEAD"] || null,
   },
-  reporter: process.env["CI"] ? [["list"], ["json", { outputFile: "test-results/results.json" }]] : "list",
+  reporter: process.env["CI"]
+    ? process.env["SIM_SHARDED_REPORTS"] === "1"
+      ? [["list"], ["json", { outputFile: "test-results/results.json" }], ["blob"]]
+      : [["list"], ["json", { outputFile: "test-results/results.json" }]]
+    : "list",
   use: { screenshot: "only-on-failure", trace: "retain-on-failure" },
   forbidOnly: true,
   // Cap local browser concurrency; CI uses two workers on its smaller Windows runner.

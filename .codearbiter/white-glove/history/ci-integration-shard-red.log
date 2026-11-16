@@ -1,0 +1,36 @@
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+ ❯ tests/unit/verification-shards.test.ts (14 tests | 1 failed | 13 skipped) 22ms
+   ❯ one candidate across parallel browser shards (14)
+     × refuses a missing expected shard before creating a successful candidate 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/verification-shards.test.ts > one candidate across parallel browser shards > refuses a missing expected shard before creating a successful candidate
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/unit/verification-shards.test.ts:121:79
+    119|     if (!missing.startsWith(data.root)) throw new Error("Invalid fixtu…
+    120|     rmSync(missing, { recursive: true });
+    121|     await expect(retainCandidate(data.root, data.output, identity, sel…
+       |                                                                               ^
+    122|     expect(existsSync(data.output)).toBe(false);
+    123|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  11:53:36
+   Duration  251ms (tests 36%, transform 32%, import 27%, worker 5%)
+

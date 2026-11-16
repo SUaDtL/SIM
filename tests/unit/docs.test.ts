@@ -32,7 +32,7 @@ describe("project documents", () => {
   });
 
   it("explains connected editing ownership and capture/recovery limits in user help", () => {
-    const help = read("README.md");
+    const help = read("docs/user-guide.md");
     expect(help).toMatch(/shared record[\s\S]*own Undo step[\s\S]*remains if you later cancel/);
     expect(help).toMatch(/Incoming dependencies belong to[\s\S]*consuming service/);
     expect(help).toMatch(/Focus temporarily suspends inventory filters/);

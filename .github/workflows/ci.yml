@@ -1,8 +1,7 @@
 name: ci
 
-# The full gate (typecheck, lint, format, build, unit tests, offline e2e in Edge and Chrome) on
-# every push to main and every pull request. The release workflow publishes only a main commit
-# whose push run here succeeded.
+# Static/unit work and eight browser shards remain parallel. Every browser shard
+# uses one shared HTML build; check verifies and retains its complete evidence.
 on:
   push:
     branches: [main]
@@ -11,44 +10,183 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PR_HEAD: ${{ github.event.pull_request.head.sha }}
+
 jobs:
-  check:
-    # Windows runners ship both Microsoft Edge and Google Chrome, the e2e browsers.
-    runs-on: windows-2025
-    # The expanded stateful acceptance journeys include repeated SQLite readback.
-    timeout-minutes: 45
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.18.0
-
+          cache: npm
       - run: npm ci
-      - name: Run the full gate
-        id: check
+      - name: Static checks
         run: |
-          npm run check 2>&1 | Tee-Object -FilePath check.log
-          exit $LASTEXITCODE
-
-      - name: Retain the checked candidate identity
-        if: always()
-        env:
-          CHECK_OUTCOME: ${{ steps.check.outcome }}
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: node scripts/verification-artifact.ts
-
-      # Reuse the already-adopted, pinned release-workflow uploader. This is
-      # bounded verification evidence, not a GitHub Release or distribution link.
+          set -euo pipefail
+          { npm run typecheck && npm run lint && npm run format:check; } 2>&1 | tee static.log
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: sim-verification-${{ github.sha }}
+          name: sim-log-${{ github.sha }}-attempt${{ github.run_attempt }}-static
+          path: static.log
+          if-no-files-found: error
+          retention-days: 7
+
+  unit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      # These unit build-output checks do not replace the shared browser candidate.
+      - name: Build and unit tests
+        run: |
+          set -euo pipefail
+          { npm run build && npm test; } 2>&1 | tee unit.log
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sim-log-${{ github.sha }}-attempt${{ github.run_attempt }}-unit
+          path: unit.log
+          if-no-files-found: error
+          retention-days: 7
+
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Retain the shared build
+        env:
+          CHECK_OUTCOME: built
+        run: node scripts/verification-artifact.ts
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        id: upload
+        with:
+          name: sim-built-${{ github.sha }}-attempt${{ github.run_attempt }}
+          path: verification/
+          if-no-files-found: error
+          retention-days: 7
+
+  e2e:
+    needs: build
+    runs-on: windows-2025
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [msedge, chrome]
+        shard: [1, 2, 3, 4]
+    name: e2e (${{ matrix.project }} ${{ matrix.shard }}/4)
+    env:
+      SIM_SHARDED_REPORTS: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      # Same immutable build artifact for every shard, including failed-job reruns.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: dist/
+      - name: Browser tests
+        run: |
+          npx playwright test --project=${{ matrix.project }} --shard=${{ matrix.shard }}/4 2>&1 | Tee-Object -FilePath e2e.log
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sim-e2e-${{ github.sha }}-attempt${{ github.run_attempt }}-${{ matrix.project }}-${{ matrix.shard }}
+          path: |
+            test-results/
+            blob-report/
+            e2e.log
+          if-no-files-found: error
+          retention-days: 7
+
+  # Preserve the required status and the overall result consumed by Pages/release.
+  check:
+    if: always()
+    needs: [static, unit, build, e2e]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Require every job
+        run: |
+          [ "${{ needs.static.result }}" = success ] &&
+          [ "${{ needs.unit.result }}" = success ] &&
+          [ "${{ needs.build.result }}" = success ] &&
+          [ "${{ needs.e2e.result }}" = success ]
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: dist/
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: sim-e2e-${{ github.sha }}-*
+          path: test-results/shards/
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: sim-log-${{ github.sha }}-*
+          path: job-logs/
+      - name: Verify and prepare the complete shard set
+        run: node scripts/verification-artifact.ts prepare-shards 4 msedge chrome
+      - name: Merge the actual Playwright blob reports
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
+        run: npx playwright merge-reports --config=playwright.config.ts --reporter=json ./blob-merge
+      - name: Retain the verified candidate and aggregate
+        env:
+          CHECK_OUTCOME: success
+        run: node scripts/verification-artifact.ts retain-shards 4 msedge chrome
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sim-verification-${{ github.sha }}-attempt${{ github.run_attempt }}
           path: |
             verification/
             check.log
             test-results/
+            blob-merge/resources/
+            !test-results/shards/**/blob-report/**
           if-no-files-found: error
           retention-days: 7

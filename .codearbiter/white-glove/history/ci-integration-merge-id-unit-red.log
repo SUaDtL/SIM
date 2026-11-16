@@ -1,0 +1,29 @@
+
+ RUN  v5.1.0 C:/Users/brenn/.codex/worktrees/sim-f26-recovery/SIM
+
+ ❯ tests/unit/verification-shards.test.ts (16 tests | 1 failed | 15 skipped) 27ms
+   ❯ one candidate across parallel browser shards (16)
+     × accepts standard JSON spec merging across projects without relying on a project-specific spec id 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/verification-shards.test.ts > one candidate across parallel browser shards > accepts standard JSON spec merging across projects without relying on a project-specific spec id
+Error: The merged report does not cover exactly the complete verified shard set.
+ ❯ shardedEvidence scripts/verification-artifact.ts:271:11
+    269|   const expected = inputs.flatMap((input) => input.cases).sort();
+    270|   if (actual.length !== expected.length || actual.some((key, i) => key…
+    271|     throw new Error("The merged report does not cover exactly the comp…
+       |           ^
+    272|   const prefix = `sim-log-${identity.commit}-`;
+    273|   const logs = ["static", "unit"].map((job) => {
+ ❯ retainCandidate scripts/verification-artifact.ts:60:50
+ ❯ tests/unit/verification-shards.test.ts:168:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  11:59:33
+   Duration  156ms (tests 41%, transform 40%, import 14%, worker 4%)
+

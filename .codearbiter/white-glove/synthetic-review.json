@@ -1,6 +1,6 @@
 {
   "method": "One assistant applies five role lenses to actual browser assertions, rendered screenshots, captures and source. No human participants, quotes, satisfaction scores or measured human success rates.",
-  "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
+  "candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
   "roles": [
     {
       "role": "Arriving solutions engineer",

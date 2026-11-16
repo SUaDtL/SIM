@@ -1,0 +1,84 @@
+{
+  "role": "implementation author, not independent reviewer or security approval",
+  "context_packet": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-author.json",
+  "context_sha256": "825c8ec952394c969b80da02bfff96a13d7099032b1473340eb92dfacc93ee26",
+  "actual_context_consumed": [
+    "author.input",
+    "delivery.delivery_text"
+  ],
+  "head": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+  "upstream_main": "2b528c15db23eef0c222bc25c3a95e68c0097c7f",
+  "source_files": {
+    ".github/workflows/ci.yml": "ebca1442e7a8df4f1f907a1166837463b7e492d52daea99ae872f11444431d20",
+    "scripts/verification-artifact.ts": "20e38e097f0cfd07f69e6c4b063d79318bf1874abf7bec02203ed0342f264cd1",
+    "playwright.config.ts": "ae55335c746dfb6c968cc538c84ea5b18389015893a1d138764d8b6d57c8a392",
+    ".gitignore": "7f677858b76ca5b66ac7e2603d66f5f2468e8f62b71c039abbbd8c5986f1ccbb",
+    ".prettierignore": "e72009ca37d6869ecf2edc541655f259b33c8e3b948ebba6770b9f6126e4e8ac",
+    "tests/unit/verification-shards.test.ts": "3775fc75850eef47c3a1d7cfab7f5334609f81484185db457c20029f3ee423d0"
+  },
+  "pages_unchanged_sha256": "895c564d37fa24fb3f385444b95087f6f159127979c43fef31483b3a97e67cd6",
+  "paths_released_to_root": true,
+  "source_frozen": true,
+  "checks": [
+    {
+      "command": "npx vitest run tests/unit/verification-shards.test.ts --testNamePattern \"refuses a missing expected shard\"",
+      "exit": 1,
+      "meaning": "Genuine original-helper regression RED: success resolved despite missing expected beta/2; thirteen unrelated tests filtered, not disabled.",
+      "log": "ci-integration-shard-red.log"
+    },
+    {
+      "command": "npx vitest run tests/unit/verification-shards.test.ts --testNamePattern \"standard JSON spec merging\"",
+      "exit": 1,
+      "meaning": "Genuine first-collector RED: standard cross-project spec grouping changes spec.id ownership. Corrected to full qualified source address plus project.",
+      "log": "ci-integration-merge-id-unit-red.log"
+    },
+    {
+      "command": "npx vitest run tests/unit/verification-artifact.test.ts tests/unit/verification-shards.test.ts tests/unit/verification-crypto.test.ts",
+      "exit": 0,
+      "passed": 24,
+      "original_retention_and_crypto_tests_unchanged": 8,
+      "new_strict_shard_tests": 16,
+      "log": "ci-integration-unit-final.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "log": "ci-integration-typecheck-final.log"
+    },
+    {
+      "command": "npx eslint scripts/verification-artifact.ts playwright.config.ts tests/unit/verification-shards.test.ts",
+      "exit": 0,
+      "log": "ci-integration-lint-final.log"
+    },
+    {
+      "command": "npx prettier --check .github/workflows/ci.yml scripts/verification-artifact.ts playwright.config.ts tests/unit/verification-shards.test.ts",
+      "exit": 0,
+      "log": "ci-integration-format-check-final.log"
+    }
+  ],
+  "actual_blob_rehearsal": {
+    "proof": "ci-integration-rehearsal/proof.json",
+    "proof_sha256": "4959261b891563920157402836696c0f983454d6104bc1c9979b668c4e07ef23",
+    "actual_browser_executions": 8,
+    "configured_projects": [
+      "msedge",
+      "chrome"
+    ],
+    "configured_shards_per_project": 2,
+    "distribution_per_project": [
+      4,
+      0
+    ],
+    "meaning": "The small file-level selection left the second shard empty, honestly retained. All four raw reports and two actual browser hosts fed the standard merge.",
+    "html_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+    "standard_merge": "npx playwright merge-reports --config=playwright.config.ts --reporter=json <owned blob directory>",
+    "raw_and_merged_full_case_addresses_match": true,
+    "source_modified": true,
+    "clean_success_promotion": "Refused: clean, committed source required; no successful candidate created. Actual raw and merged metadata were never rewritten.",
+    "platform_limit": "Actual rehearsal used Windows browser jobs and a Windows merge host. Official docs and installed1.65.0 rootDirOverride/PathSeparatorPatcher support the explicit merge-config normalization for Windows raw reports on Ubuntu; first hosted cross-OS proof remains pending. Global merged metadata is not proof of every physical browser host; per-producer metadata is retained."
+  },
+  "workflow_contract": "Static/unit parallel jobs retained; one common Windows build via immutable artifact ID; eight unchanged browser matrix slots; required ci/check joins static/unit/build/e2e; Pages file unchanged. All pinned actions are already adopted in release.yml. No dependency, schema or application source change.",
+  "attempt_policy": "Newest available attempt per expected slot, including a failed newest attempt. Never select an older success to hide a failure. Matching reruns may reuse unchanged successful producer evidence when exact common HTML/source/tree/run/head agrees. Earlier attempt artifacts remain retained.",
+  "artifact_layout": "Per-shard artifacts retain raw JSON/output/logs and blob ZIPs. The final artifact retains raw outputs/JSON, merged resources and verified candidate; original blob ZIPs remain in their per-shard artifacts for the same seven-day retention.",
+  "remaining": "Root owns complete gate, independent affected review, exact staged crypto marker, merge commit, PR and hosted proof. No Git/index/native/marker changes were made by this author."
+}

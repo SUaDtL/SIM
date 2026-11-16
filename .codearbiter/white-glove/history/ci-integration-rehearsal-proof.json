@@ -1,0 +1,94 @@
+{
+  "qualification": "Real isolated offline installed-browser/tooling rehearsal on truthful dirty working source. No hosted run identity and no clean-candidate promotion; no actual report metadata rewritten.",
+  "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+  "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+  "source_tree": "31700541a031960217652bcbb892700154ea2863",
+  "source_modified": true,
+  "raw_reports": [
+    {
+      "project": "msedge",
+      "shard": 1,
+      "executions": 4,
+      "report_path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-rehearsal\\test-results\\shards\\sim-e2e-b9afdf26cc30d48c58440beeaddd3161d529be2b-attempt1-msedge-1\\test-results\\results.json",
+      "metadata": {
+        "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+        "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+        "source_tree": "31700541a031960217652bcbb892700154ea2863",
+        "source_modified": true,
+        "platform": "win32 10.0.26200",
+        "node": "v24.18.0",
+        "ci_run_id": null,
+        "pull_request_head": null,
+        "actualWorkers": 2
+      }
+    },
+    {
+      "project": "msedge",
+      "shard": 2,
+      "executions": 0,
+      "report_path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-rehearsal\\test-results\\shards\\sim-e2e-b9afdf26cc30d48c58440beeaddd3161d529be2b-attempt1-msedge-2\\test-results\\results.json",
+      "metadata": {
+        "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+        "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+        "source_tree": "31700541a031960217652bcbb892700154ea2863",
+        "source_modified": true,
+        "platform": "win32 10.0.26200",
+        "node": "v24.18.0",
+        "ci_run_id": null,
+        "pull_request_head": null,
+        "actualWorkers": 0
+      }
+    },
+    {
+      "project": "chrome",
+      "shard": 1,
+      "executions": 4,
+      "report_path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-rehearsal\\test-results\\shards\\sim-e2e-b9afdf26cc30d48c58440beeaddd3161d529be2b-attempt1-chrome-1\\test-results\\results.json",
+      "metadata": {
+        "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+        "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+        "source_tree": "31700541a031960217652bcbb892700154ea2863",
+        "source_modified": true,
+        "platform": "win32 10.0.26200",
+        "node": "v24.18.0",
+        "ci_run_id": null,
+        "pull_request_head": null,
+        "actualWorkers": 2
+      }
+    },
+    {
+      "project": "chrome",
+      "shard": 2,
+      "executions": 0,
+      "report_path": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-rehearsal\\test-results\\shards\\sim-e2e-b9afdf26cc30d48c58440beeaddd3161d529be2b-attempt1-chrome-2\\test-results\\results.json",
+      "metadata": {
+        "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+        "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+        "source_tree": "31700541a031960217652bcbb892700154ea2863",
+        "source_modified": true,
+        "platform": "win32 10.0.26200",
+        "node": "v24.18.0",
+        "ci_run_id": null,
+        "pull_request_head": null,
+        "actualWorkers": 0
+      }
+    }
+  ],
+  "merged_report": "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-white-glove-20261116-q4gwr3nt\\work\\ci-integration-rehearsal\\test-results\\results.json",
+  "merged_executions": 8,
+  "merged_metadata": {
+    "candidate_sha256": "a512f8387ba9ea7b605955e60687388a688c9399da0c7dd4ecf356165c467b86",
+    "source_commit": "b9afdf26cc30d48c58440beeaddd3161d529be2b",
+    "source_tree": "31700541a031960217652bcbb892700154ea2863",
+    "source_modified": true,
+    "platform": "win32 10.0.26200",
+    "node": "v24.18.0",
+    "ci_run_id": null,
+    "pull_request_head": null,
+    "actualWorkers": 4
+  },
+  "all_actual_html_bytes_unchanged": true,
+  "actual_raw_and_merged_case_identities_equal": true,
+  "dirty_success_promotion_refused": "Error: A successful retained CI candidate requires clean, committed source.",
+  "actual_merged_report_sha256": "a5596d791afaf6e0fbe2f9ed3c9b8567f9db88f58dbacfc298f32152f69d1d27"
+}

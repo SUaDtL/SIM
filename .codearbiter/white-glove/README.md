@@ -44,4 +44,10 @@ Use a fresh synthetic file or a disposable copy. Open the delivered checkpoint d
 
 ## Delivery boundary
 
-This work prepares one follow-up PR. Hosted checks and downloaded artifact verification are reported by exact run/head identity when available. A retained CI artifact is a review candidate, expires according to workflow retention and is not a public release. G01-G07 capability proposals remain outside this stabilization work. Broad distribution still needs the owner’s release authorization and disposition of the mandatory environmental/human proof obligations.
+This work prepares one follow-up PR. Hosted checks and downloaded artifact verification are reported by exact run/head identity when available. A retained CI artifact is a review candidate, expires according to workflow retention and is not a public release. G01-G07 capability proposals remain outside this stabilization work. Broad distribution still needs the ownerâ€™s release authorization and disposition of the mandatory environmental/human proof obligations.
+
+## Integration of PRs 27 and 28
+
+The UI implementation is retained in commit `b9afdf26`. Current main `2b528c15` adds the public docs, automatic Pages deployment and parallel CI. This working-tree integration preserves Pages byte-for-byte and the required `ci/check` result. Static and unit work remain parallel; all eight browser shards download one immutable Windows build. The final check validates every expected shard and its source/run/head/checksum, merges actual Playwright blobs, and retains the same HTML plus complete raw and combined evidence. Earlier failed attempts remain historical.
+
+The final local integration gate passed 426 unit tests and 972 browser executions. The small real blob rehearsal used both installed browsers and explicitly retained empty second shards; it did not fabricate clean-source metadata. Windows-to-Ubuntu hosted merging and the actual retained download remain delivery checks at this snapshot. The current native Pages workflow publishes successful main changes; this branch has not been merged or published.

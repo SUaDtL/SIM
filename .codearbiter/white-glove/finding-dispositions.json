@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-11-16T16:41:00.746565+00:00",
-  "candidate_sha256": "523ecf94673670226b440cca15b706e1b407734d8cf4c9118c4ccf2e0cea48d8",
-  "source_epoch": "d77f4a62af8e3a16b4b0920f67811609ca5f19dd2935850686517cf9be70f1a6",
+  "as_of": "2026-11-16T17:17:45.006606+00:00",
+  "candidate_sha256": "bba0d0884c4a119382ad4bcedebc99d57698fac58e3d2f9f0488f68fa2d3052d",
+  "source_epoch": "3d733c1f953c9988d21ae8962f59d4daf1afa6eabe25afe7b65a8c54d69e0edd",
   "findings": [
     {
       "original": {
