@@ -1,8 +1,9 @@
 name: ci
 
 # The full gate (typecheck, lint, format, build, unit tests, offline e2e in Edge and Chrome) on
-# every push to main and every pull request. The release workflow publishes only a main commit
-# whose push run here succeeded.
+# every push to main and every pull request, split into parallel jobs: static checks, unit tests,
+# and the e2e suite sharded per browser. The release and pages workflows key off this workflow's
+# overall result, so the final `check` job fails unless every job succeeded.
 on:
   push:
     branches: [main]
@@ -11,19 +12,73 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  check:
-    # Windows runners ship both Microsoft Edge and Google Chrome, the e2e browsers.
-    runs-on: windows-2025
-    timeout-minutes: 30
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.18.0
-
+          cache: npm
       - run: npm ci
-      - run: npm run check
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  unit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      # Build first: unit tests include build-output checks.
+      - run: npm run build
+      - run: npm test
+
+  e2e:
+    # Windows runners ship both Microsoft Edge and Google Chrome, the e2e browsers.
+    runs-on: windows-2025
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [msedge, chrome]
+        shard: [1, 2, 3, 4]
+    name: e2e (${{ matrix.project }} ${{ matrix.shard }}/4)
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright test --project=${{ matrix.project }} --shard=${{ matrix.shard }}/4
+
+  # Single required status: keeps the name `check` and fails if any job above failed or was skipped.
+  check:
+    if: always()
+    needs: [static, unit, e2e]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - run: |
+          [ "${{ needs.static.result }}" = success ] &&
+          [ "${{ needs.unit.result }}" = success ] &&
+          [ "${{ needs.e2e.result }}" = success ]
