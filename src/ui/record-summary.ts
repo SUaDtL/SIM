@@ -428,8 +428,8 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
     );
     const commands = el("div", { class: "record-command-list" });
     if (ctx.onSimilar) commands.append(button("Create similar service", ctx.onSimilar));
-    if (ctx.onAssessment) commands.append(button("Assessment notes", ctx.onAssessment));
     if (ctx.onDelete) commands.append(button("Delete record", ctx.onDelete, { class: "danger" }));
+    if (ctx.onAssessment) commands.append(button("Assessment notes", ctx.onAssessment));
     more.append(commands);
     actions.append(more);
   }
