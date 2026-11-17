@@ -71,6 +71,13 @@ from `file://`. See [AGENTS.md](AGENTS.md) for layout, module boundaries and rul
   publish `sim-<version>.html` with its SHA-256. See [CHANGELOG.md](CHANGELOG.md).
 - Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
 
+## Product planning
+
+The [assessment product proposal](docs/assessment-product/README.md) contains a specification,
+phased implementation plan, and acceptance protocol for reusable views, assessment handoff,
+evidence/questions, owner review, and safe inventory upkeep. It is proposed scope, not a list
+of shipped features. Autodiscovery remains deferred.
+
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE). Bundled runtime dependencies keep their own licenses,

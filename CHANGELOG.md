@@ -8,6 +8,7 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Documentation-only assessment product proposal with a phased specification, implementation plan, and acceptance protocol; no runtime capabilities are added by the proposal.
 - Public README, user guide, contributing and security docs, and a GitHub Pages deployment of the current `main` build.
 
 - Dataset renaming with Undo, persistent paginated data-issue review, keyboard Save, offline build/support identity and an accessible startup failure shell.
