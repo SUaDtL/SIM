@@ -28,6 +28,8 @@ describe("schema v1", () => {
   it("creates every MVP table with SIM's application_id and version", () => {
     expect(tables(db)).toEqual([
       "application",
+      "assessment_context",
+      "assessment_note",
       "category",
       "cds",
       "cds_network",
@@ -35,6 +37,8 @@ describe("schema v1", () => {
       "network",
       "org_consumes",
       "organization",
+      "review_issuance",
+      "saved_viewpoint",
       "scenario",
       "scenario_change",
       "service",

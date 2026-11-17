@@ -1,6 +1,6 @@
 # SIM assessment product proposal
 
-**Status:** Proposed for review. Documentation only; no capability described here is claimed to be implemented or accepted.
+This directory preserves the original PR 31 proposal and case definitions. The [execution register](execution.md) links the native work records and records the implementation and receiving evidence.
 
 **Baseline:** `a2b84ef19f6e1ab880c032f79190aa9b434244f7` on `main`, including PR 30. Prepared November 17, 2026.
 

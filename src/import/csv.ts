@@ -115,3 +115,9 @@ export function toCsv(rows: readonly (readonly string[])[]): string {
   const quote = (v: string) => (/[",\r\n]/.test(v) ? `"${v.replaceAll('"', '""')}"` : v);
   return "﻿" + rows.map((r) => r.map(quote).join(",")).join("\r\n") + "\r\n";
 }
+
+/** CSV quoting alone does not stop spreadsheet formula execution in a downloaded receipt. */
+export function spreadsheetText(value: string): string {
+  const first = value.trimStart().charAt(0);
+  return ("=+-@".includes(first) && first !== "") || (value !== "" && value.charCodeAt(0) < 32) ? "'" + value : value;
+}

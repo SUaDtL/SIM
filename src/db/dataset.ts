@@ -1,4 +1,9 @@
+import { parseReviewBase } from "../assessment/review";
+import { parseStoredNote } from "../assessment/notes";
+import { isMarking } from "./markings";
+import { parseViewpoint } from "../map/viewpoint";
 import type { Database } from "sql.js";
+import { ASSESSMENT_FIELDS_LIST, EXCHANGE_TABLES, validateAssessmentContext } from "../domain/assessment-context";
 import { isValidCaveat, normalizeCaveat } from "./markings";
 import { LATEST_VERSION, migrate, SIM_APPLICATION_ID, userVersion } from "./migrate";
 import { MIGRATIONS } from "./migrations";
@@ -41,6 +46,8 @@ interface OpenOptions {
   readonly maxBytes?: number;
 }
 
+const migratedOpens = new WeakSet<Database>();
+
 const SQLITE_HEADER = new TextEncoder().encode("SQLite format 3\0");
 
 export async function createDataset(name: string, wasm?: Uint8Array): Promise<Database> {
@@ -81,12 +88,62 @@ export async function openDataset(bytes: Uint8Array, options: OpenOptions = {}):
     ) {
       throw new DatasetError("CORRUPT");
     }
+    const requiresMigration = userVersion(db) < LATEST_VERSION;
     migrate(db);
+    if (requiresMigration) migratedOpens.add(db);
+    checkAssessmentRecords(db);
+    const lineage = scalar(db, "SELECT lineage FROM assessment_context WHERE id = 1");
+    for (const [id, marking, payload] of db.exec("SELECT id, marking, payload FROM review_issuance")[0]?.values ?? []) {
+      if (typeof payload !== "string") throw new DatasetError("CORRUPT");
+      const base = parseReviewBase(payload);
+      if (base.id !== id || base.marking !== marking || base.lineage !== lineage) throw new DatasetError("CORRUPT");
+    }
+    for (const [id, marking, payload] of db.exec("SELECT id, marking, payload FROM assessment_note")[0]?.values ?? []) {
+      if (typeof id !== "string" || !isMarking(marking) || typeof payload !== "string")
+        throw new DatasetError("CORRUPT");
+      parseStoredNote(id, marking, payload);
+    }
+    for (const [definition] of db.exec("SELECT definition FROM saved_viewpoint")[0]?.values ?? []) {
+      parseViewpoint(String(definition));
+    }
+    if (
+      (scalar(db, "PRAGMA page_count") as number) * (scalar(db, "PRAGMA page_size") as number) >
+      (options.maxBytes ?? MAX_DATASET_BYTES)
+    ) {
+      throw new DatasetError("TOO_LARGE");
+    }
     return db;
   } catch (error) {
     db.close();
     if (error instanceof DatasetError) throw error;
     throw new DatasetError("CORRUPT", { cause: error });
+  }
+}
+
+/** The on-disk bytes predate the in-memory schema and newly assigned identities. */
+export function openedDatasetWasMigrated(db: Database): boolean {
+  return migratedOpens.has(db);
+}
+
+function checkAssessmentRecords(db: Database): void {
+  const values = db.exec(
+    "SELECT description, scope, exclusions, assessor, started_on, as_of FROM assessment_context WHERE id = 1",
+  )[0]?.values[0];
+  if (!values) throw new DatasetError("CORRUPT");
+  const assessment = {
+    description: values[0] as string | null,
+    scope: values[1] as string | null,
+    exclusions: values[2] as string | null,
+    assessor: values[3] as string | null,
+    startedOn: values[4] as string | null,
+    asOf: values[5] as string | null,
+  };
+  const validated = validateAssessmentContext(assessment);
+  if (ASSESSMENT_FIELDS_LIST.some((field) => assessment[field] !== validated[field])) throw new DatasetError("CORRUPT");
+  for (const table of EXCHANGE_TABLES) {
+    if (scalar(db, `SELECT 1 FROM ${table} WHERE exchange_id IS NULL LIMIT 1`) === 1) {
+      throw new DatasetError("CORRUPT", undefined, "An exchange identity is missing.");
+    }
   }
 }
 

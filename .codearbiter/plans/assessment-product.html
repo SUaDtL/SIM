@@ -1,0 +1,1162 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Assessment product rollout · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-ASSESSMENT-PRODUCT</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/assessment-product.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Assessment product rollout</h1><p class="deck">Track the twelve assessment packages, their dependencies, and evidence.</p><div class="meta"><span>PLAN-ASSESSMENT-PRODUCT</span><span>Revision 2 · schema 0.3.2</span><span>28 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-ASSESSMENT-PRODUCT</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>c9bcb131cf02fb0e9dcae6a62a1cc5c762a940e8273c4acc66eb67bf35edb358</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:AP-W00 -->
+<article class="record" id="AP-W00" data-ca-symbol="AP-W00" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W00">AP-W00</a><h3>Intake and baseline</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W00</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-001">SPEC-ASSESSMENT-PRODUCT#AC-AP-001</a></li><li><a href="../specs/assessment-product.html#AC-AP-002">SPEC-ASSESSMENT-PRODUCT#AC-AP-002</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>a receiving-source map, preserved worktree, reproducible baseline, and planned changes to normal governance records. No unsupported green status. A missing full environment does not justify changing acceptance criteria.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W00</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>docs/assessment-product</code></td></tr><tr><td>inspect</td><td><code>.github/workflows/ci.yml</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Reconcile PR 30 and capture exact source, tooling, gate and environment identity.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-001</li><li>AC-AP-002</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W00 -->
+
+<!-- CA:BEGIN:AP-W01 -->
+<article class="record" id="AP-W01" data-ca-symbol="AP-W01" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W01">AP-W01</a><h3>Current-product pilot and qualification</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W01</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-003">SPEC-ASSESSMENT-PRODUCT#AC-AP-003</a></li><li><a href="../specs/assessment-product.html#AC-AP-004">SPEC-ASSESSMENT-PRODUCT#AC-AP-004</a></li><li><a href="../specs/assessment-product.html#AC-AP-005">SPEC-ASSESSMENT-PRODUCT#AC-AP-005</a></li><li><a href="../specs/assessment-product.html#AC-AP-006">SPEC-ASSESSMENT-PRODUCT#AC-AP-006</a></li><li><a href="../specs/assessment-product.html#AC-AP-007">SPEC-ASSESSMENT-PRODUCT#AC-AP-007</a></li><li><a href="../specs/assessment-product.html#AC-AP-008">SPEC-ASSESSMENT-PRODUCT#AC-AP-008</a></li><li><a href="../specs/assessment-product.html#AC-AP-009">SPEC-ASSESSMENT-PRODUCT#AC-AP-009</a></li><li><a href="../specs/assessment-product.html#AC-AP-010">SPEC-ASSESSMENT-PRODUCT#AC-AP-010</a></li><li><a href="../specs/assessment-product.html#AC-AP-057">SPEC-ASSESSMENT-PRODUCT#AC-AP-057</a></li><li><a href="../specs/assessment-product.html#AC-AP-058">SPEC-ASSESSMENT-PRODUCT#AC-AP-058</a></li><li><a href="../specs/assessment-product.html#AC-AP-059">SPEC-ASSESSMENT-PRODUCT#AC-AP-059</a></li><li><a href="../specs/assessment-product.html#AC-AP-060">SPEC-ASSESSMENT-PRODUCT#AC-AP-060</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W00">AP-W00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>current-product qualification report and a prioritized pilot correction list. Missing participants/native methods remain blocked or receive an explicit owner risk disposition; neither is labeled passed. No new required metadata. Release authority remains with the owner.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W01</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>e2e</code></td></tr><tr><td>inspect</td><td><code>docs/assessment-product</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Exercise existing workflows with fictional inputs and supported offline browsers.</li><li>Run the uncoached engineer and recipient pilot and record externally observed results.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-003</li><li>AC-AP-004</li><li>AC-AP-005</li><li>AC-AP-006</li><li>AC-AP-007</li><li>AC-AP-008</li><li>AC-AP-009</li><li>AC-AP-010</li><li>AC-AP-057</li><li>AC-AP-058</li><li>AC-AP-059</li><li>AC-AP-060</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W01 -->
+
+<!-- CA:BEGIN:AP-W02 -->
+<article class="record" id="AP-W02" data-ca-symbol="AP-W02" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W02">AP-W02</a><h3>Assessment context and identity</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W02</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-011">SPEC-ASSESSMENT-PRODUCT#AC-AP-011</a></li><li><a href="../specs/assessment-product.html#AC-AP-012">SPEC-ASSESSMENT-PRODUCT#AC-AP-012</a></li><li><a href="../specs/assessment-product.html#AC-AP-013">SPEC-ASSESSMENT-PRODUCT#AC-AP-013</a></li><li><a href="../specs/assessment-product.html#AC-AP-014">SPEC-ASSESSMENT-PRODUCT#AC-AP-014</a></li><li><a href="../specs/assessment-product.html#AC-AP-015">SPEC-ASSESSMENT-PRODUCT#AC-AP-015</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W00">AP-W00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>compatible, tested metadata/identity foundation with a visible useful feature and reviewed forward migration. Do not merge tables that have no consuming feature. **Rollback:** revert unreleased code; for migrated saved files restore a known pre-upgrade copy, not a down migration.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W02</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/db</code></td></tr><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/session</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Resolve identity and marking contract, then implement optional assessment context and a forward migration with a consuming feature.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-011</li><li>AC-AP-012</li><li>AC-AP-013</li><li>AC-AP-014</li><li>AC-AP-015</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W02 -->
+
+<!-- CA:BEGIN:AP-W03 -->
+<article class="record" id="AP-W03" data-ca-symbol="AP-W03" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W03">AP-W03</a><h3>Named viewpoints</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W03</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-016">SPEC-ASSESSMENT-PRODUCT#AC-AP-016</a></li><li><a href="../specs/assessment-product.html#AC-AP-017">SPEC-ASSESSMENT-PRODUCT#AC-AP-017</a></li><li><a href="../specs/assessment-product.html#AC-AP-018">SPEC-ASSESSMENT-PRODUCT#AC-AP-018</a></li><li><a href="../specs/assessment-product.html#AC-AP-019">SPEC-ASSESSMENT-PRODUCT#AC-AP-019</a></li><li><a href="../specs/assessment-product.html#AC-AP-020">SPEC-ASSESSMENT-PRODUCT#AC-AP-020</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W02">AP-W02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>close/reopen three saved questions, restore each usable scope/framing, test stale/deleted/projected references, and prove zero inventory/position/history mutation during restoration. Saving a view itself is undoable and file-persisted. Per-view layouts remain excluded.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W03</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/db</code></td></tr><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/map</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Persist versioned map scope and framing and use existing navigation to restore, rename and delete definitions.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-016</li><li>AC-AP-017</li><li>AC-AP-018</li><li>AC-AP-019</li><li>AC-AP-020</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W03 -->
+
+<!-- CA:BEGIN:AP-W04 -->
+<article class="record" id="AP-W04" data-ca-symbol="AP-W04" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W04">AP-W04</a><h3>Inventory and assessment output</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W04</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-021">SPEC-ASSESSMENT-PRODUCT#AC-AP-021</a></li><li><a href="../specs/assessment-product.html#AC-AP-022">SPEC-ASSESSMENT-PRODUCT#AC-AP-022</a></li><li><a href="../specs/assessment-product.html#AC-AP-023">SPEC-ASSESSMENT-PRODUCT#AC-AP-023</a></li><li><a href="../specs/assessment-product.html#AC-AP-024">SPEC-ASSESSMENT-PRODUCT#AC-AP-024</a></li><li><a href="../specs/assessment-product.html#AC-AP-025">SPEC-ASSESSMENT-PRODUCT#AC-AP-025</a></li><li><a href="../specs/assessment-product.html#AC-AP-026">SPEC-ASSESSMENT-PRODUCT#AC-AP-026</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W02">AP-W02</a></li><li><a href="#AP-W03">AP-W03</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>an unfamiliar recipient can understand the report; CSV/JSON are correctly scoped, safe, and exact for their declared purpose. Current PNG/SVG remains one direct operation. Report review is separate from authority to distribute its contents.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W04</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/file</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Freeze one scoped snapshot and serialize marked inventory and printable reports with omission counts.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-021</li><li>AC-AP-022</li><li>AC-AP-023</li><li>AC-AP-024</li><li>AC-AP-025</li><li>AC-AP-026</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W04 -->
+
+<!-- CA:BEGIN:AP-W05 -->
+<article class="record" id="AP-W05" data-ca-symbol="AP-W05" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W05">AP-W05</a><h3>Decision views</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W05</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-027">SPEC-ASSESSMENT-PRODUCT#AC-AP-027</a></li><li><a href="../specs/assessment-product.html#AC-AP-028">SPEC-ASSESSMENT-PRODUCT#AC-AP-028</a></li><li><a href="../specs/assessment-product.html#AC-AP-029">SPEC-ASSESSMENT-PRODUCT#AC-AP-029</a></li><li><a href="../specs/assessment-product.html#AC-AP-030">SPEC-ASSESSMENT-PRODUCT#AC-AP-030</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W04">AP-W04</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>the pilot engineer answers a boundary/ownership/path question using records they can inspect, without inventing failure impact or moving saved positions.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W05</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/scenario</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Derive dependency matrix, responsibility roles and bounded path explanations and integrate drill-down.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-027</li><li>AC-AP-028</li><li>AC-AP-029</li><li>AC-AP-030</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W05 -->
+
+<!-- CA:BEGIN:AP-W06 -->
+<article class="record" id="AP-W06" data-ca-symbol="AP-W06" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W06">AP-W06</a><h3>Evidence and unresolved discovery</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W06</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-031">SPEC-ASSESSMENT-PRODUCT#AC-AP-031</a></li><li><a href="../specs/assessment-product.html#AC-AP-032">SPEC-ASSESSMENT-PRODUCT#AC-AP-032</a></li><li><a href="../specs/assessment-product.html#AC-AP-033">SPEC-ASSESSMENT-PRODUCT#AC-AP-033</a></li><li><a href="../specs/assessment-product.html#AC-AP-034">SPEC-ASSESSMENT-PRODUCT#AC-AP-034</a></li><li><a href="../specs/assessment-product.html#AC-AP-035">SPEC-ASSESSMENT-PRODUCT#AC-AP-035</a></li><li><a href="../specs/assessment-product.html#AC-AP-036">SPEC-ASSESSMENT-PRODUCT#AC-AP-036</a></li><li><a href="../specs/assessment-product.html#AC-AP-037">SPEC-ASSESSMENT-PRODUCT#AC-AP-037</a></li><li><a href="../specs/assessment-product.html#AC-AP-038">SPEC-ASSESSMENT-PRODUCT#AC-AP-038</a></li><li><a href="../specs/assessment-product.html#AC-AP-039">SPEC-ASSESSMENT-PRODUCT#AC-AP-039</a></li><li><a href="../specs/assessment-product.html#AC-AP-040">SPEC-ASSESSMENT-PRODUCT#AC-AP-040</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W02">AP-W02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>an engineer records a partially known capability, attaches sources later, resolves one question, preserves another, and hands over distinguishable reported/reviewed/disputed information. Legacy records remain unspecified, not retrospectively verified.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W06</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/db</code></td></tr><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Record typed assertion evidence and unresolved questions with review invalidation and target deletion retention.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-031</li><li>AC-AP-032</li><li>AC-AP-033</li><li>AC-AP-034</li><li>AC-AP-035</li><li>AC-AP-036</li><li>AC-AP-037</li><li>AC-AP-038</li><li>AC-AP-039</li><li>AC-AP-040</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W06 -->
+
+<!-- CA:BEGIN:AP-W07 -->
+<article class="record" id="AP-W07" data-ca-symbol="AP-W07" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W07">AP-W07</a><h3>Enriched handoff and owner review</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W07</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-041">SPEC-ASSESSMENT-PRODUCT#AC-AP-041</a></li><li><a href="../specs/assessment-product.html#AC-AP-042">SPEC-ASSESSMENT-PRODUCT#AC-AP-042</a></li><li><a href="../specs/assessment-product.html#AC-AP-043">SPEC-ASSESSMENT-PRODUCT#AC-AP-043</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W04">AP-W04</a></li><li><a href="#AP-W06">AP-W06</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>a team-scoped pack can be produced and explained, reopens against its issuing saved base, and cannot expose unrelated data or mislead users about delivery. Corrections remain nonmutating until AP-W08 exists.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W07</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/file</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Include scoped evidence in exports and prepare a team review against its durably retained issuance base.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-041</li><li>AC-AP-042</li><li>AC-AP-043</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W07 -->
+
+<!-- CA:BEGIN:AP-W08 -->
+<article class="record" id="AP-W08" data-ca-symbol="AP-W08" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W08">AP-W08</a><h3>Reviewed correction acceptance</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W08</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-044">SPEC-ASSESSMENT-PRODUCT#AC-AP-044</a></li><li><a href="../specs/assessment-product.html#AC-AP-045">SPEC-ASSESSMENT-PRODUCT#AC-AP-045</a></li><li><a href="../specs/assessment-product.html#AC-AP-046">SPEC-ASSESSMENT-PRODUCT#AC-AP-046</a></li><li><a href="../specs/assessment-product.html#AC-AP-047">SPEC-ASSESSMENT-PRODUCT#AC-AP-047</a></li><li><a href="../specs/assessment-product.html#AC-AP-048">SPEC-ASSESSMENT-PRODUCT#AC-AP-048</a></li><li><a href="../specs/assessment-product.html#AC-AP-049">SPEC-ASSESSMENT-PRODUCT#AC-AP-049</a></li><li><a href="../specs/assessment-product.html#AC-AP-050">SPEC-ASSESSMENT-PRODUCT#AC-AP-050</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W07">AP-W07</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>a second team corrects a description/provider/support assignment, including an intervening local conflict, without name-based mislinking, duplicate records, unintended clearing, or partial success. Do not add generic dataset merging.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W08</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/file</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Validate returned proposals against trusted issuance, preview three-way effects, and commit selected changes atomically.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-044</li><li>AC-AP-045</li><li>AC-AP-046</li><li>AC-AP-047</li><li>AC-AP-048</li><li>AC-AP-049</li><li>AC-AP-050</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W08 -->
+
+<!-- CA:BEGIN:AP-W09 -->
+<article class="record" id="AP-W09" data-ca-symbol="AP-W09" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W09">AP-W09</a><h3>Bounded upkeep</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W09</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-051">SPEC-ASSESSMENT-PRODUCT#AC-AP-051</a></li><li><a href="../specs/assessment-product.html#AC-AP-052">SPEC-ASSESSMENT-PRODUCT#AC-AP-052</a></li><li><a href="../specs/assessment-product.html#AC-AP-053">SPEC-ASSESSMENT-PRODUCT#AC-AP-053</a></li><li><a href="../specs/assessment-product.html#AC-AP-054">SPEC-ASSESSMENT-PRODUCT#AC-AP-054</a></li><li><a href="../specs/assessment-product.html#AC-AP-055">SPEC-ASSESSMENT-PRODUCT#AC-AP-055</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W05">AP-W05</a></li><li><a href="#AP-W06">AP-W06</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>a routine ownership/support change across an inventory is faster but no less understandable or reversible than individual editing.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W09</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain</code></td></tr><tr><td>modify</td><td><code>src/ui/list-panel.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Preview bounded selected provider, category and support assignments and expose duplicate suggestions.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-051</li><li>AC-AP-052</li><li>AC-AP-053</li><li>AC-AP-054</li><li>AC-AP-055</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W09 -->
+
+<!-- CA:BEGIN:AP-W10 -->
+<article class="record" id="AP-W10" data-ca-symbol="AP-W10" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W10">AP-W10</a><h3>Integrated usability and envelope</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W10</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-003">SPEC-ASSESSMENT-PRODUCT#AC-AP-003</a></li><li><a href="../specs/assessment-product.html#AC-AP-004">SPEC-ASSESSMENT-PRODUCT#AC-AP-004</a></li><li><a href="../specs/assessment-product.html#AC-AP-005">SPEC-ASSESSMENT-PRODUCT#AC-AP-005</a></li><li><a href="../specs/assessment-product.html#AC-AP-006">SPEC-ASSESSMENT-PRODUCT#AC-AP-006</a></li><li><a href="../specs/assessment-product.html#AC-AP-007">SPEC-ASSESSMENT-PRODUCT#AC-AP-007</a></li><li><a href="../specs/assessment-product.html#AC-AP-008">SPEC-ASSESSMENT-PRODUCT#AC-AP-008</a></li><li><a href="../specs/assessment-product.html#AC-AP-009">SPEC-ASSESSMENT-PRODUCT#AC-AP-009</a></li><li><a href="../specs/assessment-product.html#AC-AP-010">SPEC-ASSESSMENT-PRODUCT#AC-AP-010</a></li><li><a href="../specs/assessment-product.html#AC-AP-056">SPEC-ASSESSMENT-PRODUCT#AC-AP-056</a></li><li><a href="../specs/assessment-product.html#AC-AP-057">SPEC-ASSESSMENT-PRODUCT#AC-AP-057</a></li><li><a href="../specs/assessment-product.html#AC-AP-058">SPEC-ASSESSMENT-PRODUCT#AC-AP-058</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W01">AP-W01</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>evidence-backed operating limits, supported workflows, remaining risks, and owner decision. No invented sample participants, certified accessibility claim, or support envelope inferred from file size.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W10</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>e2e</code></td></tr><tr><td>modify</td><td><code>docs/assessment-product</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Measure the operating envelope and repeat integrated software, native, accessibility and participant checks for each candidate.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-003</li><li>AC-AP-004</li><li>AC-AP-005</li><li>AC-AP-006</li><li>AC-AP-007</li><li>AC-AP-008</li><li>AC-AP-009</li><li>AC-AP-010</li><li>AC-AP-056</li><li>AC-AP-057</li><li>AC-AP-058</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W10 -->
+
+<!-- CA:BEGIN:AP-W11 -->
+<article class="record" id="AP-W11" data-ca-symbol="AP-W11" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#AP-W11">AP-W11</a><h3>Exact-candidate delivery</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-AP-W11</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/assessment-product.html#AC-AP-059">SPEC-ASSESSMENT-PRODUCT#AC-AP-059</a></li><li><a href="../specs/assessment-product.html#AC-AP-060">SPEC-ASSESSMENT-PRODUCT#AC-AP-060</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#AP-W10">AP-W10</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>a reviewable candidate with exact receiving evidence and explicit owner merge/release decision. This package does not publish automatically.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-AP-W11</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>docs</code></td></tr><tr><td>modify</td><td><code>CHANGELOG.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.</div><div class="field"><span class="label">Source refs</span><ul class="items"><li><a href="#SRC-PLAN">SRC-PLAN</a></li><li><a href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a></li></ul></div><div class="field"><span class="label">Steps</span><ul class="items"><li>Verify and reopen retained candidate bytes, update owner-facing documentation, and obtain a receiving disposition.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Software gate passes. Record native, participant and artifact methods separately.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>AC-AP-059</li><li>AC-AP-060</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:AP-W11 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-AP-W00 -->
+<article class="record" id="CP-AP-W00" data-ca-symbol="CP-AP-W00" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W00">CP-AP-W00</a><h3>I0 Intake and baseline</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>a receiving-source map, preserved worktree, reproducible baseline, and planned changes to normal governance records. No unsupported green status. A missing full environment does not justify changing acceptance criteria.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W00">AP-W00</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W00 -->
+
+<!-- CA:BEGIN:CP-AP-W01 -->
+<article class="record" id="CP-AP-W01" data-ca-symbol="CP-AP-W01" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W01">CP-AP-W01</a><h3>I0 Current-product pilot and qualification</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W00">CP-AP-W00</a></li></ul></div><div class="field"><span class="label">Exit</span>current-product qualification report and a prioritized pilot correction list. Missing participants/native methods remain blocked or receive an explicit owner risk disposition; neither is labeled passed. No new required metadata. Release authority remains with the owner.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W01">AP-W01</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W01 -->
+
+<!-- CA:BEGIN:CP-AP-W02 -->
+<article class="record" id="CP-AP-W02" data-ca-symbol="CP-AP-W02" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W02">CP-AP-W02</a><h3>I1 Assessment context and identity</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W00">CP-AP-W00</a></li></ul></div><div class="field"><span class="label">Exit</span>compatible, tested metadata/identity foundation with a visible useful feature and reviewed forward migration. Do not merge tables that have no consuming feature. **Rollback:** revert unreleased code; for migrated saved files restore a known pre-upgrade copy, not a down migration.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W02">AP-W02</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W02 -->
+
+<!-- CA:BEGIN:CP-AP-W03 -->
+<article class="record" id="CP-AP-W03" data-ca-symbol="CP-AP-W03" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W03">CP-AP-W03</a><h3>I1 Named viewpoints</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W02">CP-AP-W02</a></li></ul></div><div class="field"><span class="label">Exit</span>close/reopen three saved questions, restore each usable scope/framing, test stale/deleted/projected references, and prove zero inventory/position/history mutation during restoration. Saving a view itself is undoable and file-persisted. Per-view layouts remain excluded.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W03">AP-W03</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W03 -->
+
+<!-- CA:BEGIN:CP-AP-W04 -->
+<article class="record" id="CP-AP-W04" data-ca-symbol="CP-AP-W04" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W04">CP-AP-W04</a><h3>I1 Inventory and assessment output</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W02">CP-AP-W02</a></li><li><a href="#CP-AP-W03">CP-AP-W03</a></li></ul></div><div class="field"><span class="label">Exit</span>an unfamiliar recipient can understand the report; CSV/JSON are correctly scoped, safe, and exact for their declared purpose. Current PNG/SVG remains one direct operation. Report review is separate from authority to distribute its contents.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W04">AP-W04</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W04 -->
+
+<!-- CA:BEGIN:CP-AP-W05 -->
+<article class="record" id="CP-AP-W05" data-ca-symbol="CP-AP-W05" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W05">CP-AP-W05</a><h3>I1 Decision views</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W04">CP-AP-W04</a></li></ul></div><div class="field"><span class="label">Exit</span>the pilot engineer answers a boundary/ownership/path question using records they can inspect, without inventing failure impact or moving saved positions.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W05">AP-W05</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W05 -->
+
+<!-- CA:BEGIN:CP-AP-W06 -->
+<article class="record" id="CP-AP-W06" data-ca-symbol="CP-AP-W06" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W06">CP-AP-W06</a><h3>I2a Evidence and unresolved discovery</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W02">CP-AP-W02</a></li></ul></div><div class="field"><span class="label">Exit</span>an engineer records a partially known capability, attaches sources later, resolves one question, preserves another, and hands over distinguishable reported/reviewed/disputed information. Legacy records remain unspecified, not retrospectively verified.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W06">AP-W06</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W06 -->
+
+<!-- CA:BEGIN:CP-AP-W07 -->
+<article class="record" id="CP-AP-W07" data-ca-symbol="CP-AP-W07" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W07">CP-AP-W07</a><h3>I2a/I2b Enriched handoff and owner review</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W04">CP-AP-W04</a></li><li><a href="#CP-AP-W06">CP-AP-W06</a></li></ul></div><div class="field"><span class="label">Exit</span>a team-scoped pack can be produced and explained, reopens against its issuing saved base, and cannot expose unrelated data or mislead users about delivery. Corrections remain nonmutating until AP-W08 exists.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W07">AP-W07</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W07 -->
+
+<!-- CA:BEGIN:CP-AP-W08 -->
+<article class="record" id="CP-AP-W08" data-ca-symbol="CP-AP-W08" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W08">CP-AP-W08</a><h3>I2b Reviewed correction acceptance</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W07">CP-AP-W07</a></li></ul></div><div class="field"><span class="label">Exit</span>a second team corrects a description/provider/support assignment, including an intervening local conflict, without name-based mislinking, duplicate records, unintended clearing, or partial success. Do not add generic dataset merging.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W08">AP-W08</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W08 -->
+
+<!-- CA:BEGIN:CP-AP-W09 -->
+<article class="record" id="CP-AP-W09" data-ca-symbol="CP-AP-W09" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W09">CP-AP-W09</a><h3>I2b Bounded upkeep</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W05">CP-AP-W05</a></li><li><a href="#CP-AP-W06">CP-AP-W06</a></li></ul></div><div class="field"><span class="label">Exit</span>a routine ownership/support change across an inventory is faster but no less understandable or reversible than individual editing.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W09">AP-W09</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W09 -->
+
+<!-- CA:BEGIN:CP-AP-W10 -->
+<article class="record" id="CP-AP-W10" data-ca-symbol="CP-AP-W10" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W10">CP-AP-W10</a><h3>Each release Integrated usability and envelope</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W01">CP-AP-W01</a></li></ul></div><div class="field"><span class="label">Exit</span>evidence-backed operating limits, supported workflows, remaining risks, and owner decision. No invented sample participants, certified accessibility claim, or support envelope inferred from file size.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W10">AP-W10</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W10 -->
+
+<!-- CA:BEGIN:CP-AP-W11 -->
+<article class="record" id="CP-AP-W11" data-ca-symbol="CP-AP-W11" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-AP-W11">CP-AP-W11</a><h3>Each release Exact-candidate delivery</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-AP-W10">CP-AP-W10</a></li></ul></div><div class="field"><span class="label">Exit</span>a reviewable candidate with exact receiving evidence and explicit owner merge/release decision. This package does not publish automatically.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#AP-W11">AP-W11</a></li></ul></div></article>
+<!-- CA:END:CP-AP-W11 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-PROPOSAL -->
+<article class="record" id="SRC-PROPOSAL" data-ca-symbol="SRC-PROPOSAL" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-PROPOSAL">SRC-PROPOSAL</a><h3>Assessment product specification</h3></div><div class="field"><span class="label">Locator</span>docs/assessment-product/spec.md</div><div class="field"><span class="label">Note</span>Product direction and detailed interaction semantics originally proposed in PR 31.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-PROPOSAL -->
+
+<!-- CA:BEGIN:SRC-ACCEPTANCE -->
+<article class="record" id="SRC-ACCEPTANCE" data-ca-symbol="SRC-ACCEPTANCE" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-ACCEPTANCE">SRC-ACCEPTANCE</a><h3>Assessment acceptance protocol</h3></div><div class="field"><span class="label">Locator</span>docs/assessment-product/acceptance.md</div><div class="field"><span class="label">Note</span>Case register, exact evidence rules and pilot protocol.</div><div class="field"><span class="label">Type</span>test_reference</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-ACCEPTANCE -->
+
+<!-- CA:BEGIN:SRC-PLAN -->
+<article class="record" id="SRC-PLAN" data-ca-symbol="SRC-PLAN" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-PLAN">SRC-PLAN</a><h3>Assessment implementation plan</h3></div><div class="field"><span class="label">Locator</span>docs/assessment-product/plan.md</div><div class="field"><span class="label">Note</span>Package ordering, owning modules, effect and rollback boundaries.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-PLAN -->
+
+<!-- CA:BEGIN:SRC-PR31 -->
+<article class="record" id="SRC-PR31" data-ca-symbol="SRC-PR31" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-PR31">SRC-PR31</a><h3>Receiving pull request</h3></div><div class="field"><span class="label">Locator</span>SUaDtL/SIM#31</div><div class="field"><span class="label">Note</span>The repository owner directed implementation on this pull request.</div><div class="field"><span class="label">Type</span>repository</div><div class="field"><span class="label">Url</span>https://github.com/SUaDtL/SIM/pull/31</div></article>
+<!-- CA:END:SRC-PR31 -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>a2b84ef19f6e1ab880c032f79190aa9b434244f7</div><div class="field"><span class="label">Observed date</span>2026-11-17</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group" id="group-verification_inputs"><a class="back" href="#main-content">Top</a><h2>Verification inputs</h2><div class="fields"><div class="field"><span class="label">Exclude directories</span><ul class="items"><li>node_modules</li><li>dist</li></ul></div><div class="field"><span class="label">Roots</span><ul class="items"><li>.</li></ul></div></div></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 2bd162b19c8cade8174711f2fb782926883c9c5aad20beb03c229cf0f801c805<br>Model SHA-256: 4747dd488e2d53d009ea992e601804a5395fa638c1be211a44b0b51fcdbce7f2</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-ASSESSMENT-PRODUCT",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "tasks": {
+      "AP-W00": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W01": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W02": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W03": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W04": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W05": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W06": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W07": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W08": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W09": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W10": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "AP-W11": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "4747dd488e2d53d009ea992e601804a5395fa638c1be211a44b0b51fcdbce7f2",
+    "normative_sha256": "2bd162b19c8cade8174711f2fb782926883c9c5aad20beb03c229cf0f801c805",
+    "symbol_count": 28
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "a2b84ef19f6e1ab880c032f79190aa9b434244f7",
+      "observed_date": "2026-11-17",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "a receiving-source map, preserved worktree, reproducible baseline, and planned changes to normal governance records. No unsupported green status. A missing full environment does not justify changing acceptance criteria.",
+        "id": "CP-AP-W00",
+        "tasks": [
+          "AP-W00"
+        ],
+        "title": "I0 Intake and baseline"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W00"
+        ],
+        "exit": "current-product qualification report and a prioritized pilot correction list. Missing participants/native methods remain blocked or receive an explicit owner risk disposition; neither is labeled passed. No new required metadata. Release authority remains with the owner.",
+        "id": "CP-AP-W01",
+        "tasks": [
+          "AP-W01"
+        ],
+        "title": "I0 Current-product pilot and qualification"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W00"
+        ],
+        "exit": "compatible, tested metadata/identity foundation with a visible useful feature and reviewed forward migration. Do not merge tables that have no consuming feature. **Rollback:** revert unreleased code; for migrated saved files restore a known pre-upgrade copy, not a down migration.",
+        "id": "CP-AP-W02",
+        "tasks": [
+          "AP-W02"
+        ],
+        "title": "I1 Assessment context and identity"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W02"
+        ],
+        "exit": "close/reopen three saved questions, restore each usable scope/framing, test stale/deleted/projected references, and prove zero inventory/position/history mutation during restoration. Saving a view itself is undoable and file-persisted. Per-view layouts remain excluded.",
+        "id": "CP-AP-W03",
+        "tasks": [
+          "AP-W03"
+        ],
+        "title": "I1 Named viewpoints"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W02",
+          "CP-AP-W03"
+        ],
+        "exit": "an unfamiliar recipient can understand the report; CSV/JSON are correctly scoped, safe, and exact for their declared purpose. Current PNG/SVG remains one direct operation. Report review is separate from authority to distribute its contents.",
+        "id": "CP-AP-W04",
+        "tasks": [
+          "AP-W04"
+        ],
+        "title": "I1 Inventory and assessment output"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W04"
+        ],
+        "exit": "the pilot engineer answers a boundary/ownership/path question using records they can inspect, without inventing failure impact or moving saved positions.",
+        "id": "CP-AP-W05",
+        "tasks": [
+          "AP-W05"
+        ],
+        "title": "I1 Decision views"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W02"
+        ],
+        "exit": "an engineer records a partially known capability, attaches sources later, resolves one question, preserves another, and hands over distinguishable reported/reviewed/disputed information. Legacy records remain unspecified, not retrospectively verified.",
+        "id": "CP-AP-W06",
+        "tasks": [
+          "AP-W06"
+        ],
+        "title": "I2a Evidence and unresolved discovery"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W04",
+          "CP-AP-W06"
+        ],
+        "exit": "a team-scoped pack can be produced and explained, reopens against its issuing saved base, and cannot expose unrelated data or mislead users about delivery. Corrections remain nonmutating until AP-W08 exists.",
+        "id": "CP-AP-W07",
+        "tasks": [
+          "AP-W07"
+        ],
+        "title": "I2a/I2b Enriched handoff and owner review"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W07"
+        ],
+        "exit": "a second team corrects a description/provider/support assignment, including an intervening local conflict, without name-based mislinking, duplicate records, unintended clearing, or partial success. Do not add generic dataset merging.",
+        "id": "CP-AP-W08",
+        "tasks": [
+          "AP-W08"
+        ],
+        "title": "I2b Reviewed correction acceptance"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W05",
+          "CP-AP-W06"
+        ],
+        "exit": "a routine ownership/support change across an inventory is faster but no less understandable or reversible than individual editing.",
+        "id": "CP-AP-W09",
+        "tasks": [
+          "AP-W09"
+        ],
+        "title": "I2b Bounded upkeep"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W01"
+        ],
+        "exit": "evidence-backed operating limits, supported workflows, remaining risks, and owner decision. No invented sample participants, certified accessibility claim, or support envelope inferred from file size.",
+        "id": "CP-AP-W10",
+        "tasks": [
+          "AP-W10"
+        ],
+        "title": "Each release Integrated usability and envelope"
+      },
+      {
+        "depends_on": [
+          "CP-AP-W10"
+        ],
+        "exit": "a reviewable candidate with exact receiving evidence and explicit owner merge/release decision. This package does not publish automatically.",
+        "id": "CP-AP-W11",
+        "tasks": [
+          "AP-W11"
+        ],
+        "title": "Each release Exact-candidate delivery"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [
+      {
+        "id": "SRC-PROPOSAL",
+        "locator": "docs/assessment-product/spec.md",
+        "note": "Product direction and detailed interaction semantics originally proposed in PR 31.",
+        "title": "Assessment product specification",
+        "type": "local_document",
+        "url": null
+      },
+      {
+        "id": "SRC-ACCEPTANCE",
+        "locator": "docs/assessment-product/acceptance.md",
+        "note": "Case register, exact evidence rules and pilot protocol.",
+        "title": "Assessment acceptance protocol",
+        "type": "test_reference",
+        "url": null
+      },
+      {
+        "id": "SRC-PLAN",
+        "locator": "docs/assessment-product/plan.md",
+        "note": "Package ordering, owning modules, effect and rollback boundaries.",
+        "title": "Assessment implementation plan",
+        "type": "local_document",
+        "url": null
+      },
+      {
+        "id": "SRC-PR31",
+        "locator": "SUaDtL/SIM#31",
+        "note": "The repository owner directed implementation on this pull request.",
+        "title": "Receiving pull request",
+        "type": "repository",
+        "url": "https://github.com/SUaDtL/SIM/pull/31"
+      }
+    ],
+    "spec_ref": {
+      "artifact_id": "SPEC-ASSESSMENT-PRODUCT",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "c9bcb131cf02fb0e9dcae6a62a1cc5c762a940e8273c4acc66eb67bf35edb358"
+    },
+    "summary": "Track the twelve assessment packages, their dependencies, and evidence.",
+    "tasks": [
+      {
+        "checkpoint": "CP-AP-W00",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-001",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-002"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "a receiving-source map, preserved worktree, reproducible baseline, and planned changes to normal governance records. No unsupported green status. A missing full environment does not justify changing acceptance criteria."
+        ],
+        "execution_scope": "CP-AP-W00",
+        "id": "AP-W00",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "docs/assessment-product"
+          },
+          {
+            "action": "inspect",
+            "path": ".github/workflows/ci.yml"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Reconcile PR 30 and capture exact source, tooling, gate and environment identity."
+        ],
+        "title": "Intake and baseline",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-001",
+              "AC-AP-002"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W01",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-003",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-004",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-005",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-006",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-007",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-008",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-009",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-010",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-057",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-058",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-059",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-060"
+        ],
+        "depends_on": [
+          "AP-W00"
+        ],
+        "done_when": [
+          "current-product qualification report and a prioritized pilot correction list. Missing participants/native methods remain blocked or receive an explicit owner risk disposition; neither is labeled passed. No new required metadata. Release authority remains with the owner."
+        ],
+        "execution_scope": "CP-AP-W01",
+        "id": "AP-W01",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "e2e"
+          },
+          {
+            "action": "inspect",
+            "path": "docs/assessment-product"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Exercise existing workflows with fictional inputs and supported offline browsers.",
+          "Run the uncoached engineer and recipient pilot and record externally observed results."
+        ],
+        "title": "Current-product pilot and qualification",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-003",
+              "AC-AP-004",
+              "AC-AP-005",
+              "AC-AP-006",
+              "AC-AP-007",
+              "AC-AP-008",
+              "AC-AP-009",
+              "AC-AP-010",
+              "AC-AP-057",
+              "AC-AP-058",
+              "AC-AP-059",
+              "AC-AP-060"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W02",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-011",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-012",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-013",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-014",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-015"
+        ],
+        "depends_on": [
+          "AP-W00"
+        ],
+        "done_when": [
+          "compatible, tested metadata/identity foundation with a visible useful feature and reviewed forward migration. Do not merge tables that have no consuming feature. **Rollback:** revert unreleased code; for migrated saved files restore a known pre-upgrade copy, not a down migration."
+        ],
+        "execution_scope": "CP-AP-W02",
+        "id": "AP-W02",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/db"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/session"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Resolve identity and marking contract, then implement optional assessment context and a forward migration with a consuming feature."
+        ],
+        "title": "Assessment context and identity",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-011",
+              "AC-AP-012",
+              "AC-AP-013",
+              "AC-AP-014",
+              "AC-AP-015"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W03",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-016",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-017",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-018",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-019",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-020"
+        ],
+        "depends_on": [
+          "AP-W02"
+        ],
+        "done_when": [
+          "close/reopen three saved questions, restore each usable scope/framing, test stale/deleted/projected references, and prove zero inventory/position/history mutation during restoration. Saving a view itself is undoable and file-persisted. Per-view layouts remain excluded."
+        ],
+        "execution_scope": "CP-AP-W03",
+        "id": "AP-W03",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/db"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/map"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Persist versioned map scope and framing and use existing navigation to restore, rename and delete definitions."
+        ],
+        "title": "Named viewpoints",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-016",
+              "AC-AP-017",
+              "AC-AP-018",
+              "AC-AP-019",
+              "AC-AP-020"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W04",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-021",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-022",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-023",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-024",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-025",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-026"
+        ],
+        "depends_on": [
+          "AP-W02",
+          "AP-W03"
+        ],
+        "done_when": [
+          "an unfamiliar recipient can understand the report; CSV/JSON are correctly scoped, safe, and exact for their declared purpose. Current PNG/SVG remains one direct operation. Report review is separate from authority to distribute its contents."
+        ],
+        "execution_scope": "CP-AP-W04",
+        "id": "AP-W04",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/file"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Freeze one scoped snapshot and serialize marked inventory and printable reports with omission counts."
+        ],
+        "title": "Inventory and assessment output",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-021",
+              "AC-AP-022",
+              "AC-AP-023",
+              "AC-AP-024",
+              "AC-AP-025",
+              "AC-AP-026"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W05",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-027",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-028",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-029",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-030"
+        ],
+        "depends_on": [
+          "AP-W04"
+        ],
+        "done_when": [
+          "the pilot engineer answers a boundary/ownership/path question using records they can inspect, without inventing failure impact or moving saved positions."
+        ],
+        "execution_scope": "CP-AP-W05",
+        "id": "AP-W05",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/scenario"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Derive dependency matrix, responsibility roles and bounded path explanations and integrate drill-down."
+        ],
+        "title": "Decision views",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-027",
+              "AC-AP-028",
+              "AC-AP-029",
+              "AC-AP-030"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W06",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-031",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-032",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-033",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-034",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-035",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-036",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-037",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-038",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-039",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-040"
+        ],
+        "depends_on": [
+          "AP-W02"
+        ],
+        "done_when": [
+          "an engineer records a partially known capability, attaches sources later, resolves one question, preserves another, and hands over distinguishable reported/reviewed/disputed information. Legacy records remain unspecified, not retrospectively verified."
+        ],
+        "execution_scope": "CP-AP-W06",
+        "id": "AP-W06",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/db"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Record typed assertion evidence and unresolved questions with review invalidation and target deletion retention."
+        ],
+        "title": "Evidence and unresolved discovery",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-031",
+              "AC-AP-032",
+              "AC-AP-033",
+              "AC-AP-034",
+              "AC-AP-035",
+              "AC-AP-036",
+              "AC-AP-037",
+              "AC-AP-038",
+              "AC-AP-039",
+              "AC-AP-040"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W07",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-041",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-042",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-043"
+        ],
+        "depends_on": [
+          "AP-W04",
+          "AP-W06"
+        ],
+        "done_when": [
+          "a team-scoped pack can be produced and explained, reopens against its issuing saved base, and cannot expose unrelated data or mislead users about delivery. Corrections remain nonmutating until AP-W08 exists."
+        ],
+        "execution_scope": "CP-AP-W07",
+        "id": "AP-W07",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/file"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Include scoped evidence in exports and prepare a team review against its durably retained issuance base."
+        ],
+        "title": "Enriched handoff and owner review",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-041",
+              "AC-AP-042",
+              "AC-AP-043"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W08",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-044",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-045",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-046",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-047",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-048",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-049",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-050"
+        ],
+        "depends_on": [
+          "AP-W07"
+        ],
+        "done_when": [
+          "a second team corrects a description/provider/support assignment, including an intervening local conflict, without name-based mislinking, duplicate records, unintended clearing, or partial success. Do not add generic dataset merging."
+        ],
+        "execution_scope": "CP-AP-W08",
+        "id": "AP-W08",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/file"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Validate returned proposals against trusted issuance, preview three-way effects, and commit selected changes atomically."
+        ],
+        "title": "Reviewed correction acceptance",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-044",
+              "AC-AP-045",
+              "AC-AP-046",
+              "AC-AP-047",
+              "AC-AP-048",
+              "AC-AP-049",
+              "AC-AP-050"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W09",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-051",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-052",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-053",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-054",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-055"
+        ],
+        "depends_on": [
+          "AP-W05",
+          "AP-W06"
+        ],
+        "done_when": [
+          "a routine ownership/support change across an inventory is faster but no less understandable or reversible than individual editing."
+        ],
+        "execution_scope": "CP-AP-W09",
+        "id": "AP-W09",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/list-panel.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Preview bounded selected provider, category and support assignments and expose duplicate suggestions."
+        ],
+        "title": "Bounded upkeep",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-051",
+              "AC-AP-052",
+              "AC-AP-053",
+              "AC-AP-054",
+              "AC-AP-055"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W10",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-003",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-004",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-005",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-006",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-007",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-008",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-009",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-010",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-056",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-057",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-058"
+        ],
+        "depends_on": [
+          "AP-W01"
+        ],
+        "done_when": [
+          "evidence-backed operating limits, supported workflows, remaining risks, and owner decision. No invented sample participants, certified accessibility claim, or support envelope inferred from file size."
+        ],
+        "execution_scope": "CP-AP-W10",
+        "id": "AP-W10",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "e2e"
+          },
+          {
+            "action": "modify",
+            "path": "docs/assessment-product"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Measure the operating envelope and repeat integrated software, native, accessibility and participant checks for each candidate."
+        ],
+        "title": "Integrated usability and envelope",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-003",
+              "AC-AP-004",
+              "AC-AP-005",
+              "AC-AP-006",
+              "AC-AP-007",
+              "AC-AP-008",
+              "AC-AP-009",
+              "AC-AP-010",
+              "AC-AP-056",
+              "AC-AP-057",
+              "AC-AP-058"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-AP-W11",
+        "criterion_refs": [
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-059",
+          "SPEC-ASSESSMENT-PRODUCT#AC-AP-060"
+        ],
+        "depends_on": [
+          "AP-W10"
+        ],
+        "done_when": [
+          "a reviewable candidate with exact receiving evidence and explicit owner merge/release decision. This package does not publish automatically."
+        ],
+        "execution_scope": "CP-AP-W11",
+        "id": "AP-W11",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "docs"
+          },
+          {
+            "action": "modify",
+            "path": "CHANGELOG.md"
+          }
+        ],
+        "rollback": "Preserve the receiving tree and older data. Revert unreleased code or reopen a retained pre-upgrade file.",
+        "source_refs": [
+          "SRC-PLAN",
+          "SRC-ACCEPTANCE"
+        ],
+        "steps": [
+          "Verify and reopen retained candidate bytes, update owner-facing documentation, and obtain a receiving disposition."
+        ],
+        "title": "Exact-candidate delivery",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Software gate passes. Record native, participant and artifact methods separately.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "AC-AP-059",
+              "AC-AP-060"
+            ]
+          }
+        ]
+      }
+    ],
+    "title": "Assessment product rollout",
+    "verification_inputs": {
+      "exclude_directories": [
+        "node_modules",
+        "dist"
+      ],
+      "roots": [
+        "."
+      ]
+    }
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/assessment-product.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 2,
+  "schema_version": "0.3.2",
+  "slug": "assessment-product"
+}
+</script>
+</body></html>

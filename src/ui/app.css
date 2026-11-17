@@ -1893,3 +1893,48 @@ dialog h3 {
     padding: 12px;
   }
 }
+
+.assessment-dialog {
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+}
+
+.assessment-field {
+  display: grid;
+  gap: 0.25rem;
+  margin-block: 0.6rem;
+}
+
+.assessment-field textarea {
+  resize: vertical;
+}
+
+.decision-dialog {
+  width: min(64rem, calc(100vw - 2rem));
+}
+
+.assessment-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.assessment-table th,
+.assessment-table td {
+  border: 1px solid currentcolor;
+  overflow-wrap: anywhere;
+  padding: 0.3rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+.assessment-table button {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.batch-choice {
+  display: block;
+  padding-block: 0.2rem;
+}

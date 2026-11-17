@@ -1,4 +1,4 @@
-import { toCsv } from "../import/csv";
+import { spreadsheetText, toCsv } from "../import/csv";
 import type { ImportOptions, ImportReport, RowNote } from "../import/engine";
 import { highestMarking, type Marking } from "../db/markings";
 
@@ -72,12 +72,6 @@ export function importReceiptCounts(receipt: ImportReceipt): {
     held,
     unreadable: receipt.files.filter((file) => file.error !== null).length,
   };
-}
-
-/** CSV quoting alone does not stop spreadsheet formula execution in a downloaded receipt. */
-function spreadsheetText(value: string): string {
-  const first = value.trimStart().charAt(0);
-  return ("=+-@".includes(first) && first !== "") || (value !== "" && value.charCodeAt(0) < 32) ? "'" + value : value;
 }
 
 /** Includes every diagnostic, independent of the bounded on-screen pages. */

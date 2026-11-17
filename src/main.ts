@@ -1,5 +1,11 @@
+import { duplicateSuggestions } from "./assessment/upkeep";
+import { openCorrectionReview, openReviewIssuance } from "./ui/owner-review";
+import { openAssessmentNotes } from "./ui/assessment-notes";
+import { freezeAssessment, renderAssessment } from "./assessment/output";
+import { chooseAssessmentExport } from "./ui/assessment-export";
+import { openAssessmentDetails } from "./ui/assessment-details";
 import type { Database } from "sql.js";
-import { buildInformation } from "./build-info";
+import { BUILD, buildInformation } from "./build-info";
 import { LATEST_VERSION } from "./db/migrate";
 import {
   createDataset,
@@ -75,6 +81,10 @@ const banner = createBanner();
 const recoveryStatus = document.createElement("p");
 recoveryStatus.dataset["testid"] = "recovery-status";
 recoveryStatus.setAttribute("role", "status");
+let assessmentDetails: ReturnType<typeof openAssessmentDetails> | undefined;
+let noteDraft = false;
+let noteDialog: HTMLDialogElement | undefined;
+let ownerReviewDialog: HTMLDialogElement | undefined;
 let recoveryIntent = false;
 let recoveryRequest = 0;
 const undoButton = button("Undo", () => travel("undo"));
@@ -124,7 +134,13 @@ function render(): void {
  * it was opened, created or saved. Laying out an opened dataset is not an edit, so it does not count.
  */
 function hasUnsavedEdits(): boolean {
-  return state.session.hasDiscardWorthyWork() || workspace.hasPendingDraft();
+  return (
+    state.session.hasDiscardWorthyWork() ||
+    workspace.hasPendingDraft() ||
+    workspace.hasViewpointDraft() ||
+    noteDraft ||
+    assessmentDetails?.hasDraft() === true
+  );
 }
 
 async function travel(direction: "undo" | "redo"): Promise<void> {
@@ -174,6 +190,64 @@ function openDataIssues(): void {
   const close = (): void => {
     dialog.close();
   };
+  const duplicates = el(
+    "details",
+    {},
+    el("summary", {}, "Potential duplicate organizations and applications"),
+    el(
+      "p",
+      {},
+      "Suggestions share a name after punctuation, spacing, and case are normalized. Review how each is used before editing.",
+    ),
+  );
+  const duplicateRows = el("ul");
+  let duplicatePage = 0;
+  function drawDuplicates(): void {
+    if (!duplicates.open || state !== owner) return;
+    const candidates = duplicateSuggestions(owner.repo);
+    duplicatePage = Math.min(duplicatePage, Math.max(0, Math.ceil(candidates.length / 12) - 1));
+    duplicateRows.replaceChildren(
+      ...candidates.slice(duplicatePage * 12, (duplicatePage + 1) * 12).map((group) =>
+        el(
+          "li",
+          {},
+          ...group.slice(0, 50).map((record) =>
+            el(
+              "p",
+              {},
+              uiButton(record.name, () => {
+                close();
+                if (state === owner) void workspace.inspectRecord({ type: record.type, id: record.id });
+              }),
+              ` · ${String(record.uses)} recorded uses`,
+            ),
+          ),
+          group.length > 50
+            ? el(
+                "p",
+                {},
+                `${String(group.length - 50)} more similar names. Narrow the inventory search to inspect them.`,
+              )
+            : null,
+        ),
+      ),
+    );
+    if (!candidates.length) duplicateRows.append(el("li", {}, "No matching duplicate suggestions."));
+    previousDuplicates.disabled = duplicatePage === 0;
+    nextDuplicates.disabled = (duplicatePage + 1) * 12 >= candidates.length;
+  }
+  const previousDuplicates = uiButton("Previous suggestions", () => {
+    duplicatePage--;
+    drawDuplicates();
+    focusPagingControl(previousDuplicates, nextDuplicates);
+  });
+  const nextDuplicates = uiButton("Next suggestions", () => {
+    duplicatePage++;
+    drawDuplicates();
+    focusPagingControl(nextDuplicates, previousDuplicates);
+  });
+  duplicates.append(duplicateRows, el("div", { class: "actions" }, previousDuplicates, nextDuplicates));
+  duplicates.addEventListener("toggle", drawDuplicates);
   const previous = uiButton("Previous issues", () => {
     page--;
     draw();
@@ -227,6 +301,7 @@ function openDataIssues(): void {
       : "No current data issues.";
     previous.disabled = page === 0;
     next.disabled = (page + 1) * 20 >= issues.length;
+    drawDuplicates();
   }
   dialog.append(
     heading,
@@ -237,6 +312,7 @@ function openDataIssues(): void {
     ),
     count,
     rows,
+    duplicates,
     el("div", { class: "actions" }, previous, next, uiButton("Close", close)),
   );
   const stop = owner.repo.subscribe(draw);
@@ -253,6 +329,35 @@ function openDataIssues(): void {
   draw();
   dialog.showModal();
   heading.focus();
+}
+
+async function onAssessmentExport(): Promise<void> {
+  const owner = state;
+  const choice = await chooseAssessmentExport(workspace.mapIsOpen());
+  if (!choice || state !== owner || !(await workspace.resolveActiveDraft("export")) || state !== owner) return;
+  show("Preparing assessment export…");
+  try {
+    const frozen = freezeAssessment(
+      owner.repo,
+      {
+        generated: new Date().toISOString(),
+        build: { version: BUILD.version, commit: BUILD.commit, modified: BUILD.modified },
+        schema: LATEST_VERSION,
+        fileState: owner.session.fileStatus(),
+      },
+      choice.currentMap ? workspace.assessmentView(choice.format === "html") : undefined,
+      choice.includeNotes,
+    );
+    const source = new TextEncoder().encode(owner.session.currentContent());
+    const digest = await crypto.subtle.digest("SHA-256", source);
+    const checkpoint = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+    const output = renderAssessment(frozen, choice.format, checkpoint);
+    const baseName = suggestedFileName(frozen.dataset).replace(/\.sqlite$/, "");
+    downloadBlob(output, `${baseName} assessment.${choice.format}`);
+    if (state === owner) show("Assessment download requested.");
+  } catch (error) {
+    if (state === owner) show(error instanceof Error ? error.message : "Could not export the assessment.", "error");
+  }
 }
 
 function onRename(): void {
@@ -311,6 +416,13 @@ function replace(db: Database, fileName: string | null, handle: FileHandle | nul
     session.dispose();
     throw error;
   }
+  ownerReviewDialog?.close();
+  ownerReviewDialog = undefined;
+  noteDialog?.close();
+  noteDialog = undefined;
+  noteDraft = false;
+  assessmentDetails?.close();
+  assessmentDetails = undefined;
   old.session.dispose();
   stopRecovery(old);
   showRecoveryStatus("Recovery is off for this dataset.");
@@ -736,8 +848,52 @@ async function boot(): Promise<void> {
     button("New", onNew),
     button("Open", onOpen),
     button("Import CSV", onImport),
+    button("Export assessment or inventory", onAssessmentExport),
+    button("Prepare owner review", async () => {
+      const owner = state;
+      if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
+      ownerReviewDialog = openReviewIssuance(
+        owner.repo,
+        (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
+        async () => {
+          if (state !== owner) return;
+          const result = await onSave(false);
+          if (state === owner && result === "saved") {
+            show("Review base saved. Open Prepare owner review to download the package.");
+          } else if (state === owner && result === "download-requested") {
+            show("Dataset download requested. Reopen the downloaded dataset before exporting its review package.");
+          }
+        },
+      );
+    }),
+    button("Apply reviewed corrections", async () => {
+      const owner = state;
+      if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
+      ownerReviewDialog = openCorrectionReview(
+        owner.repo,
+        (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
+        (count) => {
+          show(`${String(count)} reviewed corrections applied. Save file to retain them.`);
+        },
+      );
+    }),
     button("Save As", () => onSave(true)),
     button("Rename dataset", onRename),
+    button("Assessment details", () => {
+      const owner = state;
+      assessmentDetails = openAssessmentDetails(
+        owner.repo,
+        () => state === owner,
+        () => {
+          show("Assessment details applied. Save file to retain them.");
+        },
+      );
+    }),
+    button("Assessment evidence and questions", () => {
+      noteDialog = openAssessmentNotes(state.repo, (pending) => {
+        noteDraft = pending;
+      });
+    }),
     dataIssuesButton,
     button("Choose recovery file", onRecovery),
     stopRecoveryButton,
