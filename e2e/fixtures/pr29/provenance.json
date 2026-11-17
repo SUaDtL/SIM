@@ -1,0 +1,11 @@
+{
+  "source": "SIM-PR29-White-Glove-Handoff-8b1bc5a0",
+  "classification": "Synthetic UNCLASSIFIED fixtures supplied for regression testing.",
+  "sha256": {
+    "enterprise.sqlite": "8947383289289b37434ab344176460605b905a69a46dbc55a3ab944f13b44044",
+    "four-change-scenario.sqlite": "ba7dda68ac536fbb087b99dc95ff91c5b4038dd9b8138098b71edfaa2b589f88",
+    "demo-arrangement.sqlite": "e199937278d9feb462ed752e76f82734a818e5c7f7604145434d90d2546dcb46"
+  },
+  "representation": "Readable SQL source fixtures reconstruct the supplied schema and every table row, including saved positions. Original binary files are not committed.",
+  "equivalence_evidence": ".codearbiter/pr29-residuals/fixture-equivalence.json"
+}

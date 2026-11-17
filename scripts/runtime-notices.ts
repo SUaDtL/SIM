@@ -60,8 +60,12 @@ function metadata(directory: string): PackageMetadata {
 }
 
 function licenseFiles(directory: string): RuntimeNotice["files"] {
+  // Notice documents may have a license-family suffix (LICENSE-MIT, LICENSE.BSD)
+  // and a text extension. A prefix alone also matches upstream maintenance scripts.
+  const document =
+    /^(?:licen[cs]e|copying|notice|authors)(?:[-_][a-z0-9-]+|\.(?:mit|bsd))?(?:\.(?:txt|md|markdown|rst|text))?$/i;
   const files = readdirSync(directory, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && /^(?:licen[cs]e|copying|notice|authors)(?:[._-].*)?$/i.test(entry.name))
+    .filter((entry) => entry.isFile() && document.test(entry.name))
     .sort((a, b) => a.name.localeCompare(b.name));
   if (!files.some((entry) => /^(?:licen[cs]e|copying)(?:[._-].*)?$/i.test(entry.name))) {
     throw new Error(`Missing runtime license text in ${directory}`);

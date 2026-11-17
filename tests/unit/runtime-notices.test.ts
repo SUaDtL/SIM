@@ -64,6 +64,29 @@ describe("standalone runtime notices", () => {
     ]);
   });
 
+  it("includes license variants and text notices while excluding maintenance source files", () => {
+    const root = project();
+    const directory = join(root, "node_modules/synthetic-direct");
+    pkg(directory, "synthetic-direct");
+    const documents = ["LICENSE-MIT", "LICENSE.BSD", "LICENSE-MIT.txt", "COPYING.md", "NOTICE.txt", "AUTHORS"];
+    const programs = ["license-update.mjs", "LICENSE.js", "notice-generator.ts", "authors.cjs"];
+    for (const name of documents) writeFileSync(join(directory, name), `Required text: ${name}\n`);
+    for (const name of programs) writeFileSync(join(directory, name), "Fictional maintenance source\n");
+    const files = collectRuntimeNotices(root)[1]?.files;
+    expect(files?.map((file) => file.name).sort()).toEqual(["LICENSE", ...documents].sort());
+    for (const name of documents) expect(files).toContainEqual({ name, text: `Required text: ${name}\n` });
+  });
+
+  it("does not accept maintenance source in place of required license text", () => {
+    const root = project();
+    const directory = join(root, "node_modules/synthetic-direct");
+    pkg(directory, "synthetic-direct");
+    rmSync(join(directory, "LICENSE"));
+    writeFileSync(join(directory, "license-update.mjs"), "Fictional maintenance source\n");
+    writeFileSync(join(directory, "NOTICE.txt"), "Attribution alone is insufficient.\n");
+    expect(() => collectRuntimeNotices(root)).toThrow("Missing runtime license text");
+  });
+
   it.each(["missing", "empty"])("refuses a %s runtime license before distribution", (variant) => {
     const root = project();
     const directory = join(root, "node_modules/synthetic-direct");

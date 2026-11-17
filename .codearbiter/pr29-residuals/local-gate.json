@@ -1,0 +1,41 @@
+{
+  "format": "sim.post-pr29.local-gate/v1",
+  "command": {
+    "started_at": "2026-11-16T22:38:58.4269186Z",
+    "cwd": "C:\\Users\\brenn\\.codex\\worktrees\\sim-f26-recovery\\SIM",
+    "completed_at": "2026-11-16T22:44:59.2087318Z",
+    "command": "npm run check -- -- --workers=4",
+    "exit_code": 0
+  },
+  "unit_tests": 432,
+  "browser_report_sha256": "932a389ad6f4b353657892816a2bfc01fdd6b75aafcd95a296271c68ded24fdb",
+  "candidate": {
+    "candidate_sha256": "7a8da116383267de823756fff4746c545e6fcc58f3b9bfc637d3e38b145a9496",
+    "source_commit": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+    "source_tree": "e194cc2c02f456ee3925afd53f028bd8ce7e8d5a",
+    "source_modified": true,
+    "platform": "win32 10.0.26200",
+    "node": "v24.18.0",
+    "ci_run_id": null,
+    "pull_request_head": null,
+    "actualWorkers": 4
+  },
+  "stats": {
+    "startTime": "2026-11-16T22:39:14.411Z",
+    "duration": 344742.727,
+    "expected": 1038,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errors": [],
+  "source_manifest_sha256": "ad6e3fe9bb9fa8b60528a60f86ea02096ec309cb3bed49ea5f360addaecf4466",
+  "qualification": "Local working-tree full pipeline success, not exact-head hosted CI or native/AT/human receiving. CI candidate delivery remains pending.",
+  "history": {
+    "aborted_gate1": "Stopped for readable SQL fixture delivery; not passed.",
+    "failed_gate2": "Formatting stopped before browser execution; corrected.",
+    "failed_gate3": "1030 pass/6 capture compatibility regressions; corrected without weakening original map/CAP04 assertions.",
+    "current_gate4": "432 unit and1038 browser cases pass; no skips/flakes/errors.",
+    "negative_control": "sql-fixture-negative2.json:18 genuine target assertion failures on exact auditedHTML8517 in Edge/Chrome; attempt1 setup failures not counted."
+  }
+}

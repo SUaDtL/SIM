@@ -1,0 +1,257 @@
+{
+  "format": "sim.pr29.findings/v1",
+  "baseline": "8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe",
+  "findings": [
+    {
+      "id": "PR29-UX01",
+      "priority": "P2",
+      "title": "Changing editor sections carries an inappropriate scroll offset",
+      "kind": "interaction defect",
+      "checks": [
+        "T013"
+      ],
+      "owner": "src/ui/editor-panel.ts: showSection; editor view context and scroll owner",
+      "impact": "An engineer types at the bottom of Details, opens Support, and starts below the heading and Tier 1 label. The section looks incomplete and requires scrolling upward before the first assignment can be understood.",
+      "observed": "The first interactive case had editor-body scrollTop 131; its visible top was 366.31 CSS pixels while the Support heading began at 275.31 and the Tier 1 label at 329.16. The portable replay reproduces the same class of clipping with ordinary Description input followed by Support.",
+      "steps": [
+        "Open enterprise.sqlite; select Orders & Fulfilment; Edit service.",
+        "Type in Description near the bottom of Details.",
+        "Click Support and inspect the first heading/assignment without scrolling."
+      ],
+      "expected": "A first visit to a section starts at its meaningful beginning. Revisiting a section may restore its own valid scroll position. Error reveal and Back restoration have deliberate priority.",
+      "correction": "Give each editor section a deliberate scroll policy or per-section bookmark. Apply it to .editor-body after showing the target section. Do not mix offsets from unrelated panels; preserve the one aggregate draft. Do not blindly force every navigation or validation result to zero.",
+      "constraints": [
+        "Keep tabs keyboard-operable and preserve the raw values and relationship drafts.",
+        "An invalid field or unfinished task must remain the intentional focus/scroll target.",
+        "Back should restore its captured editor context, not be overridden by an unconditional reset."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/editor-panel.ts#L123-L141"
+      ],
+      "evidence": [
+        "evidence/screenshots/08-new-service-support.png",
+        "evidence/replay/PR29-UX01.png",
+        "evidence/replay/replay-results.json"
+      ],
+      "acceptance": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "limits": "Executed in complete retained HTML on Linux Chromium. Confirm focus and scroll on supported Windows browsers and real zoom."
+    },
+    {
+      "id": "PR29-UX02",
+      "priority": "P2",
+      "title": "Resolved failure feedback still describes the current workspace as failed",
+      "kind": "truthful-feedback defect",
+      "checks": [
+        "T026"
+      ],
+      "owner": "src/ui/workspace.ts: applyActiveDraft, completion callbacks; src/map/map-view.ts: session reset/export status",
+      "impact": "The engineer fixes a refused edit, applies it, and saves a correct file, but the workspace still says the draft could not be applied. This encourages unnecessary rework or reopening a file that is already correct.",
+      "observed": "After an unfinished dependency blocked Save, Add dependency, Apply, successful SQLite download, and a later map visit all completed while navigation-status retained “The draft could not be applied. Review the editor errors and try again.” The replay uses an empty required name, corrects it, and verifies the new description in the downloaded SQLite file. A secondary observation showed “PNG download started” persisting into New/demo.",
+      "steps": [
+        "Open enterprise.sqlite and edit Orders & Fulfilment.",
+        "Clear the required name and click Save file to obtain a refused Apply.",
+        "Restore the name, change Description, Apply, and Save file.",
+        "Observe the current navigation status and verify the saved description."
+      ],
+      "expected": "A resolved operation no longer presents its failure as current. A completed export from an earlier dataset is cleared or explicitly attributed when a session changes.",
+      "correction": "Own status by operation/session and clear or replace the matching failure on success or deliberate discard. Preserve unrelated errors and late-operation source identity. Use completion semantics, not a blanket clear-on-input or string matching.",
+      "constraints": [
+        "Do not hide real validation failures or suppress post-commit projection errors.",
+        "A successful Apply followed by a file/export failure must still say which part succeeded.",
+        "An old dataset capture may finish, but its feedback must not imply an export of the new dataset."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/workspace.ts#L360-L389",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/workspace.ts#L454-L478",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/workspace.ts#L835-L889",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/map/map-view.ts"
+      ],
+      "evidence": [
+        "evidence/screenshots/15-map-overview.png",
+        "evidence/screenshots/32-demo-overview-1366.png",
+        "evidence/replay/PR29-UX02.png",
+        "evidence/replay/feedback-saved.sqlite"
+      ],
+      "acceptance": [
+        "A04",
+        "A05",
+        "A06"
+      ],
+      "limits": "The main failure path is independently replayed and verified by saved-file readback. The cross-session export-status observation needs its own targeted regression."
+    },
+    {
+      "id": "PR29-UX03",
+      "priority": "P2",
+      "title": "Removing a planned target silently removes dependent merge proposals",
+      "kind": "destructive-action consequence gap",
+      "checks": [
+        "T066",
+        "T067"
+      ],
+      "owner": "src/ui/scenario-changes.ts: renderRows remove handler; repository scenario-change removal/deletion planning",
+      "impact": "A planner removes one proposed service and unintentionally removes a separate decision to merge another service into it. The baseline enterprise is not deleted, but the proposed design changes more than the action describes.",
+      "observed": "The four-change fixture contains an added Target Portal, a retire, a merge into Target Portal, and a rehome. Clicking Remove on Target Portal immediately changes four rows to two, without a prior consequence disclosure. One Undo restores both removed changes. This is an intentional database cascade exposed with insufficient UX, not irreversible corruption.",
+      "steps": [
+        "Open four-change-scenario.sqlite; inspect Consolidation; Edit scenario.",
+        "Review the four authored changes, including Directory (Amber) merging into the added Target Portal.",
+        "Click Remove on Add Target Portal.",
+        "Observe both add and merge disappear; Undo restores all four."
+      ],
+      "expected": "Before collateral changes commit, identify exactly which dependent proposals will also be removed. Cancellation preserves all. Acceptance removes the reviewed set in one undoable operation.",
+      "correction": "Reuse the existing consequence-planning approach narrowly for scenario changes. A small inline review/confirmation is appropriate when there are dependent proposals. Ordinary independent removals need not gain a new modal. Revalidate the plan before commit and preserve one Undo.",
+      "constraints": [
+        "Do not remove FK protections or orphan merge references.",
+        "Do not apply/discard unrelated scenario metadata or unfinished builder input as a side effect.",
+        "A consequence-explicit immediate action is an alternative only if the collateral change is visibly stated before the action; update the replay oracle accordingly."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/scenario-changes.ts#L345-L383",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/db/migrations/0003-scenarios.ts",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/domain/repository.ts"
+      ],
+      "evidence": [
+        "evidence/screenshots/22-scenario-four-changes.png",
+        "evidence/screenshots/23-remove-target-removes-merge.png",
+        "evidence/replay/PR29-UX03.png",
+        "evidence/fixtures/four-change-scenario.sqlite"
+      ],
+      "acceptance": [
+        "A07",
+        "A08",
+        "A09",
+        "A10"
+      ],
+      "limits": "Executed full-app removal and Undo; no baseline data loss was observed. The proposed consequence-disclosure acceptance is a product safeguard, not a claim that every undoable removal legally requires confirmation."
+    },
+    {
+      "id": "PR29-UX04",
+      "priority": "P2",
+      "title": "Default fitted demo overlaps network and CDS headings",
+      "kind": "visual usability defect",
+      "checks": [
+        "T138",
+        "T139"
+      ],
+      "owner": "src/map/map-view.ts: fit/zoom label placement; src/map/style.ts; e2e/layout-quality.spec.ts",
+      "impact": "The first full-enterprise view makes domain names and route labels collide. A solutions engineer cannot reliably read the boundaries and gateways while orienting to the enterprise, even though service labels are intentionally suppressed at overview scale.",
+      "observed": "On the saved demo arrangement, 1366×768 and 1024×768 each produced six top-level network/CDS label-box intersections; 1600×1000 and 1920×1080 each produced one. Screenshots visibly show Training/Cloud SaaS and Operations/Partner gateway crowding. Reopening the saved arrangement reproduced it without random layout generation.",
+      "steps": [
+        "Open demo-arrangement.sqlite from the packet.",
+        "Select Map and Fit map at 1366×768 and 1024×768.",
+        "Inspect network names, classifications and CDS labels.",
+        "Compare to 1600×1000 and 1920×1080; retain the same saved positions."
+      ],
+      "expected": "At fit-to-overview scale, network and CDS identities remain separable and readable. The requirement does not demand that all 92 service labels be legible simultaneously.",
+      "correction": "Add top-level label-collision checks, including compound network headings, at real laptop sizes. Investigate a bounded display-only placement/label-priority solution. Preserve qualified identity through labels or intentional accessible detail, not tiny unreadable text or silent loss. Inspect actual PNG/SVG as well as the live map.",
+      "constraints": [
+        "Do not automatically rearrange saved inventory positions just because the viewport changed.",
+        "Keep full classification/caveat and correct connection endpoints.",
+        "Do not simply increase the overlap threshold or delete existing quality assertions.",
+        "Reproduce with native Windows fonts first; the independent run uses Linux fallback for Segoe UI."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/map/map-view.ts",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/map/style.ts",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/e2e/layout-quality.spec.ts#L80-L190"
+      ],
+      "evidence": [
+        "evidence/screenshots/demo-fit-1366x768.png",
+        "evidence/screenshots/demo-fit-1024x768.png",
+        "evidence/screenshots/33-demo-repeat-saved-1366.png",
+        "evidence/demo-label-metrics.json",
+        "evidence/fixtures/demo-arrangement.sqlite",
+        "evidence/replay/PR29-UX04.png"
+      ],
+      "acceptance": [
+        "A11",
+        "A12",
+        "A13",
+        "A14"
+      ],
+      "limits": "A repeated visual finding on Linux Chromium 144 with system font fallback. Box intersection is a diagnostic backed by screenshots, not proof every intersecting box has glyph collision. Native Windows/Edge/Chrome reproduction is required before selecting the remedy."
+    },
+    {
+      "id": "PR29-UX05",
+      "priority": "P2",
+      "title": "Generic record creation drops keyboard focus onto BODY",
+      "kind": "keyboard-continuity defect",
+      "checks": [
+        "T142",
+        "T143",
+        "T146"
+      ],
+      "owner": "src/ui/editor-panel.ts: inspect/focusSection completion; src/ui/workspace.ts: F2 listener",
+      "impact": "After adding an organization, the next advertised F2 shortcut does nothing until the user manually focuses another workspace control. Keyboard flow is interrupted immediately after a successful task.",
+      "observed": "Adding an organization leaves document.activeElement as BODY. F2 does not open editing because the listener is on the workspace. Focusing Edit and pressing F2 works. Selecting an existing inventory row and pressing F2 also works; this is not a blanket failure of F2.",
+      "steps": [
+        "Start a fresh dataset, switch Inventory Show to Organizations, and Add organization.",
+        "Enter a name and submit Add organization.",
+        "Without another click, press F2.",
+        "Compare with explicitly focusing Edit and pressing F2."
+      ],
+      "expected": "Completion leaves a meaningful focus target in the current summary, such as its heading or selected tab. The next appropriate shortcut works and the user can continue without starting the tab order over.",
+      "correction": "Add a deliberate summary-heading fallback when there is no selected tab. Preserve service tab restoration and explicit return-to-invoker behavior. Test Add, Apply and Cancel across generic record types; do not move focus on unrelated background refreshes.",
+      "constraints": [
+        "Do not make the application steal focus on every repository notification.",
+        "Do not solve only by making F2 global; repair the lost focus independently.",
+        "Maintain clear keyboard order and visible focus styling."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/editor-panel.ts#L142-L220",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/src/ui/workspace.ts#L820-L834"
+      ],
+      "evidence": [
+        "evidence/replay/PR29-UX05.png",
+        "evidence/replay/replay-results.json",
+        "evidence/results.json"
+      ],
+      "acceptance": [
+        "A15",
+        "A16",
+        "A17"
+      ],
+      "limits": "Organization creation is independently reproduced. Existing-row F2 is a positive control. Other generic completion types are required follow-up cases, not claimed as independently failed."
+    },
+    {
+      "id": "PR29-UX06",
+      "priority": "P3",
+      "title": "Licenses and notices includes a maintenance JavaScript program",
+      "kind": "developer-content leakage / polish",
+      "checks": [
+        "T153"
+      ],
+      "owner": "scripts/runtime-notices.ts: licenseFiles; notice rendering and tests",
+      "impact": "An end user reading notices encounters import fs, const license and fs.writeFileSync from license-update.mjs. This looks like unfinished developer output rather than a reviewed notices page.",
+      "observed": "The runtime notice collector accepts any filename beginning with license/copying/notice/authors plus a suffix. Consequently, an upstream license-update.mjs maintenance script is embedded and displayed as notice text. It is escaped text, not executable code in this dialog.",
+      "steps": [
+        "Open About and demo → Licenses and notices.",
+        "Locate license-update.mjs.",
+        "Observe the maintenance script alongside actual license texts."
+      ],
+      "expected": "The human-facing dialog contains actual license and attribution documents, not executable maintenance files.",
+      "correction": "Narrow document selection without dropping legitimate LICENSE-MIT, NOTICE, AUTHORS, or documented text variants. Add fixture tests with actual notices and similarly named .mjs/.js/.ts maintenance files. Keep the build fail-closed when required license text is absent. Do not alter original license wording to make it shorter.",
+      "constraints": [
+        "Do not remove required attribution or assert a licensing-compliance conclusion from this UX finding.",
+        "Preserve offline availability and text escaping.",
+        "This is lower priority than interaction and map-reading defects."
+      ],
+      "sources": [
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/scripts/runtime-notices.ts#L64-L75",
+        "https://github.com/SUaDtL/SIM/blob/8b1bc5a0ba201dd3ccb0ddc1e84dd2702e44aebe/scripts/runtime-notices.ts#L132-L155"
+      ],
+      "evidence": [
+        "evidence/screenshots/38-license-generator-source.png",
+        "evidence/replay/PR29-UX06.png"
+      ],
+      "acceptance": [
+        "A18",
+        "A19"
+      ],
+      "limits": "Complete retained HTML and collector source verified. No script execution or security exploit was observed."
+    }
+  ]
+}

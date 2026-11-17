@@ -1,0 +1,45 @@
+[
+  {
+    "title": "Project license: sim@0.1.0",
+    "license": "Apache-2.0",
+    "files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "title": "Bundled package: cose-base@2.2.0",
+    "license": "MIT",
+    "files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "title": "Bundled package: cytoscape-fcose@2.2.0",
+    "license": "MIT",
+    "files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "title": "Bundled package: cytoscape@3.34.4",
+    "license": "MIT",
+    "files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "title": "Bundled package: layout-base@2.0.1",
+    "license": "MIT",
+    "files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "title": "Bundled package: sql.js@1.16.0",
+    "license": "MIT",
+    "files": [
+      "AUTHORS",
+      "LICENSE"
+    ]
+  }
+]

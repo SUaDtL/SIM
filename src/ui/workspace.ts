@@ -74,6 +74,14 @@ export function createWorkspace(
   let projectedOrigin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null = null;
   let restoringOrigin = false;
   const navigationStatus = el("p", { role: "status", "data-testid": "navigation-status" });
+  let applyRefusal: { draftId: number; sessionId: number } | null = null;
+  function setNavigationStatus(text: string, draftId?: number): void {
+    applyRefusal = draftId === undefined ? null : { draftId, sessionId };
+    navigationStatus.textContent = text;
+  }
+  function resolveDraftFeedback(draftId: number): void {
+    if (applyRefusal?.draftId === draftId && applyRefusal.sessionId === sessionId) setNavigationStatus("");
+  }
   const backButton = button("Back", () => {
     void back();
   });
@@ -168,9 +176,7 @@ export function createWorkspace(
       editor.restoreViewContext(previous.editorView);
     } else {
       editor.close();
-      navigationStatus.textContent = previous.selection
-        ? "The previous record no longer exists."
-        : "Returned to the workspace.";
+      setNavigationStatus(previous.selection ? "The previous record no longer exists." : "Returned to the workspace.");
     }
     surface = previous.surface;
     inspectorParked = previous.inspectorParked;
@@ -180,7 +186,7 @@ export function createWorkspace(
       restoringOrigin = true;
       if (!map.inspectOrigin(previous.origin)) {
         restoringOrigin = false;
-        navigationStatus.textContent = "The previous projected target is no longer available.";
+        setNavigationStatus("The previous projected target is no longer available.");
       }
     }
     list.restoreContext(previous.list);
@@ -362,11 +368,12 @@ export function createWorkspace(
   }
 
   function applyActiveDraft(): boolean {
+    const owner = editor.activeDraftId();
     const applied = editor.applyActiveDraft();
     if (!applied) {
       inspectorParked = false;
       syncSurface();
-      navigationStatus.textContent = "The draft could not be applied. Review the editor errors and try again.";
+      setNavigationStatus("The draft could not be applied. Review the editor errors and try again.", owner);
       const target =
         editor.element.querySelector<HTMLElement>('[aria-invalid="true"]') ??
         editor.element.querySelector<HTMLElement>('[role="alert"]:not(:empty)');
@@ -380,7 +387,7 @@ export function createWorkspace(
         if (!target.matches("button, input, select, textarea")) target.tabIndex = -1;
         target.focus();
       }
-    }
+    } else resolveDraftFeedback(owner);
     return applied;
   }
 
@@ -438,14 +445,21 @@ export function createWorkspace(
       pendingReturn = null;
       inspectorParked = false;
       syncSurface();
-      if (edit && section) editor.restoreViewContext({ ...editor.viewContext(), section });
+      if (edit && section) {
+        const view = editor.viewContext();
+        editor.restoreViewContext({
+          ...view,
+          section,
+          scrollTop: view.section === section ? view.scrollTop : (view.sectionScroll?.[section] ?? 0),
+        });
+      }
       focusFoundRecord();
       return;
     }
     if (!pendingReturn && !(await prepareNavigation())) return;
     if (id !== null && descriptor(type).get(repo, id) === undefined) {
       pendingReturn = null;
-      navigationStatus.textContent = "That record no longer exists. Choose another result.";
+      setNavigationStatus("That record no longer exists. Choose another result.");
       return;
     }
     rememberReturn();
@@ -453,7 +467,7 @@ export function createWorkspace(
     inspectorParked = false;
     if (id === null || edit) editor.open(type, id, section);
     else editor.inspect(type, id);
-    navigationStatus.textContent = "";
+    setNavigationStatus("");
     list.reveal(type);
     if (id !== null && ["service", "network", "cds"].includes(type))
       map.select(type as "service" | "network" | "cds", id);
@@ -465,14 +479,14 @@ export function createWorkspace(
     if (!(await prepareNavigation())) return;
     if (!repo.getNetwork(networkId)) {
       pendingReturn = null;
-      navigationStatus.textContent = "That network no longer exists. Choose another network.";
+      setNavigationStatus("That network no longer exists. Choose another network.");
       return;
     }
     rememberReturn();
     projectedOrigin = null;
     inspectorParked = false;
     editor.openServiceOnNetwork(networkId);
-    navigationStatus.textContent = "";
+    setNavigationStatus("");
     list.reveal("service");
     syncSurface();
   }
@@ -483,6 +497,7 @@ export function createWorkspace(
       list.render();
       syncSurface();
     },
+    draftResolved: resolveDraftFeedback,
     draftChanged: () => {
       draftToken++;
       onDraftChanged();
@@ -497,6 +512,7 @@ export function createWorkspace(
     requestCancel: () => {
       void (async () => {
         const previous = editor.selection();
+        const draft = editor.activeDraftId();
         const section = readSection(editor.viewContext().section);
         const origin = navigationHistory.at(-1);
         const owner = repo;
@@ -509,6 +525,7 @@ export function createWorkspace(
           request !== navigationRequest
         )
           return;
+        resolveDraftFeedback(draft);
         if (previous?.id === null && origin && navigationHistory.at(-1) === origin) {
           await back();
           return;
@@ -543,7 +560,7 @@ export function createWorkspace(
       );
     },
     recordDeleted: (type) => {
-      navigationStatus.textContent = `${descriptor(type).label} deleted. Undo can restore it.`;
+      setNavigationStatus(`${descriptor(type).label} deleted. Undo can restore it.`);
       focusResults();
     },
   });
@@ -570,7 +587,7 @@ export function createWorkspace(
       if (projectedOrigin) {
         editor.close();
         projectedOrigin = null;
-        navigationStatus.textContent = "Projection changed. Select a record in the current view.";
+        setNavigationStatus("Projection changed. Select a record in the current view.");
       }
     },
     inspectDependency: (inspectConnection = (
@@ -585,8 +602,7 @@ export function createWorkspace(
         (d) => d.consumerServiceId === consumer && d.providerServiceId === provider,
       );
       if (!row) {
-        navigationStatus.textContent =
-          "That connection is no longer available in this view. Select a current connection.";
+        setNavigationStatus("That connection is no longer available in this view. Select a current connection.");
         return;
       }
       const provenance =
@@ -692,7 +708,7 @@ export function createWorkspace(
                   .listDependencies()
                   .some((item) => item.consumerServiceId === consumer && item.providerServiceId === provider)
               ) {
-                navigationStatus.textContent = "That connection no longer exists. Select a current connection.";
+                setNavigationStatus("That connection no longer exists. Select a current connection.");
                 return;
               }
               void open("service", consumer, true, "connections");
@@ -740,7 +756,7 @@ export function createWorkspace(
         if (!restoring) rememberReturn();
         inspectorParked = false;
         projectedOrigin = node.data.origin;
-        navigationStatus.textContent = "";
+        setNavigationStatus("");
         list.reveal(node.data.entity);
         editor.inspectProjected(node, view, projected, comparison, {
           inspectRecord: (target) => {
@@ -841,6 +857,7 @@ export function createWorkspace(
     unsubscribe();
     repo = next;
     sessionId++;
+    setNavigationStatus("");
     ++navigationRequest;
     pendingReturn = null;
     projectedOrigin = null;
@@ -871,8 +888,7 @@ export function createWorkspace(
       if (projectedOrigin) {
         editor.close();
         projectedOrigin = null;
-        navigationStatus.textContent =
-          "The dataset changed. Select the projected record again to inspect its current state.";
+        setNavigationStatus("The dataset changed. Select the projected record again to inspect its current state.");
       }
       if (errors.length > 0) throw new AggregateError(errors, "The workspace could not fully refresh.");
     });
@@ -891,7 +907,7 @@ export function createWorkspace(
       if (projectedOrigin && !map.inspectOrigin(projectedOrigin)) {
         editor.close();
         projectedOrigin = null;
-        navigationStatus.textContent = "The projected target is no longer available.";
+        setNavigationStatus("The projected target is no longer available.");
       }
     },
     hasPendingDraft: () => editor.hasPendingDraft(),

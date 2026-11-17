@@ -1,0 +1,104 @@
+{
+  "packages": [
+    {
+      "id": "P0",
+      "name": "Reconcile the receiving build and preserve scope",
+      "depends": [],
+      "findings": [],
+      "steps": [
+        "Read AGENTS.md and current native governance instructions. Record git status, exact HEAD/tree and unrelated changes.",
+        "Compare receiving code to the reviewed main; classify already-fixed/new/different behavior without restoring an older tree.",
+        "Run packet integrity verification, obtain/build an exact current artifact and record SHA-256. Reproduce baseline failures; retain negative evidence."
+      ],
+      "closure": "Receiving identity, scoped branch, current gate evidence and reviewed acceptance oracles."
+    },
+    {
+      "id": "P1",
+      "name": "Repair interaction ownership",
+      "depends": [
+        "P0"
+      ],
+      "findings": [
+        "PR29-UX01",
+        "PR29-UX02",
+        "PR29-UX05"
+      ],
+      "steps": [
+        "One owner edits editor/workspace scroll, status, focus and completion boundaries.",
+        "Implement section-specific scroll intent and a no-tab completion focus fallback.",
+        "Bind resolved failure feedback to its operation/session; cover ordinary success and delayed/session-switch feedback.",
+        "Add integrated keyboard and fail-fix-success sequences using production components."
+      ],
+      "closure": "A01-A06 and A15-A17 pass on identified artifact; no regression to drafts, Back or positive-control F2."
+    },
+    {
+      "id": "P2",
+      "name": "Disclose collateral scenario removal",
+      "depends": [
+        "P0"
+      ],
+      "findings": [
+        "PR29-UX03"
+      ],
+      "steps": [
+        "Read removal implementation and schema cascade, not just UI wording.",
+        "Prepare exact removal consequences and revalidate relevant proposal identity before commit.",
+        "Keep simple independent removal light; protect unrelated pending metadata/builder input.",
+        "Prove Cancel and one-step Undo/Redo with a merge into an added service."
+      ],
+      "closure": "A07-A10 pass; no orphaned references or baseline mutations."
+    },
+    {
+      "id": "P3",
+      "name": "Stabilize overview readability",
+      "depends": [
+        "P0"
+      ],
+      "findings": [
+        "PR29-UX04"
+      ],
+      "steps": [
+        "Use saved demo fixture before any randomized layout. Reproduce on approved Windows fonts and screenshot laptop sizes.",
+        "Design bounded label placement/priority without silently moving saved nodes or shrinking text below readability.",
+        "Extend quality checks to network/CDS heading intersections; retain current quality gates.",
+        "Review actual PNG/SVG and live As-Is/To-Be/Compare/focus states."
+      ],
+      "closure": "A11-A14 pass with meaningful visual review, exact native/font identity and no position/history changes."
+    },
+    {
+      "id": "P4",
+      "name": "Clean developer output and delivery wording",
+      "depends": [
+        "P0"
+      ],
+      "findings": [
+        "PR29-UX06",
+        "DELIVERY01"
+      ],
+      "steps": [
+        "Tighten notice-document selection while retaining real licenses/attribution and escaping.",
+        "Add maintenance-script exclusion and fail-closed missing-license fixtures.",
+        "Correct preview/release wording using actual release metadata. Prepare, but do not publish, an owner-approved candidate path."
+      ],
+      "closure": "A18-A20 pass; no unauthorized release or removed required notices."
+    },
+    {
+      "id": "P5",
+      "name": "Integrate and obtain remaining acceptance",
+      "depends": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "findings": [],
+      "steps": [
+        "Run the repository current full gate and new regressions; retain exact compiled candidate and reports.",
+        "Reconcile all original 180 cases against current repository evidence without resetting or fabricating their statuses.",
+        "Complete native file/recovery, real zoom/AT and uncoached participant checks on approved environments.",
+        "Perform independent receiving review and record remaining limits. Stop before merge/tag/release unless separately authorized."
+      ],
+      "closure": "A21-A25, current exact-artifact evidence and owner decision. Green automated tests alone are not human or native sign-off."
+    }
+  ]
+}

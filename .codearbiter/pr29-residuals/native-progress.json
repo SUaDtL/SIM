@@ -1,0 +1,56 @@
+{
+  "plan_id": "PLAN-PR29-RESIDUALS",
+  "spec_id": "SPEC-PR29-RESIDUALS",
+  "structural_ready_validation": true,
+  "work": [
+    {
+      "work_id": "WORK-E918894A878558C086747147828AFD28",
+      "title": "P0 SIM post-PR29",
+      "state": "complete",
+      "origin": "pr29-residuals-8b1bc5a0#P0",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    },
+    {
+      "work_id": "WORK-6628A34EFF56C94BC0E71904E434403F",
+      "title": "P1 SIM post-PR29",
+      "state": "complete",
+      "origin": "pr29-residuals-8b1bc5a0#P1",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    },
+    {
+      "work_id": "WORK-7529E843788D75D621C5878F34B51B08",
+      "title": "P2 SIM post-PR29",
+      "state": "complete",
+      "origin": "pr29-residuals-8b1bc5a0#P2",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    },
+    {
+      "work_id": "WORK-F4FC008F21E9E5641BD14B8AB3928F23",
+      "title": "P3 SIM post-PR29",
+      "state": "complete",
+      "origin": "pr29-residuals-8b1bc5a0#P3",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    },
+    {
+      "work_id": "WORK-72397A52A5A91923047FE211A6DB7AFD",
+      "title": "P4 SIM post-PR29",
+      "state": "complete",
+      "origin": "pr29-residuals-8b1bc5a0#P4",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    },
+    {
+      "work_id": "WORK-C5DACC272A0EFCC20E23C02DAAC292E7",
+      "title": "P5 SIM receiving: native, AT and participant acceptance",
+      "state": "active",
+      "origin": "pr29-residuals-8b1bc5a0#P5",
+      "spec_id": "SPEC-PR29-RESIDUALS",
+      "plan_id": "PLAN-PR29-RESIDUALS"
+    }
+  ],
+  "qualification": "P0-P4 reported implementation complete with current software checks. P5 active for real receiving and exact delivered-byte qualification. DONE is not human/native/release certification."
+}

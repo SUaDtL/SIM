@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "Final corrected runtime and derived evidence, before separate complete-index auth recording.",
+  "observed_at": "2026-11-16T23:02:19.692725+00:00",
+  "review_units": {
+    "security_and_architecture": "PASS",
+    "auth_crypto": "PASS",
+    "coverage_and_derived_evidence": "PASS; numeric coverage unmeasured under documented no-tooling exemption"
+  },
+  "open_findings": 0,
+  "resolved_findings": [
+    "DERIVED-EVIDENCE-01: old GATE04/GATE05/GATE07 scopes preserved explicitly historical; current facts derive from the present gate and branch."
+  ],
+  "local_gate": {
+    "unit_tests": 432,
+    "browser_executions": 1038,
+    "skipped": 0,
+    "flaky": 0,
+    "errors": 0
+  },
+  "ledger_windows_worktree_sha256": "50bedb51d428963c84d3b464ea7177050c23c7f73d1389c1935f43e1f27ae6dc",
+  "ledger_staged_sha256": "9d81812580501b392875af44d6d37013601bc852413da5f51791bec2ce753d26",
+  "reports": {
+    "security-review.md": "6b6c158652611c0ebec00bb4877a582e14f77ebb1f0396831ea5ac0f3667abef",
+    "crypto-review.md": "e2c293c316501df8557b132499dc9333400336eca6958b7e96b51cc0da83d5df",
+    "coverage-review.md": "1c65ee293071d23a049f2c5b93552a2406c7b2e9f0166caeceb031872f9b56f7"
+  },
+  "funnel": "Complete finding-triage followed by verdict-aggregator. All3units complete; current aggregate received by integration owner.",
+  "qualification": "Separate complete-index auth review/marker follows this frozen record. Hosted exact-head CI, new delivered-byte qualification and native/AT/human acceptance are not claimed by this source snapshot. No merge or release authorization."
+}

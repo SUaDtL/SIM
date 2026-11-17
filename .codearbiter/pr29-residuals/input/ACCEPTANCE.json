@@ -1,0 +1,206 @@
+{
+  "format": "sim.pr29.followup-acceptance/v1",
+  "scope": "Future corrected candidate. All statuses intentionally not-run; baseline observations are separate.",
+  "cases": [
+    {
+      "id": "A01",
+      "finding": "PR29-UX01",
+      "title": "First section visit",
+      "steps": "Type at the bottom of Details, then enter Support and Connections by pointer and keyboard.",
+      "expected": "First meaningful heading/field visible; draft unchanged.",
+      "status": "not-run"
+    },
+    {
+      "id": "A02",
+      "finding": "PR29-UX01",
+      "title": "Revisit and Back",
+      "steps": "Scroll each section, inspect a reference, use Back and revisit sections.",
+      "expected": "Section-specific or deliberately reset position; no offset borrowed from a different panel.",
+      "status": "not-run"
+    },
+    {
+      "id": "A03",
+      "finding": "PR29-UX01",
+      "title": "Validation takes precedence",
+      "steps": "Create an error and an unfinished route/consumer; Apply from another section.",
+      "expected": "Relevant section and completion/error control revealed; no blanket reset hiding it.",
+      "status": "not-run"
+    },
+    {
+      "id": "A04",
+      "finding": "PR29-UX02",
+      "title": "Fail then fix",
+      "steps": "Refuse Save through invalid field or unfinished connection, fix, Apply, Save.",
+      "expected": "Persisted intended data; no stale failed-Apply message.",
+      "status": "not-run"
+    },
+    {
+      "id": "A05",
+      "finding": "PR29-UX02",
+      "title": "Preserve real unrelated failures",
+      "steps": "Cause Apply success followed by file/export failure; repair only one condition.",
+      "expected": "Accurate partial success; unresolved error not cleared by unrelated input.",
+      "status": "not-run"
+    },
+    {
+      "id": "A06",
+      "finding": "PR29-UX02",
+      "title": "Session feedback",
+      "steps": "Complete export, New/Open/demo, and a delayed old-session export.",
+      "expected": "Status reset or source-qualified; no implication that old output represents the new dataset.",
+      "status": "not-run"
+    },
+    {
+      "id": "A07",
+      "finding": "PR29-UX03",
+      "title": "Dependent proposal review",
+      "steps": "Remove an added target referenced by one or more merge proposals.",
+      "expected": "Exact consequences visible before commit; no premature collateral removal.",
+      "status": "not-run"
+    },
+    {
+      "id": "A08",
+      "finding": "PR29-UX03",
+      "title": "Cancel and one Undo",
+      "steps": "Cancel the consequence step, then accept it; Undo and Redo.",
+      "expected": "Cancel preserves all; one Undo restores the accepted removal set.",
+      "status": "not-run"
+    },
+    {
+      "id": "A09",
+      "finding": "PR29-UX03",
+      "title": "Stale consequence plan",
+      "steps": "Change relevant proposal set between plan presentation and acceptance using a controlled event.",
+      "expected": "Replan/refuse stale intent; no unreviewed dependent changes removed.",
+      "status": "not-run"
+    },
+    {
+      "id": "A10",
+      "finding": "PR29-UX03",
+      "title": "Unrelated draft retained",
+      "steps": "Have pending scenario metadata/builder input while removing another committed change.",
+      "expected": "Explicit existing ownership semantics; unrelated pending work is not silently applied or discarded.",
+      "status": "not-run"
+    },
+    {
+      "id": "A11",
+      "finding": "PR29-UX04",
+      "title": "Pinned arrangement",
+      "steps": "Open provided demo arrangement and Fit at 1024x768, 1366x768, 1600x1000, 1920x1080.",
+      "expected": "Readable/separable network and CDS headings; compare actual native fonts.",
+      "status": "not-run"
+    },
+    {
+      "id": "A12",
+      "finding": "PR29-UX04",
+      "title": "Repeat initial layout",
+      "steps": "Open fictional demo repeatedly from fresh sessions and inspect laptop Fit.",
+      "expected": "No reliance on one favorable random layout; title bounds and visual review pass.",
+      "status": "not-run"
+    },
+    {
+      "id": "A13",
+      "finding": "PR29-UX04",
+      "title": "No data-side layout changes",
+      "steps": "Resize, zoom, focus, return and capture the same arrangement.",
+      "expected": "No unwanted position/history/save-state mutations; endpoints and markings intact.",
+      "status": "not-run"
+    },
+    {
+      "id": "A14",
+      "finding": "PR29-UX04",
+      "title": "Capture legibility",
+      "steps": "PNG/SVG for As-Is, To-Be, Compare and focus at briefing scale.",
+      "expected": "No heading/caption collisions; deliberate viewport cropping remains distinct from clipping.",
+      "status": "not-run"
+    },
+    {
+      "id": "A15",
+      "finding": "PR29-UX05",
+      "title": "Generic Add focus",
+      "steps": "Add organization and each other non-service entity using keyboard.",
+      "expected": "Meaningful focus remains in summary; F2 continues when appropriate.",
+      "status": "not-run"
+    },
+    {
+      "id": "A16",
+      "finding": "PR29-UX05",
+      "title": "Apply and Cancel focus",
+      "steps": "Apply changes and cancel a clean/dirty editor; exercise Stay.",
+      "expected": "Completion/return focus intentional; raw draft retained when staying.",
+      "status": "not-run"
+    },
+    {
+      "id": "A17",
+      "finding": "PR29-UX05",
+      "title": "No focus stealing",
+      "steps": "Background relation refresh while typing, service-section restoration, reference peek return.",
+      "expected": "Focus only changes for an intentional user transition or error reveal.",
+      "status": "not-run"
+    },
+    {
+      "id": "A18",
+      "finding": "PR29-UX06",
+      "title": "Notice file selection",
+      "steps": "Fixture packages with real LICENSE/NOTICE/AUTHORS and license-update.mjs.",
+      "expected": "Real notices retained, maintenance source excluded, absent required license fails build.",
+      "status": "not-run"
+    },
+    {
+      "id": "A19",
+      "finding": "PR29-UX06",
+      "title": "Rendered notices",
+      "steps": "Inspect and keyboard-close offline notices page.",
+      "expected": "No executable maintenance source; text escaping and all required attribution remain.",
+      "status": "not-run"
+    },
+    {
+      "id": "A20",
+      "finding": "DELIVERY01",
+      "title": "Build and distribution distinction",
+      "steps": "Compare public release metadata, Pages deployment and candidate identity.",
+      "expected": "Docs label preview/main vs released download accurately; no unauthorized tag/release.",
+      "status": "not-run"
+    },
+    {
+      "id": "A21",
+      "finding": "GATE",
+      "title": "Prior workflow preservation",
+      "steps": "Replay important routes from the 154 independent checks and existing repository suite.",
+      "expected": "Inline creation, aggregate edits, Save, pending inspection, imports, Undo, focus and typed navigation preserved.",
+      "status": "not-run"
+    },
+    {
+      "id": "A22",
+      "finding": "GATE",
+      "title": "Native file acceptance",
+      "steps": "Use approved Windows Edge/Chrome and exact standalone HTML with real OS files.",
+      "expected": "Save/Save As/cancel/refusal, recovery/readback and external-writer cases evidenced; no mocked-only closure.",
+      "status": "not-run"
+    },
+    {
+      "id": "A23",
+      "finding": "GATE",
+      "title": "Real zoom and assistive technology",
+      "steps": "Exercise real 200/400-percent zoom, keyboard-only task and a supported screen reader.",
+      "expected": "No clipped required actions; sensible announcements, order and focus; report exact limitations.",
+      "status": "not-run"
+    },
+    {
+      "id": "A24",
+      "finding": "GATE",
+      "title": "Uncoached receiving engineer",
+      "steps": "Use the participant protocol with an arriving solutions engineer and a briefing recipient.",
+      "expected": "Observe task completion, confusion, recovery and understanding of pending/applied/saved state; no fabricated participants.",
+      "status": "not-run"
+    },
+    {
+      "id": "A25",
+      "finding": "GATE",
+      "title": "Exact delivered artifact",
+      "steps": "Build final candidate; hash and read back retained/downloaded bytes; run intended delivery path.",
+      "expected": "Report and acceptance tied to exact build; release only with owner authority.",
+      "status": "not-run"
+    }
+  ]
+}

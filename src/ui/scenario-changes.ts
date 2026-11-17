@@ -86,6 +86,12 @@ export function createScenarioChanges(
   const anyway = el("div", { class: "actions" });
   anyway.hidden = true;
   const rows = el("ul", { class: "rows", "data-testid": "scenario-changes" });
+  const removalReview = el("section", {
+    role: "region",
+    "aria-label": "Remove proposed changes",
+    tabindex: "-1",
+    hidden: "",
+  });
   const empty = el("p", { class: "hint" }, "No proposed changes yet.");
   const diagnostics = el("div", { "data-testid": "scenario-diagnostics" });
   let page = 0;
@@ -366,11 +372,9 @@ export function createScenarioChanges(
             "Remove",
             () => {
               try {
-                repo.removeScenarioChange(change.id);
-                refresh();
-                const alternative = rows.querySelector<HTMLButtonElement>("button");
-                if (alternative) alternative.focus();
-                else query.focus();
+                const plan = repo.planRemoveScenarioChange(change.id);
+                if (plan.changes.length > 1) reviewRemoval(change.id);
+                else finishRemoval(change.id, plan.signature);
               } catch (error) {
                 message.textContent = error instanceof ValidationError ? error.message : "Could not remove the change.";
               }
@@ -390,6 +394,77 @@ export function createScenarioChanges(
     next.disabled = result.page + 1 >= result.pages;
     paging.hidden = result.pages === 1;
   }
+
+  function focusRemoval(changeId: number): void {
+    const row = [...rows.querySelectorAll<HTMLElement>("li")].find(
+      (item) => item.dataset["changeId"] === String(changeId),
+    );
+    const alternative =
+      row?.querySelector<HTMLButtonElement>("button") ?? rows.querySelector<HTMLButtonElement>("button");
+    if (alternative) alternative.focus();
+    else query.focus();
+  }
+
+  function closeRemoval(changeId: number): void {
+    removalReview.hidden = true;
+    removalReview.replaceChildren();
+    focusRemoval(changeId);
+  }
+
+  function finishRemoval(changeId: number, signature: string): void {
+    if (!rows.isConnected) return;
+    repo.removeScenarioChange(changeId, signature);
+    refresh();
+    closeRemoval(changeId);
+  }
+
+  function reviewRemoval(changeId: number, notice = ""): void {
+    const plan = repo.planRemoveScenarioChange(changeId);
+    removalReview.replaceChildren(
+      el("h4", {}, "Remove proposed changes?"),
+      el(
+        "p",
+        {},
+        "Removing this planned target also removes the proposals that merge into it. These changes will be removed:",
+      ),
+      el("ul", {}, ...plan.changes.map((change) => el("li", {}, describeChange(repo, change, all)))),
+      el("p", {}, "Other proposals and your unapplied fields stay unchanged. Undo restores this removal as one step."),
+      ...(notice ? [el("p", { role: "alert", class: "field-error" }, notice)] : []),
+      el(
+        "div",
+        { class: "actions" },
+        button(
+          "Confirm remove changes",
+          () => {
+            try {
+              finishRemoval(changeId, plan.signature);
+            } catch (error) {
+              if (error instanceof ValidationError && error.code === "STALE") {
+                reviewRemoval(changeId, error.message);
+              } else {
+                message.textContent =
+                  error instanceof ValidationError ? error.message : "Could not remove the changes.";
+                closeRemoval(changeId);
+              }
+            }
+          },
+          { class: "danger" },
+        ),
+        button("Cancel removal", () => {
+          closeRemoval(changeId);
+        }),
+      ),
+    );
+    removalReview.hidden = false;
+    removalReview.focus();
+    removalReview.scrollIntoView({ block: "nearest" });
+  }
+
+  removalReview.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    removalReview.querySelector<HTMLButtonElement>(".actions button:last-child")?.click();
+  });
 
   function revealChange(changeId: number): boolean {
     const index = all.findIndex((change) => change.id === changeId);
@@ -576,6 +651,7 @@ export function createScenarioChanges(
     query,
     count,
     rows,
+    removalReview,
     empty,
     paging,
     diagnostics,

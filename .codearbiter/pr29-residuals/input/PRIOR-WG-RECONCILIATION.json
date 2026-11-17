@@ -1,0 +1,95 @@
+{
+  "format": "sim.pr29.prior-reconciliation/v1",
+  "items": [
+    {
+      "id": "WG01",
+      "title": "Child-only pending input",
+      "disposition": "software-path verified; native close remains open",
+      "checks": [
+        "T035",
+        "T036"
+      ],
+      "qualification": "Synthetic beforeunload event is cancelled for child-only input in complete app; actual OS close/recovery acceptance is separate."
+    },
+    {
+      "id": "WG02",
+      "title": "About viewport overflow",
+      "disposition": "verified on tested viewports",
+      "checks": [
+        "T095"
+      ],
+      "qualification": "Actual .file-menu-actions panel measured at six widths; prior right-edge overflow not reproduced."
+    },
+    {
+      "id": "WG03",
+      "title": "Crowded picker scroll ownership",
+      "disposition": "verified with short-height qualification",
+      "checks": [
+        "T088",
+        "T089",
+        "T090",
+        "T091",
+        "T094"
+      ],
+      "qualification": "Search/current assignment/footer reachable; 84 choices with 20-result pages. At 320x180 whole-dialog scroll is used rather than simultaneous visibility."
+    },
+    {
+      "id": "WG04",
+      "title": "Current assignment indication",
+      "disposition": "verified",
+      "checks": [
+        "T034",
+        "T088"
+      ],
+      "qualification": "Visible current-assignment text and styling, not ARIA alone."
+    },
+    {
+      "id": "WG05",
+      "title": "Ineffective focus expansion",
+      "disposition": "verified",
+      "checks": [
+        "T029",
+        "T120",
+        "T121"
+      ],
+      "qualification": "Network expansion not exposed; exhausted directed expansion disabled; actual second hop adds a recorded consumer."
+    },
+    {
+      "id": "WG06",
+      "title": "Empty-library reuse guidance",
+      "disposition": "verified in tested first-service path",
+      "checks": [
+        "T006"
+      ],
+      "qualification": "No false instruction requiring unavailable reusable service."
+    },
+    {
+      "id": "WG07",
+      "title": "Narrow relationship imbalance",
+      "disposition": "layout verified; human comfort remains qualified",
+      "checks": [
+        "T140"
+      ],
+      "qualification": "Long qualified identity uses full row width with the action below. Scrolling still necessary at 320px; actual zoom and human reading acceptance remain."
+    },
+    {
+      "id": "WG08",
+      "title": "Contextual defaults counted as edits",
+      "disposition": "verified",
+      "checks": [
+        "T038",
+        "T039"
+      ],
+      "qualification": "Untouched service draft on non-first Blue network cancels without false unapplied-work prompt."
+    },
+    {
+      "id": "WG09",
+      "title": "No retained exact candidate",
+      "disposition": "verified availability and hash chain",
+      "checks": [
+        "T154"
+      ],
+      "qualification": "Artifact 14254470965 is available; HTML/report/shard hashes checked and source tree matches merged main. Native/human acceptance is not supplied by artifact retention."
+    }
+  ]
+}

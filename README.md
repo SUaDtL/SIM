@@ -9,7 +9,7 @@ paths through CDS and external SaaS.
 SIM is one self-contained HTML file. It has no server, no account and no network access.
 Your data lives in a local SQLite (`.sqlite`) file that you open and save yourself.
 
-**Use it now: <https://suadtl.github.io/SIM/>** (Edge or Chrome recommended)
+**Try the main preview: <https://suadtl.github.io/SIM/>** (Edge or Chrome recommended)
 
 ## How it works
 
@@ -21,14 +21,15 @@ Your data lives in a local SQLite (`.sqlite`) file that you open and save yourse
   nothing; a dataset is just a file you keep, back up and share like any other.
 - **Chrome and Edge** can open and save the file in place (File System Access API). Other
   browsers fall back to upload and download.
-- **Hosted copy or your own copy.** The GitHub Pages site is the same single file that is
-  published with each [release](https://github.com/SUaDtL/SIM/releases). For sensitive
-  environments, download the release `sim-<version>.html` and its SHA-256, verify it, and open
-  it from disk; it behaves identically offline.
+- **Main preview or versioned download.** GitHub Pages follows `main` after CI passes and can
+  include changes newer than the latest [release](https://github.com/SUaDtL/SIM/releases).
+  Versioned releases are published separately. For an identifiable offline copy, download
+  `sim-<version>.html` and its SHA-256 from the chosen release, verify it, and open it from disk.
+  Check **About and demo** for the version, commit and build date of the copy you are using.
 
 ## Quick start
 
-1. Open the [hosted app](https://suadtl.github.io/SIM/) or a downloaded `sim.html`.
+1. Open the [main preview](https://suadtl.github.io/SIM/) or a downloaded `sim.html`.
 2. **File → New** (or try the demo under **About and demo**), then **File → Rename dataset**.
 3. **Inventory → Services → Add service** to record services and their dependencies.
 4. Switch to **Map** to see how they connect; capture it as PNG or SVG.
@@ -64,8 +65,8 @@ from `file://`. See [AGENTS.md](AGENTS.md) for layout, module boundaries and rul
 ## Releases and hosting
 
 - Every merge to `main` that passes CI is deployed to GitHub Pages by
-  [`pages.yml`](.github/workflows/pages.yml). The page footer in **About and demo** shows the
-  version, commit and build date.
+  [`pages.yml`](.github/workflows/pages.yml). This is a main preview; a merge does not create a
+  versioned release. The page footer in **About and demo** shows the version, commit and build date.
 - Releases are started by hand from `main` ([`release.yml`](.github/workflows/release.yml)) and
   publish `sim-<version>.html` with its SHA-256. See [CHANGELOG.md](CHANGELOG.md).
 - Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
