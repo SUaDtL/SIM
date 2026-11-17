@@ -343,6 +343,7 @@ export interface RecordSummaryOptions {
   readonly onEdit?: (section?: SummarySection) => void;
   readonly onDependency?: (consumer: number, provider: number) => void;
   readonly onSimilar?: () => void;
+  readonly onAssessment?: () => void;
   readonly onDelete?: () => void;
   readonly initialSection?: SummarySection;
   readonly initialView?: RecordSummaryViewContext;
@@ -419,7 +420,7 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
         { class: "primary", "data-summary-action": "edit", "aria-label": `Edit ${ctx.target.type}` },
       ),
     );
-  if (!ctx.readOnly && (ctx.onSimilar || ctx.onDelete)) {
+  if (!ctx.readOnly && (ctx.onSimilar || ctx.onAssessment || ctx.onDelete)) {
     const more = el(
       "details",
       { class: "record-secondary-actions" },
@@ -428,6 +429,7 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
     const commands = el("div", { class: "record-command-list" });
     if (ctx.onSimilar) commands.append(button("Create similar service", ctx.onSimilar));
     if (ctx.onDelete) commands.append(button("Delete record", ctx.onDelete, { class: "danger" }));
+    if (ctx.onAssessment) commands.append(button("Assessment notes", ctx.onAssessment));
     more.append(commands);
     actions.append(more);
   }

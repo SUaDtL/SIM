@@ -8,6 +8,9 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Optional assessment details, durable exchange identities, live saved viewpoints, and scoped HTML, JSON, and CSV exports.
+- Dependency and responsibility views, assertion-level evidence, unresolved questions, bounded batch assignments, and team-scoped owner review with explicit correction acceptance.
+- Forward-only dataset upgrades through schema 7. Retain a pre-upgrade copy for use with earlier builds.
 - Public README, user guide, contributing and security docs, and a GitHub Pages deployment of the current `main` build.
 
 - Dataset renaming with Undo, persistent paginated data-issue review, keyboard Save, offline build/support identity and an accessible startup failure shell.

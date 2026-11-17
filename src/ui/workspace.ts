@@ -1,7 +1,14 @@
+import { openAssessmentNotes } from "./assessment-notes";
+import { openBatchAssignment } from "./batch-assignment";
+import { openDecisionViews, type DecisionPosition } from "./decision-views";
+import { freezeAssessment } from "../assessment/output";
+import { BUILD } from "../build-info";
+import { LATEST_VERSION } from "../db/migrate";
+import { manageViewpoints } from "./saved-viewpoints";
 import type { Repository } from "../domain/repository";
 import type { Snapshot } from "../domain/types";
 import { downloadBlob, suggestedImageName } from "../file/dataset-file";
-import { createMapView, type MapViewState } from "../map/map-view";
+import { createMapView, type AssessmentMapView, type MapViewState } from "../map/map-view";
 import { button, el } from "./dom";
 import { createEditor } from "./editor-panel";
 import { createListPanel, type ListPanel, type Selection } from "./list-panel";
@@ -27,11 +34,14 @@ export interface Workspace {
   pendingDraftLabel(): string;
   applyActiveDraft(): boolean;
   discardActiveDraft(): void;
-  resolveActiveDraft(kind: "navigate" | "history" | "import" | "capture"): Promise<boolean>;
+  resolveActiveDraft(kind: "navigate" | "history" | "import" | "capture" | "export"): Promise<boolean>;
   sessionIdentity(): number;
   activeDraftToken(): number;
   settlePendingPlacement(): Promise<void>;
   refreshView(): void;
+  assessmentView(includeMap: boolean): AssessmentMapView;
+  hasAssessmentDraft(): boolean;
+  mapIsOpen(): boolean;
   inspectRecord(target: EntityTarget): Promise<void>;
 }
 
@@ -42,6 +52,9 @@ export function createWorkspace(
   captureUnsaved: () => boolean = () => true,
 ): Workspace {
   let repo = initial;
+  let viewpointDraft = false;
+  let batchDraft = false;
+  let recordNoteDraft = false;
   let unsubscribe = (): void => undefined;
   let sessionId = 0;
   let draftToken = 0;
@@ -58,6 +71,7 @@ export function createWorkspace(
     focus: HTMLElement | null;
     focusBookmark: { scope: HTMLElement; index: number; id: string; tag: string; text: string } | null;
     origin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null;
+    decision?: DecisionPosition;
   };
   const navigationHistory: NavigationEntry[] = [];
   const inspectionDialogs = new Set<HTMLDialogElement>();
@@ -192,6 +206,7 @@ export function createWorkspace(
     list.restoreContext(previous.list);
     restoreNavigationFocus(previous);
     backButton.disabled = navigationHistory.length === 0;
+    if (previous.decision) showDecisionViews(previous.decision);
   }
 
   function peek(target: EntityTarget, snapshot?: Snapshot, context?: string): void {
@@ -318,14 +333,16 @@ export function createWorkspace(
   }
 
   function chooseDraftAction(
-    kind: "navigate" | "history" | "import" | "capture",
+    kind: "navigate" | "history" | "import" | "capture" | "export",
   ): Promise<"apply" | "discard" | "stay"> {
     return new Promise((resolve) => {
       const dialog = el("dialog", { "aria-label": "Unapplied changes" });
       const title =
         kind === "capture"
           ? `Capture the current map? ${editor.pendingDraftLabel()} is pending.`
-          : `${editor.pendingDraftLabel()} is pending. Choose how to continue.`;
+          : kind === "export"
+            ? `Export the assessment? ${editor.pendingDraftLabel()} is pending.`
+            : `${editor.pendingDraftLabel()} is pending. Choose how to continue.`;
       const choices: readonly [string, "apply" | "discard" | "stay"][] =
         kind === "history"
           ? [
@@ -338,11 +355,17 @@ export function createWorkspace(
                 ["Capture current view", "discard"],
                 ["Cancel", "stay"],
               ]
-            : [
-                ["Apply and continue", "apply"],
-                ["Discard and continue", "discard"],
-                ["Stay", "stay"],
-              ];
+            : kind === "export"
+              ? [
+                  ["Apply and export", "apply"],
+                  ["Export current recorded state", "discard"],
+                  ["Cancel", "stay"],
+                ]
+              : [
+                  ["Apply and continue", "apply"],
+                  ["Discard and continue", "discard"],
+                  ["Stay", "stay"],
+                ];
       const settle = (choice: "apply" | "discard" | "stay"): void => {
         dialog.close();
         dialog.remove();
@@ -391,7 +414,7 @@ export function createWorkspace(
     return applied;
   }
 
-  async function resolveActiveDraft(kind: "navigate" | "history" | "import" | "capture"): Promise<boolean> {
+  async function resolveActiveDraft(kind: "navigate" | "history" | "import" | "capture" | "export"): Promise<boolean> {
     if (!editor.hasPendingDraft()) return true;
     const owner = repo;
     const session = sessionId;
@@ -401,10 +424,10 @@ export function createWorkspace(
     if (choice === "stay") return false;
     if (choice === "apply") {
       if (!applyActiveDraft()) return false;
-      if (kind === "capture") await map.settlePendingPlacement();
+      if (kind === "capture" || kind === "export") await map.settlePendingPlacement();
       return true;
     }
-    if (kind !== "capture") editor.discardActiveDraft();
+    if (kind !== "capture" && kind !== "export") editor.discardActiveDraft();
     return true;
   }
 
@@ -437,6 +460,7 @@ export function createWorkspace(
       if (fromFind) editor.element.querySelector<HTMLElement>(".record-summary h2")?.focus();
     };
     if (
+      !pendingReturn?.decision &&
       editor.selection()?.type === type &&
       editor.selection()?.id === id &&
       !projectedOrigin &&
@@ -501,6 +525,20 @@ export function createWorkspace(
     draftChanged: () => {
       draftToken++;
       onDraftChanged();
+    },
+    requestAssessment: (id) => {
+      const identity = repo.exchangeIdentities("service").get(String(id));
+      const target = repo.assessmentTargets().find((row) => row.kind === "service" && row.id === identity);
+      if (!target) return;
+      const dialog = openAssessmentNotes(
+        repo,
+        (pending) => {
+          recordNoteDraft = pending;
+        },
+        target,
+      );
+      inspectionDialogs.add(dialog);
+      dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
     },
     requestServiceOnNetwork: (networkId) => {
       void openServiceOnNetwork(networkId);
@@ -722,6 +760,7 @@ export function createWorkspace(
       document.body.append(dialog);
       dialog.showModal();
     }),
+    exchangeIdentities: (table) => repo.exchangeIdentities(table),
     resolveCapture: async () => ((await resolveActiveDraft("capture")) ? "capture" : "cancel"),
     captureSource: () => ({
       sessionId,
@@ -799,6 +838,122 @@ export function createWorkspace(
     surface = "map";
     syncSurface();
   });
+  const viewpointsButton = button("Saved views", () => {
+    const dialog = manageViewpoints(
+      repo,
+      () => map.captureViewpoint(),
+      (row) => {
+        const previous = captureNavigation();
+        const resized = map.restoreViewpoint(row.definition);
+        pendingReturn = previous;
+        rememberReturn();
+        inspectorParked = editor.selection() !== null || projectedOrigin !== null;
+        setNavigationStatus(`Restored ${row.name}.${resized ? " Framing was adjusted for this window." : ""}`);
+        syncSurface();
+      },
+      (pending) => {
+        viewpointDraft = pending;
+        onDraftChanged();
+      },
+    );
+    inspectionDialogs.add(dialog);
+    dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+  });
+  function showDecisionViews(previous?: DecisionPosition): void {
+    try {
+      const mapState = surface === "map" ? map.assessmentView(false) : undefined;
+      const output = freezeAssessment(
+        repo,
+        {
+          generated: new Date().toISOString(),
+          schema: LATEST_VERSION,
+          build: BUILD,
+          fileState: captureUnsaved() ? "Changes not saved to file" : "Saved",
+        },
+        mapState,
+      );
+      const owner = repo;
+      const dialog = openDecisionViews(
+        output,
+        (service, position) => {
+          void (async () => {
+            if (repo !== owner || !(await prepareNavigation()) || repo !== owner) return;
+            if (pendingReturn) pendingReturn.decision = position;
+            const baselineId = [...repo.exchangeIdentities("service")].find(
+              ([, identity]) => identity === service.id,
+            )?.[0];
+            if (position.view === "As-Is") {
+              if (baselineId === undefined) {
+                pendingReturn = null;
+                setNavigationStatus("That recorded service no longer exists.");
+                return;
+              }
+              await open("service", Number(baselineId));
+              return;
+            }
+            const shown = map.captureView().view;
+            if (shown.kind === "as-is") {
+              pendingReturn = null;
+              setNavigationStatus("The selected proposal is no longer open.");
+              return;
+            }
+            const plannedId = [...repo.exchangeIdentities("scenario_change")].find(
+              ([, identity]) => identity === service.id,
+            )?.[0];
+            if (shown.kind === "compare")
+              map.restoreView({ ...map.captureView(), view: { kind: "to-be", scenarioId: shown.scenarioId } });
+            const found =
+              baselineId !== undefined
+                ? map.inspectOrigin({ kind: "baseline", entity: "service", entityId: Number(baselineId) })
+                : plannedId !== undefined &&
+                  map.inspectOrigin({
+                    kind: "planned",
+                    entity: "service",
+                    scenarioId: shown.scenarioId,
+                    changeId: Number(plannedId),
+                  });
+            if (!found) {
+              pendingReturn = null;
+              setNavigationStatus("That proposed service is no longer available.");
+            }
+          })();
+        },
+        previous,
+      );
+      inspectionDialogs.add(dialog);
+      dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+    } catch (error) {
+      setNavigationStatus(error instanceof Error ? error.message : "Could not open decision views.");
+    }
+  }
+
+  const batchButton = button("Batch assignments", () => {
+    void (async () => {
+      const owner = repo;
+      if (!(await resolveActiveDraft("navigate")) || repo !== owner) return;
+      const dialog = openBatchAssignment(
+        repo,
+        (count) => {
+          setNavigationStatus(`${String(count)} service assignments changed. Save file to keep them.`);
+        },
+        (pending) => {
+          batchDraft = pending;
+        },
+      );
+      inspectionDialogs.add(dialog);
+      dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+    })();
+  });
+
+  const decisionButton = button("Decision views", () => {
+    showDecisionViews();
+  });
+  const assessmentActions = el(
+    "details",
+    { class: "workspace-assessment" },
+    el("summary", {}, "Assessment"),
+    el("div", { class: "file-menu-actions" }, decisionButton, viewpointsButton, batchButton),
+  );
   const returnButton = button("Return to results", () => {
     inspectorParked = true;
     syncSurface();
@@ -818,6 +973,8 @@ export function createWorkspace(
     map.element.hidden = surface !== "map";
     inventoryButton.setAttribute("aria-pressed", String(surface === "inventory"));
     mapButton.setAttribute("aria-pressed", String(surface === "map"));
+    viewpointsButton.hidden = surface !== "map";
+    batchButton.hidden = surface !== "inventory";
     const selected = (editor.selection() !== null || projectedOrigin !== null) && !inspectorParked;
     element.classList.toggle("has-selection", selected);
     element.classList.toggle("editing", editor.isEditing() && !inspectorParked);
@@ -833,6 +990,7 @@ export function createWorkspace(
       { class: "workspace-navigation", "aria-label": "Workspace" },
       inventoryButton,
       mapButton,
+      assessmentActions,
       backButton,
       returnButton,
       returnToEditor,
@@ -910,6 +1068,12 @@ export function createWorkspace(
         setNavigationStatus("The projected target is no longer available.");
       }
     },
+    assessmentView: (includeMap) => {
+      if (surface !== "map") throw new Error("Open Map before exporting the current map view.");
+      return map.assessmentView(includeMap);
+    },
+    hasAssessmentDraft: () => viewpointDraft || batchDraft || recordNoteDraft,
+    mapIsOpen: () => surface === "map",
     hasPendingDraft: () => editor.hasPendingDraft(),
     pendingDraftLabel: () => editor.pendingDraftLabel(),
     applyActiveDraft,

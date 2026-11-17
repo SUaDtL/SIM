@@ -25,6 +25,8 @@ import { applyScenario, type Comparison, compareScenario } from "../scenario/sce
 import { searchEntities } from "../ui/relations";
 import type { EntityType } from "../ui/forms";
 import { focusGraph, type FocusRequest } from "./focus";
+import { createViewpoint, resolveViewpoint, type Viewpoint } from "./viewpoint";
+import type { ExchangeTable } from "../domain/assessment-context";
 import { routeOffset } from "./route-offset";
 import "./market.css";
 
@@ -77,6 +79,7 @@ export interface MapViewContext {
   captureSource(): { sessionId: number; name: string; revision: number; unsaved: boolean };
   /** Hand a completed capture to the caller using the name frozen with its source. */
   saveImage(image: Blob, extension: "png" | "svg", capturedName: string): void;
+  exchangeIdentities(table: ExchangeTable): ReadonlyMap<string, string>;
 }
 
 export interface MapView {
@@ -93,9 +96,20 @@ export interface MapView {
   inspectOrigin(origin: GraphOrigin): boolean;
   captureView(): MapViewState;
   restoreView(state: MapViewState): void;
+  captureViewpoint(): Viewpoint;
+  restoreViewpoint(view: Viewpoint): boolean;
+  assessmentView(includeMap: boolean): AssessmentMapView;
   reveal(entity: MapEntity, id: number): void;
   /** Select a focus subject without changing the viewport or the current map question. */
   select(entity: MapEntity, id: number): void;
+}
+
+export interface AssessmentMapView {
+  readonly view: MapViewState["view"];
+  readonly snapshot: Snapshot;
+  readonly visibleNodes: ReadonlySet<string>;
+  readonly visibleDependencies: ReadonlySet<string>;
+  readonly svg: string | null;
 }
 
 // Readable on-screen label sizes, in pixels (WORK-018). Service labels smaller than this are
@@ -107,6 +121,7 @@ const MIN_CDS_LABEL_PX = 11;
 
 // Margin around the drawable map area; controls occupy their own row.
 const FIT_MARGIN = 24;
+const ROUTE_OFFSET_BUDGET = 250_000;
 
 const LAYOUT = {
   name: "fcose",
@@ -785,7 +800,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
-    applyRouteOffsets();
+    const limitedRouteOffsets = applyRouteOffsets();
     const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
     foundationalLabel.textContent = `Show foundational links (${String(links)})`;
     const root = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
@@ -827,6 +842,9 @@ export function createMapView(ctx: MapViewContext): MapView {
         `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
       ...(focus ? [focusGraph(graph, focus).label] : []),
       ...(focusNotice ? [focusNotice] : []),
+      ...(limitedRouteOffsets
+        ? ["Route overlap reduction is limited in this dense view. Narrow the scope for more detail."]
+        : []),
       ...(chainRoot !== null
         ? ["Selected-chain captions are prioritized; captures include other context captions where space permits."]
         : []),
@@ -862,41 +880,42 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   /** Route decoration changes display geometry only, never the snapshot or repository. */
-  function applyRouteOffsets(): void {
+  function applyRouteOffsets(): boolean {
     cy.edges().removeStyle("curve-style control-point-distances control-point-weights");
+    const edges = cy.edges().filter((edge) => edge.visible());
     const leaves = cy.nodes().filter((node) => !node.isParent() && node.visible());
-    // Compound containers are intentionally crossed. Only their title/marking text is an obstacle.
-    const headings = cy
-      .nodes(".network")
-      .filter((node) => node.visible())
-      .map((node) => {
-        const box = node.boundingBox({
-          includeNodes: false,
-          includeEdges: false,
-          includeLabels: true,
-          includeOverlays: false,
+    const networks = cy.nodes(".network").filter((node) => node.visible());
+    if (edges.length * (leaves.length + networks.length) > ROUTE_OFFSET_BUDGET) return true;
+    const obstacles = leaves.map((node) => ({
+      id: node.id(),
+      box: node.boundingBox({ includeLabels: true, includeOverlays: false }),
+    }));
+    // Compound containers are intentionally crossed. Their title and marking text remain obstacles.
+    const headings = networks.map((node) => {
+      const box = node.boundingBox({
+        includeNodes: false,
+        includeEdges: false,
+        includeLabels: true,
+        includeOverlays: false,
+      });
+      return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
+    });
+    edges.forEach((edge) => {
+      const source = edge.source();
+      const target = edge.target();
+      const from = source.id();
+      const to = target.id();
+      const boxes = obstacles.filter(({ id }) => id !== from && id !== to).map(({ box }) => box);
+      const distance = routeOffset(source.position(), target.position(), [...boxes, ...headings]);
+      if (distance !== 0) {
+        edge.style({
+          "curve-style": "unbundled-bezier",
+          "control-point-distances": String(distance),
+          "control-point-weights": "0.5",
         });
-        return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
-      });
-    cy.edges()
-      .filter((edge) => edge.visible())
-      .forEach((edge) => {
-        const source = edge.source();
-        const target = edge.target();
-        const obstacles = [
-          ...leaves
-            .filter((node) => node.id() !== source.id() && node.id() !== target.id())
-            .map((node) => node.boundingBox({ includeLabels: true, includeOverlays: false })),
-          ...headings,
-        ];
-        const distance = routeOffset(source.position(), target.position(), obstacles);
-        if (distance !== 0)
-          edge.style({
-            "curve-style": "unbundled-bezier",
-            "control-point-distances": String(distance),
-            "control-point-weights": "0.5",
-          });
-      });
+      }
+    });
+    return false;
   }
 
   function hasVisibleNodes(): boolean {
@@ -1444,7 +1463,7 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   /** Redraw for another view, keeping the viewport so As-Is and To-Be line up. */
-  function switchView(): void {
+  function switchView(persistPositions = true): void {
     pendingVisibleNode = null;
     chainRoot = null;
     selectedNode = null;
@@ -1458,7 +1477,7 @@ export function createMapView(ctx: MapViewContext): MapView {
           place(cy, fresh);
         }
       });
-      persist("none");
+      if (persistPositions) persist("none");
     }
   }
 
@@ -1528,14 +1547,14 @@ export function createMapView(ctx: MapViewContext): MapView {
       focusReturn: focusReturn ? { ...focusReturn, focusReturn: null } : null,
     };
   }
-  function restoreView(saved: MapViewState): void {
+  function restoreView(saved: MapViewState, persistPositions = true): void {
     // Back restores an exact historical viewport even if a resize is still queued.
     pendingVisibleNode = null;
     focus = null;
     focusReturn = null;
     focusNotice = "";
     view = saved.view;
-    switchView();
+    switchView(persistPositions);
     filterNetwork.value = saved.filter.networkId === undefined ? "" : String(saved.filter.networkId);
     filterCategory.value = saved.filter.categoryId === undefined ? "" : String(saved.filter.categoryId);
     filterOrg.value = saved.filter.orgId === undefined ? "" : String(saved.filter.orgId);
@@ -1552,6 +1571,63 @@ export function createMapView(ctx: MapViewContext): MapView {
       cy.zoom(saved.zoom);
       cy.pan(saved.pan);
     }
+  }
+  function mapDimensions(): { width: number; height: number } {
+    return { width: Math.max(cy.width(), 1), height: Math.max(cy.height(), 1) };
+  }
+
+  function cachedIdentities(): MapViewContext["exchangeIdentities"] {
+    const entries = new Map<ExchangeTable, ReadonlyMap<string, string>>();
+    return (table) => {
+      const current = entries.get(table);
+      if (current) return current;
+      const loaded = ctx.exchangeIdentities(table);
+      entries.set(table, loaded);
+      return loaded;
+    };
+  }
+
+  function captureViewpoint(): Viewpoint {
+    return createViewpoint(captureView(), graph, mapDimensions(), cachedIdentities());
+  }
+
+  function restoreViewpoint(definition: Viewpoint): boolean {
+    const asIs = ctx.snapshot();
+    const resolved = resolveViewpoint(
+      definition,
+      cachedIdentities(),
+      (wanted) => {
+        if (wanted.kind === "as-is") return buildGraph(asIs);
+        return buildGraph(
+          wanted.kind === "compare"
+            ? compareScenario(asIs, wanted.scenarioId).overlay
+            : applyScenario(asIs, wanted.scenarioId),
+        );
+      },
+      mapDimensions(),
+    );
+    restoreView(resolved.state, false);
+    return resolved.resized;
+  }
+
+  function assessmentView(includeMap: boolean): AssessmentMapView {
+    if (snapshot === null) throw new Error("The map is unavailable.");
+    const visibleNodes = new Set(cy.nodes(":visible").map((node) => node.id()));
+    const edges = new Set(cy.edges(":visible").map((edge) => edge.id()));
+    const visibleDependencies = new Set(
+      graph.edges.filter((edge) => edges.has(edge.data.id)).map((edge) => edge.data.dependency),
+    );
+    let svg: string | null = null;
+    if (includeMap && hasVisibleNodes()) {
+      const { marking, caveat, frame, measure } = prepareExport();
+      try {
+        applyZoom(true, 2);
+        svg = svgDocument(sceneFromMap(cy, 2, measure), marking, caveat, frame);
+      } finally {
+        applyZoom();
+      }
+    }
+    return { view: { ...view }, snapshot, visibleNodes, visibleDependencies, svg };
   }
   function reveal(entity: MapEntity, id: number): void {
     pendingVisibleNode = null;
@@ -1580,6 +1656,9 @@ export function createMapView(ctx: MapViewContext): MapView {
     inspectOrigin,
     captureView,
     restoreView,
+    captureViewpoint,
+    restoreViewpoint,
+    assessmentView,
     reveal,
     select,
   };

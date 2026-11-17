@@ -1,3 +1,12 @@
+import { parseReviewBase, type Issuance } from "../assessment/review";
+import {
+  parseStoredNote,
+  validateNote,
+  type NoteInput,
+  type NoteTarget,
+  type ReadAssessmentNote,
+} from "../assessment/notes";
+import { parseViewpoint, type Viewpoint } from "../map/viewpoint";
 import type { Database, SqlValue } from "sql.js";
 import { datasetName } from "../db/dataset";
 import { highestMarking, isMarking, isValidCaveat, type Marking, normalizeCaveat } from "../db/markings";
@@ -32,6 +41,16 @@ import type {
   WriteOptions,
 } from "./types";
 import { checkSensitive, cleanName, cleanText } from "./validate";
+import {
+  ASSESSMENT_FIELDS,
+  ASSESSMENT_FIELDS_LIST,
+  EXCHANGE_KEYS,
+  type ExchangeTable,
+  newExchangeIdentity,
+  validateAssessmentContext,
+  type AssessmentContext,
+  type AssessmentContextInput,
+} from "./assessment-context";
 
 type Row = Record<string, SqlValue>;
 export interface RepositoryChange {
@@ -259,6 +278,28 @@ export class Repository {
         );
         break;
     }
+    if (type === "service" || type === "organization") {
+      const affected = new Set<string | undefined>();
+      if (type === "service") {
+        affected.add(this.exchangeIdentities("service").get(String(id)));
+        const routes = this.exchangeIdentities("service_dependency");
+        for (const row of view.dependencies) {
+          if (row.consumerServiceId === id || row.providerServiceId === id)
+            affected.add(routes.get([row.consumerServiceId, row.providerServiceId].join(":")));
+        }
+      }
+      const consumers = this.exchangeIdentities("org_consumes");
+      for (const row of view.consumption) {
+        if ((type === "service" && row.serviceId === id) || (type === "organization" && row.orgId === id))
+          affected.add(consumers.get([row.orgId, row.serviceId].join(":")));
+      }
+      add(
+        "assessment notes retained as detached records",
+        this.listAssessmentNotes()
+          .filter((note) => note.target.id !== null && affected.has(note.target.id))
+          .map((note) => note.id),
+      );
+    }
     if (details.length === 0) details.push("No related records will change.");
     return { details, blocked, blockers, signature: JSON.stringify(effects) };
   }
@@ -353,7 +394,7 @@ export class Repository {
   createNetwork(input: NetworkInput, options: WriteOptions = {}): Network {
     const v = this.network(input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO network (name, kind, marking, description) VALUES (?, ?, ?, ?)", v);
+      const id = this.insertExchangeRow("network", "name, kind, marking, description", v);
       return this.mustGet(this.getNetwork(id));
     }, "network");
   }
@@ -417,7 +458,7 @@ export class Repository {
   createOrganization(input: OrganizationInput, options: WriteOptions = {}): Organization {
     const v = this.organization(null, input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO organization (name, parent_id) VALUES (?, ?)", v);
+      const id = this.insertExchangeRow("organization", "name, parent_id", v);
       return this.mustGet(this.getOrganization(id));
     }, "organization");
   }
@@ -474,7 +515,7 @@ export class Repository {
   createCategory(input: CategoryInput, options: WriteOptions = {}): Category {
     const v = this.category(input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO category (name, color) VALUES (?, ?)", v);
+      const id = this.insertExchangeRow("category", "name, color", v);
       return this.mustGet(this.getCategory(id));
     }, "category");
   }
@@ -517,7 +558,7 @@ export class Repository {
   createApplication(input: ApplicationInput, options: WriteOptions = {}): Application {
     const v = this.application(input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO application (name, vendor, description) VALUES (?, ?, ?)", v);
+      const id = this.insertExchangeRow("application", "name, vendor, description", v);
       return this.mustGet(this.getApplication(id));
     }, "application");
   }
@@ -668,24 +709,47 @@ export class Repository {
           [...values, merged.networkId, merged.networkId, id],
           "service",
         );
-        this.db.run("DELETE FROM support_assignment WHERE service_id = ?", [id]);
-        for (const row of support) {
-          this.db.run("INSERT INTO support_assignment (service_id, tier, org_id, notes) VALUES (?, ?, ?, ?)", [
-            id,
-            row.tier,
-            row.orgId,
-            row.notes,
-          ]);
+        for (const row of current.support) {
+          if (!support.some((nextRow) => nextRow.tier === row.tier)) {
+            this.db.run("DELETE FROM support_assignment WHERE service_id = ? AND tier = ?", [id, row.tier]);
+          }
         }
-        this.db.run("DELETE FROM org_consumes WHERE service_id = ?", [id]);
-        for (const orgId of consumerOrgIds)
-          this.db.run("INSERT INTO org_consumes (org_id, service_id) VALUES (?, ?)", [orgId, id]);
-        this.db.run("DELETE FROM service_dependency WHERE consumer_service_id = ?", [id]);
-        for (const row of dependencies) {
-          this.db.run(
-            "INSERT INTO service_dependency (consumer_service_id, provider_service_id, via_cds_id) VALUES (?, ?, ?)",
-            [id, row.providerServiceId, row.viaCdsId],
-          );
+        for (const row of support) {
+          this.writeSupport(id, row.tier, row.orgId, row.notes);
+        }
+        for (const orgId of current.consumerOrgIds) {
+          if (!consumerOrgIds.includes(orgId)) {
+            this.db.run("DELETE FROM org_consumes WHERE org_id = ? AND service_id = ?", [orgId, id]);
+          }
+        }
+        for (const orgId of consumerOrgIds) {
+          if (!current.consumerOrgIds.includes(orgId)) {
+            this.insertExchangeRow("org_consumes", "org_id, service_id", [orgId, id]);
+          }
+        }
+        const requested = new Map(dependencies.map((row) => [row.providerServiceId, row.viaCdsId]));
+        const recorded = new Map(current.dependencies.map((row) => [row.providerServiceId, row.viaCdsId]));
+        for (const providerId of recorded.keys()) {
+          if (!requested.has(providerId)) {
+            this.db.run("DELETE FROM service_dependency WHERE consumer_service_id = ? AND provider_service_id = ?", [
+              id,
+              providerId,
+            ]);
+          }
+        }
+        for (const [providerId, route] of requested) {
+          if (!recorded.has(providerId)) {
+            this.insertExchangeRow("service_dependency", "consumer_service_id, provider_service_id, via_cds_id", [
+              id,
+              providerId,
+              route,
+            ]);
+          } else if (recorded.get(providerId) !== route) {
+            this.db.run(
+              "UPDATE service_dependency SET via_cds_id = ? WHERE consumer_service_id = ? AND provider_service_id = ?",
+              [route, id, providerId],
+            );
+          }
         }
         this.requireNoNewInvalidRoutes(brokenBefore, "network");
         return this.mustGet(this.getService(id));
@@ -702,9 +766,9 @@ export class Repository {
   createService(input: ServiceInput, options: WriteOptions = {}): Service {
     const v = this.service(input, options);
     return this.write(() => {
-      const id = this.insert(
-        `INSERT INTO service (name, network_id, application_id, category_id, provider_org_id, marking, foundational, description)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      const id = this.insertExchangeRow(
+        "service",
+        "name, network_id, application_id, category_id, provider_org_id, marking, foundational, description",
         v,
       );
       return this.mustGet(this.getService(id));
@@ -826,7 +890,7 @@ export class Repository {
   createCds(input: CdsInput, options: WriteOptions = {}): Cds {
     const { name, description, networkIds } = this.cds(input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO cds (name, description) VALUES (?, ?)", [name, description]);
+      const id = this.insertExchangeRow("cds", "name, description", [name, description]);
       this.setCdsNetworks(id, networkIds);
       return this.mustGet(this.getCds(id));
     }, "cds");
@@ -869,8 +933,17 @@ export class Repository {
   }
 
   private setCdsNetworks(id: number, networkIds: readonly number[]): void {
-    this.db.run("DELETE FROM cds_network WHERE cds_id = ?", [id]);
-    for (const n of networkIds) this.db.run("INSERT INTO cds_network (cds_id, network_id) VALUES (?, ?)", [id, n]);
+    const previous = new Set(
+      this.rows("SELECT network_id FROM cds_network WHERE cds_id = ?", [id]).map((row) => Number(row["network_id"])),
+    );
+    for (const networkId of previous) {
+      if (!networkIds.includes(networkId)) {
+        this.db.run("DELETE FROM cds_network WHERE cds_id = ? AND network_id = ?", [id, networkId]);
+      }
+    }
+    for (const networkId of networkIds) {
+      if (!previous.has(networkId)) this.insertExchangeRow("cds_network", "cds_id, network_id", [id, networkId]);
+    }
   }
 
   private toCds(row: Row): Cds {
@@ -907,19 +980,50 @@ export class Repository {
     requireTier(tier);
     this.requireExists("service", serviceId, "service");
     if (orgId !== null) this.requireExists("organization", orgId, "organization");
-    const cleanNotes = cleanText(notes);
-    checkSensitive({ notes: cleanNotes }, options.confirmSensitive === true);
+    const current = this.listSupport(serviceId).find((row) => row.tier === tier);
+    const cleanNotes = unchangedText(notes, current?.notes);
+    checkSensitive({ notes: cleanNotes === current?.notes ? null : cleanNotes }, options.confirmSensitive === true);
     this.write(() => {
-      this.db.run("DELETE FROM support_assignment WHERE service_id = ? AND tier = ?", [serviceId, tier]);
-      if (orgId !== null) {
-        this.db.run("INSERT INTO support_assignment (service_id, tier, org_id, notes) VALUES (?, ?, ?, ?)", [
+      if (orgId === null)
+        this.db.run("DELETE FROM support_assignment WHERE service_id = ? AND tier = ?", [serviceId, tier]);
+      else this.writeSupport(serviceId, tier, orgId, cleanNotes);
+    }, "support");
+  }
+
+  assignServiceReference(
+    serviceId: number,
+    field: "provider" | "category" | "support",
+    targetId: number,
+    tier: Tier,
+  ): void {
+    this.requireExists("service", serviceId, "service");
+    this.requireExists(field === "category" ? "category" : "organization", targetId, "assignment");
+    this.write(() => {
+      if (field === "support") {
+        requireTier(tier);
+        const notes = this.row("SELECT notes FROM support_assignment WHERE service_id = ? AND tier = ?", [
           serviceId,
           tier,
-          orgId,
-          cleanNotes,
+        ]);
+        this.writeSupport(serviceId, tier, targetId, text(notes?.["notes"]));
+      } else {
+        const column = field === "provider" ? "provider_org_id" : "category_id";
+        this.db.run(`UPDATE service SET ${column} = ? WHERE id = ? AND ${column} IS NOT ?`, [
+          targetId,
+          serviceId,
+          targetId,
         ]);
       }
-    }, "support");
+    }, "service assignment");
+  }
+
+  private writeSupport(serviceId: number, tier: Tier, orgId: number, notes: string | null): void {
+    this.db.run(
+      `INSERT INTO support_assignment (service_id, tier, org_id, notes, exchange_id) VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(service_id, tier) DO UPDATE SET org_id = excluded.org_id, notes = excluded.notes
+       WHERE org_id IS NOT excluded.org_id OR notes IS NOT excluded.notes`,
+      [serviceId, tier, orgId, notes, newExchangeIdentity()],
+    );
   }
 
   // ---- consumption and dependencies ----
@@ -935,7 +1039,7 @@ export class Repository {
     this.requireExists("organization", orgId, "organization");
     this.requireExists("service", serviceId, "service");
     this.write(() => {
-      this.db.run("INSERT INTO org_consumes (org_id, service_id) VALUES (?, ?)", [orgId, serviceId]);
+      this.insertExchangeRow("org_consumes", "org_id, service_id", [orgId, serviceId]);
     }, "consumption");
   }
 
@@ -983,10 +1087,11 @@ export class Repository {
       }
     }
     this.write(() => {
-      this.db.run(
-        "INSERT INTO service_dependency (consumer_service_id, provider_service_id, via_cds_id) VALUES (?, ?, ?)",
-        [consumer.id, provider.id, via],
-      );
+      this.insertExchangeRow("service_dependency", "consumer_service_id, provider_service_id, via_cds_id", [
+        consumer.id,
+        provider.id,
+        via,
+      ]);
     }, "dependency");
   }
 
@@ -1013,7 +1118,7 @@ export class Repository {
   createScenario(input: ScenarioInput, options: WriteOptions = {}): Scenario {
     const v = this.scenario(input, options);
     return this.write(() => {
-      const id = this.insert("INSERT INTO scenario (name, description) VALUES (?, ?)", v);
+      const id = this.insertExchangeRow("scenario", "name, description", v);
       return this.mustGet(this.getScenario(id));
     }, "scenario");
   }
@@ -1094,9 +1199,9 @@ export class Repository {
     const values = this.scenarioChange(input, this.listScenarioChanges(scenarioId), options);
     const before = new Set(this.scenarioNameCollisions(scenarioId).map((issue) => issue.key));
     return this.atomic(() => {
-      const id = this.insert(
-        `INSERT INTO scenario_change (scenario_id, kind, service_id, into_service_id, into_change_id, network_id,
-         provider_org_id, name, marking, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      const id = this.insertExchangeRow(
+        "scenario_change",
+        "scenario_id, kind, service_id, into_service_id, into_change_id, network_id, provider_org_id, name, marking, description",
         [scenarioId, input.kind, ...values],
       );
       const newIssue = this.scenarioNameCollisions(scenarioId).find((issue) => !before.has(issue.key));
@@ -1259,6 +1364,292 @@ export class Repository {
 
   // ---- derived views ----
 
+  exchangeIdentities(table: ExchangeTable): ReadonlyMap<string, string> {
+    const keys: readonly string[] = EXCHANGE_KEYS[table];
+    return new Map(
+      this.rows(`SELECT ${keys.join(", ")}, exchange_id FROM ${table}`).map((row) => [
+        keys.map((key) => String(row[key])).join(":"),
+        String(row["exchange_id"]),
+      ]),
+    );
+  }
+
+  reviewBindings(): ReadonlyMap<string, string> {
+    return new Map(
+      this.rows("SELECT id, digest FROM review_issuance").map((row) => [String(row["id"]), String(row["digest"])]),
+    );
+  }
+
+  listReviewIssuances(): Issuance[] {
+    return this.rows("SELECT payload, digest FROM review_issuance ORDER BY rowid DESC").map((row) => ({
+      base: parseReviewBase(String(row["payload"])),
+      digest: String(row["digest"]),
+    }));
+  }
+
+  reviewIssuance(id: string): Issuance | undefined {
+    const row = this.row("SELECT payload, digest FROM review_issuance WHERE id = ?", [id]);
+    return row ? { base: parseReviewBase(String(row["payload"])), digest: String(row["digest"]) } : undefined;
+  }
+
+  storeReviewIssuance(issuance: Issuance): void {
+    const payload = JSON.stringify(issuance.base);
+    const base = parseReviewBase(payload);
+    if (base.lineage !== this.assessmentContext().lineage || !/^[0-9a-f]{64}$/.test(issuance.digest)) {
+      throw new ValidationError("INVALID_VALUE", "review", "This review does not match the current dataset.");
+    }
+    const count = this.row("SELECT COUNT(*) as count FROM review_issuance", []);
+    if (Number(count?.["count"]) >= 40)
+      throw new ValidationError("INVALID_VALUE", "review", "This dataset already contains 40 review bases.");
+    this.write(() => {
+      this.db.run("INSERT INTO review_issuance (id, digest, marking, payload) VALUES (?, ?, ?, ?)", [
+        base.id,
+        issuance.digest,
+        base.marking,
+        payload,
+      ]);
+    }, "review issuance");
+  }
+
+  assessmentTargets(): NoteTarget[] {
+    const snapshot = this.snapshot();
+    const networks = new Map(snapshot.networks.map((row) => [row.id, row.name]));
+    const organizations = new Map(snapshot.organizations.map((row) => [row.id, row.name]));
+    const labels = new Map(
+      snapshot.services.map((row) => [row.id, `${row.name} (${networks.get(row.networkId) ?? "Unknown network"})`]),
+    );
+    const serviceIds = this.exchangeIdentities("service");
+    const dependencies = this.exchangeIdentities("service_dependency");
+    const consumes = this.exchangeIdentities("org_consumes");
+    const key = (...ids: number[]): string => ids.join(":");
+    const target = (kind: NoteTarget["kind"], id: string | undefined, label: string): NoteTarget[] =>
+      id === undefined ? [] : [{ kind, id, label }];
+    return [
+      { kind: "assessment", id: null, label: "Assessment-level" },
+      ...snapshot.services.flatMap((row) =>
+        target("service", serviceIds.get(String(row.id)), labels.get(row.id) ?? row.name),
+      ),
+      ...snapshot.dependencies.flatMap((row) =>
+        target(
+          "service_dependency",
+          dependencies.get(key(row.consumerServiceId, row.providerServiceId)),
+          `${labels.get(row.consumerServiceId) ?? ""} → ${labels.get(row.providerServiceId) ?? ""}`,
+        ),
+      ),
+      ...snapshot.consumption.flatMap((row) =>
+        target(
+          "org_consumes",
+          consumes.get(key(row.orgId, row.serviceId)),
+          `${organizations.get(row.orgId) ?? ""} consumes ${labels.get(row.serviceId) ?? ""}`,
+        ),
+      ),
+    ];
+  }
+
+  private noteAssertion(target: NoteTarget, aspect: string): string | undefined {
+    if (target.kind === "assessment") return JSON.stringify(this.assessmentContext().scope);
+    const row = this.row(`SELECT * FROM ${target.kind} WHERE exchange_id = ?`, [target.id]);
+    if (!row) return undefined;
+    const ref = (table: ExchangeTable, id: SqlValue | undefined) => {
+      if (typeof id !== "number") return null;
+      const value = this.row(`SELECT exchange_id FROM ${table} WHERE id = ?`, [id])?.["exchange_id"];
+      return typeof value === "string" ? value : null;
+    };
+    if (target.kind === "org_consumes" || aspect === "Presence") return "true";
+    if (target.kind === "service_dependency") {
+      return JSON.stringify(ref("cds", row["via_cds_id"]));
+    }
+    const serviceId = Number(row["id"]);
+    const tier = /^Tier ([123]) support$/.exec(aspect)?.[1];
+    if (tier) {
+      const support = this.row("SELECT org_id FROM support_assignment WHERE service_id = ? AND tier = ?", [
+        serviceId,
+        Number(tier),
+      ]);
+      return JSON.stringify(ref("organization", support?.["org_id"]));
+    }
+    if (aspect === "Dependencies" || aspect === "Consumers") {
+      const rows =
+        aspect === "Dependencies"
+          ? this.rows("SELECT exchange_id FROM service_dependency WHERE consumer_service_id = ? ORDER BY exchange_id", [
+              serviceId,
+            ])
+          : this.rows("SELECT exchange_id FROM org_consumes WHERE service_id = ? ORDER BY exchange_id", [serviceId]);
+      return JSON.stringify(rows.map((item) => item["exchange_id"]));
+    }
+    return JSON.stringify(
+      aspect === "Provider" ? ref("organization", row["provider_org_id"]) : (row[aspect.toLowerCase()] ?? null),
+    );
+  }
+
+  listAssessmentNotes(): ReadAssessmentNote[] {
+    return this.rows("SELECT * FROM assessment_note ORDER BY rowid").map((row) => {
+      const note = parseStoredNote(String(row["id"]), requireMarking(row["marking"]), String(row["payload"]));
+      const value = this.noteAssertion(note.target, note.aspect);
+      return {
+        ...note,
+        detached: value === undefined,
+        currentState: note.state === "reviewed" && value !== note.reviewedValue ? "needs review" : note.state,
+      };
+    });
+  }
+
+  saveAssessmentNote(input: NoteInput, id?: string, options: WriteOptions = {}): void {
+    const note = validateNote(input);
+    const rows = this.rows("SELECT COUNT(*) as count FROM assessment_note");
+    if (!id && Number(rows[0]?.["count"]) >= 2000)
+      throw new ValidationError("INVALID_VALUE", "assessment note", "This dataset already has 2,000 assessment notes.");
+    const existingRow = id === undefined ? undefined : this.row("SELECT * FROM assessment_note WHERE id = ?", [id]);
+    if (id !== undefined && !existingRow)
+      throw new ValidationError("NOT_FOUND", "assessment note", "This note no longer exists.");
+    const existing = existingRow
+      ? parseStoredNote(
+          String(existingRow["id"]),
+          requireMarking(existingRow["marking"]),
+          String(existingRow["payload"]),
+        )
+      : undefined;
+    const newTarget = existing?.target.id !== note.target.id || existing.target.kind !== note.target.kind;
+    const target = newTarget
+      ? this.assessmentTargets().find((item) => item.id === note.target.id && item.kind === note.target.kind)
+      : existing.target;
+    if (!target)
+      throw new ValidationError("NOT_FOUND", "assessment note", "The selected note target is no longer available.");
+    const current = this.noteAssertion(target, note.aspect);
+    const sourceChanged =
+      existing && (existing.source !== note.source || existing.basis !== note.basis || existing.text !== note.text);
+    const state = note.state === "reviewed" && sourceChanged ? "needs review" : note.state;
+    if (state === "reviewed" && (current === undefined || current.length > 16000)) {
+      throw new ValidationError(
+        "INVALID_VALUE",
+        "assessment note",
+        "The assertion is unavailable or too large to review.",
+      );
+    }
+    if (note.finding === "confirmed absent" && state === "reviewed" && current !== "null" && current !== "[]") {
+      throw new ValidationError(
+        "INVALID_VALUE",
+        "assessment note",
+        "A value or relationship is recorded for this assertion. Resolve that conflict before confirming absence.",
+      );
+    }
+    checkSensitive(
+      Object.fromEntries(
+        (["text", "source", "responsible", "resolution"] as const).map((field) => [
+          field,
+          note[field] === existing?.[field] ? null : note[field],
+        ]),
+      ),
+      options.confirmSensitive === true,
+    );
+    const marking = highestMarking([this.datasetMarking(), note.marking]);
+    const payload = JSON.stringify({
+      ...note,
+      target,
+      marking,
+      state,
+      reviewedValue: state === "reviewed" ? current : (existing?.reviewedValue ?? null),
+    });
+    if (payload.length > 40000)
+      throw new ValidationError("INVALID_VALUE", "assessment note", "The assessment note is too large.");
+    if (payload === existingRow?.["payload"] && marking === existingRow["marking"]) return;
+    this.write(() => {
+      this.db.run(
+        `INSERT INTO assessment_note (id, marking, payload) VALUES (?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET marking = excluded.marking, payload = excluded.payload`,
+        [id ?? newExchangeIdentity(), marking, payload],
+      );
+    }, "assessment note");
+  }
+
+  deleteAssessmentNote(id: string): void {
+    this.write(() => {
+      this.update("DELETE FROM assessment_note WHERE id = ?", [id], "Assessment note");
+    }, "assessment note");
+  }
+
+  listViewpoints() {
+    return this.rows("SELECT * FROM saved_viewpoint ORDER BY name, id").map((row) => ({
+      id: String(row["id"]),
+      name: String(row["name"]),
+      caption: text(row["caption"]),
+      definition: parseViewpoint(String(row["definition"])),
+    }));
+  }
+
+  saveViewpoint(
+    input: { name: string; caption: string | null; definition: Viewpoint },
+    id?: string,
+    options: WriteOptions = {},
+  ) {
+    const existing = id === undefined ? undefined : this.row("SELECT * FROM saved_viewpoint WHERE id = ?", [id]);
+    if (id !== undefined && !existing)
+      throw new ValidationError("NOT_FOUND", "view", "That saved view is no longer available.");
+    const name = cleanName(input.name, "view name");
+    const caption = cleanText(input.caption);
+    if (caption && (caption.length > 4000 || caption.includes("\0"))) {
+      throw new ValidationError("INVALID_VALUE", "caption", "Use up to 4,000 characters without null characters.");
+    }
+    const definition = JSON.stringify(input.definition);
+    parseViewpoint(definition);
+    checkSensitive(
+      {
+        "View name": name === existing?.["name"] ? null : name,
+        caption: caption === existing?.["caption"] ? null : caption,
+      },
+      options.confirmSensitive === true,
+    );
+    if (name === existing?.["name"] && caption === existing["caption"] && definition === existing["definition"]) return;
+    this.write(() => {
+      this.db.run(
+        `INSERT INTO saved_viewpoint (id, name, caption, definition, marking) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET name = excluded.name, caption = excluded.caption, definition = excluded.definition,
+          marking = excluded.marking`,
+        [id ?? newExchangeIdentity(), name, caption, definition, this.datasetMarking()],
+      );
+    }, "saved view");
+  }
+
+  deleteViewpoint(id: string): void {
+    this.write(() => {
+      this.update("DELETE FROM saved_viewpoint WHERE id = ?", [id], "Saved view");
+    }, "saved view");
+  }
+
+  assessmentContext(): AssessmentContext {
+    const row = this.mustGet(this.row("SELECT * FROM assessment_context WHERE id = 1", []));
+    return {
+      lineage: String(row["lineage"]),
+      description: text(row["description"]),
+      scope: text(row["scope"]),
+      exclusions: text(row["exclusions"]),
+      assessor: text(row["assessor"]),
+      startedOn: text(row["started_on"]),
+      asOf: text(row["as_of"]),
+      marking: row["marking"] === null ? null : requireMarking(row["marking"]),
+    };
+  }
+
+  setAssessmentContext(input: AssessmentContextInput, options: WriteOptions = {}): void {
+    const before = this.assessmentContext();
+    const next = validateAssessmentContext(input);
+    const changes = ASSESSMENT_FIELDS_LIST.filter((field) => next[field] !== before[field]);
+    if (!changes.length) return;
+    checkSensitive(
+      Object.fromEntries(changes.map((field) => [ASSESSMENT_FIELDS[field], next[field]])),
+      options.confirmSensitive === true,
+    );
+    const marking = ASSESSMENT_FIELDS_LIST.some((field) => next[field] !== null) ? this.datasetMarking() : null;
+    this.write(() => {
+      this.update(
+        `UPDATE assessment_context SET description = ?, scope = ?, exclusions = ?, assessor = ?,
+        started_on = ?, as_of = ?, marking = ? WHERE id = 1`,
+        [next.description, next.scope, next.exclusions, next.assessor, next.startedOn, next.asOf, marking],
+        "assessment",
+      );
+    }, "assessment");
+  }
+
   /** The dataset's name from its meta table. */
   datasetName(): string {
     return datasetName(this.db);
@@ -1310,7 +1701,8 @@ export class Repository {
       // A service a scenario adds counts too: the banner shows the highest marking in the file.
       this.rows(
         "SELECT marking FROM network UNION SELECT marking FROM service " +
-          "UNION SELECT marking FROM scenario_change WHERE marking IS NOT NULL",
+          "UNION SELECT marking FROM scenario_change WHERE marking IS NOT NULL " +
+          "UNION SELECT marking FROM assessment_context WHERE marking IS NOT NULL UNION SELECT marking FROM saved_viewpoint UNION SELECT marking FROM assessment_note UNION SELECT marking FROM review_issuance",
       ).map((r) => requireMarking(r["marking"])),
     );
   }
@@ -1601,6 +1993,13 @@ export class Repository {
     this.mergeable = false;
     this.notify("history");
     return true;
+  }
+
+  private insertExchangeRow(table: ExchangeTable, columns: string, params: SqlValue[]): number {
+    return this.insert(
+      `INSERT INTO ${table} (${columns}, exchange_id) VALUES (${params.map(() => "?").join(", ")}, ?)`,
+      [...params, newExchangeIdentity()],
+    );
   }
 
   private insert(sql: string, params: SqlValue[]): number {

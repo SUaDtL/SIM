@@ -44,6 +44,7 @@ export interface EditorContext {
   ): void;
   requestCancel?(): void;
   requestSimilar?(sourceId: number): void;
+  requestAssessment?(id: number): void;
   /** Successful guarded deletion has closed the editor and any confirmation modal. */
   recordDeleted?(type: EntityType, id: number): void;
 }
@@ -100,6 +101,20 @@ function describe(error: unknown): string {
 
 export function createEditor(ctx: EditorContext): EditorPanel {
   const element = el("aside", { class: "editor", "data-testid": "editor", "aria-label": "Editor" });
+  function keepConnectionFeedbackVisible(): void {
+    const cue = element.querySelector<HTMLElement>("#connection-task-error");
+    const action = document.activeElement;
+    if (!cue || !(action instanceof HTMLElement) || action.getAttribute("aria-describedby") !== cue.id) return;
+    const scroller = action.closest<HTMLElement>(".editor-body");
+    if (!scroller) return;
+    const cueBox = cue.getBoundingClientRect();
+    const actionBox = action.getBoundingClientRect();
+    const bodyBox = scroller.getBoundingClientRect();
+    const center = (Math.min(cueBox.top, actionBox.top) + Math.max(cueBox.bottom, actionBox.bottom)) / 2;
+    scroller.scrollTop += center - (bodyBox.top + scroller.clientHeight / 2);
+  }
+  const editorSize = new ResizeObserver(keepConnectionFeedbackVisible);
+  editorSize.observe(element);
   let current: Selection | null = null;
   let relations: HTMLElement | null = null;
   let collectCurrent: (() => FormValues) | null = null;
@@ -179,6 +194,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ? {
             onSimilar: () => {
               ctx.requestSimilar?.(id);
+            },
+            onAssessment: () => {
+              ctx.requestAssessment?.(id);
             },
           }
         : {}),
@@ -863,7 +881,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               action.before(cue);
               action.setAttribute("aria-describedby", cue.id);
               reveal(action);
-              cue.scrollIntoView({ block: "nearest" });
+              keepConnectionFeedbackVisible();
             }
             return false;
           }

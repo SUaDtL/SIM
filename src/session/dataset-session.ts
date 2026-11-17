@@ -1,5 +1,5 @@
 import type { Database } from "sql.js";
-import { exportDataset } from "../db/dataset";
+import { exportDataset, openedDatasetWasMigrated } from "../db/dataset";
 import { readPersistentContent } from "../domain/persistent-content";
 import type { Repository } from "../domain/repository";
 
@@ -22,6 +22,7 @@ export class DatasetSession {
   private readonly initialContent: string;
   private discardBaseline: string;
   private savedContent: string | null;
+  private savedReviews: ReadonlyMap<string, string>;
   private dispatchedContent: string | null = null;
   private currentFileName: string | null;
   private busy = false;
@@ -39,7 +40,8 @@ export class DatasetSession {
   ) {
     this.initialContent = readPersistentContent(db);
     this.discardBaseline = this.initialContent;
-    this.savedContent = options.opened ? this.initialContent : null;
+    this.savedContent = options.opened && !openedDatasetWasMigrated(db) ? this.initialContent : null;
+    this.savedReviews = this.savedContent ? repo.reviewBindings() : new Map();
     this.currentFileName = options.fileName;
     this.latestContent = this.initialContent;
     this.latestRevision = repo.currentRevision();
@@ -60,6 +62,10 @@ export class DatasetSession {
   fileName(): string | null {
     return this.currentFileName;
   }
+  hasSavedReview(id: string, digest: string): boolean {
+    return this.savedReviews.get(id) === digest;
+  }
+
   isSaving(): boolean {
     return this.busy;
   }
@@ -94,15 +100,15 @@ export class DatasetSession {
   }
 
   /** Captures bytes and logical content together, without yielding between the two reads. */
-  private capture(): { bytes: Uint8Array; content: string } {
+  private capture(): { bytes: Uint8Array; content: string; reviews: ReadonlyMap<string, string> } {
     const content = this.currentContent();
     const bytes = exportDataset(this.db);
-    return { bytes, content };
+    return { bytes, content, reviews: this.repo.reviewBindings() };
   }
 
   saveNative(target: NativeTarget, write: (bytes: Uint8Array) => Promise<void>): Promise<SaveResult> {
     if (this.busy || this.disposed) return Promise.resolve("busy");
-    const { bytes, content } = this.capture();
+    const { bytes, content, reviews } = this.capture();
     this.busy = true;
     this.failed = false;
     const operation = nativeWriterTail.then(() => write(bytes));
@@ -115,6 +121,7 @@ export class DatasetSession {
         () => {
           if (this.disposed) return "superseded";
           this.savedContent = content;
+          this.savedReviews = reviews;
           this.dispatchedContent = null;
           this.currentFileName = target.name;
           this.discardBaseline = content;

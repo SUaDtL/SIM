@@ -34,13 +34,19 @@ describe("readPersistentContent", () => {
 
   it("compares logical rows independently of insertion order and SQLite page history", async () => {
     const first = await dataset();
-    const second = await dataset();
+    const second = await openDataset(first.export(), { wasm });
     first.run(
-      "INSERT INTO network (id, name, kind, marking) VALUES (1, 'A', 'internal', 'CUI'), (2, 'B', 'external', 'CUI')",
+      `INSERT INTO network (id, name, kind, marking, exchange_id) VALUES
+        (1, 'A', 'internal', 'CUI', '00000000-0000-4000-8000-000000000001'),
+        (2, 'B', 'external', 'CUI', '00000000-0000-4000-8000-000000000002')`,
     );
     second.run(
-      "INSERT INTO network (id, name, kind, marking) VALUES (2, 'B', 'external', 'CUI'), (1, 'A', 'internal', 'CUI')",
+      `INSERT INTO network (id, name, kind, marking, exchange_id) VALUES
+        (2, 'B', 'external', 'CUI', '00000000-0000-4000-8000-000000000002'),
+        (1, 'A', 'internal', 'CUI', '00000000-0000-4000-8000-000000000001')`,
     );
+    second.run("INSERT INTO meta (key, value) VALUES ('Temporary', hex(zeroblob(8192)))");
+    second.run("DELETE FROM meta WHERE key = 'Temporary'");
     expect(readPersistentContent(first)).toBe(readPersistentContent(second));
     expect(first.export()).not.toEqual(second.export());
   });
