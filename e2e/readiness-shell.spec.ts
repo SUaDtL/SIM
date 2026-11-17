@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { createDataset, datasetName, openDataset } from "../src/db/dataset";
+import { LATEST_VERSION } from "../src/db/migrate";
 import { Repository } from "../src/domain/repository";
 import { showCaptureOptions } from "./helpers/map-controls";
 import { wasm } from "../tests/helpers/sqlite";
@@ -168,7 +169,7 @@ test("R20 offline About identifies application version, source build and data fo
   const identity = page.getByTestId("build-information");
   await expect(identity).toContainText("SIM 0.1.0");
   await expect(identity).toContainText(/Build [a-f0-9]{40}/);
-  await expect(identity).toContainText("Data format 3");
+  await expect(identity).toContainText(`Data format ${String(LATEST_VERSION)}`);
   await expect(identity).not.toContainText("Orders");
   await expect(page.getByRole("button", { name: "Copy support information", exact: true })).toBeVisible();
 });

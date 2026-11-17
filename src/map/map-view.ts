@@ -121,6 +121,7 @@ const MIN_CDS_LABEL_PX = 11;
 
 // Margin around the drawable map area; controls occupy their own row.
 const FIT_MARGIN = 24;
+const ROUTE_OFFSET_BUDGET = 250_000;
 
 const LAYOUT = {
   name: "fcose",
@@ -799,7 +800,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     // Cytoscape 3.34 keeps a per-element visibility cache that a class toggle does not clear; the
     // renderer reads it, so recompute styles (cheap at this size).
     cy.style().update();
-    applyRouteOffsets();
+    const limitedRouteOffsets = applyRouteOffsets();
     const links = new Set(graph.edges.filter((e) => e.data.foundational).map((e) => e.data.dependency)).size;
     foundationalLabel.textContent = `Show foundational links (${String(links)})`;
     const root = chainRoot === null ? undefined : graph.nodes.find((n) => n.data.id === chainRoot);
@@ -841,6 +842,9 @@ export function createMapView(ctx: MapViewContext): MapView {
         `${String(visibleDependencies.size)} of ${String(total)} recorded dependencies in scope`,
       ...(focus ? [focusGraph(graph, focus).label] : []),
       ...(focusNotice ? [focusNotice] : []),
+      ...(limitedRouteOffsets
+        ? ["Route overlap reduction is limited in this dense view. Narrow the scope for more detail."]
+        : []),
       ...(chainRoot !== null
         ? ["Selected-chain captions are prioritized; captures include other context captions where space permits."]
         : []),
@@ -876,41 +880,42 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   /** Route decoration changes display geometry only, never the snapshot or repository. */
-  function applyRouteOffsets(): void {
+  function applyRouteOffsets(): boolean {
     cy.edges().removeStyle("curve-style control-point-distances control-point-weights");
+    const edges = cy.edges().filter((edge) => edge.visible());
     const leaves = cy.nodes().filter((node) => !node.isParent() && node.visible());
-    // Compound containers are intentionally crossed. Only their title/marking text is an obstacle.
-    const headings = cy
-      .nodes(".network")
-      .filter((node) => node.visible())
-      .map((node) => {
-        const box = node.boundingBox({
-          includeNodes: false,
-          includeEdges: false,
-          includeLabels: true,
-          includeOverlays: false,
+    const networks = cy.nodes(".network").filter((node) => node.visible());
+    if (edges.length * (leaves.length + networks.length) > ROUTE_OFFSET_BUDGET) return true;
+    const obstacles = leaves.map((node) => ({
+      id: node.id(),
+      box: node.boundingBox({ includeLabels: true, includeOverlays: false }),
+    }));
+    // Compound containers are intentionally crossed. Their title and marking text remain obstacles.
+    const headings = networks.map((node) => {
+      const box = node.boundingBox({
+        includeNodes: false,
+        includeEdges: false,
+        includeLabels: true,
+        includeOverlays: false,
+      });
+      return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
+    });
+    edges.forEach((edge) => {
+      const source = edge.source();
+      const target = edge.target();
+      const from = source.id();
+      const to = target.id();
+      const boxes = obstacles.filter(({ id }) => id !== from && id !== to).map(({ box }) => box);
+      const distance = routeOffset(source.position(), target.position(), [...boxes, ...headings]);
+      if (distance !== 0) {
+        edge.style({
+          "curve-style": "unbundled-bezier",
+          "control-point-distances": String(distance),
+          "control-point-weights": "0.5",
         });
-        return { x1: box.x1 - 6, y1: box.y1 - 6, x2: box.x2 + 6, y2: box.y2 + 6 };
-      });
-    cy.edges()
-      .filter((edge) => edge.visible())
-      .forEach((edge) => {
-        const source = edge.source();
-        const target = edge.target();
-        const obstacles = [
-          ...leaves
-            .filter((node) => node.id() !== source.id() && node.id() !== target.id())
-            .map((node) => node.boundingBox({ includeLabels: true, includeOverlays: false })),
-          ...headings,
-        ];
-        const distance = routeOffset(source.position(), target.position(), obstacles);
-        if (distance !== 0)
-          edge.style({
-            "curve-style": "unbundled-bezier",
-            "control-point-distances": String(distance),
-            "control-point-weights": "0.5",
-          });
-      });
+      }
+    });
+    return false;
   }
 
   function hasVisibleNodes(): boolean {

@@ -1,6 +1,6 @@
 # Implementation plan: assessment product
 
-**Status:** Proposed, not started. This PR writes documentation only. Read the [specification](spec.md) first and use the [acceptance protocol](acceptance.md) as the single initial case register.
+Read the [specification](spec.md) and use the [acceptance protocol](acceptance.md) as the case register. The [execution register](execution.md) records implementation and verification on PR 31. The owner directed every implementation slice to remain on that PR.
 
 ## 1. Delivery strategy
 

@@ -48,6 +48,7 @@ export function openReviewIssuance(
   const { dialog, heading, body, alert, fail } = reviewDialog("Prepare owner review");
   const query = el("input", { type: "search" });
   const teams = el("select");
+  const includeNotes = el("input", { type: "checkbox" });
   const issueList = el("ul");
   function updateTeams(): void {
     const filtered = repo
@@ -101,10 +102,11 @@ export function openReviewIssuance(
       ),
       el("label", { class: "assessment-field" }, "Find organization", query),
       el("label", { class: "assessment-field" }, "Organization", teams),
+      el("label", {}, includeNotes, " Include evidence and questions linked to the team’s services"),
       button("Preview team scope", () => {
         try {
           if (!teams.value) throw new Error("Choose an organization.");
-          preview(prepareReview(repo, Number(teams.value)), repo.currentRevision());
+          preview(prepareReview(repo, Number(teams.value), includeNotes.checked), repo.currentRevision());
           heading.focus();
         } catch (error) {
           fail(error);
@@ -120,13 +122,58 @@ export function openReviewIssuance(
 
   function preview(base: ReviewBase, revision: number): void {
     alert.textContent = "";
-    const list = el("ul", {}, ...base.services.map((row) => el("li", {}, `${row.label} · ${row.roles.join(", ")}`)));
+    const names = new Map(base.references.map((record) => [record.id, record.label]));
+    const list = el(
+      "ul",
+      {},
+      ...base.services.map((row) =>
+        el(
+          "li",
+          {},
+          el("p", {}, `${row.label} · ${row.roles.join(", ")}`),
+          el(
+            "details",
+            {},
+            el("summary", {}, "Fields included in review"),
+            el(
+              "dl",
+              {},
+              ...Object.entries(row.fields).flatMap(([field, value]) => [
+                el("dt", {}, field),
+                el("dd", {}, value === null ? "Not recorded" : (names.get(value) ?? value)),
+              ]),
+            ),
+          ),
+        ),
+      ),
+    );
     const boundaries = el(
       "details",
       {},
       el("summary", {}, `Review dependency context (${String(base.boundaries.length)})`),
       el("ul", {}, ...base.boundaries.map((row) => el("li", {}, `${row.consumer} → ${row.provider} · ${row.kind}`))),
     );
+    const notes = base.notes?.length
+      ? el(
+          "details",
+          {},
+          el("summary", {}, `Included evidence and questions (${String(base.notes.length)})`),
+          el(
+            "ul",
+            {},
+            ...base.notes.map((note) =>
+              el(
+                "li",
+                {},
+                note.kind,
+                el("p", {}, note.text),
+                note.source ? el("p", {}, note.source) : null,
+                note.response ? el("p", {}, note.response) : null,
+              ),
+            ),
+          ),
+        )
+      : null;
     const create = button("Prepare and save review base", () => {
       create.disabled = true;
       void (async () => {
@@ -154,6 +201,7 @@ export function openReviewIssuance(
       ),
       list,
       boundaries,
+      ...(notes ? [notes] : []),
       el(
         "div",
         { class: "actions" },
@@ -173,7 +221,7 @@ export function openReviewIssuance(
 export function openCorrectionReview(
   repo: Repository,
   isSaved: (id: string, digest: string) => boolean,
-  done: (count: number) => void,
+  done: (count: number, receipt: Blob) => void,
 ): HTMLDialogElement {
   const { dialog, heading, body, alert, fail } = reviewDialog("Apply reviewed corrections");
   const picker = el("input", { type: "file", accept: ".json,application/json" });
@@ -305,7 +353,6 @@ export function openCorrectionReview(
         }
 
         function receipt(count: number, applied: string[]): void {
-          done(count);
           const content = JSON.stringify(
             {
               format: "sim-correction-receipt/v1",
@@ -324,11 +371,13 @@ export function openCorrectionReview(
             null,
             2,
           );
+          const output = new Blob([content], { type: "application/json" });
+          done(count, output);
           body.replaceChildren(
             el("p", {}, `${String(count)} corrections applied in one Undo step. Save file to retain them.`),
             el("p", {}, "The receipt records this review. Later edits or Undo may change the dataset."),
             button("Download review receipt", () => {
-              downloadBlob(new Blob([content], { type: "application/json" }), "SIM correction receipt.json");
+              downloadBlob(output, "SIM correction receipt.json");
             }),
             button("Close", () => {
               dialog.close();

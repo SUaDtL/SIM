@@ -246,16 +246,24 @@ export function freezeAssessment(
       });
     }
     if (includeNotes) {
-      const visibleIds = new Set(
-        Object.values(tables).flatMap((rows) =>
-          rows.map((row) => row["id"]).filter((value): value is string => typeof value === "string"),
-        ),
-      );
+      const visibleIds = new Map<string, string>();
+      for (const table of ["Services", "Service dependencies", "Consuming organizations"]) {
+        for (const row of tables[table] ?? []) {
+          if (typeof row["id"] !== "string") continue;
+          const label =
+            table === "Services"
+              ? `${String(row["service"])} (${String(row["network"])})`
+              : table === "Service dependencies"
+                ? `${String(row["consumer"])} → ${String(row["provider"])}`
+                : `${String(row["organization"])} consumes ${String(row["service"])}`;
+          visibleIds.set(row["id"], label);
+        }
+      }
       tables["Assessment evidence and questions"] = notes
         .filter((note) => full || (note.target.id !== null && !note.detached && visibleIds.has(note.target.id)))
         .map((note) => ({
           type: note.kind,
-          target: note.target.label,
+          target: full ? note.target.label : (visibleIds.get(note.target.id ?? "") ?? "Included assertion"),
           aspect: note.aspect,
           state: note.currentState,
           details: note.text,
@@ -362,8 +370,7 @@ function renderHtml(output: AssessmentOutput, checkpoint: string): string {
 
 export function renderAssessment(output: AssessmentOutput, format: OutputFormat, checkpoint: string): Blob {
   if (format === "html") return bounded(renderHtml(output, checkpoint), "text/html;charset=utf-8");
-  const data: Omit<AssessmentOutput, "map"> = { ...output };
-  Reflect.deleteProperty(data, "map");
+  const data = { ...output, map: undefined };
   const inventories = data.inventories.map((section) => ({
     ...section,
     rowCounts: Object.fromEntries(Object.entries(section.tables).map(([name, rows]) => [name, rows.length])),

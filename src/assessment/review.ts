@@ -1,4 +1,5 @@
-import { bannerText, isMarking, type Marking } from "../db/markings";
+import type { ReadAssessmentNote } from "./notes";
+import { bannerText, isMarking, isValidCaveat, MARKINGS, type Marking } from "../db/markings";
 import { newExchangeIdentity, UUID_V4, type ExchangeTable } from "../domain/assessment-context";
 import type { Repository } from "../domain/repository";
 import type { Tier } from "../domain/types";
@@ -36,6 +37,14 @@ export interface ReviewBase {
   }[];
   readonly references: readonly { readonly id: string; readonly label: string; readonly type: ReferenceType }[];
   readonly boundaries: readonly { readonly consumer: string; readonly provider: string; readonly kind: string }[];
+  readonly notes?: readonly {
+    readonly id: string;
+    readonly service: string;
+    readonly kind: "Evidence" | "Question";
+    readonly text: string;
+    readonly source: string;
+    readonly response: ReviewValue;
+  }[];
 }
 
 export interface Issuance {
@@ -55,6 +64,7 @@ interface ReturnedReview {
   readonly lineage: string;
   readonly digest: string;
   readonly reviewer: string;
+  readonly handling: { readonly marking: Marking; readonly caveat: string | null } | null;
   readonly proposals: readonly Proposal[];
 }
 
@@ -110,7 +120,7 @@ function referenceType(field: string): ReferenceType | null {
   return field === "provider" || /^support[123]$/.test(field) ? "organization" : null;
 }
 
-export function prepareReview(repo: Repository, organizationId: number): ReviewBase {
+export function prepareReview(repo: Repository, organizationId: number, includeNotes = false): ReviewBase {
   const snap = repo.snapshot();
   const team = repo.getOrganization(organizationId);
   if (!team) throw new Error("The selected organization is unavailable.");
@@ -166,6 +176,27 @@ export function prepareReview(repo: Repository, organizationId: number): ReviewB
     ];
   });
   if (boundaries.length > 1000) throw new Error("The review has more than 1,000 related rows.");
+  const scope = new Set(services.map(({ id }) => id));
+  const notes = includeNotes
+    ? repo.listAssessmentNotes().flatMap((note) =>
+        note.target.kind === "service" && note.target.id && scope.has(note.target.id) && !note.detached
+          ? [
+              {
+                id: note.id,
+                service: note.target.id,
+                kind: note.kind,
+                text: note.text,
+                source: note.source,
+                response: note.resolution || null,
+              },
+            ]
+          : [],
+      )
+    : [];
+  if (notes.length > 200)
+    throw new Error(
+      "This team scope has more than 200 linked notes. Prepare the review without notes or split the work.",
+    );
   return {
     format: "sim-review/v1",
     id: newExchangeIdentity(),
@@ -177,6 +208,7 @@ export function prepareReview(repo: Repository, organizationId: number): ReviewB
     services,
     references,
     boundaries,
+    ...(includeNotes ? { notes } : {}),
   };
 }
 
@@ -206,6 +238,7 @@ export function parseReviewBase(text: string): ReviewBase {
       "services",
       "references",
       "boundaries",
+      ...(Object.hasOwn(row, "notes") ? ["notes"] : []),
     ]) ||
     row["format"] !== "sim-review/v1" ||
     !uuid(row["id"]) ||
@@ -266,6 +299,23 @@ export function parseReviewBase(text: string): ReviewBase {
       throw new Error("Invalid review boundary context.");
     }
   }
+  if (Object.hasOwn(row, "notes")) {
+    const notes: unknown = row["notes"];
+    if (!Array.isArray(notes) || notes.length > 200) throw new Error("Invalid review notes.");
+    for (const note of notes as unknown[]) {
+      if (
+        !object(note) ||
+        !exactKeys(note, ["id", "service", "kind", "text", "source", "response"]) ||
+        !uuid(note["id"]) ||
+        !uuid(note["service"]) ||
+        (note["kind"] !== "Evidence" && note["kind"] !== "Question") ||
+        !brief(note["text"], 4000) ||
+        !brief(note["source"], 4000) ||
+        (note["response"] !== null && !brief(note["response"], 4000))
+      )
+        throw new Error("Invalid review note.");
+    }
+  }
   return row as unknown as ReviewBase;
 }
 
@@ -282,6 +332,7 @@ export function renderReviewPack({ base, digest }: Issuance): string {
       instructions: [
         "Review the services and roles in this package. Boundary rows include endpoint labels only.",
         "Add proposed changes to proposals. Each has service (the exact ID), field, operation (set or clear), and value (string or null for clear).",
+        "For an included note, use the linked service ID and the field response: followed by the note ID.",
         "Omit a field to make no proposal. Set shared references using IDs from references of the applicable type.",
         "The assessment owner chooses which proposals to apply. Return the file through an approved local process.",
       ],
@@ -325,11 +376,22 @@ export function parseReturn(text: string): ReturnedReview {
   });
   const keys = proposals.map(({ service, field }) => `${service}:${field}`);
   if (new Set(keys).size !== keys.length) throw new Error("A correction field was proposed more than once.");
+  let handling: ReturnedReview["handling"] = null;
+  const declared = row["marking"];
+  if (declared !== undefined) {
+    if (!brief(declared, 100)) throw new Error("Invalid returned marking.");
+    const [marking, caveat, unexpected] = declared.split("//");
+    if (!isMarking(marking) || unexpected !== undefined || (caveat !== undefined && !isValidCaveat(caveat))) {
+      throw new Error("Invalid returned marking or caveat.");
+    }
+    handling = { marking, caveat: caveat ?? null };
+  }
   return {
     issuance: row["issuance"],
     lineage: row["lineage"],
     digest: row["digest"],
     reviewer: row["reviewer"],
+    handling,
     proposals,
   };
 }
@@ -351,10 +413,23 @@ export function prepareCorrections(repo: Repository, issuance: Issuance, returne
       "This return cannot be matched to its issuing saved base. Use the explicit editor to compare any suggestions manually.",
     );
   }
+  if (
+    returned.handling &&
+    (MARKINGS.indexOf(returned.handling.marking) > MARKINGS.indexOf(repo.datasetMarking()) ||
+      (returned.handling.caveat !== null && returned.handling.caveat !== repo.datasetCaveat()))
+  ) {
+    throw new Error(
+      "This return declares a higher marking or different handling caveat. Review its handling before recording any changes.",
+    );
+  }
   const ids = mappedIds(repo);
   const services = new Map([...ids("service")].map(([id, identity]) => [identity, Number(id)]));
   const scoped = new Map(issuance.base.services.map((row) => [row.id, row]));
   const byService = new Map<string, Fields>();
+  const localNotes = returned.proposals.some(({ field }) => field.startsWith("response:"))
+    ? new Map(repo.listAssessmentNotes().map((note) => [note.id, note]))
+    : new Map<string, ReadAssessmentNote>();
+  const issuedNotes = new Map(issuance.base.notes?.map((note) => [note.id, note]));
   return returned.proposals.map((proposal) => {
     const key = `${proposal.service}:${proposal.field}`;
     const scope = scoped.get(proposal.service);
@@ -367,7 +442,12 @@ export function prepareCorrections(repo: Repository, issuance: Issuance, returne
       current: null,
       returned: proposal.value,
     };
-    if (service === undefined || !scope || !(REVIEW_FIELDS as readonly string[]).includes(proposal.field)) {
+    const noteId = proposal.field.startsWith("response:") ? proposal.field.slice("response:".length) : null;
+    if (
+      service === undefined ||
+      !scope ||
+      (noteId === null && !(REVIEW_FIELDS as readonly string[]).includes(proposal.field))
+    ) {
       return {
         ...base,
         disposition: "quarantined",
@@ -380,6 +460,34 @@ export function prepareCorrections(repo: Repository, issuance: Issuance, returne
         ...base,
         disposition: "quarantined",
         reason: "Set requires a nonempty value without outer whitespace. Use an explicit clear to remove a value.",
+      };
+    }
+    if (noteId !== null) {
+      const issued = issuedNotes.get(noteId);
+      const current = localNotes.get(noteId);
+      if (
+        !issued ||
+        issued.service !== proposal.service ||
+        !current ||
+        current.detached ||
+        current.kind !== issued.kind ||
+        current.target.kind !== "service" ||
+        current.target.id !== proposal.service
+      ) {
+        return {
+          ...base,
+          disposition: "quarantined",
+          reason: "This note is no longer linked to the issued service or is outside the review.",
+        };
+      }
+      if (current.state === "resolved" && proposal.value === null) {
+        return { ...base, disposition: "quarantined", reason: "A resolved question must keep a resolution." };
+      }
+      return {
+        ...base,
+        base: issued.response,
+        current: current.resolution || null,
+        disposition: classifyDifference(issued.response, current.resolution || null, proposal.value),
       };
     }
     const ref = referenceType(field);
@@ -424,6 +532,9 @@ export function applyCorrections(
       for (const [key, value] of ids(table)) if (value === identity) return Number(key);
       throw new Error("A selected identity is no longer available.");
     };
+    const notes = accepted.some((row) => row.proposal.field.startsWith("response:"))
+      ? new Map(repo.listAssessmentNotes().map((note) => [note.id, note]))
+      : new Map<string, ReadAssessmentNote>();
     const selected = new Map<number, Difference[]>();
     for (const row of accepted) {
       const now = fresh.get(row.key);
@@ -435,6 +546,15 @@ export function applyCorrections(
         now.disposition !== row.disposition
       ) {
         throw new Error(`${row.label} changed after preview. Review the return again before applying.`);
+      }
+      if (row.proposal.field.startsWith("response:")) {
+        const id = row.proposal.field.slice("response:".length);
+        const note = notes.get(id);
+        if (!note) throw new Error("The proposed note is unavailable.");
+        repo.saveAssessmentNote({ ...note, state: note.currentState, resolution: row.returned ?? "" }, id, {
+          confirmSensitive,
+        });
+        continue;
       }
       const service = find("service", row.proposal.service);
       if (service === null) throw new Error("A selected service is no longer available.");

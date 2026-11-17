@@ -1,3 +1,4 @@
+import { openAssessmentNotes } from "./assessment-notes";
 import { openBatchAssignment } from "./batch-assignment";
 import { openDecisionViews, type DecisionPosition } from "./decision-views";
 import { freezeAssessment } from "../assessment/output";
@@ -39,7 +40,7 @@ export interface Workspace {
   settlePendingPlacement(): Promise<void>;
   refreshView(): void;
   assessmentView(includeMap: boolean): AssessmentMapView;
-  hasViewpointDraft(): boolean;
+  hasAssessmentDraft(): boolean;
   mapIsOpen(): boolean;
   inspectRecord(target: EntityTarget): Promise<void>;
 }
@@ -52,6 +53,8 @@ export function createWorkspace(
 ): Workspace {
   let repo = initial;
   let viewpointDraft = false;
+  let batchDraft = false;
+  let recordNoteDraft = false;
   let unsubscribe = (): void => undefined;
   let sessionId = 0;
   let draftToken = 0;
@@ -523,6 +526,20 @@ export function createWorkspace(
       draftToken++;
       onDraftChanged();
     },
+    requestAssessment: (id) => {
+      const identity = repo.exchangeIdentities("service").get(String(id));
+      const target = repo.assessmentTargets().find((row) => row.kind === "service" && row.id === identity);
+      if (!target) return;
+      const dialog = openAssessmentNotes(
+        repo,
+        (pending) => {
+          recordNoteDraft = pending;
+        },
+        target,
+      );
+      inspectionDialogs.add(dialog);
+      dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+    },
     requestServiceOnNetwork: (networkId) => {
       void openServiceOnNetwork(networkId);
     },
@@ -914,9 +931,15 @@ export function createWorkspace(
     void (async () => {
       const owner = repo;
       if (!(await resolveActiveDraft("navigate")) || repo !== owner) return;
-      const dialog = openBatchAssignment(repo, (count) => {
-        setNavigationStatus(`${String(count)} service assignments changed. Save file to keep them.`);
-      });
+      const dialog = openBatchAssignment(
+        repo,
+        (count) => {
+          setNavigationStatus(`${String(count)} service assignments changed. Save file to keep them.`);
+        },
+        (pending) => {
+          batchDraft = pending;
+        },
+      );
       inspectionDialogs.add(dialog);
       dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
     })();
@@ -925,6 +948,12 @@ export function createWorkspace(
   const decisionButton = button("Decision views", () => {
     showDecisionViews();
   });
+  const assessmentActions = el(
+    "details",
+    { class: "workspace-assessment" },
+    el("summary", {}, "Assessment"),
+    el("div", { class: "file-menu-actions" }, decisionButton, viewpointsButton, batchButton),
+  );
   const returnButton = button("Return to results", () => {
     inspectorParked = true;
     syncSurface();
@@ -961,9 +990,7 @@ export function createWorkspace(
       { class: "workspace-navigation", "aria-label": "Workspace" },
       inventoryButton,
       mapButton,
-      viewpointsButton,
-      decisionButton,
-      batchButton,
+      assessmentActions,
       backButton,
       returnButton,
       returnToEditor,
@@ -1045,7 +1072,7 @@ export function createWorkspace(
       if (surface !== "map") throw new Error("Open Map before exporting the current map view.");
       return map.assessmentView(includeMap);
     },
-    hasViewpointDraft: () => viewpointDraft,
+    hasAssessmentDraft: () => viewpointDraft || batchDraft || recordNoteDraft,
     mapIsOpen: () => surface === "map",
     hasPendingDraft: () => editor.hasPendingDraft(),
     pendingDraftLabel: () => editor.pendingDraftLabel(),

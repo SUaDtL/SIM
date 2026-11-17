@@ -41,6 +41,7 @@ export function previewBatch(
   const target = field === "category" ? repo.getCategory(to) : repo.getOrganization(to);
   const targetIdentity = repo.exchangeIdentities(table).get(String(to));
   if (!target || !targetIdentity) throw new Error("The chosen assignment is unavailable.");
+  const networks = new Map(repo.listNetworks().map((row) => [row.id, row.name]));
   const ids = repo.exchangeIdentities("service");
   const serviceIds = new Map([...ids].map(([id, identity]) => [identity, Number(id)]));
   const changes = selected.map(({ id: identity, label }) => {
@@ -59,7 +60,7 @@ export function previewBatch(
     return {
       id,
       identity,
-      label,
+      label: `${service.name} (${networks.get(service.networkId) ?? "Unknown network"})`,
       before,
       beforeLabel: reference?.name ?? "Not recorded",
       notes: support?.notes ?? null,
@@ -82,7 +83,12 @@ export function applyBatch(repo: Repository, plan: BatchPlan): number {
     }
     for (const [index, row] of current.changes.entries()) {
       const before = plan.changes[index];
-      if (before?.before !== row.before || before.beforeLabel !== row.beforeLabel || before.notes !== row.notes) {
+      if (
+        before?.before !== row.before ||
+        before.beforeLabel !== row.beforeLabel ||
+        before.label !== row.label ||
+        before.notes !== row.notes
+      ) {
         throw new Error(`${row.label} changed after preview. Review it and preview the batch again.`);
       }
     }

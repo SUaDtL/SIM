@@ -5,6 +5,7 @@ import {
   REVIEW_STATES,
   type NoteInput,
   type NoteKind,
+  type NoteTarget,
   type ReadAssessmentNote,
 } from "../assessment/notes";
 import { MARKINGS, type Marking } from "../db/markings";
@@ -12,8 +13,11 @@ import { SensitiveInputWarning } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { button, el, option } from "./dom";
 
-export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean) => void) {
-  const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
+export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean) => void, scope?: NoteTarget) {
+  const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const origin = scope
+    ? (focused?.closest("details")?.querySelector<HTMLElement>("summary") ?? focused)
+    : document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
   const heading = el("h2", { id: "assessment-notes-heading", tabindex: "-1" }, "Assessment evidence and questions");
   const dialog = el("dialog", { class: "assessment-dialog", "aria-labelledby": heading.id });
   const body = el("div");
@@ -28,6 +32,7 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
     alert.textContent = "";
     const rows = repo
       .listAssessmentNotes()
+      .filter((note) => scope === undefined || (scope.id === note.target.id && scope.kind === note.target.kind))
       .filter((note) =>
         [note.kind, note.target.label, note.text, note.responsible, note.currentState]
           .join(" ")
@@ -53,7 +58,9 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
           note.kind === "Evidence"
             ? el("p", {}, [note.basis, note.finding, note.source, note.checkedOn].filter(Boolean).join(" · "))
             : null,
-          note.resolution ? el("p", {}, `Resolution recorded: ${note.resolution}`) : null,
+          note.resolution
+            ? el("p", {}, `${note.kind === "Question" ? "Resolution recorded" : "Review response"}: ${note.resolution}`)
+            : null,
           note.reviewedValue !== null ? el("p", {}, `Value at review: ${note.reviewedValue}`) : null,
           el(
             "div",
@@ -89,6 +96,7 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
         {},
         "Track findings, sources, and unresolved questions. Reviewed evidence applies to one assertion and value.",
       ),
+      ...(scope ? [el("p", {}, scope.label)] : []),
       el("label", { class: "assessment-field" }, "Filter notes", query),
       ...(rows.length ? [list] : [el("p", {}, "No matching assessment notes.")]),
       el(
@@ -112,7 +120,7 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
   function edit(kind: NoteKind, note?: ReadAssessmentNote): void {
     const defaultTarget = { kind: "assessment", id: null, label: "Assessment-level" } as const;
     const allTargets = repo.assessmentTargets();
-    let selected = note?.target ?? defaultTarget;
+    let selected = note?.target ?? scope ?? defaultTarget;
     const targetQuery = el("input", { type: "search" });
     const targets = el("select");
     const assertion = el("select");

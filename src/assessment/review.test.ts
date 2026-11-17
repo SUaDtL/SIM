@@ -81,6 +81,12 @@ describe("owner review", () => {
       }),
     );
     owner.updateService(orders.id, { ...orders, description: "Local change" });
+    expect(() =>
+      prepareCorrections(owner, issuance, {
+        ...returned,
+        handling: { marking: "CUI", caveat: null },
+      }),
+    ).toThrow(/higher marking/);
     const preview = prepareCorrections(owner, issuance, returned);
     expect(preview.map(({ disposition }) => disposition)).toEqual(["conflict", "quarantined", "quarantined"]);
     const accepted = preview.filter(({ disposition }) => disposition === "conflict");
@@ -90,6 +96,52 @@ describe("owner review", () => {
     expect(prepareCorrections(owner, issuance, returned)[0]?.disposition).toBe("already satisfied");
     expect(owner.undo()).toBe(true);
     expect(owner.getService(orders.id)?.description).toBe("Local change");
+  });
+
+  it("applies an included question response without closing the question", async () => {
+    const { repo, orders, team } = await fixture();
+    const service = repo.exchangeIdentities("service").get(String(orders.id));
+    const target = repo.assessmentTargets().find((row) => row.id === service);
+    if (!target) throw new Error("Expected the fixture service.");
+    repo.saveAssessmentNote({
+      kind: "Question",
+      target,
+      aspect: "Provider",
+      text: "Who confirms the provider?",
+      source: "",
+      responsible: "Platform",
+      checkedOn: "",
+      basis: "unspecified",
+      finding: "not assessed",
+      state: "open",
+      resolution: "",
+      marking: "UNCLASSIFIED",
+    });
+    const base = prepareReview(repo, team.id, true);
+    const digest = await reviewDigest(base);
+    const note = base.notes?.[0];
+    if (!note) throw new Error("Expected the linked question in this scope.");
+    const issuance = { base, digest };
+    repo.storeReviewIssuance(issuance);
+    const returned = parseReturn(
+      JSON.stringify({
+        format: "sim-corrections/v1",
+        issuance: base.id,
+        lineage: base.lineage,
+        digest,
+        reviewer: "",
+        proposals: [{ service, field: `response:${note.id}`, operation: "set", value: "Platform confirmed the owner" }],
+      }),
+    );
+    const preview = prepareCorrections(repo, issuance, returned);
+    expect(preview[0]?.disposition).toBe("proposed");
+    expect(applyCorrections(repo, issuance, returned, preview)).toBe(1);
+    expect(repo.listAssessmentNotes()[0]).toMatchObject({
+      resolution: "Platform confirmed the owner",
+      currentState: "open",
+    });
+    repo.undo();
+    expect(repo.listAssessmentNotes()[0]?.resolution).toBe("");
   });
 
   it("refuses a stale accepted plan and rolls back when a later correction is invalid", async () => {

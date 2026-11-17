@@ -76,6 +76,22 @@ export function openHelp(actions: { demo(): void; licenses(): void }): void {
       {},
       "Recovery is optional: choose a separate recovery .sqlite file from File. It keeps the latest applied snapshot, not unapplied form text, and retains the dataset's classification. Reopen that file after an interrupted session. Recovery does not replace normal saves or guarantee survival of an interrupted disk write.",
     ),
+    el("h3", {}, "Share and review an assessment"),
+    el(
+      "p",
+      {},
+      "Use File → Assessment details for optional scope and dates. Record evidence and questions from File or a service’s More actions. Saved views reopen over current records. Export a scoped report or inventory from File and verify its marking and scope before sharing.",
+    ),
+    el(
+      "p",
+      {},
+      "Prepare owner review saves a team’s base in the dataset. If SIM downloads the dataset, reopen the downloaded file before exporting the review. Apply reviewed corrections shows the exact returned fields so you can decide what to record.",
+    ),
+    el(
+      "p",
+      {},
+      "Keep an untouched copy before saving a dataset upgrade. An older SIM build needs the pre-upgrade copy.",
+    ),
     el("h3", {}, "Map vocabulary"),
     el(
       "dl",

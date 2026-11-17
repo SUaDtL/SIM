@@ -6,11 +6,11 @@ Detailed workflows for the Service Integration Map. For an overview see the [REA
 
 **File → Assessment details** records optional scope, exclusions, assessor/team and dates
 under the dataset title. **File → Assessment evidence and questions** records optional
-findings, sources and follow-up actions. Questions can be attached later. When a linked
+findings, sources and follow-up actions. A service’s **More service actions → Assessment notes** opens its linked notes. Questions can be attached later. When a linked
 record disappears, its notes retain the former link and stay visible. Evidence reviewed
 against an earlier value returns to needs review when the value changes.
 
-**Map → Saved views** stores the current question, filters, selected projection and framing.
+**Map → Assessment → Saved views** stores the current question, filters, selected projection and framing.
 A saved view opens over current records and positions. If its subject or scope has
 disappeared, edit the definition to replace it with the current map. Saving a definition
 is undoable and takes effect on disk after Save file.
@@ -21,10 +21,10 @@ omits assessment-level details and uses the full original handling marking and c
 Review the scope before distributing it. JSON preserves exact values. The display CSV
 protects values that may be interpreted as formulas and should be used for reading.
 
-**Decision views** shows a network dependency matrix, responsibility roles and bounded
+**Assessment → Decision views** shows a network dependency matrix, responsibility roles and bounded
 dependency paths. A zero count means no dependencies were recorded in that scope.
-From **Inventory → Batch assignments**, select services across pages, review the exact
-changes and apply them in one Undo step. Assigning an existing organization updates
+From **Inventory → Assessment → Batch assignments**, select services across pages, review the exact
+changes and apply them in one Undo step. **Create and use** saves a shared record before the batch preview. Assigning an existing organization updates
 the selected services without renaming the organization. **Review data issues** also
 provides optional duplicate suggestions with each shared record's usage.
 
@@ -34,7 +34,7 @@ dataset before downloading the review. Reviewers put typed proposals in the down
 JSON. **Apply reviewed corrections** shows the issued, current and proposed values,
 including conflicts. Select only the fields to apply. The existing CSV import continues
 to add new rows. Review receipts describe what happened when applied and stay historical
-after Undo or another edit.
+after Undo or another edit. Use **File → Download latest correction receipt** until you switch datasets.
 
 Files saved by this build use data format 7. Keep an untouched copy before saving an
 upgrade. To open the data in an older build, use the pre-upgrade copy.

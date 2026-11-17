@@ -37,6 +37,7 @@ test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen
   await showMap(page);
   await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Operations" });
+  await page.locator("details.workspace-assessment summary").click();
   await page.getByRole("button", { name: "Saved views", exact: true }).click();
   const views = page.getByRole("dialog", { name: "Saved views" });
   await views.getByRole("button", { name: "Save current view" }).click();
@@ -53,6 +54,7 @@ test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen
 
   await openDatasetFile(page, saved, "aster-reopened.sqlite");
   await showMap(page);
+  await page.locator("details.workspace-assessment summary").click();
   await page.getByRole("button", { name: "Saved views", exact: true }).click();
   await views.getByRole("button", { name: "Restore Operations briefing" }).click();
   await expect(page.locator("#map-filter-network").locator("option:checked")).toHaveText("Operations");
@@ -70,6 +72,7 @@ test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen
 
 test("AC-AP-024 and AC-AP-027 scoped export and dependency drill-down use recorded data", async ({ page }) => {
   await openDatasetFile(page, await asterFixture(), "aster.sqlite");
+  await page.locator("details.workspace-assessment summary").click();
   await page.getByRole("button", { name: "Decision views", exact: true }).click();
   const decision = page.getByRole("dialog", { name: "Decision views" });
   await decision.getByRole("button", { name: "Operations to Partner, 1 recorded dependencies" }).click();
@@ -150,6 +153,9 @@ test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo 
   expect(readFileSync(await (await receipt).path(), "utf8")).toContain('"applied": true');
   await review.getByRole("button", { name: "Close", exact: true }).click();
   await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await openFileMenu(page);
+  await expect(page.getByRole("button", { name: "Download latest correction receipt" })).toBeVisible();
+  await page.keyboard.press("Escape");
   const again = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   const restored = await openDataset(readFileSync(await (await again).path()), { wasm });
@@ -159,5 +165,51 @@ test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo 
     expect(repo.reviewBindings().size).toBe(1);
   } finally {
     restored.close();
+  }
+});
+
+test("AC-AP-037 and AC-AP-052 keep a contextual question and inline-created assignment independent", async ({
+  page,
+}) => {
+  await openDatasetFile(page, await asterFixture(), "aster.sqlite");
+  await page
+    .getByTestId("entity-list")
+    .getByRole("button", { name: /Orders/ })
+    .click();
+  await page.getByText("More service actions", { exact: true }).click();
+  await page.getByRole("button", { name: "Assessment notes", exact: true }).click();
+  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  await notes.getByRole("button", { name: "Add question" }).click();
+  await notes
+    .getByRole("textbox", { name: "Question or unresolved observation" })
+    .fill("Confirm who maintains the order interface.");
+  await notes.getByRole("button", { name: "Apply note" }).click();
+  await expect(notes.getByText("Confirm who maintains the order interface.")).toBeVisible();
+  await notes.getByRole("button", { name: "Close", exact: true }).click();
+
+  await page.locator("details.workspace-assessment summary").click();
+  await page.getByRole("button", { name: "Batch assignments", exact: true }).click();
+  const batch = page.getByRole("dialog", { name: "Batch assignments" });
+  await batch.getByRole("checkbox", { name: "Orders (Operations)" }).check();
+  await batch.getByRole("button", { name: "Choose record to assign" }).click();
+  const picker = page.getByRole("dialog", { name: "Choose organization" });
+  await picker.getByRole("button", { name: "Create new organization" }).click();
+  await picker.getByRole("textbox", { name: "New organization name" }).fill("Fictional Operations");
+  await picker.getByRole("button", { name: "Create and use" }).click();
+  await batch.getByRole("button", { name: "Preview assignments" }).click();
+  await expect(batch.getByText("Orders (Operations): Platform → Fictional Operations")).toBeVisible();
+  await batch.getByRole("button", { name: "Apply assignments" }).click();
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
+  const db = await openDataset(readFileSync(await (await download).path()), { wasm });
+  try {
+    const repo = new Repository(db);
+    expect(repo.listAssessmentNotes()[0]?.target.label).toBe("Orders (Operations)");
+    expect(repo.listOrganizations().map((row) => row.name)).toEqual(["Fictional Operations", "Platform"]);
+    const provider = repo.listServices().find((row) => row.name === "Orders")?.providerOrgId;
+    expect(repo.listOrganizations().find((row) => row.id === provider)?.name).toBe("Platform");
+  } finally {
+    db.close();
   }
 });

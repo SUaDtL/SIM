@@ -59,6 +59,7 @@ interface State {
   fileName: string | null;
   handle: FileHandle | null;
   importReceipt?: ImportReceipt;
+  correctionReceipt?: Blob;
   recovery?: { handle: FileHandle; controller: Recovery; unsubscribe: () => void };
 }
 
@@ -100,6 +101,9 @@ const refreshViewButton = button("Refresh view", () => {
   }
 });
 refreshViewButton.hidden = true;
+const correctionReceiptButton = button("Download latest correction receipt", () => {
+  if (state.correctionReceipt) downloadBlob(state.correctionReceipt, "SIM correction receipt.json");
+});
 const dataIssuesButton = button("Review data issues", () => {
   openDataIssues();
 });
@@ -127,6 +131,7 @@ function render(): void {
   banner.update(state.repo.datasetMarking(), state.repo.datasetCaveat());
   undoButton.disabled = !state.repo.canUndo();
   redoButton.disabled = !state.repo.canRedo();
+  correctionReceiptButton.hidden = state.correctionReceipt === undefined;
 }
 
 /**
@@ -137,7 +142,7 @@ function hasUnsavedEdits(): boolean {
   return (
     state.session.hasDiscardWorthyWork() ||
     workspace.hasPendingDraft() ||
-    workspace.hasViewpointDraft() ||
+    workspace.hasAssessmentDraft() ||
     noteDraft ||
     assessmentDetails?.hasDraft() === true
   );
@@ -872,11 +877,14 @@ async function boot(): Promise<void> {
       ownerReviewDialog = openCorrectionReview(
         owner.repo,
         (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
-        (count) => {
+        (count, receipt) => {
+          owner.correctionReceipt = receipt;
+          render();
           show(`${String(count)} reviewed corrections applied. Save file to retain them.`);
         },
       );
     }),
+    correctionReceiptButton,
     button("Save As", () => onSave(true)),
     button("Rename dataset", onRename),
     button("Assessment details", () => {

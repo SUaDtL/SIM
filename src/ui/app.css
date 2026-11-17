@@ -1938,3 +1938,38 @@ dialog h3 {
   display: block;
   padding-block: 0.2rem;
 }
+
+.workspace-assessment {
+  position: relative;
+}
+
+.workspace-assessment > summary {
+  cursor: pointer;
+  padding: 10px 8px;
+}
+
+.workspace-assessment > .file-menu-actions {
+  right: auto;
+  left: 0;
+}
+
+@media (max-width: 760px) {
+  .workspace.has-selection .workspace-assessment {
+    display: none;
+  }
+
+  .workspace-assessment > .file-menu-actions {
+    left: 12px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workspace.editing .editor-heading {
+    padding-block: 12px 8px;
+  }
+
+  .workspace.editing .editor-footer {
+    padding-block: 10px;
+  }
+}

@@ -2,6 +2,7 @@
 // and receipts) must remain open while users work elsewhere in their dialog.
 const menus = [
   "details.file-menu",
+  "details.workspace-assessment",
   "details.map-filter-panel",
   "details.map-layout-panel",
   "details.map-capture-panel",

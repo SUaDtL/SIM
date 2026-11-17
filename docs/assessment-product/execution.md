@@ -18,6 +18,20 @@ PR 31 carries the implementation and the evidence register. The original proposa
 - **AP-D3, AP-W07 and AP-W08.** Schema version 7 retains a bounded team-scoped issuance base. A native Save or reopening a downloaded file establishes readiness to export. The correction package uses typed set/clear proposals and compares those with fields in a trusted local issuance. Changes selected in the review are applied in one transaction. Suggestions outside supported fields require review in the existing editor.
 - **AP-D6, AP-W05 and AP-W09.** The decision views derive recorded paths, distinct responsibility roles and logical dependency counts from inventory. A batch requires a fixed explicit selection and an inspected preview. Its accepted writes are atomic and preserve support notes and positions. Duplicate suggestions are informational and show recorded uses.
 
+## Software checks and measured operating behavior
+
+Local checks covered migration and lineage, the first recorded map, saved views, file readback, scoped exports, decision views, annotation retention, review reconciliation, and Undo. The targeted suites also exercised earlier PR 30 interaction, capture, file and recovery regressions. The first hosted candidate exposed a narrow 320 px layout regression. The workspace now groups the assessment controls in one menu and keeps the focused connection control and its corrective cue together after resizing. The build-identity regression now checks the migrated data-format version.
+
+For AC-AP-056, the local five-vCPU AMD EPYC 9V74 Linux workspace loaded fictional version-three files with arranged nodes, repeated service names across networks, dependency cycles and sparse assignments. Chrome 158.0.8127.36 opened the standalone file offline at 1366 × 768. Five fresh pages per fixture ran start-up, file open and in-memory migration, inventory search, dependency matrix, map opening, and focused HTML download. Heap was sampled at three points in each renderer. With five samples, the nearest-rank p95 is the maximum observed value. The HTML under measurement had SHA-256 `ef833e3e2d623459fcd27240017268312a2bc78fea19c5b69836577b546035f1`, built from the follow-up implementation before the navigation layout fix.
+
+| Services / networks / dependencies | Cold boot p50 / p95 ms | Open and migrate p50 / p95 ms | Search p50 / p95 ms | Matrix p50 / p95 ms | Warm map p50 / p95 ms | Focused HTML p50 / p95 ms | Maximum sampled JS heap |
+| ---------------------------------- | ---------------------- | ----------------------------- | ------------------- | ------------------- | --------------------- | ------------------------- | ----------------------- |
+| 100 / 7 / 300                      | 235 / 244              | 361 / 630                     | 18 / 26             | 92 / 161            | 37 / 406              | 388 / 792                 | 26 MiB                  |
+| 500 / 15 / 2,500                   | 219 / 290              | 1,193 / 1,286                 | 28 / 129            | 120 / 141           | 37 / 53               | 1,373 / 1,469             | 79 MiB                  |
+| 2,000 / 25 / 10,000                | 275 / 479              | 4,031 / 4,901                 | 77 / 94             | 218 / 287           | 52 / 111              | 4,104 / 5,064             | 278 MiB                 |
+
+All five 2,000-service trials exceeded the 20-second file-open timeout on the first implementation. Bounding display-only route offsets resolved it on the measured build. A dense map discloses when overlap reduction is limited. These are observations for the arranged Linux fixture. Native Windows timing, unarranged layout, and full-process peak memory remain unmeasured.
+
 ## Receiving qualification still open
 
 - **AC-AP-005 and AC-AP-059.** The Windows native file/recovery and external writer session, real browser close/refusal, and an actual screen-reader session still require a receiving operator. Controlled browser adapters provide software evidence for the underlying paths.

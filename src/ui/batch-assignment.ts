@@ -1,9 +1,15 @@
+import { openReferencePicker, type ReferencePicker } from "./reference-picker";
+import { SensitiveInputWarning } from "../domain/errors";
 import { applyBatch, previewBatch, type Assignment, type AssignmentTarget, type BatchPlan } from "../assessment/upkeep";
 import type { Repository } from "../domain/repository";
 import type { Tier } from "../domain/types";
 import { button, el, option } from "./dom";
 
-export function openBatchAssignment(repo: Repository, done: (count: number) => void): HTMLDialogElement {
+export function openBatchAssignment(
+  repo: Repository,
+  done: (count: number) => void,
+  draftChanged: (pending: boolean) => void,
+): HTMLDialogElement {
   const origin = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const snapshot = repo.snapshot();
   const networks = new Map(snapshot.networks.map(({ id, name }) => [id, name]));
@@ -18,7 +24,8 @@ export function openBatchAssignment(repo: Repository, done: (count: number) => v
   const alert = el("p", { role: "alert" });
   const heading = el("h2", { id: "batch-assignment-heading", tabindex: "-1" }, "Batch assignments");
   const query = el("input", { type: "search" });
-  const targets = el("select");
+  let targetId = "";
+  let picker: ReferencePicker | null = null;
   const tier = el("select", {}, ...[1, 2, 3].map((n) => option(String(n), `Tier ${String(n)}`)));
   const field = el(
     "select",
@@ -30,22 +37,79 @@ export function openBatchAssignment(repo: Repository, done: (count: number) => v
   let page = 0;
   let preview: BatchPlan | null = null;
 
-  function syncTargets(): void {
-    const records = field.value === "category" ? repo.listCategories() : repo.listOrganizations();
-    targets.replaceChildren(
-      option("", "Choose an existing record"),
-      ...records.map(({ id, name }) => option(String(id), name)),
-    );
+  const available = () => (field.value === "category" ? repo.listCategories() : repo.listOrganizations());
+  const choose = button("Choose record to assign", () => {
+    const category = field.value === "category";
+    const label = category ? "category" : "organization";
+    picker = openReferencePicker({
+      label,
+      options: () => available().map((row) => ({ value: String(row.id), label: row.name })),
+      selectedValue: targetId,
+      returnFocus: choose,
+      isCurrent: () => dialog.open,
+      onSelect: (value) => {
+        targetId = value;
+        syncTarget();
+      },
+      onDraftChanged: () => {
+        draftChanged(picker?.hasPendingDraft() ?? false);
+      },
+      create: (initial, complete, back, trackDraft) => {
+        const input = el("input", { required: "", maxlength: "200" });
+        input.value = initial;
+        const message = el("p", { role: "alert" });
+        const form = el(
+          "form",
+          {},
+          el("label", { class: "assessment-field" }, `New ${label} name`, input),
+          message,
+          el("div", { class: "actions" }, button("Cancel", back), el("button", { type: "submit" }, "Create and use")),
+        );
+        trackDraft(() => input.value.trim() !== "");
+        input.addEventListener("input", () => {
+          draftChanged(picker?.hasPendingDraft() ?? false);
+        });
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!dialog.open) return;
+          const name = input.value;
+          const create = (confirmSensitive: boolean) =>
+            category
+              ? repo.createCategory({ name }, { confirmSensitive })
+              : repo.createOrganization({ name }, { confirmSensitive });
+          try {
+            let row;
+            try {
+              row = create(false);
+            } catch (error) {
+              if (!(error instanceof SensitiveInputWarning)) throw error;
+              if (!window.confirm(error.message) || input.value !== name) return;
+              row = create(true);
+            }
+            alert.textContent = `${row.name} created. Batch assignments still need your preview and approval.`;
+            complete(String(row.id));
+          } catch (error) {
+            message.textContent = error instanceof Error ? error.message : "Could not create this shared record.";
+          }
+        });
+        return form;
+      },
+    });
+    draftChanged(picker.hasPendingDraft());
+  });
+
+  function syncTarget(): void {
+    choose.textContent = available().find((row) => String(row.id) === targetId)?.name ?? "Choose record to assign";
   }
   field.addEventListener("change", () => {
-    syncTargets();
+    targetId = "";
+    syncTarget();
     select();
   });
   query.addEventListener("input", () => {
     page = 0;
     select();
   });
-  syncTargets();
 
   function select(): void {
     preview = null;
@@ -81,7 +145,7 @@ export function openBatchAssignment(repo: Repository, done: (count: number) => v
       list,
       el("div", { class: "actions" }, previous, next),
       el("label", { class: "assessment-field" }, "Assignment", field),
-      el("label", { class: "assessment-field" }, "Existing record to assign", targets),
+      el("div", { class: "assessment-field" }, "Record to assign", choose),
       ...(field.value === "support" ? [el("label", { class: "assessment-field" }, "Support tier", tier)] : []),
       el(
         "div",
@@ -91,13 +155,13 @@ export function openBatchAssignment(repo: Repository, done: (count: number) => v
         }),
         button("Preview assignments", () => {
           try {
-            if (!targets.value) throw new Error("Choose a record to assign.");
+            if (!targetId) throw new Error("Choose a record to assign.");
             preview = previewBatch(
               repo,
               [...chosen.values()],
               field.value as Assignment,
               Number(tier.value) as Tier,
-              Number(targets.value),
+              Number(targetId),
             );
             review(preview);
             heading.focus();
@@ -153,6 +217,8 @@ export function openBatchAssignment(repo: Repository, done: (count: number) => v
   dialog.addEventListener(
     "close",
     () => {
+      picker?.close();
+      draftChanged(false);
       dialog.remove();
       origin?.focus();
     },
