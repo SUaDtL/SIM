@@ -12,21 +12,62 @@ import { MARKINGS, type Marking } from "../db/markings";
 import { SensitiveInputWarning } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { button, el, focusPagingControl, option } from "./dom";
-import { assessmentOpener, assessmentPanel } from "./assessment-panel";
+import { assessmentPanel } from "./assessment-panel";
+import { resolveNoteTarget } from "../assessment/note-target";
 
-export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean) => void, scope?: NoteTarget) {
-  const origin = assessmentOpener();
-  const originPanel = origin?.closest<HTMLElement>('dialog, [data-testid="editor"]');
-  const serviceIdentity = origin?.dataset["serviceEvidence"];
+export interface NoteListPosition {
+  query: string;
+  kind: string;
+  state: string;
+  page: number;
+  scroll: number;
+  noteId: string | null;
+}
+
+export interface NoteNavigation {
+  position?: NoteListPosition;
+  recordedPerspective?: boolean;
+  inspect: (target: NoteTarget, position: NoteListPosition, aspect: string) => Promise<boolean>;
+}
+
+export function mountAssessmentNotes(
+  host: HTMLElement,
+  repo: Repository,
+  onDraft: (pending: boolean) => void,
+  scope: NoteTarget | undefined,
+  navigation: NoteNavigation,
+  onClose: () => void,
+) {
   const heading = el("h2", { id: "assessment-notes-heading", tabindex: "-1" }, "Assessment evidence and questions");
-  const dialog = el("dialog", { class: "assessment-dialog", "aria-labelledby": heading.id });
+  const container = el("section", { class: "assessment-note-inspector", "aria-labelledby": heading.id });
   const body = el("div");
   const alert = el("p", { role: "alert", class: "error" });
   const query = el("input", { type: "search" });
+  const kindFilter = el("select", {}, ...["All types", "Evidence", "Question"].map((value) => option(value, value)));
+  const stateFilter = el(
+    "select",
+    {},
+    ...["All states", "open", "resolved", ...REVIEW_STATES].map((value) => option(value, value)),
+  );
   const status = el("p", { role: "status", class: "assessment-note-meta" });
   const results = el("div");
-  let page = 0;
+  const resume = navigation.position;
+  query.value = resume?.query ?? "";
+  kindFilter.value = resume?.kind ?? "All types";
+  stateFilter.value = resume?.state ?? "All states";
+  let page = resume?.page ?? 0;
   let pending = false;
+  let composer: HTMLDialogElement | null = null;
+  let lastNoteId = resume?.noteId ?? null;
+  let navigationPending = false;
+  let notes: ReadAssessmentNote[] = [];
+  let targetLabels = new Map<string, string>();
+  function readCurrent(): void {
+    notes = repo.listAssessmentNotes();
+    targetLabels = new Map(
+      repo.assessmentTargets().map((target) => [`${target.kind}:${target.id ?? ""}`, target.label]),
+    );
+  }
   const previous = button("Previous", () => {
     page--;
     refreshResults();
@@ -54,6 +95,12 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
       el("label", { class: "assessment-field" }, "Filter notes", query),
       el(
         "div",
+        { class: "assessment-note-filters" },
+        el("label", { class: "assessment-field" }, "Note type", kindFilter),
+        el("label", { class: "assessment-field" }, "Note state", stateFilter),
+      ),
+      el(
+        "div",
         { class: "actions reading-tools" },
         button(
           "Add evidence",
@@ -74,16 +121,23 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
       results,
       el("div", { class: "actions" }, previous, next),
     );
+    readCurrent();
     refreshResults();
   }
 
   function refreshResults(): void {
     const needle = query.value.trim().toLowerCase();
-    const rows = repo
-      .listAssessmentNotes()
+    const labelFor = (note: ReadAssessmentNote) =>
+      targetLabels.get(`${note.target.kind}:${note.target.id ?? ""}`) ?? note.target.label;
+    const rows = notes
       .filter((note) => scope === undefined || (scope.id === note.target.id && scope.kind === note.target.kind))
+      .filter(
+        (note) =>
+          (kindFilter.value === "All types" || note.kind === kindFilter.value) &&
+          (stateFilter.value === "All states" || note.currentState === stateFilter.value),
+      )
       .filter((note) =>
-        [note.kind, note.target.label, note.aspect, note.text, note.responsible, note.source, note.currentState]
+        [note.kind, labelFor(note), note.aspect, note.text, note.responsible, note.source, note.currentState]
           .join(" ")
           .toLowerCase()
           .includes(needle),
@@ -94,7 +148,10 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
     next.disabled = page + 1 >= total;
     previous.hidden = next.hidden = total === 1;
     if (!rows.length) {
-      status.textContent = needle ? "No matching assessment notes." : "No evidence or questions recorded.";
+      status.textContent =
+        needle || kindFilter.value !== "All types" || stateFilter.value !== "All states"
+          ? "No matching assessment notes."
+          : "No evidence or questions recorded.";
       results.replaceChildren();
       return;
     }
@@ -109,12 +166,12 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
       ...rows.slice(page * 12, (page + 1) * 12).map((note) =>
         el(
           "li",
-          { "data-kind": note.kind },
+          { "data-kind": note.kind, "data-note-id": note.id },
           el("h3", {}, note.kind, " · ", el("span", { class: "note-state" }, note.currentState)),
           el(
             "p",
             { class: "assessment-note-target" },
-            `${note.detached ? "Detached from " : ""}${note.target.label} · ${note.aspect} · ${note.marking}`,
+            `${note.detached ? "Detached from " : ""}${labelFor(note)} · ${note.aspect} · ${note.marking}`,
           ),
           el("p", { class: "assessment-note-text" }, note.text),
           note.kind === "Evidence"
@@ -123,7 +180,14 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
                 { class: "assessment-note-meta" },
                 [note.basis, note.finding, note.source, note.checkedOn].filter(Boolean).join(" · "),
               )
-            : null,
+            : el(
+                "dl",
+                { class: "question-follow-up" },
+                el("dt", {}, "Responsible team"),
+                el("dd", {}, note.responsible || "No responsible team set"),
+                el("dt", {}, "Next action"),
+                el("dd", {}, note.source || "No next action recorded"),
+              ),
           note.resolution
             ? el("p", {}, `${note.kind === "Question" ? "Resolution recorded" : "Review response"}: ${note.resolution}`)
             : null,
@@ -131,6 +195,20 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
           el(
             "div",
             { class: "actions" },
+            !note.detached
+              ? button(
+                  navigation.recordedPerspective === false
+                    ? "Inspect recorded assertion in As-Is"
+                    : "Inspect linked assertion",
+                  () => {
+                    void inspect(note);
+                  },
+                  {
+                    "data-note-target": note.id,
+                    "aria-label": `Inspect ${labelFor(note)} · ${note.aspect}${navigation.recordedPerspective === false ? " in As-Is" : ""}`,
+                  },
+                )
+              : null,
             button(
               "Edit",
               () => {
@@ -151,9 +229,51 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
     results.replaceChildren(list);
   }
 
+  function position(): NoteListPosition {
+    return {
+      query: query.value,
+      kind: kindFilter.value,
+      state: stateFilter.value,
+      page,
+      scroll: panel.body.scrollTop,
+      noteId: lastNoteId,
+    };
+  }
+  async function inspect(note: ReadAssessmentNote): Promise<void> {
+    if (navigationPending) return;
+    const current = repo.listAssessmentNotes().find((row) => row.id === note.id);
+    if (
+      !current ||
+      current.target.kind !== note.target.kind ||
+      current.target.id !== note.target.id ||
+      !resolveNoteTarget(repo, current.target)
+    ) {
+      readCurrent();
+      refreshResults();
+      alert.textContent = "This assertion is no longer available. The note retains its original context.";
+      heading.focus();
+      return;
+    }
+    lastNoteId = note.id;
+    navigationPending = true;
+    try {
+      await navigation.inspect(current.target, position(), current.aspect);
+    } catch (error) {
+      alert.textContent = error instanceof Error ? error.message : "Could not inspect this assertion.";
+    } finally {
+      navigationPending = false;
+    }
+  }
+
   function edit(kind: NoteKind, note?: ReadAssessmentNote): void {
     const scroll = panel.body.scrollTop;
     const resumeList = (): void => {
+      if (composer) {
+        composer.close();
+        composer.remove();
+        composer = null;
+      }
+      panel.body.prepend(alert);
       showList();
       const opener = body.querySelector<HTMLElement>(`[data-note-origin="${CSS.escape(note?.id ?? kind)}"]`);
       (opener ?? query).focus({ preventScroll: true });
@@ -162,10 +282,10 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
     const back = (): void => {
       if (!pending || window.confirm("Discard this unapplied assessment note?")) resumeList();
     };
-    panel.setBack("Back to notes", back);
     const defaultTarget = { kind: "assessment", id: null, label: "Assessment-level" } as const;
     const allTargets = repo.assessmentTargets();
-    let selected = note?.target ?? scope ?? defaultTarget;
+    const original = note?.target ?? scope ?? defaultTarget;
+    let selected = allTargets.find((target) => target.kind === original.kind && target.id === original.id) ?? original;
     const targetQuery = el("input", { type: "search" });
     const targets = el("select");
     const assertion = el("select");
@@ -176,11 +296,22 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
       const needle = targetQuery.value.trim().toLowerCase();
       const filtered = allTargets
         .filter(
-          (target) => target !== selected && target.id !== selected.id && target.label.toLowerCase().includes(needle),
+          (target) =>
+            (target.kind !== selected.kind || target.id !== selected.id) && target.label.toLowerCase().includes(needle),
         )
         .slice(0, 50);
       const offered = [selected, ...filtered];
-      targets.replaceChildren(...offered.map((target, index) => option(String(index), target.label, index === 0)));
+      targets.replaceChildren(
+        ...offered.map((target, index) =>
+          option(
+            String(index),
+            note?.detached && target.id === note.target.id && target.kind === note.target.kind
+              ? `Detached · ${target.label}`
+              : target.label,
+            index === 0,
+          ),
+        ),
+      );
       targets.onchange = () => {
         selected = offered[Number(targets.value)] ?? defaultTarget;
         refreshTargets();
@@ -211,7 +342,6 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
     const form = el(
       "form",
       {},
-      el("h3", {}, note ? `Edit ${kind.toLowerCase()}` : `Add ${kind.toLowerCase()}`),
       field(kind === "Question" ? "Question or unresolved observation" : "Evidence details", text),
       field("Find a link (optional)", targetQuery),
       field("Linked record or assertion", targets),
@@ -259,38 +389,63 @@ export function openAssessmentNotes(repo: Repository, onDraft: (pending: boolean
         alert.textContent = error instanceof Error ? error.message : "Could not apply the assessment note.";
       }
     });
-    body.replaceChildren(form);
+    const label = note ? `Edit ${kind.toLowerCase()}` : `Add ${kind.toLowerCase()}`;
+    composer = el("dialog", { class: "assessment-dialog", "aria-label": label });
+    const editPanel = assessmentPanel(composer, el("h2", {}, label), back, alert, form);
+    editPanel.setBack("Back to notes", back);
+    composer.addEventListener("cancel", editPanel.cancel);
+    document.body.append(composer);
+    composer.showModal();
     text.focus();
   }
 
-  query.addEventListener("input", () => {
+  const filter = () => {
     page = 0;
     refreshResults();
-  });
-  function close(): void {
-    if (!pending || window.confirm("Discard this unapplied assessment note?")) dialog.close();
+  };
+  query.addEventListener("input", filter);
+  kindFilter.addEventListener("change", filter);
+  stateFilter.addEventListener("change", filter);
+  function dispose(): void {
+    unsubscribe();
+    composer?.close();
+    composer?.remove();
+    composer = null;
+    container.remove();
+    pending = false;
+    onDraft(false);
   }
-  dialog.addEventListener(
-    "close",
-    () => {
-      onDraft(false);
-      dialog.remove();
-      const returnTo = origin?.isConnected
-        ? origin
-        : serviceIdentity
-          ? originPanel?.querySelector<HTMLElement>(`[data-service-evidence="${CSS.escape(serviceIdentity)}"]`)
-          : origin?.id
-            ? document.getElementById(origin.id)
-            : null;
-      returnTo?.focus();
-    },
-    { once: true },
-  );
-  const panel = assessmentPanel(dialog, heading, close, alert, body);
-  dialog.addEventListener("cancel", panel.cancel);
-  document.body.append(dialog);
+  function close(): boolean {
+    if (pending && !window.confirm("Discard this unapplied assessment note?")) return false;
+    onClose();
+    return true;
+  }
+  const panel = assessmentPanel(container, heading, close, alert, body);
+  host.append(container);
   showList();
-  dialog.showModal();
-  heading.focus();
-  return dialog;
+  const unsubscribe = repo.subscribe((change) => {
+    if (composer || change.entity === "position") return;
+    const active = document.activeElement;
+    const button = active instanceof HTMLButtonElement && results.contains(active) ? active : null;
+    const id = button?.closest<HTMLElement>("[data-note-id]")?.dataset["noteId"];
+    const scroll = panel.body.scrollTop;
+    readCurrent();
+    refreshResults();
+    if (button && id) {
+      const row = results.querySelector(`[data-note-id="${CSS.escape(id)}"]`);
+      const replacement = [...(row?.querySelectorAll("button") ?? [])].find(
+        (control) => control.textContent === button.textContent,
+      );
+      (replacement ?? query).focus({ preventScroll: true });
+    }
+    panel.body.scrollTop = scroll;
+  });
+  const focus = () => {
+    const origin = lastNoteId
+      ? results.querySelector<HTMLElement>(`[data-note-target="${CSS.escape(lastNoteId)}"]`)
+      : null;
+    (origin ?? heading).focus({ preventScroll: true });
+    panel.body.scrollTop = resume?.scroll ?? 0;
+  };
+  return { close, dispose, position, focus, hasDraft: () => pending };
 }

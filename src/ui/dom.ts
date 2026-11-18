@@ -20,7 +20,10 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 
 export function button(label: string, onClick: () => void, attrs: Record<string, string> = {}): HTMLButtonElement {
   const b = el("button", { type: "button", ...attrs }, label);
-  b.addEventListener("click", onClick);
+  b.addEventListener("click", () => {
+    // A queued action from a disposed inspector or dataset cannot target the replacement.
+    if (b.isConnected) onClick();
+  });
   return b;
 }
 

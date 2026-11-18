@@ -1,6 +1,5 @@
 import { duplicateSuggestions } from "./assessment/upkeep";
 import { openCorrectionReview, openReviewIssuance } from "./ui/owner-review";
-import { openAssessmentNotes } from "./ui/assessment-notes";
 import { freezeAssessment, renderAssessment } from "./assessment/output";
 import { chooseAssessmentExport } from "./ui/assessment-export";
 import { openAssessmentDetails } from "./ui/assessment-details";
@@ -96,8 +95,6 @@ const recoveryStatus = document.createElement("p");
 recoveryStatus.dataset["testid"] = "recovery-status";
 recoveryStatus.setAttribute("role", "status");
 let assessmentDetails: ReturnType<typeof openAssessmentDetails> | undefined;
-let noteDraft = false;
-let noteDialog: HTMLDialogElement | undefined;
 let ownerReviewDialog: HTMLDialogElement | undefined;
 let recoveryIntent = false;
 let recoveryRequest = 0;
@@ -188,7 +185,6 @@ function hasUnsavedEdits(): boolean {
     state.session.hasDiscardWorthyWork() ||
     workspace.hasPendingDraft() ||
     workspace.hasAssessmentDraft() ||
-    noteDraft ||
     assessmentDetails?.hasDraft() === true
   );
 }
@@ -476,9 +472,6 @@ function replace(db: Database, fileName: string | null, handle: FileHandle | nul
   }
   ownerReviewDialog?.close();
   ownerReviewDialog = undefined;
-  noteDialog?.close();
-  noteDialog = undefined;
-  noteDraft = false;
   assessmentDetails?.close();
   assessmentDetails = undefined;
   old.session.dispose();
@@ -927,6 +920,14 @@ async function boot(): Promise<void> {
       button("Rename dataset", onRename),
     ),
     group(
+      "File safeguards",
+      button("Choose recovery file", onRecovery),
+      stopRecoveryButton,
+      button("Banner caveat", onCaveat),
+    ),
+  );
+  workspace.addAssessmentCommands(
+    group(
       "Review and export",
       button("Export assessment or inventory", onAssessmentExport),
       button("Prepare owner review", async () => {
@@ -973,18 +974,7 @@ async function boot(): Promise<void> {
           },
         );
       }),
-      button("Assessment evidence and questions", () => {
-        noteDialog = openAssessmentNotes(state.repo, (pending) => {
-          noteDraft = pending;
-        });
-      }),
       dataIssuesButton,
-    ),
-    group(
-      "File safeguards",
-      button("Choose recovery file", onRecovery),
-      stopRecoveryButton,
-      button("Banner caveat", onCaveat),
     ),
   );
   file.append(fileTitle, fileActions);

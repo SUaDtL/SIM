@@ -111,3 +111,59 @@
 .assessment-attribution [data-field="assessor"] {
   grid-column: 1 / -1;
 }
+
+.workspace > .contextual-inspector:not([hidden]):has(.assessment-note-inspector) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+.contextual-inspector > .reader-content:has(.assessment-note-inspector) {
+  flex: 1;
+  min-height: 0;
+}
+.assessment-note-inspector.reading-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+.assessment-note-inspector .reading-heading {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+}
+.assessment-note-inspector .reading-heading h2 {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.2;
+}
+.assessment-note-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 0.3rem 0.6rem;
+}
+.assessment-note-list .question-follow-up {
+  display: grid;
+  gap: 0.1rem;
+  margin-block: 0.7rem;
+}
+.question-follow-up dt {
+  font-weight: 650;
+  color: var(--muted);
+}
+.question-follow-up dd {
+  margin: 0 0 0.4rem;
+  white-space: pre-wrap;
+}
+.assessment-note-list li,
+.saved-view-context {
+  overflow-wrap: anywhere;
+}
+.saved-view-context p {
+  margin-block: 0.2rem;
+}

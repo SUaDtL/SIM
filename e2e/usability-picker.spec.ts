@@ -1,11 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { readFileSync, writeFileSync } from "node:fs";
+import { simUrl } from "./helpers/usability";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function documentAction(page: Page, name: string): Promise<void> {
   const action = page.getByRole("button", { name, exact: true });
@@ -61,7 +59,7 @@ test.beforeEach(async ({ page }) => {
 
 test("T01/T05: missing network and provider are created in context; child cancellation and parent cancellation retain the right work", async ({
   page,
-}) => {
+}, info) => {
   await startService(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Unfinished fictional service");
@@ -80,6 +78,12 @@ test("T01/T05: missing network and provider are created in context; child cancel
     "Raw parent description with trailing spaces  ",
   );
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  const uncommitted = {
+    name: await editor.getByLabel("Name", { exact: true }).inputValue(),
+    description: await editor.getByLabel("Description", { exact: true }).inputValue(),
+    selectedNetwork: await editor.locator("#field-networkId").inputValue(),
+    undoEnabled: false,
+  };
 
   await network.click();
   picker = page.getByTestId("record-picker");
@@ -113,6 +117,20 @@ test("T01/T05: missing network and provider are created in context; child cancel
   await expect(
     picker.getByTestId("picker-results").getByRole("button", { name: /^Fictional Operations/ }),
   ).toBeVisible();
+  await picker.getByRole("button", { name: "Close picker", exact: true }).click();
+  await cancelParent(page);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undoProvider = await readSaved(page);
+  expect(undoProvider.organizations).toHaveLength(0);
+  expect(undoProvider.networks).toEqual(saved.networks);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undoNetwork = await readSaved(page);
+  expect(undoNetwork.networks).toHaveLength(0);
+  expect(undoNetwork.services).toHaveLength(0);
+  writeFileSync(
+    info.outputPath("cancellation-ledger.json"),
+    JSON.stringify({ uncommitted, discardedParent: saved, undoProvider, undoNetwork }, null, 2),
+  );
 });
 
 test("T02/T10: choose a qualified duplicate among 500 services by keyboard without blur assignment", async ({

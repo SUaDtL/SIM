@@ -1,12 +1,10 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import { openFileMenu, showInventory, editSelected, chooseReference } from "./helpers/usability";
 
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("incoming rehome and CDS membership refusals link to exact owners without losing drafts", async ({ page }) => {
   const db = await createDataset("Synthetic route diagnostics", wasm);
@@ -42,7 +40,7 @@ test("incoming rehome and CDS membership refusals link to exact owners without l
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(editor.getByTestId("error-networkId")).toContainText("break the route");
   await editor.getByRole("button", { name: "Inspect consuming service Orders", exact: true }).click();
-  const owner = page.getByRole("dialog", { name: "Inspect related record" });
+  const owner = page.getByRole("region", { name: "Inspect related record" });
   await expect(owner).toContainText("Service: Orders");
   await owner.getByRole("button", { name: "Close", exact: true }).click();
   await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Copper");

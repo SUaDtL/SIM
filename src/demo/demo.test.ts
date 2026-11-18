@@ -112,4 +112,39 @@ describe("demo dataset", () => {
     expect(comparison.services.toBe).toBe(comparison.services.asIs - 1);
     expect(repo.snapshot()).toEqual(recorded);
   });
+
+  it("records the fictional Training interview, unresolved action and reusable Planning view", async () => {
+    const repo = await demo();
+    const { services, networks, dependencies } = repo.snapshot();
+    const id = (name: string, network: string) =>
+      services.find((row) => row.name === name && networks.find((net) => net.id === row.networkId)?.name === network)
+        ?.id;
+    const consumer = id("Learning", "Training");
+    const provider = id("Planning", "Operations");
+    expect(
+      dependencies.find((row) => row.consumerServiceId === consumer && row.providerServiceId === provider)?.viaCdsId,
+    ).toBe(repo.listCds().find((row) => row.name === "Partner gateway")?.id);
+    const routeId = repo.exchangeIdentities("service_dependency").get([consumer, provider].join(":"));
+    const notes = repo.listAssessmentNotes();
+    expect(notes.find((note) => note.kind === "Evidence")).toMatchObject({
+      target: { kind: "service_dependency", id: routeId },
+      basis: "reported",
+      currentState: "needs review",
+    });
+    const question = notes.find((note) => note.kind === "Question");
+    expect(question).toMatchObject({
+      responsible: "Operations Support",
+      currentState: "open",
+    });
+    expect(question?.source).toContain("Training representative");
+    expect(
+      repo.listViewpoints().find((view) => view.name === "Training planning dependencies")?.definition,
+    ).toMatchObject({
+      projection: "as-is",
+      focus: {
+        kind: "depends-on",
+        subject: { kind: "service", identity: repo.exchangeIdentities("service").get(String(consumer)) },
+      },
+    });
+  });
 });

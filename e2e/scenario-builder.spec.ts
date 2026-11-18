@@ -1,13 +1,22 @@
 import { chooseReference } from "./helpers/usability";
-import { openFileMenu, showInventory, editSelected } from "./helpers/usability";
+import {
+  openDatasetFile,
+  openFileMenu,
+  showInventory,
+  showMap,
+  editSelected,
+  savedSnapshot,
+  simUrl,
+} from "./helpers/usability";
 
 import { expect, type Page, test } from "@playwright/test";
-import { pathToFileURL, fileURLToPath } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
+import { openDataset } from "../src/db/dataset";
+import { readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import type { ScenarioChange } from "../src/domain/types";
 
 async function loadScenario(
   page: Page,
@@ -41,6 +50,253 @@ async function loadScenario(
   await editSelected(page);
   await expect(page.getByRole("heading", { name: "Edit scenario" })).toBeVisible();
 }
+
+test("Edit change prefills its proposal, cancels without history, and Save file applies the same planned identity", async ({
+  page,
+}, testInfo) => {
+  let exchangeId: string | undefined;
+  let original: readonly ScenarioChange[] = [];
+  await loadScenario(page, (repo, _db, scenarioId) => {
+    const network = repo.listNetworks()[0];
+    if (!network) throw new Error("Missing fixture network.");
+    const planned = repo.addScenarioChange(scenarioId, {
+      kind: "add",
+      networkId: network.id,
+      marking: "CUI",
+      name: "Fictional portal",
+      description: "Initial scope",
+    });
+    for (const name of ["Fictional directory", "Fictional catalogs"]) {
+      const source = repo.createService({ name, networkId: network.id, marking: "CUI" });
+      repo.addScenarioChange(scenarioId, { kind: "merge", serviceId: source.id, intoChangeId: planned.id });
+    }
+    exchangeId = repo.exchangeIdentities("scenario_change").get(String(planned.id));
+    const scenarioExchange = repo.exchangeIdentities("scenario").get(String(scenarioId));
+    if (!exchangeId || !scenarioExchange) throw new Error("Missing planned or scenario exchange identity.");
+    repo.saveViewpoint({
+      name: "Fictional planned portal",
+      caption: "Review the two consolidation proposals.",
+      definition: {
+        version: 1,
+        projection: "compare",
+        scenario: scenarioExchange,
+        filters: { network: null, category: null, organization: null },
+        focus: null,
+        chain: null,
+        selection: { kind: "planned", identity: exchangeId },
+        foundational: true,
+        framing: { width: 800, height: 480, x: 0, y: 0, zoom: 1 },
+      },
+    });
+    original = repo.listScenarioChanges(scenarioId);
+  });
+  const edit = page.getByRole("button", { name: /^Edit change: Add Fictional portal/ });
+  await expect(edit).toBeVisible();
+  await edit.click();
+  await expect(page.getByLabel("Change", { exact: true })).toBeDisabled();
+  const name = page.getByLabel("New service name");
+  await expect(name).toHaveValue("Fictional portal");
+  const description = page.getByLabel("Proposed service description");
+  await expect(description).toHaveValue("Initial scope");
+  await name.fill("Canceled correction");
+  await page.getByRole("button", { name: "Cancel revision", exact: true }).click();
+  await expect(edit).toBeFocused();
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  await edit.click();
+  await name.fill("Unified portal");
+  await description.fill("Revised scope");
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
+  const saved = await download;
+  const path = testInfo.outputPath("scenario-roundtrip.sqlite");
+  await saved.saveAs(path);
+  const reopened = await openDataset(readFileSync(path), { wasm });
+  try {
+    const read = new Repository(reopened);
+    const changes = read.listScenarioChanges();
+    expect(changes).toHaveLength(3);
+    expect(changes[0]).toMatchObject({ name: "Unified portal", description: "Revised scope", id: 1, scenarioId: 1 });
+    expect(changes.slice(1).map((change) => change.kind === "merge" && change.intoChangeId)).toEqual([1, 1]);
+    expect(read.exchangeIdentities("scenario_change").get("1")).toBe(exchangeId);
+    expect(read.listServices().map((row) => row.name)).toEqual(["Fictional catalogs", "Fictional directory"]);
+    expect(read.listViewpoints()[0]?.definition.selection).toEqual({ kind: "planned", identity: exchangeId });
+    writeFileSync(
+      testInfo.outputPath("scenario-roundtrip.json"),
+      JSON.stringify(
+        {
+          channel: testInfo.project.name,
+          action: "Save file with active revision to downloaded SQLite; reopen through Open file chooser",
+          original,
+          revised: changes,
+          exchangeIds: Object.fromEntries(read.exchangeIdentities("scenario_change")),
+          savedView: read.listViewpoints()[0],
+          baseline: read.listServices(),
+          sha256: createHash("sha256").update(readFileSync(path)).digest("hex"),
+        },
+        null,
+        2,
+      ),
+    );
+  } finally {
+    reopened.close();
+  }
+  await openDatasetFile(page, readFileSync(path), "scenario-roundtrip.sqlite");
+  await showMap(page);
+  for (const perspective of ["to-be:1", "compare:1"]) {
+    await page.getByLabel("View", { exact: true }).selectOption(perspective);
+    await page.getByLabel("Find on map", { exact: true }).fill("Unified portal");
+    await page
+      .getByTestId("find-results")
+      .getByRole("button", { name: /Unified portal.*NIPR/ })
+      .click();
+    await expect(page.getByTestId("editor")).toContainText("Unified portal");
+    await expect(page.getByTestId("editor")).toContainText("Planned service added by this scenario.");
+  }
+  await page.locator("details.workspace-assessment > summary").click();
+  await page.getByRole("button", { name: "Saved views", exact: true }).click();
+  await page.getByRole("button", { name: "Restore Fictional planned portal", exact: true }).click();
+  await expect(page.getByLabel("View", { exact: true })).toHaveValue("compare:1");
+  await expect(page.getByTestId("editor")).toContainText("Unified portal");
+});
+
+test("each revision form preserves kind and authored order and safely changes its selected source or target", async ({
+  page,
+}, info) => {
+  await loadScenario(page, (repo, _db, scenarioId) => {
+    const originalNetwork = repo.listNetworks()[0];
+    if (!originalNetwork) throw new Error("Missing fixture network.");
+    const other = repo.createNetwork({ name: "Fictional blue", kind: "internal", marking: "UNCLASSIFIED" });
+    repo.createNetwork({ name: "Fictional gold", kind: "internal", marking: "UNCLASSIFIED" });
+    const firstOwner = repo.createOrganization({ name: "Fictional Operations" });
+    repo.createOrganization({ name: "Fictional Planning" });
+    const create = (name: string) =>
+      repo.createService({
+        name,
+        networkId: originalNetwork.id,
+        marking: "UNCLASSIFIED",
+        providerOrgId: firstOwner.id,
+      });
+    const move = create("Mobile"),
+      retire = create("Spare"),
+      merge = create("Catalog");
+    create("Relay");
+    create("Reference");
+    const add = repo.addScenarioChange(scenarioId, {
+      kind: "add",
+      name: "Planned target",
+      networkId: originalNetwork.id,
+      marking: "CUI",
+    });
+    repo.addScenarioChange(scenarioId, {
+      kind: "rehome",
+      serviceId: move.id,
+      networkId: other.id,
+      providerOrgId: firstOwner.id,
+    });
+    repo.addScenarioChange(scenarioId, { kind: "retire", serviceId: retire.id });
+    repo.addScenarioChange(scenarioId, { kind: "merge", serviceId: merge.id, intoChangeId: add.id });
+  });
+  const before = await savedSnapshot(page);
+  const edit = async (label: RegExp, kind: string) => {
+    await page.getByRole("button", { name: label }).click();
+    const select = page.getByLabel("Change", { exact: true });
+    await expect(select).toHaveValue(kind);
+    await expect(select).toBeDisabled();
+  };
+  const apply = page.getByRole("button", { name: "Apply revision", exact: true });
+  await edit(/^Edit change: Re-home Mobile/, "rehome");
+  await chooseReference(page, "scenario source service", "Relay (NIPR)");
+  await chooseReference(page, "scenario network", "Fictional gold");
+  await chooseReference(page, "scenario provider", "Fictional Planning");
+  await apply.click();
+  const rehome = await savedSnapshot(page);
+  expect(rehome.scenarioChanges[1]).toMatchObject({
+    id: 2,
+    kind: "rehome",
+    serviceId: 4,
+    networkId: 3,
+    providerOrgId: 2,
+  });
+  await edit(/^Edit change: Retire Spare/, "retire");
+  await chooseReference(page, "scenario source service", "Mobile (NIPR)");
+  await apply.click();
+  await edit(/^Edit change: Merge Catalog/, "merge");
+  await chooseReference(page, "scenario source service", "Spare (NIPR)");
+  await chooseReference(page, "scenario merge target", "Reference (NIPR)");
+  await apply.click();
+  const after = await savedSnapshot(page);
+  expect(after.scenarioChanges[2]).toMatchObject({ id: 3, kind: "retire", serviceId: 1 });
+  expect(after.scenarioChanges[3]).toMatchObject({
+    id: 4,
+    kind: "merge",
+    serviceId: 2,
+    intoServiceId: 5,
+    intoChangeId: null,
+  });
+  expect(after.services).toEqual(before.services);
+  expect(after.positions).toEqual(before.positions);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undo = await savedSnapshot(page);
+  expect(undo.scenarioChanges[3]).toEqual(before.scenarioChanges[3]);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  const redo = await savedSnapshot(page);
+  expect(redo.scenarioChanges).toEqual(after.scenarioChanges);
+  writeFileSync(info.outputPath("revision-forms.json"), JSON.stringify({ before, rehome, after, undo, redo }, null, 2));
+});
+
+test("a revision warning and an invalid Save retain the raw draft without partial writes", async ({ page }, info) => {
+  await loadScenario(page, (repo, _db, scenarioId) => {
+    const n = repo.listNetworks()[0];
+    if (!n) throw new Error("Missing fixture network");
+    repo.addScenarioChange(scenarioId, { kind: "add", networkId: n.id, marking: "CUI", name: "Initial plan" });
+  });
+  const before = await savedSnapshot(page);
+  const edit = page.getByRole("button", { name: /^Edit change: Add Initial plan/ });
+  await edit.click();
+  const name = page.getByLabel("New service name");
+  const apply = page.getByRole("button", { name: "Apply revision", exact: true });
+  const confirm = page.getByRole("button", { name: "Apply revision anyway", exact: true });
+  await name.fill("");
+  const downloads: string[] = [];
+  page.on("download", (d) => {
+    downloads.push(d.suggestedFilename());
+  });
+  await page.getByRole("button", { name: "Save file", exact: true }).click();
+  await expect(page.getByTestId("change-message")).toContainText("required");
+  expect(downloads).toEqual([]);
+  await name.fill("first.example.test");
+  await apply.click();
+  await expect(confirm).toBeVisible();
+  await name.fill("revised.example.test");
+  await expect(confirm).toBeHidden();
+  await apply.click();
+  await expect(page.getByTestId("change-message")).toContainText("revised.example.test");
+  await page.getByRole("button", { name: "Cancel revision", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  const canceled = await savedSnapshot(page);
+  expect(canceled).toEqual(before);
+  await edit.click();
+  await name.fill("revised.example.test");
+  await apply.click();
+  await confirm.click();
+  const after = await savedSnapshot(page);
+  expect(after.scenarioChanges[0]).toEqual({ ...before.scenarioChanges[0], name: "revised.example.test" });
+  writeFileSync(
+    info.outputPath("revision-confirmation.json"),
+    JSON.stringify(
+      {
+        before,
+        canceled,
+        after,
+        refusedSaveDownloads: 0,
+        firstAttempt: "first.example.test",
+        confirmed: "revised.example.test",
+      },
+      null,
+      2,
+    ),
+  );
+});
 
 test("unadded scenario intent is protected on navigation and can be discarded", async ({ page }) => {
   await loadScenario(page);
@@ -85,13 +341,15 @@ test("an untouched builder stays clean and Add change preserves pending metadata
     .getByRole("button", { name: /^Plan\b/ })
     .click();
   await editSelected(page);
-  await page.getByTestId("editor").getByLabel("Description").fill("Pending planning note");
+  await page.getByTestId("editor").getByLabel("Description", { exact: true }).fill("Pending planning note");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
   await chooseReference(page, "scenario network", "NIPR");
   await page.getByLabel("New service name").fill("Portal");
   await page.getByRole("button", { name: "Add change" }).click();
   await expect(page.getByTestId("scenario-changes")).toContainText("Portal");
-  await expect(page.getByTestId("editor").getByLabel("Description")).toHaveValue("Pending planning note");
+  await expect(page.getByTestId("editor").getByLabel("Description", { exact: true })).toHaveValue(
+    "Pending planning note",
+  );
   await expect(page.getByLabel("New service name")).toHaveValue("");
 });
 
@@ -145,7 +403,7 @@ test("invalid builder keeps both builder input and pending metadata without a pa
 test("builder acknowledgement cannot apply stale scenario metadata", async ({ page }) => {
   await loadScenario(page);
   const editor = page.getByTestId("editor");
-  const description = editor.getByLabel("Description");
+  const description = editor.getByLabel("Description", { exact: true });
   await description.fill("First note");
   await page.getByLabel("Change", { exact: true }).selectOption("add");
   await chooseReference(page, "scenario network", "NIPR");
@@ -175,14 +433,15 @@ test("legacy scenario collision is diagnosed and its invalid change can be remov
   await expect(page.getByTestId("scenario-diagnostics")).toContainText("Portal");
   const description = page.getByTestId("editor").getByLabel("Description", { exact: true });
   await description.fill("Keep this scenario draft");
-  await page
+  const trigger = page
     .getByTestId("scenario-diagnostics")
-    .getByRole("button", { name: "Inspect service Portal (NIPR)", exact: true })
-    .click();
-  const inspect = page.getByRole("dialog", { name: "Inspect related record" });
+    .getByRole("button", { name: "Inspect service Portal (NIPR)", exact: true });
+  await trigger.click();
+  const inspect = page.getByRole("region", { name: "Inspect related record" });
   await expect(inspect).toContainText("Service: Portal");
   await expect(inspect.getByRole("button", { name: "NIPR", exact: true })).toBeVisible();
   await inspect.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(trigger).toBeFocused();
   await expect(description).toHaveValue("Keep this scenario draft");
   await page.getByRole("button", { name: /Remove change: Re-home Portal/ }).click();
   await expect(page.getByTestId("scenario-diagnostics")).toBeHidden();

@@ -1,3 +1,4 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import {
   chooseReference,
   editorSection,
@@ -8,12 +9,9 @@ import {
 } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function section(page: Page, label: string): Promise<void> {
   await editorSection(
@@ -260,7 +258,7 @@ test("network and CDS reverse lists distinguish membership from boundary routes 
   await expect(boundary.locator(".relationship-row")).toHaveCount(1);
   await expect(boundary).toContainText("Orders (Amber) → Identity (Blue) · CDS: Guard Amber Blue");
   await boundary.getByRole("button", { name: "Orders (Amber)", exact: true }).click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(peek.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await peek.getByRole("button", { name: "Edit service", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");

@@ -1,12 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { existsSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
-const simPath = fileURLToPath(new URL("../dist/sim.html", import.meta.url));
-const simUrl = pathToFileURL(simPath).href;
+import { candidatePath, candidateUrl } from "./helpers/candidate";
+import { sha256 } from "../scripts/verification-artifact";
 
 test.beforeAll(() => {
-  if (!existsSync(simPath)) throw new Error("dist/sim.html is missing; run `npm run build` first");
+  if (!existsSync(candidatePath)) throw new Error(`Missing SIM browser test candidate: ${candidatePath}`);
 });
 
 test("boots SQLite offline from file:// with no network requests or errors", async ({ page, context }) => {
@@ -22,7 +20,9 @@ test("boots SQLite offline from file:// with no network requests or errors", asy
   await context.setOffline(true);
   await context.route(/^https?:/, (route) => route.abort());
 
-  await page.goto(simUrl);
+  const response = await page.goto(candidateUrl);
+  if (!response) throw new Error("The offline application did not return a document.");
+  expect(await sha256(await response.body())).toBe(test.info().config.metadata["candidate_sha256"]);
 
   await expect(page.getByTestId("sqlite-version")).toHaveText(/^SQLite 3\.\d+\.\d+$/);
   expect(networkRequests).toEqual([]);

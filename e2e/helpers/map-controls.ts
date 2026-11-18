@@ -12,6 +12,10 @@ export async function showFilters(page: Page): Promise<void> {
   await disclose(page, ".map-filter-panel");
 }
 
+export async function showExploration(page: Page): Promise<void> {
+  await disclose(page, ".map-explore-panel");
+}
+
 export async function showLayout(page: Page): Promise<void> {
   await showMap(page);
   await disclose(page, ".map-layout-panel");
@@ -28,6 +32,7 @@ export async function showAbout(page: Page): Promise<void> {
 
 export async function highlightSelected(page: Page): Promise<void> {
   await showMap(page);
+  await showExploration(page);
   await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
 }
 

@@ -1,3 +1,4 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import {
   chooseReference,
   editSelected,
@@ -8,13 +9,10 @@ import {
 } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { toCsv } from "../src/import/csv";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function boot(page: Page): Promise<void> {
   await page.context().setOffline(true);
@@ -135,11 +133,11 @@ test("AC082: Save file refuses invalid scenario builder, then saves metadata and
   await select(page, "Scenarios", "Plan");
   await editSelected(page);
   const editor = page.getByTestId("editor");
-  await editor.getByLabel("Description").fill("Combined planning note");
+  await editor.getByLabel("Description", { exact: true }).fill("Combined planning note");
   await editor.getByLabel("Change", { exact: true }).selectOption("add");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   await expect(editor.getByTestId("change-message")).toContainText("required");
-  await expect(editor.getByLabel("Description")).toHaveValue("Combined planning note");
+  await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Combined planning note");
   await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
 
   await editor.getByLabel("New service name").fill("Portal");

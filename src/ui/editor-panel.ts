@@ -69,6 +69,7 @@ export interface EditorPanel {
   viewContext(): EditorViewContext;
   restoreViewContext(context: EditorViewContext): void;
   revealScenarioChange(changeId: number): boolean;
+  editScenarioChange(changeId: number): boolean;
   close(): void;
   /** The dataset changed: refresh relationship rows, keeping any text the user is typing. */
   refresh(): void;
@@ -284,7 +285,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     }
     const network = element.querySelector<HTMLSelectElement>("#field-networkId");
     if (network) {
-      network.prepend(option("", "Choose destination network"));
+      if (network.options[0]) network.options[0].text = "Choose destination network";
       network.value = "";
       network.dispatchEvent(new Event("change", { bubbles: true }));
     }
@@ -351,7 +352,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function pendingDraftLabel(): string {
-    return scenarioBuilder?.hasPendingIntent() ? "Unadded scenario change" : "Unapplied changes";
+    if (!scenarioBuilder?.hasPendingIntent()) return "Unapplied changes";
+    return scenarioBuilder.isRevising() ? "Unapplied scenario revision" : "Unadded scenario change";
   }
 
   function draftChanged(): void {
@@ -594,10 +596,6 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   }
 
   function applyActiveDraft(): boolean {
-    if (activePicker?.hasPendingDraft()) {
-      activePicker.revealPendingDraft();
-      return false;
-    }
     if (!hasPendingDraft()) return true;
     return applyCurrent?.() ?? true;
   }
@@ -805,6 +803,11 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     };
 
     function save(input: FormValues, confirmSensitive: boolean): boolean {
+      if (!editing || owner !== draftId || ctx.repo() !== repo || !form.isConnected) return false;
+      if (activePicker?.hasPendingDraft()) {
+        activePicker.revealPendingDraft();
+        return false;
+      }
       clearErrors();
       if (id !== null && descriptor(type).get(ctx.repo(), id) === undefined) {
         showExternalChange("deleted");
@@ -828,7 +831,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               d.save(ctx.repo(), id, input, { confirmSensitive });
               if (intent) {
                 phase.value = "builder";
-                ctx.repo().addScenarioChange(id, intent, { confirmSensitive });
+                if (intent.changeId === null) ctx.repo().addScenarioChange(id, intent.input, { confirmSensitive });
+                else ctx.repo().reviseScenarioChange(intent.changeId, intent.input, { confirmSensitive });
               }
             });
           } catch (error) {
@@ -1178,7 +1182,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
               : `No eligible ${d.label.toLowerCase()} records are available for this field. Close this picker to continue.`,
           returnFocus: trigger,
           selectedValue: field().value,
-          allowNone: field().options[0]?.value === "",
+          allowNone: !select.required && field().options[0]?.value === "",
           isCurrent: () => current === owner && ctx.repo() === repo && element.isConnected,
           options: () => {
             const descriptions = new Map(d.list(repo).map((record) => [String(record.id), record.detail]));
@@ -1273,6 +1277,17 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                       draftChanged();
                     } catch (error) {
                       message.textContent = describe(error);
+                      if (error instanceof ValidationError) {
+                        const key = fieldFor(type, error.field);
+                        const indicator = key && errors.get(key);
+                        const control = key && form.querySelector<HTMLElement>(`#child-field-${key}`);
+                        if (indicator && control) {
+                          indicator.hidden = false;
+                          indicator.textContent = error.message;
+                          control.setAttribute("aria-invalid", "true");
+                          control.focus();
+                        }
+                      }
                       if (error instanceof SensitiveInputWarning) {
                         confirmed = JSON.stringify(values);
                         confirm.hidden = false;
@@ -1283,12 +1298,22 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                     commit(true);
                   });
                   confirm.hidden = true;
-                  form.addEventListener("input", () => {
+                  const edited = (event: Event) => {
                     confirmed = null;
                     confirm.hidden = true;
+                    if (event.target instanceof HTMLElement && event.target.hasAttribute("aria-invalid")) {
+                      event.target.removeAttribute("aria-invalid");
+                      const indicator = errors.get(event.target.id.slice("child-field-".length));
+                      if (indicator) {
+                        indicator.hidden = true;
+                        indicator.textContent = "";
+                      }
+                    }
+                    message.textContent = "";
                     draftChanged();
-                  });
-                  form.addEventListener("change", draftChanged);
+                  };
+                  form.addEventListener("input", edited);
+                  form.addEventListener("change", edited);
                   form.addEventListener("submit", (event) => {
                     event.preventDefault();
                     commit(false);
@@ -2057,6 +2082,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     activeDraftId: () => draftId,
     discardActiveDraft,
     revealScenarioChange: (changeId) => scenarioBuilder?.revealChange(changeId) ?? false,
+    editScenarioChange: (changeId) => scenarioBuilder?.editChange(changeId) ?? false,
     inspectProjected,
     openServiceOnNetwork,
   };
@@ -2109,6 +2135,7 @@ function renderField(
     }
     case "select": {
       const select = el("select", described);
+      select.required = f.required === true;
       if (f.none !== undefined) select.append(option("", f.none, text === ""));
       for (const o of f.options?.(repo, editingId) ?? []) select.append(option(o.value, o.label, o.value === text));
       controls.set(f.key, () => select.value);

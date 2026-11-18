@@ -1,11 +1,11 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { candidateUrl as simUrl } from "./candidate";
 import { openDataset } from "../../src/db/dataset";
 import { Repository } from "../../src/domain/repository";
 import { wasm } from "../../tests/helpers/sqlite";
 
-export const simUrl = pathToFileURL(fileURLToPath(new URL("../../dist/sim.html", import.meta.url))).href;
+export { simUrl };
 
 export async function openFileMenu(page: Page): Promise<void> {
   const menu = page.locator("details.file-menu").filter({ has: page.locator("summary").filter({ hasText: /^File$/ }) });

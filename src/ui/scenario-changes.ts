@@ -26,7 +26,7 @@ const USES: Record<Kind, readonly string[]> = {
   merge: ["service", "into"],
   retire: ["service"],
   rehome: ["service", "network", "provider"],
-  add: ["name", "network", "marking", "provider"],
+  add: ["name", "network", "marking", "provider", "description"],
 };
 
 /** One line describing a change, e.g. "Merge Chat (Operations) into Chat (Enterprise)". */
@@ -62,11 +62,15 @@ export function describeChange(repo: Repository, change: ScenarioChange, all: re
   }
 }
 
+type ChangeIntent = { readonly changeId: number | null; readonly input: ScenarioChangeInput };
+
 export interface ScenarioChangeBuilder {
   readonly elements: HTMLElement[];
   /** A changed builder is an unapplied editor intent, even when metadata is clean. */
   hasPendingIntent(): boolean;
-  collectPendingIntent(): ScenarioChangeInput | null;
+  collectPendingIntent(): ChangeIntent | null;
+  isRevising(): boolean;
+  editChange(changeId: number): boolean;
   clearPendingIntent(): void;
   showError(error: ValidationError | SensitiveInputWarning, retryConfirmed?: () => void): void;
   /** Refresh committed rows and diagnostics without touching builder controls or focus. */
@@ -133,6 +137,8 @@ export function createScenarioChanges(
   const network = el("select", { id: "change-network" }, option("", "Choose a network"));
   const provider = el("select", { id: "change-provider" }, option("", "(unchanged)"));
   const name = el("input", { id: "change-name", type: "text", autocomplete: "off" });
+  const description = el("textarea", { id: "change-description" });
+  let revisionBase: { change: ScenarioChange; exchangeId: string | undefined } | null = null;
   const marking = el("select", { id: "change-marking" });
   for (const m of MARKINGS) marking.append(option(m, m));
   const prerequisite = el("p", { class: "hint", role: "status", "data-testid": "scenario-builder-guidance" });
@@ -141,6 +147,12 @@ export function createScenarioChanges(
     service: el("div", { class: "field" }, el("label", { for: "change-service" }, "Service"), service),
     into: el("div", { class: "field" }, el("label", { for: "change-into" }, "Into"), into),
     name: el("div", { class: "field" }, el("label", { for: "change-name" }, "New service name"), name),
+    description: el(
+      "div",
+      { class: "field" },
+      el("label", { for: "change-description" }, "Proposed service description"),
+      description,
+    ),
     network: el("div", { class: "field" }, el("label", { for: "change-network" }, "Network"), network),
     marking: el("div", { class: "field" }, el("label", { for: "change-marking" }, "Marking"), marking),
     provider: el("div", { class: "field" }, el("label", { for: "change-provider" }, "Provider"), provider),
@@ -198,18 +210,20 @@ export function createScenarioChanges(
     prerequisite.textContent =
       kind.value === ""
         ? "Choose what you want to propose, then choose the affected records."
-        : (kind.value === "add" || kind.value === "rehome") && network.options.length <= 1
-          ? "Add a network to the recorded enterprise before proposing this change."
-          : kind.value !== "add" && service.options.length <= 1
-            ? "No unchanged services are available. Add a service to the recorded enterprise or choose Add a service."
-            : "";
+        : revisionBase
+          ? "Revising the selected proposal keeps its kind and position. For a different kind, add a separate proposal and review any removal consequences."
+          : (kind.value === "add" || kind.value === "rehome") && network.options.length <= 1
+            ? "Add a network to the recorded enterprise before proposing this change."
+            : kind.value !== "add" && service.options.length <= 1
+              ? "No unchanged services are available. Add a service to the recorded enterprise or choose Add a service."
+              : "";
     prerequisite.hidden = prerequisite.textContent === "";
     for (const update of pickerUpdates) update();
   };
   kind.addEventListener("change", showFields);
   showFields();
 
-  const controls = [kind, service, into, network, provider, name, marking] as const;
+  const controls = [kind, service, into, network, provider, name, marking, description] as const;
   const selected = () => JSON.stringify(controls.map((control) => control.value));
   let initial = selected();
   let warningSignature: string | null = null;
@@ -221,8 +235,9 @@ export function createScenarioChanges(
     message.textContent = "";
   };
   for (const control of controls) {
-    control.addEventListener(control === name ? "input" : "change", () => {
+    control.addEventListener(control === name || control === description ? "input" : "change", () => {
       withdrawWarning();
+      clearProposal.hidden = revisionBase !== null || !hasPendingIntent();
       onIntentChanged();
     });
   }
@@ -247,6 +262,7 @@ export function createScenarioChanges(
         return {
           kind: "add",
           name: name.value,
+          description: description.value,
           networkId: Number(network.value),
           // The repository checks the marking again.
           marking: marking.value as Marking,
@@ -263,6 +279,23 @@ export function createScenarioChanges(
           : { kind: "merge", serviceId: Number(service.value), intoServiceId: Number(id) };
       }
     }
+  };
+  const collectPendingIntent = (): ChangeIntent | null => {
+    if (!hasPendingIntent()) return null;
+    if (revisionBase) {
+      const { change, exchangeId } = revisionBase;
+      const current = repo.listScenarioChanges(scenarioId).find((row) => row.id === change.id);
+      if (
+        JSON.stringify(current) !== JSON.stringify(change) ||
+        repo.exchangeIdentities("scenario_change").get(String(change.id)) !== exchangeId
+      )
+        throw new ValidationError(
+          "STALE",
+          "scenario change",
+          "This proposal changed while you were revising it. Cancel the revision and reopen the current proposal.",
+        );
+    }
+    return { changeId: revisionBase?.change.id ?? null, input: input() };
   };
   const relevantSignature = (): string => {
     const value = input();
@@ -293,7 +326,7 @@ export function createScenarioChanges(
   const showError = (error: ValidationError | SensitiveInputWarning, retryConfirmed?: () => void): void => {
     withdrawWarning();
     if (error instanceof SensitiveInputWarning) {
-      message.textContent = `${error.message} Add it anyway only if it is not a real host name or address.`;
+      message.textContent = `${error.message} Confirm only if the reviewed text is fictional.`;
       warningSignature = relevantSignature();
       retryWarning = retryConfirmed ?? null;
       anyway.hidden = false;
@@ -302,44 +335,115 @@ export function createScenarioChanges(
       const field =
         error.field === "kind"
           ? kind
-          : error.field === "name"
+          : error.field === "name" || error.field === "service name"
             ? name
             : fields[error.field]?.querySelector<HTMLElement>("button, input, select");
       field?.focus();
     }
   };
 
-  const add = (confirmSensitive: boolean) => {
+  const submit = (confirmSensitive: boolean) => {
     withdrawWarning();
     try {
-      const change = repo.addScenarioChange(scenarioId, input(), { confirmSensitive });
+      const intent = collectPendingIntent();
+      if (!intent) {
+        if (!revisionBase) input();
+        return;
+      }
+      const change =
+        intent.changeId === null
+          ? repo.addScenarioChange(scenarioId, intent.input, { confirmSensitive })
+          : repo.reviseScenarioChange(intent.changeId, intent.input, { confirmSensitive });
       clearPendingIntent();
       // Successful creation must be visible even when the previous search excluded this row.
       revealChange(change.id);
     } catch (error) {
       if (error instanceof SensitiveInputWarning) {
         showError(error, () => {
-          add(true);
+          submit(true);
         });
       } else if (error instanceof ValidationError) showError(error);
       else throw error;
     }
   };
-  anyway.append(
-    button("Add anyway", () => {
-      if (warningSignature === null || relevantSignature() !== warningSignature) {
-        withdrawWarning();
-        message.textContent = "The scenario or selected target changed. Review this change and submit it again.";
-        return;
-      }
-      retryWarning?.();
-    }),
-  );
+  const confirmWarning = button("Add anyway", () => {
+    if (warningSignature === null || relevantSignature() !== warningSignature) {
+      withdrawWarning();
+      message.textContent = "The scenario or selected target changed. Review this change and submit it again.";
+      return;
+    }
+    retryWarning?.();
+  });
+  anyway.append(confirmWarning);
+
+  const submitButton = button("Add change", () => {
+    submit(false);
+  });
+  const cancelRevision = button("Cancel revision", () => {
+    const changeId = revisionBase?.change.id;
+    clearPendingIntent();
+    if (changeId !== undefined && revealChange(changeId))
+      rows.querySelector<HTMLButtonElement>('[aria-current="true"] button')?.focus();
+    else kind.focus();
+  });
+  cancelRevision.hidden = true;
+
+  function editChange(changeId: number): boolean {
+    const change = repo.listScenarioChanges(scenarioId).find((row) => row.id === changeId);
+    if (!change) return false;
+    if (hasPendingIntent() || revisionBase) {
+      message.textContent = revisionBase
+        ? "Finish or cancel this revision first."
+        : "Finish the pending proposal or choose Clear proposal before editing another change.";
+      (revisionBase ? cancelRevision : clearProposal).focus();
+      return false;
+    }
+    revisionBase = { change, exchangeId: repo.exchangeIdentities("scenario_change").get(String(change.id)) };
+    withdrawWarning();
+    refresh();
+    kind.value = change.kind;
+    kind.disabled = true;
+    if (change.kind !== "add") service.value = String(change.serviceId);
+    if (change.kind === "merge")
+      into.value =
+        change.intoServiceId === null
+          ? `change:${String(change.intoChangeId)}`
+          : `service:${String(change.intoServiceId)}`;
+    if (change.kind === "add" || change.kind === "rehome") {
+      network.value = String(change.networkId);
+      provider.value = change.providerOrgId === null ? "" : String(change.providerOrgId);
+    }
+    if (change.kind === "add") {
+      name.value = change.name;
+      marking.value = change.marking;
+      description.value = change.description ?? "";
+    }
+    submitButton.textContent = "Apply revision";
+    cancelRevision.hidden = false;
+    clearProposal.hidden = true;
+    confirmWarning.textContent = "Apply revision anyway";
+    initial = selected();
+    showFields();
+    (change.kind === "add" ? name : fields["service"]?.querySelector("button"))?.focus();
+    onIntentChanged();
+    return true;
+  }
+  const clearProposal = button("Clear proposal", () => {
+    clearPendingIntent();
+    kind.focus();
+  });
+  clearProposal.hidden = true;
 
   function clearPendingIntent(): void {
+    revisionBase = null;
+    kind.disabled = false;
+    submitButton.textContent = "Add change";
+    cancelRevision.hidden = true;
+    clearProposal.hidden = true;
+    confirmWarning.textContent = "Add anyway";
     for (const control of controls) {
-      if (control instanceof HTMLInputElement) control.value = "";
-      else control.selectedIndex = 0;
+      if (control instanceof HTMLSelectElement) control.selectedIndex = 0;
+      else control.value = "";
     }
     showFields();
     withdrawWarning();
@@ -368,18 +472,30 @@ export function createScenarioChanges(
             ...(revealedChangeId === change.id ? { "aria-current": "true" } : {}),
           },
           el("span", { class: "row-name" }, label),
-          button(
-            "Remove",
-            () => {
-              try {
-                const plan = repo.planRemoveScenarioChange(change.id);
-                if (plan.changes.length > 1) reviewRemoval(change.id);
-                else finishRemoval(change.id, plan.signature);
-              } catch (error) {
-                message.textContent = error instanceof ValidationError ? error.message : "Could not remove the change.";
-              }
-            },
-            { "aria-label": `Remove change: ${label}`, class: "subtle" },
+          el(
+            "div",
+            { class: "actions" },
+            button(
+              "Edit change",
+              () => {
+                editChange(change.id);
+              },
+              { "aria-label": `Edit change: ${label}` },
+            ),
+            button(
+              "Remove",
+              () => {
+                try {
+                  const plan = repo.planRemoveScenarioChange(change.id);
+                  if (plan.changes.length > 1) reviewRemoval(change.id);
+                  else finishRemoval(change.id, plan.signature);
+                } catch (error) {
+                  message.textContent =
+                    error instanceof ValidationError ? error.message : "Could not remove the change.";
+                }
+              },
+              { "aria-label": `Remove change: ${label}`, class: "subtle", "data-remove-change": "" },
+            ),
           ),
         ),
       ),
@@ -400,7 +516,8 @@ export function createScenarioChanges(
       (item) => item.dataset["changeId"] === String(changeId),
     );
     const alternative =
-      row?.querySelector<HTMLButtonElement>("button") ?? rows.querySelector<HTMLButtonElement>("button");
+      row?.querySelector<HTMLButtonElement>("[data-remove-change]") ??
+      rows.querySelector<HTMLButtonElement>("[data-remove-change]");
     if (alternative) alternative.focus();
     else query.focus();
   }
@@ -487,7 +604,11 @@ export function createScenarioChanges(
     const latestNetworks = repo.listNetworks();
     const latestNetworkNames = new Map(latestNetworks.map((item) => [item.id, item.name]));
     const latestServices = repo.listServices();
-    const latestChanged = new Set(all.flatMap((change) => (change.kind === "add" ? [] : [change.serviceId])));
+    const latestChanged = new Set(
+      all.flatMap((change) =>
+        change.kind === "add" || change.id === revisionBase?.change.id ? [] : [change.serviceId],
+      ),
+    );
     const sync = (select: HTMLSelectElement, choices: { value: string; label: string }[]): void => {
       const currentValue = select.value;
       const missing = wasPending && currentValue !== "" && !choices.some((choice) => choice.value === currentValue);
@@ -620,7 +741,7 @@ export function createScenarioChanges(
             el(
               "p",
               {},
-              "This scenario has naming conflicts. Review the affected changes, then remove and re-add a change with corrected choices.",
+              "This scenario has naming conflicts. Review the affected proposals and use Edit change to correct a name or destination.",
             ),
             el("ul", {}, ...issues.map((issue) => el("li", {}, issue.message))),
           ]
@@ -646,7 +767,7 @@ export function createScenarioChanges(
     el(
       "p",
       { class: "hint", "data-testid": "scenario-command-guidance" },
-      "Add change and Remove take effect immediately. Undo reverses them. Cancel or Discard drops only changes you have not applied.",
+      "Add change and Remove take effect immediately. Apply revision saves a correction to the selected proposal. Undo reverses each action. Cancel or Discard drops only changes you have not applied.",
     ),
     query,
     count,
@@ -661,9 +782,9 @@ export function createScenarioChanges(
       el("div", { class: "field" }, el("label", { for: "change-kind" }, "Change"), kind),
       prerequisite,
       ...Object.values(fields),
-      button("Add change", () => {
-        add(false);
-      }),
+      submitButton,
+      cancelRevision,
+      clearProposal,
     ),
     message,
     anyway,
@@ -672,7 +793,9 @@ export function createScenarioChanges(
   return {
     elements,
     hasPendingIntent,
-    collectPendingIntent: () => (hasPendingIntent() ? input() : null),
+    collectPendingIntent,
+    isRevising: () => revisionBase !== null,
+    editChange,
     clearPendingIntent,
     showError,
     refresh,

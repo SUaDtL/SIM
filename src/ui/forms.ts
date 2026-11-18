@@ -1,4 +1,6 @@
 import { MARKINGS, type Marking } from "../db/markings";
+import { ValidationError } from "../domain/errors";
+import { cleanName } from "../domain/validate";
 import type { Repository } from "../domain/repository";
 import type { NetworkKind, ServiceInput, WriteOptions } from "../domain/types";
 
@@ -92,9 +94,14 @@ const asKind = (v: string): NetworkKind => v as NetworkKind;
 const asMarking = (v: string): Marking => v as Marking;
 
 export function serviceInputFromValues(v: FormValues): ServiceInput {
+  const networkId = ref(v, "networkId");
+  if (networkId === null) {
+    cleanName(str(v, "name"), "service name");
+    throw new ValidationError("REQUIRED", "network", "Choose a network for this service.");
+  }
   return {
     name: str(v, "name"),
-    networkId: ref(v, "networkId") ?? 0,
+    networkId,
     marking: asMarking(str(v, "marking")),
     providerOrgId: ref(v, "providerOrgId"),
     applicationId: ref(v, "applicationId"),
@@ -146,7 +153,14 @@ const service: EntityDescriptor = {
   plural: "Services",
   fields: [
     NAME,
-    { key: "networkId", label: "Network", kind: "select", required: true, options: networkOptions },
+    {
+      key: "networkId",
+      label: "Network",
+      kind: "select",
+      required: true,
+      none: "Choose a network",
+      options: networkOptions,
+    },
     { key: "marking", label: "Marking", kind: "select", options: markingOptions },
     {
       key: "providerOrgId",
@@ -181,12 +195,10 @@ const service: EntityDescriptor = {
   get: (repo, id) => repo.getService(id),
   values(repo, id) {
     const s = id === null ? undefined : repo.getService(id);
-    // A new service starts on the first network, at that network's marking.
-    const first = repo.listNetworks()[0];
     return {
       name: s?.name ?? "",
-      networkId: idString(s?.networkId ?? first?.id ?? null),
-      marking: s?.marking ?? first?.marking ?? "UNCLASSIFIED",
+      networkId: idString(s?.networkId ?? null),
+      marking: s?.marking ?? "UNCLASSIFIED",
       providerOrgId: idString(s?.providerOrgId ?? null),
       applicationId: idString(s?.applicationId ?? null),
       categoryId: idString(s?.categoryId ?? null),

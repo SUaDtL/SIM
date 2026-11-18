@@ -128,7 +128,7 @@ function guideTopics(): HelpTopic[] {
         el(
           "p",
           {},
-          "In a scenario, Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.",
+          "In a scenario, use Edit change to revise a proposal in place. Add change and Remove take effect immediately; Undo reverses them. Apply changes records the scenario name, description and a fully specified unadded proposal. Discard changes resets only work not yet applied. It does not reverse changes you already added or removed.",
         ),
         el("h4", {}, "Save to a file"),
         el(
@@ -157,13 +157,13 @@ function guideTopics(): HelpTopic[] {
         el(
           "p",
           {},
-          "Use File → Assessment details to enter optional scope and dates. Open Evidence and questions from a service overview to inspect its recorded sources and open questions.",
+          "Use Assessment → Assessment details to enter optional scope and dates. Open Evidence and questions from a service overview to inspect its recorded sources and open questions.",
         ),
         el("h4", {}, "Prepare a briefing"),
         el(
           "p",
           {},
-          "Saved views reopen over current records. Export a scoped report or inventory from File and verify its marking and scope before sharing.",
+          "Saved views reopen over current records. Export a scoped report or inventory from Assessment and verify its marking and scope before sharing.",
         ),
         el("h4", {}, "Review corrections"),
         el(

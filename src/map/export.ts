@@ -1,4 +1,5 @@
 import { bannerText, type Marking } from "../db/markings";
+import { keyColor, keyDash, keyLabels, type MapKey } from "./key";
 
 /**
  * Banner colors for exports, matching the app banner's CSS (an e2e test compares the two). Colors
@@ -17,6 +18,8 @@ export const bandHeight = (width: number): number => Math.max(28, Math.round(wid
 
 export interface FrameContent {
   readonly title: string;
+  readonly subject?: string;
+  readonly keys?: readonly MapKey[];
   readonly details: readonly string[];
   readonly legend: readonly string[];
   /** Full marking/caveat, measured with the same font as the capture annotations. */
@@ -28,6 +31,8 @@ export interface FrameLine {
   readonly y: number;
   readonly size: number;
   readonly bold: boolean;
+  readonly x?: number;
+  readonly key?: MapKey;
 }
 
 export interface FrameLayout {
@@ -51,20 +56,20 @@ function frameAtWidth(
 ): FrameLayout {
   const pad = Math.max(16, Math.round(width * 0.025));
   const maxWidth = Math.max(1, width - 2 * pad);
-  const wrap = (source: string, size: number, bold: boolean): string[] => {
+  const wrap = (source: string, size: number, bold: boolean, limit = maxWidth): string[] => {
     const result: string[] = [];
     let line = "";
     for (const word of source.split(/\s+/)) {
       if (!word) continue;
       const candidate = line ? `${line} ${word}` : word;
-      if (measure(candidate, size, bold) <= maxWidth) {
+      if (measure(candidate, size, bold) <= limit) {
         line = candidate;
         continue;
       }
       if (line) result.push(line);
       line = "";
       for (const char of word) {
-        if (line && measure(line + char, size, bold) > maxWidth) {
+        if (line && measure(line + char, size, bold) > limit) {
           result.push(line);
           line = "";
         }
@@ -86,12 +91,42 @@ function frameAtWidth(
     return { lines, height: y + pad };
   };
   const atScale = (scale: number): FrameLayout => {
-    const titleSize = Math.max(20, Math.min(30, Math.round(width * 0.025))) * scale;
+    const titleSize = Math.max(24, Math.min(30, Math.round(width * 0.025))) * scale;
     const top = rows([
       { text: content.title, size: titleSize, bold: true },
+      ...(content.subject ? [{ text: content.subject, size: 24 * scale, bold: true }] : []),
       ...content.details.map((text) => ({ text, size: 18 * scale, bold: false })),
     ]);
-    const bottom = rows(content.legend.map((text) => ({ text, size: 17 * scale, bold: false })));
+    const keyLines: FrameLine[] = [];
+    const keySize = 17 * scale;
+    let x = pad;
+    let y = pad + keySize;
+    for (const key of content.keys ?? []) {
+      const text = keyLabels[key];
+      const chip = keySize * 2;
+      const itemWidth = chip + measure(text, keySize, false);
+      if (x > pad && x + itemWidth > width - pad) {
+        x = pad;
+        y += keySize * 1.65;
+      }
+      // Keep narrow-caption keys readable as a group by occupying their own wrapped row.
+      if (itemWidth > maxWidth) {
+        for (const [i, part] of wrap(text, keySize, false, Math.max(1, maxWidth - chip)).entries()) {
+          keyLines.push({ text: part, size: keySize, bold: false, x: pad + chip, y, ...(i === 0 ? { key } : {}) });
+          y += keySize * 1.4;
+        }
+        x = pad;
+      } else {
+        keyLines.push({ text, size: keySize, bold: false, x: x + chip, y, key });
+        x += itemWidth + keySize * 1.25;
+      }
+    }
+    const keyHeight = keyLines.length ? y + keySize * 0.45 : 0;
+    const notes = rows(content.legend.map((text) => ({ text, size: keySize, bold: false })));
+    const bottom = {
+      lines: [...keyLines, ...notes.lines.map((line) => ({ ...line, y: line.y + keyHeight }))],
+      height: Math.ceil(notes.height + keyHeight),
+    };
     const minimumBand =
       mapHeight === undefined ? bandHeight(width) : Math.max(bandHeight(width), Math.ceil((17 * scale) / 0.6));
     const bannerSize = Math.round(minimumBand * 0.6);
@@ -137,8 +172,9 @@ function frameAtWidth(
         720 / (mapHeight + frame.topHeight + frame.bottomHeight + 2 * (frame.bandHeight ?? 0)),
       );
       const displayed = 17 * scale * fit;
-      if (displayed >= 11.99) break;
-      scale = Math.min(32, scale * (12 / displayed));
+      // Raster bands and vector numeric attributes round independently.
+      if (displayed >= 12.2) break;
+      scale = Math.min(32, scale * (12.3 / displayed));
       frame = atScale(scale);
     }
   }
@@ -161,7 +197,7 @@ export function layoutFrame(
   const smallest = Math.min(
     ...[...frame.topLines, ...frame.bottomLines, ...(frame.bannerLines ?? [])].map((line) => line.size),
   );
-  if (smallest * fit >= 11.9) return frame;
+  if (smallest * fit >= 12) return frame;
   // Growing fonts alone on a narrow portrait can create ever more wrapped rows.
   // Letterbox that map inside a wider caption canvas instead; its scope and pixels stay intact.
   const captionWidth = Math.max(width * 2, Math.ceil((mapHeight * 1280) / 720));
@@ -201,8 +237,43 @@ export async function frameWithBanner(
       context.textAlign = "left";
       context.textBaseline = "alphabetic";
       for (const line of lines) {
+        const x = line.x ?? Math.max(16, Math.round(width * 0.025));
+        if (line.key) {
+          context.save();
+          context.translate(x - 2 * line.size, offset + line.y - 0.88 * line.size);
+          context.scale(line.size / 16, line.size / 16);
+          context.fillStyle = "#0d141c";
+          context.fillRect(0, 0, 27, 16);
+          context.strokeStyle = keyColor(line.key);
+          context.fillStyle = keyColor(line.key);
+          context.lineWidth = 2;
+          context.beginPath();
+          if (line.key === "service") context.roundRect(5, 4, 17, 8, 2);
+          else if (line.key === "cds") {
+            context.moveTo(13, 2);
+            context.lineTo(20, 8);
+            context.lineTo(13, 14);
+            context.lineTo(6, 8);
+            context.closePath();
+            context.fill();
+          } else {
+            context.setLineDash(keyDash(line.key));
+            context.moveTo(2, 8);
+            context.lineTo(19, 8);
+            context.stroke();
+            context.setLineDash([]);
+            context.beginPath();
+            context.moveTo(18, 4);
+            context.lineTo(24, 8);
+            context.lineTo(18, 12);
+            context.closePath();
+            context.fill();
+          }
+          context.stroke();
+          context.restore();
+        }
         context.font = `${line.bold ? "bold " : ""}${String(line.size)}px "Segoe UI", system-ui, sans-serif`;
-        context.fillText(line.text, Math.max(16, Math.round(width * 0.025)), offset + line.y);
+        context.fillText(line.text, x, offset + line.y);
       }
     };
     if (frame) {

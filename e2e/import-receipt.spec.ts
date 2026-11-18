@@ -1,10 +1,9 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, type Page, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { toCsv } from "../src/import/csv";
 import { openFileMenu } from "./helpers/usability";
 
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 const dialog = (page: Page) => page.getByRole("dialog", { name: "Import CSV" });
 const csv = (name: string, rows: string[][]) => ({ name, mimeType: "text/csv", buffer: Buffer.from(toCsv(rows)) });
 

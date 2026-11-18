@@ -113,15 +113,54 @@ test.beforeEach(async ({ page }) => {
 test("the landscape identifies the displayed network and service scope", async ({ page }) => {
   const stage = page.getByTestId("map-area");
   await expect(stage.getByRole("heading", { name: "Network landscape" })).toBeVisible();
-  await expect(stage.getByTestId("map-counts")).toHaveText("2 networks · 4 services");
+  await expect(stage.getByTestId("map-counts")).toContainText("4 of 4 services in scope");
   const query = stage.getByLabel("Find on map");
   await query.fill("Orders (Amber)");
   await query.press("Enter");
   await stage.getByRole("button", { name: "Depends on", exact: true }).click();
-  await expect(stage.getByTestId("map-counts")).toHaveText("2 networks · 2 services");
+  await expect(stage.getByTestId("map-counts")).toContainText("2 of 4 services in scope");
   await stage.getByRole("button", { name: "Back from focus" }).click();
-  await expect(stage.getByTestId("map-counts")).toHaveText("2 networks · 4 services");
+  await expect(stage.getByTestId("map-counts")).toContainText("4 of 4 services in scope");
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+});
+
+for (const [width, height, minimum] of [
+  [390, 844, 240],
+  [320, 640, 180],
+] as const) {
+  test(`the compact inspector keeps the map usable at ${String(width)}px and expands for reading`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    const query = page.getByLabel("Find on map");
+    await query.fill("Orders (Amber)");
+    await query.press("Enter");
+    const canvas = page.getByTestId("map-canvas");
+    const editor = page.getByTestId("editor");
+    const expand = page.getByRole("button", { name: "Expand inspector", exact: true });
+    await expect(expand).toBeVisible();
+    expect((await canvas.boundingBox())?.height).toBeGreaterThanOrEqual(minimum);
+    await expand.press("Enter");
+    const workspace = await page.locator(".workspace").boundingBox();
+    expect((await editor.boundingBox())?.height).toBeGreaterThanOrEqual((workspace?.height ?? height) * 0.6);
+    await page.getByRole("button", { name: "Collapse inspector", exact: true }).press("Enter");
+    await expect(expand).toBeFocused();
+    await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  });
+}
+
+test("a selected service exposes directional questions and a secondary exploration menu", async ({ page }) => {
+  const query = page.getByLabel("Find on map");
+  await query.fill("Orders (Amber)");
+  await query.press("Enter");
+  const stage = page.getByTestId("map-area");
+  for (const name of ["Depends on", "Used by"])
+    await expect(stage.getByRole("button", { name, exact: true })).toBeVisible();
+  const more = stage.locator("summary").filter({ hasText: "Explore" });
+  await expect(stage.getByRole("button", { name: "Network connections", exact: true })).toBeHidden();
+  await more.click();
+  await expect(stage.getByRole("button", { name: "Network connections", exact: true })).toBeVisible();
+  await stage.getByRole("button", { name: "Network connections", exact: true }).click();
+  await expect(stage.getByRole("button", { name: "Back from focus" })).toHaveCount(1);
 });
 
 for (const motion of ["no-preference", "reduce"] as const)
@@ -185,13 +224,15 @@ test("overview and detached capture retain the selected name and omit an inciden
         return cy.nodes(".service.chain-root").first().numericStyle("font-size") * cy.zoom();
       }),
     )
-    .toBeGreaterThanOrEqual(8);
+    .toBeGreaterThanOrEqual(14);
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export SVG" }).evaluate((button) => {
     (button as HTMLButtonElement).click();
   });
   const svg = await readFile(await (await download).path(), "utf8");
   expect(svg).toContain(">Identity</tspan>");
+  expect(svg).toContain("Identity (Blue)");
+  expect(svg).toContain('data-key="service"');
   expect(svg).not.toContain(">Directory</tspan>");
 });
 

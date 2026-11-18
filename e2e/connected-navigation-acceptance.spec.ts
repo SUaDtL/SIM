@@ -1,7 +1,7 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import { expect, test, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { applyScenario } from "../src/scenario/scenario";
@@ -16,8 +16,6 @@ import {
   showMap,
   showSelectedRecord,
 } from "./helpers/usability";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function load(page: Page) {
   const db = await createDataset("Synthetic navigation acceptance", wasm);
@@ -144,7 +142,7 @@ test("two Back hops restore each service and organization context plus the origi
   await showSelectedRecord(page);
   const serviceContext = await context(page);
   await editor.getByRole("button", { name: "Operations", exact: true }).click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await peek.getByRole("button", { name: "Edit organization", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Operations");
   await editor.getByRole("button", { name: "Cancel", exact: true }).click();
@@ -261,7 +259,7 @@ test("a dependency merged into a virtual planned service stays read-only with sc
       if (edge.empty()) throw new Error("Expected projected dependency to the virtual planned endpoint.");
       edge.emit("tap");
     }, ids);
-    const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+    const inspector = page.getByRole("region", { name: "Connection inspector", exact: true });
     await expect(inspector).toContainText("Orders (Amber) → Replacement (Blue)");
     await expect(inspector).toContainText("Via CDS: Guard");
     await expect(inspector).toContainText("Projected connection, read-only");
@@ -272,7 +270,7 @@ test("a dependency merged into a virtual planned service stays read-only with sc
     });
     await expect(origin).toBeVisible();
     await origin.click();
-    const related = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    const related = page.getByRole("region", { name: "Inspect related record", exact: true });
     await expect(related.locator("[data-scenario-change-id]")).toHaveAttribute(
       "data-scenario-change-id",
       String(ids.plannedChange),

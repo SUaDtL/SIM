@@ -1,11 +1,9 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 import { openDatasetFile } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("a corrected field clears its invalid state before the next refusal", async ({ page }) => {
   await page.goto(simUrl);
@@ -42,7 +40,10 @@ test("connection inspector Edit consuming service enters the owner's edit task",
   const editor = page.getByTestId("editor");
   await editor.getByRole("tab", { name: "Connections", exact: true }).click();
   await editor.getByRole("button", { name: /Connection details for/ }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Edit consuming service", exact: true }).click();
+  await page
+    .getByRole("region", { name: "Connection inspector" })
+    .getByRole("button", { name: "Edit consuming service", exact: true })
+    .click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Synthetic consumer");
   await expect(editor).toHaveAttribute("data-mode", "edit");
 });

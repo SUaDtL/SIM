@@ -1,3 +1,4 @@
+import { showExploration } from "./helpers/map-controls";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFile, writeFile } from "node:fs/promises";
@@ -95,6 +96,7 @@ test("WG05 network focus has no undefined expansion while preserving complete bo
   const data = await load(page);
   await inspect(page, "Orders", "Amber");
   const before = await mapState(page);
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   await expect(page.getByTestId("focus-status")).toContainText("Cross-network links for Amber: 1 dependency");
   const focused = await mapState(page);

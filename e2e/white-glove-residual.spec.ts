@@ -1,3 +1,5 @@
+import { candidatePath } from "./helpers/candidate";
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { sha256 } from "../scripts/verification-artifact";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -97,7 +99,7 @@ test.beforeEach(async ({ browser }, info) => {
       {
         browser: info.project.name,
         version: browser.version(),
-        candidate_html_sha256: await sha256(readFileSync("dist/sim.html")),
+        candidate_html_sha256: await sha256(readFileSync(candidatePath)),
         method:
           "Isolated offline file application; explicit test-only DOM/API fault injection is separately identified. No native OS picker or human acceptance claim.",
       },
@@ -150,7 +152,7 @@ for (const choice of ["Stay", "Discard and continue", "Apply and continue"] as c
     await editor(page).getByLabel("Tier 1 support notes", { exact: true }).fill("Pending support notes");
     await section(page, "Details");
     await editor(page).getByRole("button", { name: "Inspect Provided by", exact: true }).click();
-    const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
     await peek.getByRole("button", { name: "Edit organization", exact: true }).click();
     const decision = page.getByRole("dialog", { name: "Unapplied changes", exact: true });
     await decision.getByRole("button", { name: choice, exact: true }).click();
@@ -526,7 +528,7 @@ test("MAP16 admitted semantic route issues stay explicit while duplicate-name gr
     db.run("UPDATE cds_network SET network_id=? WHERE cds_id=1 AND network_id=2", [copper.id]);
   });
   const before = await readback(page, info, "legacy-route-baseline");
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   const issues = page.getByRole("dialog", { name: "Data issues", exact: true });
   await expect(issues).toContainText("Orders");

@@ -123,7 +123,7 @@ test("PR29 A02/A17 section bookmarks, keyboard tabs and reference peek preserve 
   const inspect = editor.getByRole("button", { name: "Inspect Provided by", exact: true });
   await inspect.click();
   await page
-    .getByRole("dialog", { name: "Inspect related record", exact: true })
+    .getByRole("region", { name: "Inspect related record", exact: true })
     .getByRole("button", { name: "Close", exact: true })
     .click();
   await expect(inspect).toBeFocused();
@@ -224,10 +224,12 @@ test("PR29 A02 Back restores captured editor and independent section bookmarks",
   });
   const supportScroll = await body.evaluate((node) => node.scrollTop);
   await editor.getByRole("tab", { name: "Details", exact: true }).click();
-  await editor.getByRole("button", { name: "Inspect Provided by", exact: true }).click();
+  const reference = editor.getByRole("button", { name: "Inspect Provided by", exact: true });
+  await reference.scrollIntoViewIfNeeded();
   const capturedScroll = await body.evaluate((node) => node.scrollTop);
+  await reference.click();
   await page
-    .getByRole("dialog", { name: "Inspect related record", exact: true })
+    .getByRole("region", { name: "Inspect related record", exact: true })
     .getByRole("button", { name: "Edit organization", exact: true })
     .click();
   await expect(editor.getByRole("heading", { name: "Edit organization", exact: true })).toBeVisible();

@@ -15,10 +15,10 @@ import { SensitiveInputWarning } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { downloadBlob } from "../file/dataset-file";
 import { button, el, option, focusPagingControl } from "./dom";
-import { assessmentPanel } from "./assessment-panel";
+import { assessmentOpener, assessmentPanel } from "./assessment-panel";
 
 function reviewDialog(title: string) {
-  const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
+  const origin = assessmentOpener();
   const heading = el("h2", { id: "owner-review-heading", tabindex: "-1" }, title);
   const dialog = el("dialog", { class: "assessment-dialog decision-dialog", "aria-labelledby": heading.id });
   const body = el("div");

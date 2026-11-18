@@ -1,12 +1,18 @@
 import { expect, test, type Page, type Locator } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { openDataset } from "../src/db/dataset";
 
-import { editSelected, chooseReference, openFileMenu } from "./helpers/usability";
+import {
+  editSelected,
+  chooseReference,
+  openDatasetFile,
+  openFileMenu,
+  savedSnapshot,
+  simUrl as url,
+} from "./helpers/usability";
 
 async function sectionFor(page: Page, label: string): Promise<void> {
   const section = /^Tier \d support/.test(label)
@@ -51,7 +57,6 @@ async function cancelParent(page: Page): Promise<void> {
   if (await guard.isVisible()) await guard.getByRole("button", { name: "Discard and continue", exact: true }).click();
 }
 
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     delete (window as unknown as Record<string, unknown>)["showOpenFilePicker"];
@@ -211,6 +216,80 @@ test("new service stages app category support and consumption before first Add a
   } finally {
     db.close();
   }
+});
+
+test("missing shared references preserve a complete new service and each independent Undo boundary", async ({
+  page,
+}, info) => {
+  const db = await createDataset("Fictional inline collaboration", wasm);
+  const seed = new Repository(db);
+  const existing = seed.createNetwork({ name: "Recorded network", kind: "internal", marking: "UNCLASSIFIED" });
+  const consumer = seed.createOrganization({ name: "Recorded consumer" });
+  const peer = seed.createService({ name: "Recorded peer", networkId: existing.id, marking: "UNCLASSIFIED" });
+  const baseline = seed.snapshot();
+  const bytes = db.export();
+  db.close();
+  await openDatasetFile(page, bytes, "inline-parent.sqlite");
+  await page.getByLabel("Show", { exact: true }).selectOption("service");
+  await page.getByRole("button", { name: "Add service", exact: true }).click();
+  const editor = page.getByTestId("editor");
+  await editor.getByLabel("Name", { exact: true }).fill("Integrated index");
+  await editor.getByLabel("Description", { exact: true }).fill("Staged before child creation");
+  await pick(page, "Tier 1 support", "Recorded consumer");
+  await editor.getByLabel("Tier 1 support notes").fill("Contact by agreed procedure");
+  await pick(page, "Consuming organization", "Recorded consumer");
+  await editor.getByRole("button", { name: "Add consumer", exact: true }).click();
+  await pick(page, "Depends on service", "Recorded peer (Recorded network)");
+  await editor.getByRole("button", { name: "Add dependency", exact: true }).click();
+  const beforeChildren = {
+    consumers: await editor.getByTestId("consumers").innerText(),
+    dependencies: await editor.getByTestId("dependencies").innerText(),
+  };
+  expect(beforeChildren.consumers).toContain("Recorded consumer");
+  expect(beforeChildren.dependencies).toContain("Recorded peer");
+  const selection: Record<string, string> = {};
+  for (const [field, value, id] of [
+    ["Network", "Fictional destination", "networkId"],
+    ["Provided by", "Fictional provider", "providerOrgId"],
+    ["Application", "Fictional application", "applicationId"],
+    ["Category", "Fictional grouping", "categoryId"],
+  ] as const) {
+    const child = await createReference(page, field);
+    await expect(child).toContainText("remains available if you later cancel");
+    await child.getByLabel("Name", { exact: true }).fill(value);
+    await child.getByRole("button", { name: "Create and use", exact: true }).click();
+    await expect(editor.getByRole("button", { name: `Choose ${field}`, exact: true })).toBeFocused();
+    selection[id] = await editor.locator(`#field-${id}`).inputValue();
+    await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Integrated index");
+    await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Staged before child creation");
+  }
+  await editor.getByRole("button", { name: "Add service", exact: true }).click();
+  const after = await savedSnapshot(page);
+  const parent = after.services.find((item) => item.name === "Integrated index");
+  expect(parent).toMatchObject(
+    Object.fromEntries(Object.entries(selection).map(([field, value]) => [field, Number(value)])),
+  );
+  expect(after.support).toEqual([
+    { serviceId: parent?.id, tier: 1, orgId: consumer.id, notes: "Contact by agreed procedure" },
+  ]);
+  expect(after.consumption).toEqual([{ serviceId: parent?.id, orgId: consumer.id }]);
+  expect(after.dependencies).toEqual([{ consumerServiceId: parent?.id, providerServiceId: peer.id, viaCdsId: null }]);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undoParent = await savedSnapshot(page);
+  expect(undoParent.services).toEqual(baseline.services);
+  expect(undoParent.support).toEqual([]);
+  expect(undoParent.consumption).toEqual([]);
+  expect(undoParent.dependencies).toEqual([]);
+  for (const key of ["networks", "organizations", "applications", "categories"] as const)
+    expect(undoParent[key]).toEqual(after[key]);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undoCategory = await savedSnapshot(page);
+  expect(undoCategory.categories).toEqual([]);
+  expect(undoCategory.applications).toEqual(undoParent.applications);
+  writeFileSync(
+    info.outputPath("child-parent-diff.json"),
+    JSON.stringify({ baseline, beforeChildren, selection, after, undoParent, undoCategory }, null, 2),
+  );
 });
 
 test("inline creation keeps explicit service defaults and parked relation-only intent", async ({ page }) => {

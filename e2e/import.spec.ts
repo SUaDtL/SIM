@@ -1,7 +1,7 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { DEMO_NAME, populateDemo } from "../src/demo/demo";
 import { Repository } from "../src/domain/repository";
@@ -12,7 +12,6 @@ import { wasm } from "../tests/helpers/sqlite";
 
 // CSV import (WORK-011): the dialog's preview, Cancel, Import as one undo step, and the map laying out
 // a bulk import.
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function load(page: Page): Promise<string[]> {
   const problems: string[] = [];

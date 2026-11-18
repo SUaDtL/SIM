@@ -128,7 +128,7 @@ test("WG07 narrow relationship content gets the reading width and the secondary 
   expect(actions.y).toBeGreaterThanOrEqual(detail.y + detail.height);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await row.getByRole("button", { name: /^Connection details for Identity/ }).click();
-  await expect(page.getByRole("dialog", { name: "Connection inspector", exact: true })).toContainText(
+  await expect(page.getByRole("region", { name: "Connection inspector", exact: true })).toContainText(
     "Identity and Directory coordination",
   );
 });

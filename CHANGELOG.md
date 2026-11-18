@@ -6,6 +6,12 @@ All notable changes to SIM are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-18
+
+- Follow related records, connections and assessment notes in one inspector. Back restores the previous investigation, and perspective changes reconcile the selected record.
+- Edit a scenario proposal in place, keeping its identity and dependent merges. New services require a deliberate network unless started on a specific network.
+- Read question ownership and next action, recognize saved views by scope and subject, and prepare labeled map captures from the assessment workspace.
+
 ### Added
 
 - Optional assessment details, durable exchange identities, live saved viewpoints, and scoped HTML, JSON, and CSV exports.

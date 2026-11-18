@@ -175,13 +175,13 @@ test("nested connection and related inspectors return focus one layer at a time"
     .getByRole("region", { name: "Depends on", exact: true })
     .getByRole("button", { name: /^Identity and Directory/ });
   await relation.click();
-  const related = page.getByRole("dialog", { name: "Inspect related record" });
+  const related = page.getByRole("region", { name: "Inspect related record" });
   await related.getByRole("tab", { name: "Connections", exact: true }).click();
   const connection = related
     .getByRole("region", { name: "Depends on", exact: true })
     .getByRole("button", { name: /^Connection details/ });
   await connection.click();
-  const nested = page.getByRole("dialog", { name: "Connection inspector" });
+  const nested = page.getByRole("region", { name: "Connection inspector" });
   await expect(nested).toContainText("Directory (Blue)");
   await expect(nested.getByRole("button", { name: "Close", exact: true })).toBeInViewport({ ratio: 0.98 });
   await page.keyboard.press("Escape");

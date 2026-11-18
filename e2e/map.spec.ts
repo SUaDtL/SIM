@@ -1,5 +1,6 @@
 import {
   openFileMenu,
+  simUrl,
   showMap,
   showInventory,
   editSelected,
@@ -7,6 +8,7 @@ import {
   chooseReference,
 } from "./helpers/usability";
 import {
+  showExploration,
   showFilters,
   showLayout,
   showCaptureOptions,
@@ -14,14 +16,11 @@ import {
   showEditActions,
 } from "./helpers/map-controls";
 import { expect, type Page, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { toCsv } from "../src/import/csv";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 interface Watch {
   errors: string[];
@@ -203,7 +202,11 @@ test("draws networks as containers, the external zone, CDS between networks and 
 
   const map = await readMap(page);
   const networks = map.nodes.filter((n) => n.entity === "network");
-  expect(networks.map((n) => n.label).sort()).toEqual(["External\nUNCLASSIFIED", "NIPR\nCUI", "SIPR\nSECRET"]);
+  expect(networks.map((n) => n.label).sort()).toEqual([
+    "External\nExternal · 1 shown\nUNCLASSIFIED",
+    "NIPR\nInternal · 2 shown\nCUI",
+    "SIPR\nInternal · 3 shown\nSECRET",
+  ]);
   for (const s of map.nodes.filter((n) => n.entity === "service")) {
     const parent = networks.find((n) => n.id === s.parent);
     expect(parent, s.label).toBeDefined();
@@ -621,6 +624,7 @@ test("highlights everything that chains to a tapped node, with its foundational 
   await expect(page.getByTestId("editor").getByLabel("Name", { exact: true })).toHaveValue("Email");
   await showMap(page);
 
+  await showExploration(page);
   await page.getByRole("button", { name: "Clear highlight", exact: true }).click();
   await expect(page.getByTestId("map-summary")).not.toContainText("Highlighted");
   map = await readMap(page);

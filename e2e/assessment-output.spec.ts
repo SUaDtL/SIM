@@ -1,9 +1,10 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { openDatasetFile, openFileMenu } from "./helpers/usability";
+import { openDatasetFile } from "./helpers/usability";
 
 test("a recipient can navigate a downloaded assessment on a phone and print its full tables without scripts", async ({
   page,
@@ -25,7 +26,7 @@ test("a recipient can navigate a downloaded assessment on a phone and print its 
   } finally {
     db.close();
   }
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Export assessment or inventory", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Export assessment or inventory" });
   await dialog.getByLabel("Export scope").selectOption("all");

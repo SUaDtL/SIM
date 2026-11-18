@@ -58,16 +58,16 @@ test("R11 each responsible scenario change has an exact readable review destinat
   await editor.getByLabel("Description", { exact: true }).fill("Retain independent planning notes");
   for (const label of ["Merge Orders (Amber) into Platform (Blue)", "Re-home Identity (Blue) to Green"]) {
     await diagnostics.getByRole("button", { name: `Review: ${label}`, exact: true }).click();
-    const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
     await expect(peek).toContainText(label);
-    await expect(peek).toContainText("Remove and re-add");
+    await expect(peek.getByRole("button", { name: "Edit change", exact: true })).toBeVisible();
     await peek.getByRole("button", { name: "Close", exact: true }).click();
     await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Retain independent planning notes");
   }
   await page.getByRole("searchbox", { name: "Search scenario changes", exact: true }).fill("Merge Orders");
   await diagnostics.getByRole("button", { name: "Review: Re-home Identity (Blue) to Green", exact: true }).click();
   await page
-    .getByRole("dialog", { name: "Inspect related record", exact: true })
+    .getByRole("region", { name: "Inspect related record", exact: true })
     .getByRole("button", { name: "Review in scenario editor", exact: true })
     .click();
   await expect(page.getByRole("searchbox", { name: "Search scenario changes", exact: true })).toHaveValue("");
@@ -93,12 +93,12 @@ test("R10 projected connection origins link to each exact responsible change", a
     .getByRole("region", { name: "Depends on", exact: true })
     .getByRole("button", { name: /^Connection details for/ })
     .click();
-  const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+  const inspector = page.getByRole("region", { name: "Connection inspector", exact: true });
   await expect(inspector).not.toContainText("As-Is service #");
   await expect(inspector.getByRole("button", { name: /^Review:/ })).toHaveCount(2);
   for (const label of ["Merge Orders (Amber) into Platform (Blue)", "Re-home Identity (Blue) to Green"]) {
     await inspector.getByRole("button", { name: `Review: ${label}`, exact: true }).click();
-    const related = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    const related = page.getByRole("region", { name: "Inspect related record", exact: true });
     await expect(related).toContainText(label);
     await related.getByRole("button", { name: "Close", exact: true }).click();
     await expect(inspector.getByRole("button", { name: `Review: ${label}`, exact: true })).toBeFocused();

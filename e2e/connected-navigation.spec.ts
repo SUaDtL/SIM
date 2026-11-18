@@ -1,5 +1,6 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
+import { showExploration } from "./helpers/map-controls";
 import { expect, test, type Page } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
@@ -12,8 +13,6 @@ import {
   showMap,
   showSelectedRecord,
 } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function fixture(): Promise<Uint8Array> {
   const db = await createDataset("Connected navigation fixture", wasm);
@@ -132,7 +131,7 @@ test("reference peek preserves scalar and support draft, returns focus, and adds
   await editorSection(page, "Details");
   const inspect = editor.getByRole("button", { name: "Inspect Provided by", exact: true });
   await inspect.click();
-  const dialog = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const dialog = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(dialog.getByRole("heading", { name: "Organization: Operations", exact: true })).toBeVisible();
   await expect(page.getByRole("dialog", { name: "Unapplied changes", exact: true })).toHaveCount(0);
   await dialog
@@ -184,14 +183,16 @@ test("accepted Back restores prior service, list filter and map framing without 
 
 test("Stay rejects a Find request before selection, filters, chain or framing change", async ({ page }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
+  await showExploration(page);
   await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
+  await mapFilters(page);
+  await page.locator("#map-filter-network").selectOption({ label: "Amber" });
   await editSelected(page);
   const editor = page.getByTestId("editor");
   await editor.getByLabel("Name", { exact: true }).fill("Orders pending");
   await showInventory(page);
   await page.getByLabel("Filter", { exact: true }).fill("Ord");
-  await mapFilters(page);
-  await page.locator("#map-filter-network").selectOption({ label: "Amber" });
+  await showMap(page);
   const previous = await viewport(page);
   const summary = await page.getByTestId("map-summary").textContent();
   expect(summary).toContain("Highlighted");
@@ -233,7 +234,7 @@ test("non-map references expose separate recorded reverse roles and application/
 }) => {
   await findRecord(page, "orders", "Orders (Amber) · service");
   const editor = page.getByTestId("editor");
-  const dialog = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const dialog = page.getByRole("region", { name: "Inspect related record", exact: true });
   await editor.getByRole("button", { name: "Operations", exact: true }).click();
   const roles = dialog.getByLabel("Filter service relationships by role", { exact: true });
   await roles.selectOption({ label: "Provides services" });

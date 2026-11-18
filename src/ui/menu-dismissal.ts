@@ -7,6 +7,7 @@ const menus = [
   "details.workspace-assessment",
   "details.map-filter-panel",
   "details.map-layout-panel",
+  "details.map-explore-panel",
   "details.map-capture-panel",
   "details.record-secondary-actions",
   "details.record-actions",

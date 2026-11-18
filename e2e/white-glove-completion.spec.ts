@@ -1,3 +1,4 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { sha256 } from "../scripts/verification-artifact";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -101,7 +102,7 @@ test.beforeEach(async ({ browser }, info) => {
       {
         browser: info.project.name,
         version: browser.version(),
-        candidateHtmlSha256: await sha256(readFileSync("dist/sim.html")),
+        candidateHtmlSha256: await sha256(readFileSync(candidatePath)),
         method:
           "Offline full application, actual downloads and parsed SQLite readback. Controlled capture timing and modal invariant injection are labelled in their own evidence. No native picker or participant acceptance claim.",
       },

@@ -1,11 +1,10 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openFileMenu, editSelected } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { wasm } from "../tests/helpers/sqlite";
 import { observeRuntime } from "./helpers/runtime-audit";
 
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 interface Files {
   files: Record<string, number[]>;
   selected: string;
