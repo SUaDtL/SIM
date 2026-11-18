@@ -1,12 +1,10 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import { openFileMenu, showInventory, editSelected, chooseReference } from "./helpers/usability";
 
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("incoming rehome and CDS membership refusals link to exact owners without losing drafts", async ({ page }) => {
   const db = await createDataset("Synthetic route diagnostics", wasm);

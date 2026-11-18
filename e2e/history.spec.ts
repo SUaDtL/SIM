@@ -1,12 +1,10 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { showExploration } from "./helpers/map-controls";
 import { chooseReference, editSelected, mapFilters, openFileMenu, showInventory, showMap } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 /** Load SIM offline with the download/upload fallback, recording page errors and requests. */
 async function load(page: Page): Promise<string[]> {

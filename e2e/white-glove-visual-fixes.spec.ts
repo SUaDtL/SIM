@@ -1,3 +1,4 @@
+import { candidatePath } from "./helpers/candidate";
 import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -35,7 +36,7 @@ async function evidence(page: Page, info: TestInfo, stem: string, data: unknown)
     info.outputPath(`${stem}.json`),
     JSON.stringify(
       {
-        candidateHtmlSha256: await sha256(readFileSync("dist/sim.html")),
+        candidateHtmlSha256: await sha256(readFileSync(candidatePath)),
         channel: info.project.name,
         browser: page.context().browser()?.version(),
         viewport: page.viewportSize(),

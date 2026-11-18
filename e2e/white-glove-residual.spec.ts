@@ -1,3 +1,4 @@
+import { candidatePath } from "./helpers/candidate";
 import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { sha256 } from "../scripts/verification-artifact";
@@ -98,7 +99,7 @@ test.beforeEach(async ({ browser }, info) => {
       {
         browser: info.project.name,
         version: browser.version(),
-        candidate_html_sha256: await sha256(readFileSync("dist/sim.html")),
+        candidate_html_sha256: await sha256(readFileSync(candidatePath)),
         method:
           "Isolated offline file application; explicit test-only DOM/API fault injection is separately identified. No native OS picker or human acceptance claim.",
       },

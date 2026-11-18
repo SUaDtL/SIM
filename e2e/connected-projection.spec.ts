@@ -1,12 +1,10 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { chooseReference } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 import { editSelected, mapFilters, openFileMenu, showInventory, showMap } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function loadFixture(page: Page): Promise<void> {
   const db = await createDataset("Projected navigation fixture", wasm);

@@ -1,11 +1,9 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import { expect, test, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function openFixture(page: Page, large = false): Promise<void> {
   const db = await createDataset("Synthetic usability shell", wasm);

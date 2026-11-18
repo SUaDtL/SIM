@@ -1,3 +1,4 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import {
   chooseReference,
   editorSection,
@@ -8,12 +9,9 @@ import {
 } from "./helpers/usability";
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function section(page: Page, label: string): Promise<void> {
   await editorSection(

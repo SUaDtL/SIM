@@ -1,7 +1,7 @@
+import { candidateUrl as url } from "./helpers/candidate";
 import { expect, test, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { applyScenario } from "../src/scenario/scenario";
@@ -16,8 +16,6 @@ import {
   showMap,
   showSelectedRecord,
 } from "./helpers/usability";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function load(page: Page) {
   const db = await createDataset("Synthetic navigation acceptance", wasm);

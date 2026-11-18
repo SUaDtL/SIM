@@ -1,12 +1,10 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openAssessmentMenu } from "./helpers/assessment";
 import { chooseReference, editSelected, editorSection, openFileMenu, showInventory } from "./helpers/usability";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("an existing service keeps fields and relations in one pending edit", async ({ page }) => {
   await page.context().setOffline(true);

@@ -1,3 +1,4 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import {
   editSelected,
   mapFilters,
@@ -7,13 +8,10 @@ import {
   showSelectedRecord,
 } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { toCsv } from "../src/import/csv";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function fixture(): Promise<Uint8Array> {
   const db = await createDataset("Deletion consequences", wasm);

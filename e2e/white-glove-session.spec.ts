@@ -1,7 +1,7 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { sha256 } from "../scripts/verification-artifact";
 import { readFile, writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 import { datasetName, MAX_DATASET_BYTES, openDataset } from "../src/db/dataset";
 import { LATEST_VERSION } from "../src/db/migrate";
 import { Repository } from "../src/domain/repository";
@@ -17,7 +17,6 @@ import {
   showMap,
 } from "./helpers/usability";
 
-const htmlPath = fileURLToPath(new URL("../dist/sim.html", import.meta.url));
 const observations = new WeakMap<
   Page,
   { errors: string[]; consoleErrors: string[]; requests: string[]; htmlBefore: string }
@@ -29,7 +28,7 @@ test.beforeEach(async ({ page }) => {
     errors: [] as string[],
     consoleErrors: [] as string[],
     requests: [] as string[],
-    htmlBefore: await sha256(await readFile(htmlPath)),
+    htmlBefore: await sha256(await readFile(candidatePath)),
   };
   observations.set(page, record);
   await page.context().setOffline(true);
@@ -44,7 +43,7 @@ test.beforeEach(async ({ page }) => {
 
 test.afterEach(async ({ page }, info) => {
   const record = observations.get(page);
-  const htmlAfter = await sha256(await readFile(htmlPath));
+  const htmlAfter = await sha256(await readFile(candidatePath));
   const image = info.outputPath("session-state.png");
   if (!page.isClosed()) {
     await page.screenshot({ path: image, fullPage: true });

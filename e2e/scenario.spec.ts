@@ -1,9 +1,9 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { chooseReference } from "./helpers/usability";
 import { openFileMenu, showMap, showInventory, editSelected } from "./helpers/usability";
 import { showCaptureOptions, showAbout } from "./helpers/map-controls";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { DEMO_NAME, populateDemo } from "../src/demo/demo";
 import { Repository } from "../src/domain/repository";
@@ -12,7 +12,6 @@ import { wasm } from "../tests/helpers/sqlite";
 
 // As-Is / To-Be scenarios (WORK-013): the view selector, the compare overlay and metrics, scenario
 // views that never write, and authoring changes in the editor.
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function load(page: Page): Promise<string[]> {
   const problems: string[] = [];

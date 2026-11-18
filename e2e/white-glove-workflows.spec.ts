@@ -1,7 +1,7 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Page } from "@playwright/test";
 import { readFile, writeFile } from "node:fs/promises";
 import { sha256 } from "../scripts/verification-artifact";
-import { fileURLToPath } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { parseCsv, toCsv } from "../src/import/csv";
@@ -18,7 +18,6 @@ import {
   simUrl,
 } from "./helpers/usability";
 
-const htmlPath = fileURLToPath(new URL("../dist/sim.html", import.meta.url));
 const watched = new WeakMap<Page, { errors: string[]; requests: string[]; htmlSha256: string }>();
 const readbackCounts = new WeakMap<Page, number>();
 
@@ -26,7 +25,7 @@ test.beforeEach(async ({ page }) => {
   const observation = {
     errors: [] as string[],
     requests: [] as string[],
-    htmlSha256: await sha256(await readFile(htmlPath)),
+    htmlSha256: await sha256(await readFile(candidatePath)),
   };
   watched.set(page, observation);
   page.on("pageerror", (error) => observation.errors.push(error.message));

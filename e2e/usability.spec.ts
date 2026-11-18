@@ -1,11 +1,9 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 import { openDatasetFile } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("a corrected field clears its invalid state before the next refusal", async ({ page }) => {
   await page.goto(simUrl);

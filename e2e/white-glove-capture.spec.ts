@@ -1,3 +1,4 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { sha256 } from "../scripts/verification-artifact";
@@ -25,7 +26,7 @@ async function load(page: Page, info: TestInfo, name?: string, longCaveat = fals
   const browser = page.context().browser();
   if (!browser) throw new Error("Capture acceptance requires a browser host");
   const runtime = {
-    candidateHtmlSha256: await sha256(await readFile("dist/sim.html")),
+    candidateHtmlSha256: await sha256(await readFile(candidatePath)),
     channel: info.project.name,
     browserVersion: browser.version(),
     os: `${process.platform} ${release()}`,

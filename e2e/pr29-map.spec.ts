@@ -1,3 +1,4 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -145,7 +146,7 @@ for (const viewport of [
     const result = await headings(page);
     await info.attach("runtime", {
       body: JSON.stringify({
-        htmlSha256: await sha256(readFileSync(new URL("../dist/sim.html", import.meta.url))),
+        htmlSha256: await sha256(readFileSync(candidatePath)),
         channel: info.project.name,
         browser: page.context().browser()?.version(),
         platform: process.platform,

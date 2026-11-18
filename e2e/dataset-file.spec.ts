@@ -1,11 +1,9 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, datasetName, openDataset } from "../src/db/dataset";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function fixture(): Promise<Uint8Array> {
   const db = await createDataset("Fixture enterprise", wasm);

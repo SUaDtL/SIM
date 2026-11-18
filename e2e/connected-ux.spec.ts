@@ -1,8 +1,6 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { mapFilters, showInventory, showMap, showSelectedRecord } from "./helpers/usability";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 test("UX0-003 Find Stay preserves the filter and pending form", async ({ page }) => {
   await page.goto(simUrl);

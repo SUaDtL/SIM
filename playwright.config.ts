@@ -3,14 +3,13 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { platform, release } from "node:os";
 import { sha256 } from "./scripts/verification-artifact";
-
-const candidate = process.env["SIM_TEST_HTML"] ?? new URL("./dist/sim.html", import.meta.url);
+import { candidatePath } from "./e2e/helpers/candidate";
 
 // Uses the installed Edge and Chrome (no browser download), matching what SIM's users run.
 export default defineConfig({
   testDir: "e2e",
   metadata: {
-    candidate_sha256: existsSync(candidate) ? await sha256(readFileSync(candidate)) : null,
+    candidate_sha256: existsSync(candidatePath) ? await sha256(readFileSync(candidatePath)) : null,
     source_commit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
     source_tree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim(),
     source_modified:

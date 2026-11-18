@@ -1,7 +1,5 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 // Must match security-controls CON-006.
 const expectedPolicy = [

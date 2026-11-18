@@ -1,6 +1,6 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { showExploration } from "./helpers/map-controls";
 import { expect, test, type Page } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
@@ -13,8 +13,6 @@ import {
   showMap,
   showSelectedRecord,
 } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function fixture(): Promise<Uint8Array> {
   const db = await createDataset("Connected navigation fixture", wasm);

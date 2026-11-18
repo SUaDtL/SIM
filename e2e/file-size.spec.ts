@@ -1,8 +1,6 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { openFileMenu } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 for (const mode of ["native", "fallback"] as const) {
   test(`${mode} oversized Open refuses before reading and preserves the pending draft`, async ({ page }) => {

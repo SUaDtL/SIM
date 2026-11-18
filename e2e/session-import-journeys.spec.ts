@@ -1,11 +1,10 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openFileMenu } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { toCsv } from "../src/import/csv";
 import { wasm } from "../tests/helpers/sqlite";
 
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 const status = (page: Page) => page.getByTestId("dataset-status");
 const importDialog = (page: Page) => page.getByRole("dialog", { name: "Import CSV" });
 const csv = (name: string, rows: string[][]) => ({

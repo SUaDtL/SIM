@@ -1,13 +1,11 @@
+import { candidateUrl as simUrl } from "./helpers/candidate";
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
 import { editSelected, chooseReference, openFileMenu, showMap, showInventory } from "./helpers/usability";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 interface Watch {
   errors: string[];

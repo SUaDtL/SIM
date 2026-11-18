@@ -1,7 +1,7 @@
+import { candidatePath } from "./helpers/candidate";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { sha256 } from "../scripts/verification-artifact";
 import { readFileSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import type { Snapshot } from "../src/domain/types";
@@ -24,7 +24,6 @@ const id = (n: number) => `ENTITY${String(n).padStart(2, "0")}`;
 const editor = (page: Page) => page.getByTestId("editor");
 const undo = (page: Page) => page.getByRole("button", { name: "Undo", exact: true });
 const redo = (page: Page) => page.getByRole("button", { name: "Redo", exact: true });
-const htmlPath = fileURLToPath(new URL("../dist/sim.html", import.meta.url));
 function required<T>(value: T | null | undefined, description: string): T {
   if (value === null || value === undefined) throw new Error(`Missing test prerequisite: ${description}`);
   return value;
@@ -147,7 +146,7 @@ for (const item of cases) {
       if (!/^(file|data|blob):/.test(request.url())) problems.push(request.url());
     });
     const bytes = await whiteGloveFixture();
-    const candidate = await sha256(readFileSync(htmlPath));
+    const candidate = await sha256(readFileSync(candidatePath));
     await openDatasetFile(page, bytes, "white-glove-entities.sqlite");
     const initial = await readback(page, info, "baseline");
     const name = `White glove ${item.type}`;
