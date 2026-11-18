@@ -20,3 +20,6 @@
 [2026-11-13T17:29:36.9379283Z] | BY: SUaDtL | LANE: full | SCOPE: SIM usability review U01-U12 and T01-T15 | BASIS: read-first surfaces, reusable picker, task editor, reuse and action hierarchy across multiple modules
 [2026-11-13T21:28:26.1033258Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: Implement checkpoint MR01-MR13 on existing PR25 | BASIS: multiple implementation surfaces and security/file/build contracts
 [2026-11-14T00:55:16.0494041Z] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: Inventory flow, alignment and text density from direct user feedback | BASIS: shared presentation/navigation behavior across more than two implementation files
+[2026-11-17T21:05:02.2346614-05:00] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: Enterprise Atlas presentation and navigation | BASIS: shell, map, inspectors and offline export across multiple modules.
+[2026-11-18T04:13:49.3149435+00:00] | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: wider Atlas presentation and crossing-aware dependency routes | BASIS: multiple surfaces, cartographic routing and offline capture verification
+2026-11-18T05:00:35.4809262+00:00 | BY: SUaDtL@users.noreply.github.com | LANE: full | SCOPE: Consistent dismissal across dialogs, inspectors and expanded controls | BASIS: Multiple UI modules and guarded interactions.

@@ -1,7 +1,8 @@
 import { SensitiveInputWarning } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import type { Viewpoint } from "../map/viewpoint";
-import { button, el } from "./dom";
+import { button, el, focusPagingControl } from "./dom";
+import { assessmentOpener, assessmentPanel } from "./assessment-panel";
 
 type SavedView = ReturnType<Repository["listViewpoints"]>[number];
 
@@ -11,14 +12,26 @@ export function manageViewpoints(
   restore: (view: SavedView) => void,
   onDraft: (pending: boolean) => void,
 ): HTMLDialogElement {
-  const origin = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const origin = assessmentOpener();
   const heading = el("h2", { id: "saved-views-heading", tabindex: "-1" }, "Saved views");
   const dialog = el("dialog", { class: "assessment-dialog", "aria-labelledby": heading.id });
   const problem = el("p", { role: "alert", class: "error" });
   const body = el("div");
   const query = el("input", { type: "search", "aria-label": "Filter saved views" });
+  const results = el("div");
+  const status = el("p", { role: "status" });
   let page = 0;
   let pending = false;
+  const previous = button("Previous", () => {
+    page--;
+    refreshResults();
+    focusPagingControl(previous, next);
+  });
+  const next = button("Next", () => {
+    page++;
+    refreshResults();
+    focusPagingControl(next, previous);
+  });
 
   function setPending(value: boolean): void {
     pending = value;
@@ -30,13 +43,47 @@ export function manageViewpoints(
   }
 
   function showAll(): void {
+    panel.setBack("", null);
     setPending(false);
+    body.replaceChildren(
+      el("p", {}, "Saved views open over the current dataset and its current map positions."),
+      el("label", { class: "assessment-field" }, "Filter saved views", query),
+      el(
+        "div",
+        { class: "actions reading-tools" },
+        button(
+          "Save current view",
+          () => {
+            edit();
+          },
+          { "data-view-origin": "new" },
+        ),
+      ),
+      status,
+      results,
+      el("div", { class: "actions" }, previous, next),
+    );
+    refreshResults();
+  }
+
+  function refreshResults(): void {
+    const needle = query.value.trim().toLowerCase();
     const matching = repo
       .listViewpoints()
-      .filter(({ name }) => name.toLowerCase().includes(query.value.trim().toLowerCase()));
+      .filter(({ name, caption }) => [name, caption].join(" ").toLowerCase().includes(needle));
     const lastPage = Math.max(0, Math.ceil(matching.length / 12) - 1);
     page = Math.min(page, lastPage);
-    const list = el("ul");
+    previous.disabled = page === 0;
+    next.disabled = page >= lastPage;
+    previous.hidden = next.hidden = lastPage === 0;
+    if (matching.length === 0) {
+      status.textContent = needle ? "No matching saved views." : "No views saved yet.";
+      results.replaceChildren();
+      return;
+    }
+    const count = `${String(matching.length)} ${matching.length === 1 ? "view" : "views"}`;
+    status.textContent = lastPage ? `${count} · Page ${String(page + 1)} of ${String(lastPage + 1)}` : count;
+    const list = el("ul", { class: "saved-view-list" });
     for (const row of matching.slice(page * 12, (page + 1) * 12)) {
       list.append(
         el(
@@ -64,7 +111,7 @@ export function manageViewpoints(
               () => {
                 edit(row);
               },
-              { "aria-label": `Edit ${row.name}` },
+              { "aria-label": `Edit ${row.name}`, "data-view-origin": row.id },
             ),
             button(
               "Delete",
@@ -80,34 +127,21 @@ export function manageViewpoints(
         ),
       );
     }
-    const previous = button("Previous", () => {
-      page--;
-      showAll();
-    });
-    const next = button("Next", () => {
-      page++;
-      showAll();
-    });
-    previous.disabled = page === 0;
-    next.disabled = page >= lastPage;
-    body.replaceChildren(
-      el("p", {}, "Saved views open over the current dataset and its current map positions."),
-      query,
-      matching.length === 0 ? el("p", {}, "No matching saved views.") : list,
-      el(
-        "div",
-        { class: "actions" },
-        previous,
-        next,
-        button("Save current view", () => {
-          edit();
-        }),
-        button("Close", close),
-      ),
-    );
+    results.replaceChildren(list);
   }
 
   function edit(row?: SavedView): void {
+    const scroll = panel.body.scrollTop;
+    const resumeList = (): void => {
+      showAll();
+      const opener = body.querySelector<HTMLElement>(`[data-view-origin="${CSS.escape(row?.id ?? "new")}"]`);
+      (opener ?? query).focus({ preventScroll: true });
+      panel.body.scrollTop = scroll;
+    };
+    const back = (): void => {
+      if (!pending || window.confirm("Discard this unapplied view definition?")) resumeList();
+    };
+    panel.setBack("Back to saved views", back);
     problem.textContent = "";
     const name = el("input", { required: "", maxlength: "200" });
     const caption = el("textarea", { rows: "3", maxlength: "4000" });
@@ -123,12 +157,7 @@ export function manageViewpoints(
       el(
         "div",
         { class: "actions" },
-        button("Cancel", () => {
-          if (!pending || window.confirm("Discard this unapplied view definition?")) {
-            showAll();
-            heading.focus();
-          }
-        }),
+        button("Cancel", back),
         el("button", { type: "submit" }, row ? "Apply view changes" : "Save view"),
       ),
     );
@@ -150,8 +179,7 @@ export function manageViewpoints(
           if (!window.confirm(error.message)) return;
           repo.saveViewpoint(input, row?.id, { confirmSensitive: true });
         }
-        showAll();
-        heading.focus();
+        resumeList();
       } catch (error) {
         problem.textContent = error instanceof Error ? error.message : "Could not save the view.";
       }
@@ -162,11 +190,7 @@ export function manageViewpoints(
 
   query.addEventListener("input", () => {
     page = 0;
-    showAll();
-  });
-  dialog.addEventListener("cancel", (event) => {
-    event.preventDefault();
-    close();
+    refreshResults();
   });
   dialog.addEventListener(
     "close",
@@ -177,7 +201,8 @@ export function manageViewpoints(
     },
     { once: true },
   );
-  dialog.append(heading, problem, body);
+  const panel = assessmentPanel(dialog, heading, close, problem, body);
+  dialog.addEventListener("cancel", panel.cancel);
   document.body.append(dialog);
   showAll();
   dialog.showModal();

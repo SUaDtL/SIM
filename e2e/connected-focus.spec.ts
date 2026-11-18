@@ -179,7 +179,7 @@ for (const viewport of [
     const before = await readMap(page);
     expect(before.nodes.find((n) => n.id === data.ids.identity)?.visible).toBe(false);
     await page.getByRole("button", { name: "Network connections", exact: true }).click();
-    await expect(page.getByTestId("focus-status")).toContainText("Network connections Network A: 1 dependency");
+    await expect(page.getByTestId("focus-status")).toContainText("Cross-network links for Network A: 1 dependency");
     await expect(page.getByTestId("focus-status")).toContainText("Strict inventory filters are suspended");
     const focused = await readMap(page);
     expect(
@@ -207,7 +207,7 @@ for (const viewport of [
     const svgFile = await download;
     await svgFile.saveAs(info.outputPath("network-focus.svg"));
     const svg = readFileSync(info.outputPath("network-focus.svg"), "utf8");
-    expect(svg).toContain("Network connections Network A");
+    expect(svg).toContain("Cross-network links for Network A");
     expect(svg).toContain("Network filter suspended during focus: Network A");
     expect(svg).toContain("SECRET");
     expect(svg).toContain("SYNTHETIC");
@@ -237,20 +237,20 @@ test("directional focus expands explicitly without data writes or position chang
   await select(page, data.ids.caller);
   const before = await readMap(page);
   await page.getByRole("button", { name: "Depends on", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller: 1 dependency");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 1 dependency");
   let visible = (await readMap(page)).nodes.filter((n) => n.visible).map((n) => n.id);
   expect(visible).toContain(data.ids.identity);
   expect(visible).not.toContain(data.ids.reporting);
   expect(visible).not.toContain(data.ids.other);
   expect(visible).not.toContain(data.ids.next);
   await page.getByRole("button", { name: "Expand focus", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller: 2 dependencies");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 2 dependencies");
   visible = (await readMap(page)).nodes.filter((n) => n.visible).map((n) => n.id);
   expect(visible).toContain(data.ids.next);
   expect(visible).not.toContain(data.ids.other);
   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
   await page.getByRole("button", { name: "Used by", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Used by Caller: 1 dependency");
+  await expect(page.getByTestId("focus-status")).toContainText("Services relying on Caller: 1 dependency");
   visible = (await readMap(page)).nodes.filter((n) => n.visible).map((n) => n.id);
   expect(visible).toContain(data.ids.reporting);
   expect(visible).not.toContain(data.ids.identity);
@@ -307,7 +307,7 @@ test("projected focused routes remain read-only and retain full marking in To-Be
       const focusControl = page.getByRole("button", { name: "Depends on", exact: true });
       await focusControl.focus();
       await focusControl.press("Enter");
-      await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller: 1 dependency");
+      await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 1 dependency");
       await tapEdge(page, `dep-${data.ids.dependency}-in`);
       const inspector = page.getByRole("dialog", { name: "Connection inspector" });
       await expect(inspector).toContainText("Projected connection, read-only");
@@ -322,7 +322,7 @@ test("projected focused routes remain read-only and retain full marking in To-Be
       const svg = readFileSync(info.outputPath(`${artifact}.svg`), "utf8");
       expect(svg).toContain("TOP SECRET");
       expect(svg).toContain("SYNTHETIC");
-      expect(svg).toContain("Depends on Caller");
+      expect(svg).toContain("Dependencies of Caller");
       expect(svg).toContain(kind === "to-be" ? "To-Be" : "Compare");
       expect(svg).not.toContain("Planned outside focus");
       const png = page.waitForEvent("download");

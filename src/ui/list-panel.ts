@@ -233,6 +233,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     element.dataset["inventoryType"] = type;
     networkControl.hidden = type !== "service";
     const d = descriptor(type);
+    const plural = type === "cds" ? "CDS" : d.plural.toLowerCase();
     addButton.textContent = `Add ${nounOf(type)}`;
     const blocker = addBlocker(ctx.repo(), type);
     addButton.disabled = blocker !== null;
@@ -265,18 +266,44 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     );
     count.textContent =
       shown.total === 0
-        ? `0 matching ${d.plural.toLowerCase()}`
-        : `${String(page * 30 + 1)}–${String(page * 30 + shown.rows.length)} of ${String(shown.total)} ${d.plural.toLowerCase()}`;
+        ? `0 matching ${plural}`
+        : shown.total === 1
+          ? `1 ${nounOf(type)}`
+          : `${String(page * 30 + 1)}–${String(page * 30 + shown.rows.length)} of ${String(shown.total)} ${plural}`;
     previous.disabled = page === 0;
     next.disabled = page + 1 >= shown.pages;
     pagination.hidden = shown.pages <= 1;
     empty.replaceChildren();
     const noRecords = descriptor(type).list(ctx.repo()).length === 0;
-    if (shown.total === 0)
+    if (shown.total === 0) {
+      const filtering = filter.value.trim() !== "" || (type === "service" && network.value !== "");
       empty.append(
-        el("h3", {}, noRecords ? `No ${d.plural.toLowerCase()} yet` : "No matching records"),
-        el("p", {}, noRecords ? `Use Add ${nounOf(type)} to begin.` : "Try another name, network scope or context."),
+        el("h3", {}, filtering || !noRecords ? "No matching records" : `No ${plural} yet`),
+        el(
+          "p",
+          {},
+          filtering
+            ? "Try a different name or clear the current filters."
+            : (blocker ?? `Use Add ${nounOf(type)} to begin.`),
+        ),
       );
+      if (filtering)
+        empty.append(
+          button("Clear inventory filters", () => {
+            filter.value = "";
+            network.value = "";
+            page = 0;
+            render();
+            filter.focus();
+          }),
+        );
+      else if (blocker)
+        empty.append(
+          button("Add a network", () => {
+            ctx.select("network", null);
+          }),
+        );
+    }
     empty.hidden = all.length > 0 && shown.total > 0;
     updateCollapsed();
     if (focusedId) document.getElementById(focusedId)?.focus({ preventScroll: true });

@@ -8,6 +8,7 @@ import {
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { button, el } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 
 export function openAssessmentDetails(repo: Repository, active: () => boolean, saved: () => void) {
   const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
@@ -67,17 +68,42 @@ export function openAssessmentDetails(repo: Repository, active: () => boolean, s
     },
     { once: true },
   );
+  function fieldLabels(...keys: AssessmentField[]): HTMLLabelElement[] {
+    return keys.flatMap((key) => {
+      const control = fields.get(key);
+      return control
+        ? [el("label", { class: "assessment-field", "data-field": key }, ASSESSMENT_FIELDS[key], control)]
+        : [];
+    });
+  }
   form.append(
     el(
       "p",
       {},
-      "All fields are optional. An empty scope is shown as Scope not recorded. Dates describe the assessment period.",
+      "Describe what this assessment covers and when the information was current. These optional details travel with the exported assessment.",
     ),
-    ...entries.map(([key, control]) => el("label", { class: "assessment-field" }, ASSESSMENT_FIELDS[key], control)),
+    el(
+      "fieldset",
+      { class: "assessment-context-group" },
+      el("legend", {}, "Coverage"),
+      ...fieldLabels("description", "scope", "exclusions"),
+    ),
+    el(
+      "fieldset",
+      { class: "assessment-context-group assessment-attribution" },
+      el("legend", {}, "Team and dates"),
+      ...fieldLabels("assessor", "startedOn", "asOf"),
+    ),
     problem,
     el("div", { class: "actions" }, button("Cancel", cancel), el("button", { type: "submit" }, "Apply details")),
   );
-  dialog.append(heading, el("p", {}, repo.datasetName()), form);
+  assessmentPanel(
+    dialog,
+    heading,
+    cancel,
+    el("strong", { class: "assessment-context-dataset" }, repo.datasetName()),
+    form,
+  );
   document.body.append(dialog);
   dialog.showModal();
   heading.focus();

@@ -2,14 +2,14 @@ import { expect, test } from "@playwright/test";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { openDatasetFile, openFileMenu, simUrl } from "./helpers/usability";
+import { openDatasetFile, openFileMenu, showInventory, simUrl } from "./helpers/usability";
 
 test("document menu labels share a readable left edge instead of floating by word length", async ({ page }) => {
   await page.context().setOffline(true);
   await page.goto(simUrl);
   await openFileMenu(page);
   const starts = await page
-    .locator(".file-menu:not(.about-menu) .file-menu-actions > button:visible")
+    .locator(".file-menu:not(.about-menu) .file-menu-actions button:visible")
     .evaluateAll((buttons) =>
       buttons.map((button) => {
         const text = [...button.childNodes].find(
@@ -29,6 +29,7 @@ for (const width of [1366, 1024, 768, 390, 320]) {
   test(`action labels stay centered and reachable at ${String(width)}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(simUrl);
+    await showInventory(page);
     await page.getByRole("button", { name: "Add network", exact: true }).click();
     const add = page.getByTestId("editor").getByRole("button", { name: "Add network", exact: true });
     await add.scrollIntoViewIfNeeded();
@@ -71,6 +72,7 @@ for (const width of [1366, 1024, 768, 390, 320]) {
       });
       await page.setViewportSize({ width, height: 900 });
       await openDatasetFile(page, db.export(), "synthetic-layout.sqlite");
+      await showInventory(page);
       const row = page.getByTestId("entity-list").getByRole("button").first();
       await row.scrollIntoViewIfNeeded();
       const layout = await row.evaluate((node) => {

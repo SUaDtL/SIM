@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { curveIntersects, routeControl, routeOffset } from "./route-offset";
+import { curveIntersects, planRouteOffsets, routeControl, routeOffset } from "./route-offset";
 
 describe("display-only dependency offsets", () => {
   const start = { x: 100, y: 100 };
@@ -46,5 +46,38 @@ describe("display-only dependency offsets", () => {
   it("remains bounded when every candidate intersects a surrounding obstacle", () => {
     expect(routeOffset(start, end, [{ x1: -10000, y1: -10000, x2: 10000, y2: 10000 }])).toBe(0);
     expect(routeControl(start, start, 48)).toEqual(start);
+  });
+});
+
+describe("crossings on fixed dependency geometry", () => {
+  it("routes a long dependency around the end of a shorter intersecting dependency", () => {
+    const wide = { id: "wide", start: { x: -300, y: 0 }, end: { x: 300, y: 0 }, obstacles: [] };
+    const short = { id: "short", start: { x: 0, y: -65 }, end: { x: 0, y: 65 }, obstacles: [] };
+    const { offsets } = planRouteOffsets([wide, short]);
+    expect(Math.abs(offsets.get("wide") ?? 0) / 2).toBeGreaterThan(65);
+    expect(offsets.get("short")).toBe(0);
+    expect(planRouteOffsets([short, wide]).offsets).toEqual(offsets);
+  });
+
+  it("keeps a shared CDS fan in angular order when two obstacle-clear sides are available", () => {
+    const hub = { x: 0, y: 0 };
+    const upper = {
+      id: "upper",
+      start: hub,
+      end: { x: 400, y: 100 },
+      obstacles: [{ x1: 194, x2: 206, y1: 46, y2: 54 }],
+    };
+    const lower = { id: "lower", start: hub, end: { x: 400, y: 75 }, obstacles: [] };
+    const slope = (end: typeof hub, distance: number) => {
+      const control = routeControl(hub, end, distance);
+      return control.y / control.x;
+    };
+    expect(slope(upper.end, routeOffset(hub, upper.end, upper.obstacles))).toBeLessThan(slope(lower.end, 0));
+    const { offsets } = planRouteOffsets([upper, lower]);
+    const offset = offsets.get("upper") ?? 0;
+    expect(slope(upper.end, offset)).toBeGreaterThan(slope(lower.end, offsets.get("lower") ?? 0));
+    expect(
+      upper.obstacles.some((box) => curveIntersects(hub, routeControl(hub, upper.end, offset), upper.end, box)),
+    ).toBe(false);
   });
 });

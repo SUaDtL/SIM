@@ -54,6 +54,7 @@ export interface SummaryGroup {
 }
 
 export interface RecordSummaryModel {
+  readonly name: string;
   readonly title: string;
   readonly context: string;
   readonly fields: readonly SummaryField[];
@@ -325,6 +326,7 @@ export function recordSummaryModel(
     }
   }
   return {
+    name: record.name,
     title: `${labels[target.type]}: ${record.name}`,
     context: options.context ?? context,
     fields,
@@ -420,7 +422,7 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
         { class: "primary", "data-summary-action": "edit", "aria-label": `Edit ${ctx.target.type}` },
       ),
     );
-  if (!ctx.readOnly && (ctx.onSimilar || ctx.onAssessment || ctx.onDelete)) {
+  if (!ctx.readOnly && (ctx.onSimilar || ctx.onDelete)) {
     const more = el(
       "details",
       { class: "record-secondary-actions" },
@@ -437,7 +439,12 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
     el(
       "header",
       { class: "record-summary-heading" },
-      el("h2", { tabindex: "-1" }, model.title),
+      el(
+        "h2",
+        { tabindex: "-1", "aria-label": model.title },
+        el("span", { class: "summary-kind" }, labels[ctx.target.type], el("span", { class: "sr-only" }, ": ")),
+        model.name,
+      ),
       el("p", { class: "record-context" }, model.context),
       actions,
     ),
@@ -502,8 +509,38 @@ export function createRecordSummary(ctx: RecordSummaryOptions): HTMLElement {
       id: `${prefix}-${name}-panel`,
       "aria-labelledby": tab.id,
     });
-    if (name === "overview") panel.append(overview);
-    else panel.append(...groups(name));
+    if (name === "overview") {
+      panel.append(overview);
+      if (ctx.onAssessment && !ctx.readOnly) {
+        const serviceIdentity = ctx.repo.exchangeIdentities("service").get(String(ctx.target.id));
+        const notes = ctx.repo
+          .listAssessmentNotes()
+          .filter((note) => note.target.kind === "service" && note.target.id === serviceIdentity && !note.detached);
+        const evidence = notes.filter((note) => note.kind === "Evidence");
+        const openQuestions = notes.filter((note) => note.kind === "Question" && note.currentState === "open").length;
+        const resolved = notes.filter((note) => note.kind === "Question" && note.currentState === "resolved").length;
+        const counts = [
+          `${String(evidence.length)} evidence ${evidence.length === 1 ? "entry" : "entries"}`,
+          `${String(openQuestions)} open question${openQuestions === 1 ? "" : "s"}`,
+        ];
+        if (resolved) counts.push(`${String(resolved)} resolved question${resolved === 1 ? "" : "s"}`);
+        for (const state of ["needs review", "reviewed", "disputed"] as const) {
+          const count = evidence.filter((note) => note.currentState === state).length;
+          if (count) counts.push(`${String(count)} ${state === "needs review" ? "awaiting review" : state}`);
+        }
+        panel.append(
+          el(
+            "section",
+            { class: "service-assessment" },
+            button("Evidence and questions", ctx.onAssessment, {
+              class: "record-link",
+              ...(serviceIdentity ? { "data-service-evidence": serviceIdentity } : {}),
+            }),
+            el("p", { class: "hint" }, counts.join(" · ")),
+          ),
+        );
+      }
+    } else panel.append(...groups(name));
     buttons.set(name, tab);
     panels.set(name, panel);
     tabs.append(tab);

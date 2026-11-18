@@ -4,6 +4,7 @@ import { createDataset, openDataset, openedDatasetWasMigrated } from "../db/data
 import { MIGRATIONS } from "../db/migrations";
 import { migrate } from "../db/migrate";
 import { Repository } from "../domain/repository";
+import { BANNER_COLORS } from "../map/export";
 import { UUID_V4 } from "../domain/assessment-context";
 import { DatasetSession } from "../session/dataset-session";
 import { dependencyMatrix, decisionData, recordedPaths } from "./decision-views";
@@ -149,6 +150,55 @@ describe("assessment identity and disclosure", () => {
     expect(json).toContain('"description": "=form, Ω\\nsecond"');
     const csv = await renderAssessment(output, "csv", "synthetic").text();
     expect(csv).toContain("'=form, Ω\nsecond");
+  });
+
+  it("links to each populated table in its own projection using local targets independent of input text", async () => {
+    const { db, repo } = await fixture();
+    try {
+      const output = freezeAssessment(repo, source);
+      const original = output.inventories[0];
+      if (!original) throw new Error("Missing fixture inventory.");
+      const proposal = { ...original, view: 'To-Be: <a href="https://invalid.test">Proposal</a>' };
+      const html = await renderAssessment({ ...output, inventories: [original, proposal] }, "html", "synthetic").text();
+      const contents = /<nav\b[^>]*aria-label="Report contents"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? "";
+      expect(contents).toContain("As-Is");
+      expect(contents).toContain("To-Be: &lt;a href=");
+      expect(contents).not.toContain("Scenario changes");
+      const tableLinks = Array.from(contents.matchAll(/<a href="#([\w-]+)">Services<\/a>/g), (match) => match[1]);
+      expect(tableLinks).toHaveLength(2);
+      expect(new Set(tableLinks).size).toBe(2);
+      const ids = Array.from(html.matchAll(/\bid="([^"]+)"/g), (match) => match[1]);
+      expect(new Set(ids).size).toBe(ids.length);
+      for (const match of html.matchAll(/<a\b[^>]*href="([^"]+)"/g)) {
+        expect(match[1]).toMatch(/^#[\w-]+$/);
+        expect(ids).toContain(match[1]?.slice(1));
+      }
+      expect(html).not.toMatch(/<script\b|<link\b|<img src="https?:/i);
+    } finally {
+      db.close();
+    }
+  });
+
+  it("carries the source banner colors and caveat and labels wide human-readable inventory rows", async () => {
+    const { db, repo } = await fixture();
+    try {
+      const output = freezeAssessment(repo, source);
+      const html = await renderAssessment({ ...output, caveat: "TEST ONLY" }, "html", "<checkpoint>").text();
+      expect(html.match(/CUI\/\/TEST ONLY/g)).toHaveLength(2);
+      expect(html).toContain(BANNER_COLORS.CUI.background);
+      expect(html).toContain("&lt;checkpoint&gt;");
+      expect(html).toContain("Source checkpoint");
+      expect(html).toContain('scope="row"');
+      expect(html).toContain("Foundational");
+      expect(html).toContain("&lt;img src=&quot;https://invalid.test/&quot;&gt;");
+      expect(html).not.toContain("networkId");
+      const unusualCaveat = '</style><a href="https://invalid.test">link</a>';
+      const escaped = await renderAssessment({ ...output, caveat: unusualCaveat }, "html", "synthetic").text();
+      expect(escaped.match(/<\/style>/g)).toHaveLength(1);
+      expect(escaped).not.toContain(unusualCaveat);
+    } finally {
+      db.close();
+    }
   });
 
   it("counts logical cross-network connections once and traces cycles with bounded paths", async () => {

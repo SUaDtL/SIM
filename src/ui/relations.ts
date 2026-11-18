@@ -61,18 +61,21 @@ function entityIndex(snapshot: Snapshot): Map<string, EntityMatch> {
 
 const compareText = (left: string, right: string): number => (left < right ? -1 : left > right ? 1 : 0);
 
+/** Qualified baseline identities in discovery order, including same-named services. */
+export function inventoryRecords(snapshot: Snapshot): EntityMatch[] {
+  return [...entityIndex(snapshot).values()].sort(
+    (left, right) =>
+      compareText(left.label.toLowerCase(), right.label.toLowerCase()) ||
+      compareText(left.target.type, right.target.type) ||
+      left.target.id - right.target.id,
+  );
+}
+
 /** Partial, case-insensitive discovery returns every typed candidate; callers select an exact ID. */
 export function searchEntities(snapshot: Snapshot, query: string): EntityMatch[] {
   const needle = query.trim().toLowerCase();
   if (!needle) return [];
-  return [...entityIndex(snapshot).values()]
-    .filter((entry) => `${entry.label} ${entry.detail}`.toLowerCase().includes(needle))
-    .sort(
-      (left, right) =>
-        compareText(left.label.toLowerCase(), right.label.toLowerCase()) ||
-        compareText(left.target.type, right.target.type) ||
-        left.target.id - right.target.id,
-    );
+  return inventoryRecords(snapshot).filter((entry) => `${entry.label} ${entry.detail}`.toLowerCase().includes(needle));
 }
 
 /** Derive recorded forward/reverse roles without writing, inferring reachability or inheriting roles. */

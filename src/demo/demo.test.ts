@@ -4,6 +4,7 @@ import { createDataset } from "../db/dataset";
 import { Repository } from "../domain/repository";
 import { findSensitive } from "../domain/validate";
 import { buildGraph, summarize } from "../map/graph";
+import { applyScenario, compareScenario } from "../scenario/scenario";
 import { DEMO_CAVEAT, populateDemo } from "./demo";
 
 async function demo(): Promise<Repository> {
@@ -48,5 +49,67 @@ describe("demo dataset", () => {
 
   it("is identical every time it is built", async () => {
     expect(JSON.stringify((await demo()).snapshot())).toBe(JSON.stringify((await demo()).snapshot()));
+  });
+
+  it("seeds every service and gateway in separate network regions on a landscape map", async () => {
+    const { networks, services, cds, positions } = (await demo()).snapshot();
+    const leaves = positions.filter((position) => position.entity !== "network");
+    expect(leaves).toHaveLength(services.length + cds.length);
+    expect(new Set(leaves.map((point) => JSON.stringify([point.x, point.y]))).size).toBe(leaves.length);
+    const regions = networks.map((network) => {
+      const members = new Set(
+        services.filter((service) => service.networkId === network.id).map((service) => service.id),
+      );
+      const placed = leaves.filter((point) => point.entity === "service" && members.has(point.id));
+      expect(placed).toHaveLength(members.size);
+      return {
+        left: Math.min(...placed.map((p) => p.x)) - 45,
+        right: Math.max(...placed.map((p) => p.x)) + 45,
+        top: Math.min(...placed.map((p) => p.y)) - 45,
+        bottom: Math.max(...placed.map((p) => p.y)) + 45,
+      };
+    });
+    for (const [index, box] of regions.entries()) {
+      for (const other of regions.slice(index + 1))
+        expect(
+          box.left > other.right || box.right < other.left || box.top > other.bottom || box.bottom < other.top,
+        ).toBe(true);
+      for (const gateway of leaves.filter((point) => point.entity === "cds"))
+        expect(gateway.x < box.left || gateway.x > box.right || gateway.y < box.top || gateway.y > box.bottom).toBe(
+          true,
+        );
+    }
+    const width = Math.max(...regions.map((r) => r.right)) - Math.min(...regions.map((r) => r.left));
+    const height = Math.max(...regions.map((r) => r.bottom)) - Math.min(...regions.map((r) => r.top));
+    expect(width / height).toBeGreaterThan(1.5);
+  });
+
+  it("projects the shared planning proposal and retains the recorded partner gateway", async () => {
+    const repo = await demo();
+    const recorded = repo.snapshot();
+    const proposal = recorded.scenarios.find((scenario) => scenario.name === "Shared planning hub");
+    expect(proposal).toBeDefined();
+    if (!proposal) throw new Error("Missing planning proposal");
+    const planned = applyScenario(recorded, proposal.id);
+    const hub = planned.services.find((service) => service.name === "Planning Hub");
+    expect(hub).toBeDefined();
+    if (!hub) throw new Error("Missing planned service");
+    expect(planned.networks.find((network) => network.id === hub.networkId)?.name).toBe("Operations");
+    expect(planned.organizations.find((org) => org.id === hub.providerOrgId)?.name).toBe("Operations Support");
+    expect(recorded.services.some((service) => service.name === "Planning Hub")).toBe(false);
+    const predecessors = recorded.services.filter((service) => ["Planning", "Common Picture"].includes(service.name));
+    expect(predecessors).toHaveLength(2);
+    expect(planned.services.filter((service) => predecessors.some((row) => row.id === service.id))).toEqual([]);
+    const gateway = recorded.cds.find((cds) => cds.name === "Partner gateway");
+    const portal = recorded.services.find((service) => service.name === "Partner Portal");
+    expect(planned.dependencies).toContainEqual({
+      consumerServiceId: portal?.id,
+      providerServiceId: hub.id,
+      viaCdsId: gateway?.id,
+    });
+    const comparison = compareScenario(recorded, proposal.id);
+    expect(predecessors.map((row) => comparison.status.get(row.id))).toEqual(["merged", "merged"]);
+    expect(comparison.services.toBe).toBe(comparison.services.asIs - 1);
+    expect(repo.snapshot()).toEqual(recorded);
   });
 });

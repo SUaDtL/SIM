@@ -41,6 +41,7 @@ for (const ending of ["Stay", "Escape", "Discard all and continue", "Save retain
     await page.getByRole("button", { name: "New", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "Unsaved changes", exact: true });
     await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Stay" })).toBeFocused();
     if (ending === "Escape") await dialog.press("Escape");
     else if (ending.startsWith("Save")) {
       page.once("dialog", (d) => (ending === "Save retained" ? d.accept() : d.dismiss()));
@@ -64,7 +65,7 @@ for (const source of ["About", "Help"] as const)
     const origin =
       source === "About"
         ? page.locator("details.about-menu > summary")
-        : page.getByRole("button", { name: "Help", exact: true });
+        : page.getByRole("dialog", { name: "Using SIM" }).getByRole("button", { name: "Licenses and notices" });
     await expect(origin).toBeFocused();
   });
 
@@ -88,4 +89,17 @@ test("Host-like import opt-in retains keyboard focus and can be reversed with an
   await page.keyboard.press("Space");
   await expect(choice).not.toBeChecked();
   await expect(dialog.getByTestId("import-summary")).toContainText("1 network");
+});
+
+test("declining an About demo replacement returns to About", async ({ page }) => {
+  await openFileMenu(page);
+  page.once("dialog", (d) => d.accept("SYNTHETIC ONLY"));
+  await page.getByRole("button", { name: "Banner caveat", exact: true }).click();
+  const about = page.locator("details.about-menu > summary");
+  await about.click();
+  await page.getByRole("button", { name: "Open demo", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Unsaved changes" });
+  await expect(dialog.getByRole("heading", { name: "Unsaved changes" })).toBeVisible();
+  await dialog.getByRole("button", { name: "Stay" }).click();
+  await expect(about).toBeFocused();
 });

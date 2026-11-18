@@ -1,0 +1,113 @@
+.import-dialog.reading-panel .reading-heading h2 {
+  font-size: clamp(23px, 2.5vw, 33px);
+  line-height: 1.12;
+}
+.reading-panel .reading-heading:has(.workflow-back:not([hidden])) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+}
+.reading-panel .workflow-back:not([hidden]) {
+  grid-column: 1 / -1;
+  justify-self: start;
+  color: var(--accent);
+  background: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  padding-inline: 0;
+}
+.reading-panel .workflow-back[hidden] {
+  display: none;
+}
+.reading-panel :is(.assessment-field, .assessment-field > *, .field > *, fieldset) {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+.reading-panel .assessment-field :is(input:not([type]), input[type="date"]) {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.reading-panel .workflow-list {
+  display: grid;
+  gap: 0.45rem;
+  list-style: none;
+  padding: 0;
+}
+.reading-panel .workflow-list > li {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.reading-panel .workflow-list > li > :first-child {
+  margin-top: 0;
+}
+.reading-panel .workflow-list > li > :last-child {
+  margin-bottom: 0;
+}
+.reading-panel .batch-choice {
+  padding: 0.45rem 0.25rem;
+  border-bottom: 1px solid var(--line);
+}
+.reading-panel .batch-choice:last-child {
+  border: none;
+}
+.reading-panel .workflow-diff {
+  margin: 0.4rem 0 0;
+  display: grid;
+  gap: 0.35rem 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.reading-panel .workflow-diff dt {
+  font-size: 0.85em;
+  font-weight: 650;
+  color: var(--muted);
+}
+.reading-panel .workflow-diff dd {
+  margin: 0;
+  white-space: pre-wrap;
+}
+.reading-panel .import-notes > li {
+  padding: 0.3rem 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 540px) {
+  .reading-panel .workflow-diff {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .reading-panel .reading-body {
+    overflow-wrap: anywhere;
+  }
+}
+
+.assessment-context-dataset {
+  display: block;
+  border-inline-start: 3px solid var(--accent);
+  padding-inline-start: 0.7rem;
+  overflow-wrap: anywhere;
+}
+.reading-panel .assessment-context-group {
+  margin: 1.3rem 0 1rem;
+  padding: 0.3rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.assessment-context-group legend {
+  padding: 0 0.65rem 0 0;
+  font: 500 1.22rem var(--atlas-display);
+}
+.assessment-attribution {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 0 1rem;
+}
+.assessment-attribution [data-field="assessor"] {
+  grid-column: 1 / -1;
+}

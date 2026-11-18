@@ -14,7 +14,8 @@ import { bannerText } from "../db/markings";
 import { SensitiveInputWarning } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { downloadBlob } from "../file/dataset-file";
-import { button, el, option } from "./dom";
+import { button, el, option, focusPagingControl } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 
 function reviewDialog(title: string) {
   const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
@@ -30,14 +31,24 @@ function reviewDialog(title: string) {
     },
     { once: true },
   );
-  dialog.append(heading, alert, body);
+  const panel = assessmentPanel(
+    dialog,
+    heading,
+    () => {
+      dialog.close();
+    },
+    alert,
+    body,
+  );
+  dialog.addEventListener("cancel", panel.cancel);
   document.body.append(dialog);
   dialog.showModal();
   heading.focus();
   const fail = (error: unknown): void => {
     alert.textContent = error instanceof Error ? error.message : "The review operation could not be completed.";
+    alert.scrollIntoView({ block: "nearest" });
   };
-  return { dialog, heading, body, alert, fail };
+  return { dialog, heading, body, alert, fail, panel };
 }
 
 export function openReviewIssuance(
@@ -45,9 +56,10 @@ export function openReviewIssuance(
   isSaved: (id: string, digest: string) => boolean,
   saveBase: () => Promise<void>,
 ): HTMLDialogElement {
-  const { dialog, heading, body, alert, fail } = reviewDialog("Prepare owner review");
+  const { dialog, heading, body, alert, fail, panel } = reviewDialog("Prepare owner review");
   const query = el("input", { type: "search" });
   const teams = el("select");
+  const teamStatus = el("p", { role: "status", class: "hint" });
   const includeNotes = el("input", { type: "checkbox" });
   const issueList = el("ul");
   function updateTeams(): void {
@@ -58,6 +70,13 @@ export function openReviewIssuance(
       option("", "Choose an organization"),
       ...filtered.slice(0, 50).map(({ id, name }) => option(String(id), name)),
     );
+    teamStatus.textContent =
+      filtered.length > 50
+        ? `Showing 50 of ${String(filtered.length)} organizations. Narrow your search.`
+        : !filtered.length
+          ? "No matching organizations."
+          : "";
+    teamStatus.hidden = !teamStatus.textContent;
   }
   query.addEventListener("input", updateTeams);
 
@@ -82,6 +101,7 @@ export function openReviewIssuance(
   }
 
   function instructions(): void {
+    panel.setBack("", null);
     alert.textContent = "";
     issueList.replaceChildren(
       ...repo.listReviewIssuances().map((item) =>
@@ -101,31 +121,41 @@ export function openReviewIssuance(
         "A review uses recorded provider, support, and consumer roles. Save its local base before downloading the package.",
       ),
       el("label", { class: "assessment-field" }, "Find organization", query),
+      teamStatus,
       el("label", { class: "assessment-field" }, "Organization", teams),
       el("label", {}, includeNotes, " Include evidence and questions linked to the team’s services"),
-      button("Preview team scope", () => {
-        try {
-          if (!teams.value) throw new Error("Choose an organization.");
-          preview(prepareReview(repo, Number(teams.value), includeNotes.checked), repo.currentRevision());
-          heading.focus();
-        } catch (error) {
-          fail(error);
-        }
-      }),
+      el(
+        "div",
+        { class: "actions" },
+        button(
+          "Preview team scope",
+          () => {
+            try {
+              if (!teams.value) throw new Error("Choose an organization.");
+              preview(prepareReview(repo, Number(teams.value), includeNotes.checked), repo.currentRevision());
+              heading.focus();
+            } catch (error) {
+              fail(error);
+            }
+          },
+          { class: "preview-team" },
+        ),
+      ),
       el("h3", {}, "Prepared reviews"),
-      issueList,
-      button("Close", () => {
-        dialog.close();
-      }),
+      issueList.childElementCount ? issueList : el("p", {}, "No reviews have been prepared for this dataset."),
     );
   }
 
   function preview(base: ReviewBase, revision: number): void {
     alert.textContent = "";
+    panel.setBack("Back to organizations", () => {
+      instructions();
+      body.querySelector<HTMLButtonElement>(".preview-team")?.focus();
+    });
     const names = new Map(base.references.map((record) => [record.id, record.label]));
     const list = el(
       "ul",
-      {},
+      { class: "workflow-list" },
       ...base.services.map((row) =>
         el(
           "li",
@@ -179,7 +209,7 @@ export function openReviewIssuance(
       void (async () => {
         try {
           const digest = await reviewDigest(base);
-          if (!dialog.open) return;
+          if (!dialog.open || !create.isConnected) return;
           if (repo.currentRevision() !== revision)
             throw new Error("The dataset changed. Preview the team scope again.");
           repo.storeReviewIssuance({ base, digest });
@@ -197,20 +227,12 @@ export function openReviewIssuance(
       el(
         "p",
         {},
-        `${String(base.services.length)} services. The pack includes their descriptions, current shared assignments and support notes. Related dependencies include endpoint labels only.`,
+        `${String(base.services.length)} ${base.services.length === 1 ? "service" : "services"} in scope. The package includes service descriptions, shared assignments and support notes. Related dependencies include endpoint labels only.`,
       ),
       list,
       boundaries,
       ...(notes ? [notes] : []),
-      el(
-        "div",
-        { class: "actions" },
-        button("Back", () => {
-          instructions();
-          heading.focus();
-        }),
-        create,
-      ),
+      el("div", { class: "actions" }, create),
     );
   }
   updateTeams();
@@ -223,10 +245,12 @@ export function openCorrectionReview(
   isSaved: (id: string, digest: string) => boolean,
   done: (count: number, receipt: Blob) => void,
 ): HTMLDialogElement {
-  const { dialog, heading, body, alert, fail } = reviewDialog("Apply reviewed corrections");
+  const { dialog, heading, body, alert, fail, panel } = reviewDialog("Apply reviewed corrections");
   const picker = el("input", { type: "file", accept: ".json,application/json" });
   let latestPick = 0;
-  function choose(): void {
+  function choose(resume?: () => void): void {
+    panel.setBack("", null);
+    alert.textContent = "";
     body.replaceChildren(
       el(
         "p",
@@ -234,9 +258,7 @@ export function openCorrectionReview(
         "Choose the returned JSON from a prepared owner review. Inspect the proposed fields and select the ones to apply.",
       ),
       el("label", { class: "assessment-field" }, "Returned review file", picker),
-      button("Cancel", () => {
-        dialog.close();
-      }),
+      ...(resume ? [button("Return to proposed corrections", resume)] : []),
     );
   }
 
@@ -260,10 +282,20 @@ export function openCorrectionReview(
         const differences = prepareCorrections(repo, issuance, returned);
         let page = 0;
         const selected = new Map<string, Difference>();
-        function draw(): void {
+        function draw(paging?: "previous" | "next"): void {
+          alert.textContent = "";
+          panel.setBack("Back to file selection", () => {
+            picker.value = "";
+            choose(() => {
+              latestPick++;
+              draw();
+              heading.focus();
+            });
+            picker.focus();
+          });
           const list = el(
             "ul",
-            {},
+            { class: "workflow-list" },
             ...differences.slice(page * 16, (page + 1) * 16).map((row) => {
               const selectable = row.disposition === "proposed" || row.disposition === "conflict";
               const checkbox = el("input", { type: "checkbox" });
@@ -282,27 +314,33 @@ export function openCorrectionReview(
                 "li",
                 {},
                 el("label", {}, checkbox, `${row.label} · ${row.proposal.field} · ${row.disposition}`),
-                el(
-                  "p",
-                  {},
-                  row.reason ??
-                    `Base: ${descriptive(row.base)} | Current: ${descriptive(row.current)} | Proposed: ${descriptive(row.returned)}`,
-                ),
+                row.reason
+                  ? el("p", {}, row.reason)
+                  : el(
+                      "dl",
+                      { class: "workflow-diff" },
+                      ...[
+                        ["Issued value", row.base],
+                        ["Current value", row.current],
+                        ["Proposed value", row.returned],
+                      ].map(([title, value]) =>
+                        el("div", {}, el("dt", {}, title), el("dd", {}, descriptive(value ?? null))),
+                      ),
+                    ),
               );
             }),
           );
           const previous = button("Previous", () => {
             page--;
-            draw();
-            heading.focus();
+            draw("previous");
           });
           const next = button("Next", () => {
             page++;
-            draw();
-            heading.focus();
+            draw("next");
           });
           previous.disabled = page === 0;
           next.disabled = (page + 1) * 16 >= differences.length;
+          previous.hidden = next.hidden = differences.length <= 16;
           const count = el("p", { role: "status" });
           const commit = button("Apply selected corrections", () => {
             const accepted = [...selected.values()];
@@ -324,7 +362,13 @@ export function openCorrectionReview(
             }
           });
           function redrawCount(): void {
-            count.textContent = `${String(selected.size)} of ${String(differences.length)} proposals selected.`;
+            const range =
+              differences.length > 16
+                ? `Showing ${String(page * 16 + 1)}–${String(Math.min((page + 1) * 16, differences.length))}. `
+                : "";
+            count.textContent = differences.length
+              ? `${range}${String(selected.size)} of ${String(differences.length)} proposals selected.`
+              : "The returned review contains no proposed changes.";
             commit.disabled = selected.size === 0;
           }
           redrawCount();
@@ -337,22 +381,14 @@ export function openCorrectionReview(
             ),
             count,
             list,
-            el(
-              "div",
-              { class: "actions" },
-              previous,
-              next,
-              button("Choose another file", () => {
-                picker.value = "";
-                choose();
-                heading.focus();
-              }),
-              commit,
-            ),
+            el("div", { class: "actions" }, previous, next, commit),
           );
+          if (paging === "previous") focusPagingControl(previous, next);
+          if (paging === "next") focusPagingControl(next, previous);
         }
 
         function receipt(count: number, applied: string[]): void {
+          panel.setBack("", null);
           const content = JSON.stringify(
             {
               format: "sim-correction-receipt/v1",
@@ -374,13 +410,19 @@ export function openCorrectionReview(
           const output = new Blob([content], { type: "application/json" });
           done(count, output);
           body.replaceChildren(
-            el("p", {}, `${String(count)} corrections applied in one Undo step. Save file to retain them.`),
+            el(
+              "p",
+              {},
+              `${String(count)} ${count === 1 ? "correction" : "corrections"} applied in one Undo step. Save file to retain ${count === 1 ? "it" : "them"}.`,
+            ),
             el("p", {}, "The receipt records this review. Later edits or Undo may change the dataset."),
             button("Download review receipt", () => {
               downloadBlob(output, "SIM correction receipt.json");
             }),
-            button("Close", () => {
-              dialog.close();
+            button("Review another file", () => {
+              picker.value = "";
+              choose();
+              picker.focus();
             }),
           );
           alert.textContent = "";

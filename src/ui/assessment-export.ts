@@ -1,5 +1,6 @@
 import type { OutputFormat } from "../assessment/output";
 import { button, el, option } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 
 export interface ExportChoice {
   readonly format: OutputFormat;
@@ -25,6 +26,17 @@ export function chooseAssessmentExport(canExportMap: boolean): Promise<ExportCho
       option("csv", "Display CSV"),
     );
     const includeNotes = el("input", { type: "checkbox" });
+    const description = el("p", { class: "hint", role: "status" });
+    const explain = (): void => {
+      const summaries: Record<OutputFormat, string> = {
+        html: "A read-only report with a contents index and printable tables. Current map scope also includes the captured map.",
+        json: "Structured inventory with exact values and stable record IDs for analysis.",
+        csv: "Tables for spreadsheets. Formula-like values are prefixed with an apostrophe.",
+      };
+      description.textContent = summaries[format.value as OutputFormat];
+    };
+    format.addEventListener("change", explain);
+    explain();
     const form = el(
       "form",
       {},
@@ -35,6 +47,7 @@ export function chooseAssessmentExport(canExportMap: boolean): Promise<ExportCho
       ),
       el("label", { class: "assessment-field" }, "Export scope", scope),
       el("label", { class: "assessment-field" }, "Format", format),
+      description,
       el("label", {}, includeNotes, " Include in-scope evidence and questions"),
       el(
         "div",
@@ -63,8 +76,17 @@ export function chooseAssessmentExport(canExportMap: boolean): Promise<ExportCho
         includeNotes: includeNotes.checked,
       });
     });
-    dialog.append(el("h2", { id: "assessment-export-heading" }, "Export assessment or inventory"), form);
+    const heading = el("h2", { id: "assessment-export-heading", tabindex: "-1" }, "Export assessment or inventory");
+    assessmentPanel(
+      dialog,
+      heading,
+      () => {
+        finish(null);
+      },
+      form,
+    );
     document.body.append(dialog);
     dialog.showModal();
+    heading.focus();
   });
 }

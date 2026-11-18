@@ -133,20 +133,27 @@ export const escapeNoticeText = (text: string): string =>
 export function noticeDialog(notices: readonly RuntimeNotice[]): string {
   return (
     '<dialog id="sim-license-dialog" class="license-dialog" aria-labelledby="sim-license-title">' +
-    '<h2 id="sim-license-title">Licenses and notices</h2>' +
-    "<p>SIM and its bundled runtime components include the following license and attribution texts. No connection is needed to read them.</p>" +
-    '<button id="sim-license-close" type="button">Close licenses</button>' +
+    '<header class="reading-heading"><h2 id="sim-license-title">Licenses and notices</h2>' +
+    '<button id="sim-license-close" type="button">Close licenses</button></header>' +
+    '<div class="license-body"><p>Read the licenses for SIM and the components bundled in this offline copy.</p>' +
+    '<label class="assessment-field">Jump to component<select id="sim-license-component"><option value="">Choose a component</option>' +
     notices
       .map(
-        (notice) =>
-          `<section><h3>${escapeNoticeText(notice.title)} (${escapeNoticeText(notice.license)})</h3>` +
+        (notice, i) => `<option value="sim-license-component-${String(i)}">${escapeNoticeText(notice.title)}</option>`,
+      )
+      .join("") +
+    "</select></label>" +
+    notices
+      .map(
+        (notice, i) =>
+          `<section><h3 id="sim-license-component-${String(i)}" tabindex="-1">${escapeNoticeText(notice.title)} (${escapeNoticeText(notice.license)})</h3>` +
           notice.files
             .map((file) => `<h4>${escapeNoticeText(file.name)}</h4><pre>${escapeNoticeText(file.text)}</pre>`)
             .join("") +
           "</section>",
       )
       .join("") +
-    "</dialog>"
+    "</div></dialog>"
   );
 }
 

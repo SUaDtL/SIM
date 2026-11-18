@@ -4,6 +4,8 @@ import type { Repository } from "../domain/repository";
 import type { Snapshot } from "../domain/types";
 import { spreadsheetText, toCsv } from "../import/csv";
 import { nodeId } from "../map/graph";
+import { BANNER_COLORS } from "../map/export";
+import reportStyles from "./report.css?raw";
 import type { AssessmentMapView } from "../map/map-view";
 import { applyScenario, dependencyKey, serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 
@@ -334,38 +336,113 @@ const codeColumns = new Set([
   "targetChangeId",
 ]);
 
+const wideTableColumns = new Map<string, readonly string[]>([
+  ["Services", ["service", "network", "provider"]],
+  ["Assessment evidence and questions", ["target", "type", "state"]],
+]);
+
+function fieldLabel(key: string): string {
+  if (key === "cds") return "CDS";
+  if (key === "sourceOrNextAction") return "Source or next action";
+  return key.slice(0, 1).toUpperCase() + key.slice(1).replace(/[A-Z]/g, (letter) => ` ${letter.toLowerCase()}`);
+}
+
+function displayValue(value: Cell | undefined): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  return value === null || value === undefined || value === ""
+    ? '<span class="missing">Not recorded</span>'
+    : htmlText(value);
+}
+
+function field(label: string, value: Cell | undefined): string {
+  return `<div><dt>${htmlText(label)}</dt><dd>${displayValue(value)}</dd></div>`;
+}
+
+function reportTable(label: string, rows: readonly Row[], id: string, view: string): string {
+  const keys = Object.keys(rows[0] ?? {}).filter((key) => !codeColumns.has(key));
+  const columns = wideTableColumns.get(label) ?? keys;
+  const extra = keys.filter((key) => !columns.includes(key));
+  const headings = [...columns.map(fieldLabel), ...(extra.length ? ["Record details"] : [])];
+  const title = `${htmlText(label)} <span>(${String(rows.length)})</span>`;
+  const header = headings.map((title) => `<th scope="col">${htmlText(title)}</th>`).join("");
+  const body = rows
+    .map((row) => {
+      const cells = columns.map((key, column) => {
+        const tag = column === 0 ? "th" : "td";
+        return `<${tag}${column === 0 ? ' scope="row"' : ""} data-label="${htmlText(fieldLabel(key))}">${displayValue(row[key])}</${tag}>`;
+      });
+      if (extra.length) {
+        const recorded = extra.filter((key) => row[key] != null && row[key] !== "");
+        const fields = recorded.map((key) => field(fieldLabel(key), row[key])).join("");
+        cells.push(
+          `<td class="record-details" data-label="Record details">${fields ? `<dl>${fields}</dl>` : displayValue(null)}</td>`,
+        );
+      }
+      return `<tr>${cells.join("")}</tr>`;
+    })
+    .join("");
+  return `<section class="report-table" aria-labelledby="${id}"><div class="table-title">
+<h3 id="${id}">${title}</h3><a class="back" href="#contents">Contents</a></div>
+<table aria-labelledby="${id}"><thead><tr class="print-title" aria-hidden="true"><td colspan="${String(headings.length)}">${htmlText(view)} · ${title}</td></tr><tr>${header}</tr></thead><tbody>${body}</tbody></table></section>`;
+}
+
 function renderHtml(output: AssessmentOutput, checkpoint: string): string {
   const title = htmlText(output.dataset);
-  const marking = htmlText(bannerText(output.marking, output.caveat));
+  const banner = bannerText(output.marking, output.caveat);
+  const marking = htmlText(banner);
+  // The printed page margins need a CSS string. Encode each character so dataset text cannot end the style element.
+  const printMarking = Array.from(banner, (letter) => `\\${(letter.codePointAt(0) ?? 0).toString(16)} `).join("");
+  const colors = BANNER_COLORS[output.marking];
+  const generated = new Date(output.generated);
+  const generatedTime = Number.isNaN(generated.valueOf())
+    ? htmlText(output.generated)
+    : `<time datetime="${htmlText(output.generated)}">${htmlText(generated.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "medium", timeZone: "UTC" }))} UTC</time>`;
   const details = output.details;
-  const context = details
-    ? `<dl><dt>Scope</dt><dd>${details.scope ? htmlText(details.scope) : "Scope not recorded"}</dd><dt>Exclusions</dt><dd>${htmlText(details.exclusions)}</dd><dt>Description</dt><dd>${htmlText(details.description)}</dd><dt>Assessor or team</dt><dd>${htmlText(details.assessor)}</dd><dt>Period start</dt><dd>${htmlText(details.startedOn)}</dd><dt>As of</dt><dd>${htmlText(details.asOf)}</dd></dl>`
-    : "<p>Assessment-level details were omitted from this focused export.</p>";
+  let context = "<p>Assessment-level details were omitted from this focused export.</p>";
+  if (details) {
+    context = Object.values(details).some(Boolean)
+      ? `<dl class="context">${field("Scope", details.scope)}${field("Exclusions", details.exclusions)}${field("Description", details.description)}${field("Assessor or team", details.assessor)}${field("Period start", details.startedOn)}${field("As of", details.asOf)}</dl>`
+      : "<p>Assessment scope, exclusions, description, assessor and dates were not recorded.</p>";
+  }
   const map =
     output.map === null
       ? ""
-      : `<figure><img alt="Map of the exported scope. Recorded services and dependencies are listed below." src="data:image/svg+xml,${encodeURIComponent(output.map)}"><figcaption>Map captured at export time.</figcaption></figure>`;
-  const sections = output.inventories
-    .map((section) => {
-      const tables = Object.entries(section.tables)
-        .map(([label, rows]) => {
-          const columns = Object.keys(rows[0] ?? {}).filter((column) => !codeColumns.has(column));
-          const head = columns.map((column) => `<th scope="col">${htmlText(column)}</th>`).join("");
-          const contents = rows
-            .map((row) => `<tr>${columns.map((column) => `<td>${htmlText(row[column] ?? null)}</td>`).join("")}</tr>`)
-            .join("");
-          return rows.length === 0
-            ? ""
-            : `<table><caption>${htmlText(label)} (${String(rows.length)})</caption><thead><tr>${head}</tr></thead><tbody>${contents}</tbody></table>`;
-        })
-        .join("");
-      return `<section><h2>${htmlText(section.view)}</h2><p>${String(section.tables["Services"]?.length ?? 0)} of ${String(section.totals.services)} recorded services and ${String(section.tables["Service dependencies"]?.length ?? 0)} of ${String(section.totals.dependencies)} recorded service dependencies in this projection.</p>${tables}</section>`;
-    })
+      : `<section><h2 id="map">Map at export</h2>
+<figure><img alt="Map of the exported scope. Recorded services and dependencies are listed below." src="data:image/svg+xml,${encodeURIComponent(output.map)}"></figure></section>`;
+  const sections = output.inventories.map((inventory, index) => {
+    const id = `projection-${String(index + 1)}`;
+    const tables = Object.entries(inventory.tables)
+      .filter(([, rows]) => rows.length > 0)
+      .map(([label, rows], tableIndex) => ({ label, rows, id: `${id}-table-${String(tableIndex + 1)}` }));
+    return { id, inventory, tables };
+  });
+  const contents = sections
+    .map(
+      ({
+        id,
+        inventory,
+        tables,
+      }) => `<div class="index-group"><a class="index-view" href="#${id}">${htmlText(inventory.view)}</a>
+<ul>${tables.map((table) => `<li><a href="#${table.id}">${htmlText(table.label)}</a></li>`).join("")}</ul></div>`,
+    )
     .join("");
-  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title>
-<style>body{font:1rem system-ui,sans-serif;color:#182236;margin:0 auto;max-width:90rem;padding:1rem}header,footer{font-weight:700;text-align:center;background:#eef3f9;padding:.5rem}img{display:block;max-width:100%;max-height:82vh;margin:auto}figure{margin:1rem 0}table{border-collapse:collapse;width:100%;margin:1rem 0 2rem;table-layout:fixed}caption{text-align:left;font-weight:700;margin:.4rem 0}th,td{border:1px solid #a0aec0;vertical-align:top;text-align:left;padding:.4rem;overflow-wrap:anywhere;white-space:pre-wrap}th{background:#eff3f9}dd,p,small{overflow-wrap:anywhere}dd{white-space:pre-wrap}@media print{body{padding:0;font-size:9pt}tr{break-inside:avoid}thead{display:table-header-group}img{max-height:60vh}h2,caption{break-after:avoid}}</style>
-<header>${marking}</header><main><h1>${title}</h1><p>Assessment generated ${htmlText(output.generated)} from ${htmlText(output.scope)}. File state at export: ${htmlText(output.fileState)}.</p>${context}
-<p>Dependencies point from consumers to providers. Connectivity is unverified. Counts cover recorded relationships in the stated scope. Hiding records does not reduce the source marking. Unrelated records outside the selected scope were omitted.</p>${map}${sections}<p>Data format ${String(output.schema)}. SIM ${htmlText(output.build.version)} build ${htmlText(output.build.commit)}. Source checkpoint ${htmlText(checkpoint)}.</p></main><footer>${marking}</footer></html>`;
+  const inventories = sections
+    .map(
+      ({ id, inventory, tables }) => `<section class="projection"><h2 id="${id}">${htmlText(inventory.view)}</h2>
+<p>${String(inventory.tables["Services"]?.length ?? 0)} of ${String(inventory.totals.services)} recorded services and ${String(inventory.tables["Service dependencies"]?.length ?? 0)} of ${String(inventory.totals.dependencies)} recorded service dependencies in this projection.</p>
+${tables.map((table) => reportTable(table.label, table.rows, table.id, inventory.view)).join("")}</section>`,
+    )
+    .join("");
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} · Assessment report</title><style>:root{--classification:${colors.background};--classification-text:${colors.text};--print-marking:"${printMarking}"}${reportStyles}</style></head>
+<body><div class="marking">${marking}</div>
+<header class="masthead"><div class="wrap"><p class="publisher">Service Integration Map <span>Assessment report</span></p><h1>${title}</h1>
+<dl class="metadata">${field("Export scope", output.scope)}<div><dt>Generated</dt><dd>${generatedTime}</dd></div>${field("File state at export", output.fileState)}</dl></div></header>
+<div class="layout wrap"><nav aria-label="Report contents" id="contents"><h2>Report contents</h2><a class="index-view" href="#overview">Assessment overview</a>
+${map ? '<a class="index-view" href="#map">Map at export</a>' : ""}${contents}<a class="index-view" href="#source">Source information</a></nav>
+<main><section><h2 id="overview">Assessment overview</h2>${context}
+<p class="scope-note">Dependencies point from consumers to providers. Connectivity is unverified. Counts cover recorded relationships in the stated scope. Hiding records does not reduce the source marking. Unrelated records outside the selected scope were omitted.</p></section>
+${map}${inventories}<section class="source"><h2 id="source">Source information</h2><dl class="context">${field("Data format", output.schema)}${field("SIM build", `${output.build.version} · ${output.build.commit}`)}${field("Source checkpoint", checkpoint)}</dl></section></main></div>
+<div class="marking" aria-hidden="true">${marking}</div></body></html>`;
 }
 
 export function renderAssessment(output: AssessmentOutput, format: OutputFormat, checkpoint: string): Blob {

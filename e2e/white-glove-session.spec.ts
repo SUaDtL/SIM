@@ -171,9 +171,11 @@ for (const section of ["Support", "Connections"] as const) {
       else {
         await help.getByRole("button", { name: "Licenses and notices", exact: true }).click();
         const notices = page.getByRole("dialog", { name: "Licenses and notices", exact: true });
-        await expect(help).toHaveCount(0);
+        await expect(help).toHaveAttribute("open");
         await expect(notices).toBeVisible();
         await notices.press("Escape");
+        await expect(help.getByRole("button", { name: "Licenses and notices", exact: true })).toBeFocused();
+        await help.press("Escape");
       }
       await expect(page.getByRole("button", { name: "Help", exact: true })).toBeFocused();
       await expect(editor.getByRole("tab", { name: section, exact: true })).toHaveAttribute("aria-selected", "true");
@@ -275,7 +277,7 @@ for (const origin of ["About", "Help"] as const) {
     const invoker =
       origin === "About"
         ? page.locator("details.about-menu > summary")
-        : page.getByRole("button", { name: "Help", exact: true });
+        : page.getByRole("dialog", { name: "Using SIM" }).getByRole("button", { name: "Licenses and notices" });
     await expect(invoker).toBeFocused();
     await expect(page.getByTestId("dataset-status")).toContainText("session.sqlite | Saved");
   });

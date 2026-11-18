@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { openDatasetFile, simUrl } from "./helpers/usability";
+import { openDatasetFile, showInventory, simUrl } from "./helpers/usability";
 
 test("Help distinguishes immediate scenario commands from service drafts and scenario metadata", async ({ page }) => {
   await page.context().setOffline(true);
@@ -77,6 +77,7 @@ for (const viewport of [
     } finally {
       db.close();
     }
+    await showInventory(page);
     await page
       .getByTestId("entity-list")
       .getByRole("button", { name: /^Portal / })

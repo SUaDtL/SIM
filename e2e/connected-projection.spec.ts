@@ -123,6 +123,7 @@ test("switching View closes the old projected inspector with an actionable curre
   await expect(page.getByTestId("editor")).not.toContainText("Planned service added");
   await expect(page.getByTestId("navigation-status")).toContainText("Projection changed");
   await expect(page.getByTestId("navigation-status")).toContainText("Select a record");
+  await expect(page.getByTestId("editor")).toBeHidden();
   await expect(page.getByTestId("editor").getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
 });
 

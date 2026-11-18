@@ -24,6 +24,49 @@ async function asterFixture() {
   return bytes;
 }
 
+test("Assessment note filtering keeps keyboard focus and reports the visible range", async ({ page }) => {
+  const db = await createDataset("Fictional assessment notes", wasm);
+  try {
+    const repo = new Repository(db);
+    for (let index = 1; index <= 13; index++) {
+      repo.saveAssessmentNote({
+        kind: "Question",
+        target: { kind: "assessment", id: null, label: "Assessment-level" },
+        aspect: "Scope",
+        text: index === 13 ? "Owner interview" : `Fictional question ${String(index)}`,
+        state: "open",
+        marking: "UNCLASSIFIED",
+        basis: "unspecified",
+        finding: "not assessed",
+        source: "",
+        responsible: "",
+        checkedOn: "",
+        resolution: "",
+      });
+    }
+    await openDatasetFile(page, db.export(), "atlas-notes.sqlite");
+  } finally {
+    db.close();
+  }
+  await openFileMenu(page);
+  await page.getByRole("button", { name: "Assessment evidence and questions", exact: true }).click();
+  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  const close = notes.getByRole("button", { name: "Close", exact: true });
+  await expect(close).toBeInViewport({ ratio: 1 });
+  await notes.getByRole("listitem").last().scrollIntoViewIfNeeded();
+  await expect(close).toBeInViewport({ ratio: 1 });
+  const query = notes.getByRole("searchbox", { name: "Filter notes" });
+  await query.pressSequentially("Owner");
+  await expect(query).toHaveValue("Owner");
+  await expect(query).toBeFocused();
+  await expect(notes.getByRole("listitem")).toHaveCount(1);
+  await expect(notes.getByRole("status")).toHaveText("1 matching note");
+  await query.fill("");
+  await notes.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(notes.getByRole("status")).toHaveText("13 of 13 notes");
+  await expect(notes.getByRole("button", { name: "Previous", exact: true })).toBeFocused();
+});
+
 test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen", async ({ page }) => {
   await openDatasetFile(page, await asterFixture(), "aster.sqlite");
   await openFileMenu(page);
@@ -43,7 +86,13 @@ test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen
   await views.getByRole("button", { name: "Save current view" }).click();
   await views.getByLabel("View name").fill("Operations briefing");
   await views.getByRole("button", { name: "Save view", exact: true }).click();
+  const filterViews = views.getByRole("searchbox", { name: "Filter saved views" });
+  await filterViews.pressSequentially("briefing");
+  await expect(filterViews).toHaveValue("briefing");
+  await expect(filterViews).toBeFocused();
+  await expect(views.getByRole("button", { name: "Restore Operations briefing" })).toBeVisible();
   await views.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(page.locator("details.workspace-assessment > summary")).toBeFocused();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   const saved = readFileSync(await (await download).path());
@@ -75,7 +124,7 @@ test("AC-AP-024 and AC-AP-027 scoped export and dependency drill-down use record
   await page.locator("details.workspace-assessment summary").click();
   await page.getByRole("button", { name: "Decision views", exact: true }).click();
   const decision = page.getByRole("dialog", { name: "Decision views" });
-  await decision.getByRole("button", { name: "Operations to Partner, 1 recorded dependencies" }).click();
+  await decision.getByRole("button", { name: "Operations to Partner, 1 recorded dependency" }).click();
   await expect(decision.getByRole("button", { name: "Orders (Operations)", exact: true })).toBeVisible();
   await expect(decision.getByText("Boundary, no CDS recorded", { exact: true })).toBeVisible();
   await decision.getByRole("button", { name: "Close", exact: true }).click();
@@ -147,7 +196,7 @@ test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo 
   });
   await review.getByRole("checkbox", { name: /Orders \(Operations\).*description.*proposed/ }).check();
   await review.getByRole("button", { name: "Apply selected corrections" }).click();
-  await expect(review.getByText("1 corrections applied in one Undo step. Save file to retain them.")).toBeVisible();
+  await expect(review.getByText("1 correction applied in one Undo step. Save file to retain it.")).toBeVisible();
   const receipt = page.waitForEvent("download");
   await review.getByRole("button", { name: "Download review receipt" }).click();
   expect(readFileSync(await (await receipt).path(), "utf8")).toContain('"applied": true');

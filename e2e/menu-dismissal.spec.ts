@@ -42,6 +42,29 @@ test("map menus replace each other and dismiss on another action or the canvas",
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
 
+test("phone menus keep a local Close at the end of a long command list", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await openFixture(page);
+  for (const [selector, name] of [
+    ["details.file-menu:not(.about-menu)", "File"],
+    ["details.about-menu", "About and demo"],
+    ["details.workspace-assessment", "Assessment"],
+  ] as const) {
+    const menu = page.locator(selector);
+    const trigger = menu.locator(":scope > summary");
+    await trigger.click();
+    const commands = menu.locator(".file-menu-actions");
+    await commands.evaluate((panel) => {
+      panel.scrollTop = panel.scrollHeight;
+    });
+    const close = commands.getByRole("button", { name: `Close ${name} menu` });
+    await expect(close).toBeInViewport({ ratio: 1 });
+    await close.click();
+    await expect(menu).not.toHaveAttribute("open");
+    await expect(trigger).toBeFocused();
+  }
+});
+
 test("document and map menus share dismissal without taking focus from the next control", async ({ page }) => {
   await openFixture(page);
   await showMap(page);
@@ -146,6 +169,7 @@ test("connection menus replace each other and keep the chosen staged action", as
   await menus.nth(0).locator("summary").click();
   await menus.nth(1).locator("summary").click();
   await expect(menus.nth(0)).not.toHaveAttribute("open");
+  await expect(menus.nth(1)).toHaveAttribute("open", "");
   await menus.nth(1).locator("summary").press("Escape");
   await expect(menus.nth(1)).not.toHaveAttribute("open");
   await expect(menus.nth(1).locator("summary")).toBeFocused();

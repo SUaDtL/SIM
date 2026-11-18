@@ -206,6 +206,6 @@ test("a detached focus capture explains its scope once", async ({ page }) => {
       .join(" ")
       .replace(/\s+/g, " ");
   }, svg);
-  expect(metadata.match(/Network connections Coral: 2 dependencies/g)).toHaveLength(1);
+  expect(metadata.match(/Cross-network links for Coral: 2 dependencies/g)).toHaveLength(1);
   expect(metadata).toContain("Current viewport");
 });
