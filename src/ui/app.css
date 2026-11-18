@@ -1950,6 +1950,7 @@ dialog h3 {
 .workspace-assessment > summary {
   cursor: pointer;
   padding: 10px 8px;
+  white-space: nowrap;
 }
 
 .workspace-assessment > .file-menu-actions {
@@ -2130,7 +2131,7 @@ dialog h3 {
 @media (min-width: 980px) and (min-height: 520px) {
   .workspace,
   .workspace.editing {
-    --rail: 78px;
+    --rail: minmax(78px, min-content);
     grid-template-columns: var(--rail) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
   }
