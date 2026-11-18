@@ -110,11 +110,12 @@ describe("focusGraph", () => {
     ]);
     expect([...focus.dependencies]).toEqual(["service-1:service-2"]);
     expect([...focus.remote]).toEqual(["service-2"]);
-    expect(focus.label).toContain("Network connections");
+    expect(focus.label).toBe("Cross-network links for network-1: 1 dependency");
   });
 
   it("depends on shows direct providers and excludes consumers and the next provider tier (UX4-003)", () => {
     const focus = focusGraph(fixture(), { kind: "depends-on", subject: "service-1", depth: 1 });
+    expect(focus.label).toBe("Dependencies of service-1: 1 dependency");
     expect(focus.visible.has("service-2")).toBe(true);
     expect(focus.visible.has("service-4")).toBe(false);
     expect(focus.visible.has("service-5")).toBe(false);
@@ -124,6 +125,7 @@ describe("focusGraph", () => {
 
   it("used by follows incoming consumers rather than providers (UX4-004)", () => {
     const focus = focusGraph(fixture(), { kind: "used-by", subject: "service-1", depth: 1 });
+    expect(focus.label).toBe("Services relying on service-1: 1 dependency");
     expect(focus.visible.has("service-4")).toBe(true);
     expect(focus.visible.has("service-2")).toBe(false);
     expect([...focus.remote]).toEqual([]);

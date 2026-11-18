@@ -11,13 +11,16 @@
     <title>SIM - Service Integration Map</title>
   </head>
   <body>
-    <div id="app" aria-busy="true">
-      <h1>SIM — Service Integration Map</h1>
-      <p role="status">Starting SIM… Your dataset files remain on disk.</p>
-      <noscript
-        >SIM needs JavaScript enabled in Edge or Chrome. Open an intact SIM HTML file; your dataset files are
-        separate.</noscript
-      >
+    <div id="app">
+      <section class="boot-panel">
+        <h1>SIM — Service Integration Map</h1>
+        <p role="status">Starting SIM… Your dataset files remain on disk.</p>
+        <noscript
+          ><p>
+            Enable JavaScript in Edge or Chrome and reopen this SIM HTML file. Your dataset files remain on disk.
+          </p></noscript
+        >
+      </section>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -104,7 +104,9 @@ test.describe("Accepted canvas selection viewport", () => {
       page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Map", exact: true }).click();
-    await expect.poll(async () => (await viewport(page)).width).toBe(1366);
+    await expect(page.getByTestId("editor")).toBeHidden();
+    const landscapeWidth = await page.getByTestId("map-area").evaluate((element) => element.clientWidth);
+    await expect.poll(async () => (await viewport(page)).width).toBe(landscapeWidth);
     const { before, point } = await edgeTarget(page);
     const previous = await viewport(page);
     await page.mouse.click(point.x, point.y);

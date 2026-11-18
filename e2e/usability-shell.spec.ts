@@ -122,11 +122,11 @@ test("map questions are explicit and browsing retains the active focus and arran
   expect(selected.chain).toEqual([]);
   await expect(page.getByRole("button", { name: "Depends on", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Depends on", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller: 1 dependency");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 1 dependency");
   await expect(page.getByRole("button", { name: "Expand focus", exact: true })).toBeVisible();
   const focused = await readMap(page);
   await choose(page, "Other", "Other (Amber) · service");
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller: 1 dependency");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 1 dependency");
   const browsed = await readMap(page);
   expect(browsed.pan).toEqual(focused.pan);
   expect(browsed.zoom).toBe(focused.zoom);

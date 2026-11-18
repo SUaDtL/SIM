@@ -240,6 +240,7 @@ test("R15 issue pagination preserves complete access and enabled keyboard focus 
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Data issues", exact: true });
   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(20);
+  await expect(dialog.getByRole("button", { name: "Close", exact: true })).toBeInViewport({ ratio: 1 });
   const next = dialog.getByRole("button", { name: "Next issues", exact: true });
   const previous = dialog.getByRole("button", { name: "Previous issues", exact: true });
   await next.focus();
@@ -250,6 +251,13 @@ test("R15 issue pagination preserves complete access and enabled keyboard focus 
   await previous.press("Enter");
   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(20);
   await expect(next).toBeFocused();
+  const details = dialog.getByTestId("data-issue-row").last().locator("summary");
+  await details.click();
+  await expect(dialog.getByRole("button", { name: "Close", exact: true })).toBeInViewport({ ratio: 1 });
+  await details.press("Escape");
+  await expect(dialog).toBeVisible();
+  await expect(details.locator("..")).not.toHaveAttribute("open");
+  await expect(details).toBeFocused();
 });
 
 test("J01 renamed populated enterprise saves, reopens and captures the current title", async ({ page, context }) => {

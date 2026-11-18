@@ -1,0 +1,276 @@
+.decision-dialog .reading-body {
+  container-type: inline-size;
+}
+.decision-dialog .decision-question {
+  margin: 0.45rem 0 0.85rem;
+  color: var(--ink);
+  font:
+    500 clamp(1.25rem, 3.3cqi, 1.7rem) / 1.2 Georgia,
+    serif;
+  overflow-wrap: break-word;
+}
+.decision-selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.4rem 1rem;
+  margin-block: 0.3rem 0.8rem;
+}
+.decision-selectors .assessment-field,
+.decision-path-tools .assessment-field {
+  min-width: 0;
+  margin: 0;
+}
+.decision-selectors :is(select, input),
+.decision-path-tools select {
+  min-width: 0;
+  width: 100%;
+}
+.decision-scope {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-inline-start: 3px solid var(--accent);
+  background: var(--panel);
+  overflow-wrap: break-word;
+}
+.decision-scope span {
+  display: block;
+  margin-block-start: 0.15rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.decision-purpose {
+  margin-block: 0.8rem;
+  max-width: 76ch;
+}
+.decision-providers,
+.decision-footer,
+.decision-pager,
+.decision-path-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.decision-providers,
+.decision-footer {
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-block: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.decision-providers[hidden],
+.decision-footer[hidden],
+.decision-pager[hidden] {
+  display: none;
+}
+.decision-range {
+  margin: 0;
+}
+.decision-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+.decision-matrix :is(th, td) {
+  padding: 0.55rem 0.35rem;
+  text-align: center;
+  overflow-wrap: break-word;
+  border-bottom: 1px solid var(--line);
+}
+.decision-matrix thead th {
+  border-block: 1px solid var(--line);
+  color: var(--muted);
+  background: var(--panel);
+}
+.decision-matrix thead tr:first-child > th:first-child,
+.decision-matrix tbody th {
+  width: clamp(6.25rem, 22cqi, 10rem);
+  text-align: start;
+  padding-inline-start: 0.55rem;
+}
+.decision-matrix tbody th {
+  font-weight: 600;
+}
+.decision-matrix .decision-axis {
+  color: #f5f6ea;
+  background: #275a51;
+  font-weight: 650;
+}
+.decision-matrix td {
+  padding: 0.25rem;
+}
+.decision-count {
+  min-width: 2.45rem;
+  min-height: 2.2rem;
+  padding: 0.25rem 0.48rem;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  color: var(--ink);
+  font-weight: 650;
+}
+.decision-zero {
+  color: var(--muted);
+}
+.decision-count[data-density="medium"] {
+  color: #173b32;
+  background: #d5e5da;
+  border-color: #93b5a3;
+}
+.decision-count[data-density="high"] {
+  color: #ffffff;
+  background: #285d51;
+  border-color: #285d51;
+}
+.decision-matrix .decision-count:hover {
+  color: #ffffff;
+  background: #194b40;
+}
+.decision-dialog .decision-content h3 {
+  margin-block: 0.8rem 0.45rem;
+  overflow-wrap: break-word;
+}
+.decision-rows,
+.decision-subjects,
+.decision-support {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.decision-rows > li {
+  border-block-start: 1px solid var(--line);
+  padding-block: 0.7rem;
+}
+.decision-rows h3,
+.decision-rows h4,
+.decision-path {
+  margin: 0 0 0.4rem;
+}
+.decision-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 0.6rem 1rem;
+  margin: 0.3rem 0;
+}
+.decision-fields dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+.decision-fields dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: break-word;
+}
+.decision-dialog .decision-record,
+.decision-subjects button {
+  max-width: 100%;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.decision-record {
+  border: 0;
+  padding: 0.25rem 0.1rem;
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.21em;
+}
+.decision-subjects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.45rem;
+}
+.decision-subjects button {
+  width: 100%;
+  height: 100%;
+}
+.decision-path-tools {
+  align-items: end;
+}
+.decision-path {
+  overflow-wrap: break-word;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.decision-path li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+}
+.decision-path li > span {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  background: var(--panel);
+}
+.decision-path li:first-child > span {
+  border-inline-start: 3px solid var(--accent);
+}
+.decision-path li:last-child > span {
+  border-color: #719c85;
+}
+.decision-path li:not(:last-child)::after {
+  content: " →";
+  color: var(--muted);
+}
+.decision-route-status {
+  color: var(--muted);
+}
+.decision-empty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+  padding-block: 0.8rem;
+}
+.reading-panel.decision-dialog[open] {
+  width: min(76rem, calc(100vw - 1.5rem));
+  max-width: min(76rem, calc(100vw - 1.5rem));
+}
+
+@container (max-width: 28rem) {
+  .decision-matrix-overview .decision-question {
+    margin-block: 0.2rem 0.55rem;
+  }
+  .decision-matrix-overview .decision-selectors {
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.3rem 0.6rem;
+    margin-block: 0 0.5rem;
+  }
+  .decision-matrix-overview .decision-selectors label {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: center;
+  }
+  .decision-matrix-overview .decision-selectors :is(input, select) {
+    min-height: 2.4rem;
+    padding-block: 0.3rem;
+  }
+  .decision-matrix-overview .decision-scope {
+    padding: 0.4rem 0.6rem;
+    line-height: 1.3;
+  }
+  .decision-matrix-overview .decision-purpose {
+    margin-block: 0.5rem;
+    line-height: 1.35;
+  }
+  .decision-providers {
+    gap: 0.25rem;
+    margin-block: 0.4rem;
+  }
+  .decision-providers button {
+    min-height: 2.4rem;
+    padding: 0.3rem 0.65rem;
+  }
+  .decision-matrix :is(th, td) {
+    padding-block: 0.3rem;
+  }
+}

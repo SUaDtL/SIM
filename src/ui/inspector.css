@@ -1,0 +1,30 @@
+.workspace > .editor:is([data-mode="read"], [data-mode="projection"]),
+dialog.related-record,
+dialog:has(> .connection-heading) {
+  scroll-padding-block-start: 52px;
+}
+
+.inspector-navigation,
+.connection-heading {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 4px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.inspector-navigation button {
+  min-height: 32px;
+  padding: 4px 10px;
+}
+
+.connection-heading h2,
+.inspector-navigation .summary-kind {
+  margin: 0;
+}

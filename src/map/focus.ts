@@ -118,9 +118,11 @@ export function focusGraph(graph: Graph, request: FocusRequest): FocusResult {
     }
   }
 
-  const question = { "depends-on": "Depends on", "used-by": "Used by", "network-connections": "Network connections" }[
-    request.kind
-  ];
+  const question = {
+    "depends-on": "Dependencies of",
+    "used-by": "Services relying on",
+    "network-connections": "Cross-network links for",
+  }[request.kind];
   const name = subject.data.label.split("\n")[0] ?? subject.data.id;
   const count = `${String(dependencies.size)} ${dependencies.size === 1 ? "dependency" : "dependencies"}`;
   return { visible, remote, dependencies, label: `${question} ${name}: ${count}` };

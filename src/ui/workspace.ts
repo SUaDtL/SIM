@@ -1,4 +1,8 @@
+import { assessmentPanel } from "./assessment-panel";
 import { openAssessmentNotes } from "./assessment-notes";
+import type { NoteTarget } from "../assessment/notes";
+import { openAtlasFind, type FindRecord } from "./atlas-find";
+import type { PickerPosition } from "./reference-picker";
 import { openBatchAssignment } from "./batch-assignment";
 import { openDecisionViews, type DecisionPosition } from "./decision-views";
 import { freezeAssessment } from "../assessment/output";
@@ -13,7 +17,7 @@ import { button, el } from "./dom";
 import { createEditor } from "./editor-panel";
 import { createListPanel, type ListPanel, type Selection } from "./list-panel";
 import { descriptor } from "./forms";
-import { type EntityTarget } from "./relations";
+import { inventoryRecords, type EntityTarget } from "./relations";
 import {
   captureRecordSummaryView,
   createRecordSummary,
@@ -23,13 +27,14 @@ import {
 } from "./record-summary";
 import { dependencyKey, serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 import { describeChange } from "./scenario-changes";
+import "./inspector.css";
 
 export interface Workspace {
   readonly element: HTMLElement;
   /** Show a (new or reopened) dataset: drops the old selection and listens to the new repository. */
   setRepository(repo: Repository): void;
-  /** Undo or redo ran: forms showing changed data are rebuilt. */
-  historyChanged(): void;
+  /** Apply one history step and restore forms and feedback for the resulting selection. */
+  travelHistory(direction: "undo" | "redo"): void;
   hasPendingDraft(): boolean;
   pendingDraftLabel(): string;
   applyActiveDraft(): boolean;
@@ -42,6 +47,8 @@ export interface Workspace {
   assessmentView(includeMap: boolean): AssessmentMapView;
   hasAssessmentDraft(): boolean;
   mapIsOpen(): boolean;
+  showMap(): void;
+  startNetwork(): Promise<void>;
   inspectRecord(target: EntityTarget): Promise<void>;
 }
 
@@ -50,6 +57,7 @@ export function createWorkspace(
   initial: Repository,
   onDraftChanged: () => void = () => undefined,
   captureUnsaved: () => boolean = () => true,
+  startPanel?: HTMLElement,
 ): Workspace {
   let repo = initial;
   let viewpointDraft = false;
@@ -58,7 +66,10 @@ export function createWorkspace(
   let unsubscribe = (): void => undefined;
   let sessionId = 0;
   let draftToken = 0;
-  let surface: "inventory" | "map" = "inventory";
+  let surface: "inventory" | "map" = window.matchMedia("(max-width: 480px)").matches ? "map" : "inventory";
+  let activeFind: ReturnType<typeof openAtlasFind> | null = null;
+  type FindReturn = { position: PickerPosition; surface: "inventory" | "map"; map: MapViewState | null };
+  let findReturn: FindReturn | null = null;
   let inspectorParked = false;
   let editorFocus: HTMLElement | null = null;
   type NavigationEntry = {
@@ -71,10 +82,28 @@ export function createWorkspace(
     focus: HTMLElement | null;
     focusBookmark: { scope: HTMLElement; index: number; id: string; tag: string; text: string } | null;
     origin: Parameters<typeof editor.inspectProjected>[0]["data"]["origin"] | null;
+    findReturn: FindReturn | null;
     decision?: DecisionPosition;
   };
   const navigationHistory: NavigationEntry[] = [];
   const inspectionDialogs = new Set<HTMLDialogElement>();
+  function showNotes(target?: NoteTarget): HTMLDialogElement {
+    const dialog = openAssessmentNotes(
+      repo,
+      (pending) => {
+        recordNoteDraft = pending;
+      },
+      target,
+    );
+    inspectionDialogs.add(dialog);
+    dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+    return dialog;
+  }
+  function serviceNotes(id: number): HTMLDialogElement | undefined {
+    const identity = repo.exchangeIdentities("service").get(String(id));
+    const target = repo.assessmentTargets().find((row) => row.kind === "service" && row.id === identity);
+    return target && showNotes(target);
+  }
   let pendingReturn: NavigationEntry | null = null;
   let navigationRequest = 0;
   let inspectConnection: (
@@ -96,9 +125,13 @@ export function createWorkspace(
   function resolveDraftFeedback(draftId: number): void {
     if (applyRefusal?.draftId === draftId && applyRefusal.sessionId === sessionId) setNavigationStatus("");
   }
-  const backButton = button("Back", () => {
-    void back();
-  });
+  const backButton = button(
+    "Back",
+    () => {
+      void back();
+    },
+    { "data-atlas-action": "back" },
+  );
   backButton.disabled = true;
 
   function captureNavigation(): NavigationEntry {
@@ -129,6 +162,7 @@ export function createWorkspace(
             }
           : null,
       origin: projectedOrigin,
+      findReturn,
     };
   }
 
@@ -165,6 +199,7 @@ export function createWorkspace(
   function rememberReturn(): void {
     const before = pendingReturn ?? captureNavigation();
     pendingReturn = null;
+    findReturn = null;
     navigationHistory.push(before);
     if (navigationHistory.length > 64) navigationHistory.shift();
     backButton.disabled = false;
@@ -204,6 +239,7 @@ export function createWorkspace(
       }
     }
     list.restoreContext(previous.list);
+    findReturn = previous.findReturn;
     restoreNavigationFocus(previous);
     backButton.disabled = navigationHistory.length === 0;
     if (previous.decision) showDecisionViews(previous.decision);
@@ -211,12 +247,18 @@ export function createWorkspace(
 
   function peek(target: EntityTarget, snapshot?: Snapshot, context?: string): void {
     const focusBefore = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const dialog = el("dialog", { "aria-label": "Inspect related record" });
+    const sourcePanel = focusBefore?.closest<HTMLElement>('dialog, [data-testid="editor"]');
+    const sourceReference = focusBefore?.dataset["summaryReference"];
+    const dialog = el("dialog", { class: "related-record", "aria-label": "Inspect related record" });
     inspectionDialogs.add(dialog);
     const close = (): void => {
       dialog.close();
       dialog.remove();
-      focusBefore?.focus();
+      const opener = focusBefore?.isConnected
+        ? focusBefore
+        : sourceReference &&
+          sourcePanel?.querySelector<HTMLElement>(`[data-summary-reference="${CSS.escape(sourceReference)}"]`);
+      if (opener) opener.focus({ preventScroll: true });
       inspectionDialogs.delete(dialog);
     };
     const owner = repo;
@@ -285,6 +327,28 @@ export function createWorkspace(
               ...(snapshot ? { snapshot, readOnly: true } : {}),
               ...(context ? { context } : {}),
               ...(previous?.view ? { initialView: previous.view } : {}),
+              ...(!snapshot && next.type === "service"
+                ? {
+                    onAssessment: () => {
+                      const revision = owner.currentRevision();
+                      serviceNotes(next.id)?.addEventListener(
+                        "close",
+                        () => {
+                          if (
+                            !dialog.open ||
+                            owner !== repo ||
+                            session !== sessionId ||
+                            owner.currentRevision() === revision
+                          )
+                            return;
+                          draw(next);
+                          dialog.querySelector<HTMLElement>("[data-service-evidence]")?.focus();
+                        },
+                        { once: true },
+                      );
+                    },
+                  }
+                : {}),
               onNavigate: (destination) => {
                 const current = dialog.querySelector<HTMLElement>(".record-summary");
                 const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -313,7 +377,7 @@ export function createWorkspace(
         if (entry) draw(entry.target, entry);
       });
       back.disabled = history.length === 0;
-      dialog.replaceChildren(summary, back, button("Close", close));
+      dialog.replaceChildren(el("div", { class: "related-navigation" }, back, button("Close", close)), summary);
       if (previous) {
         if (previous.view) restoreRecordSummaryView(summary, previous.view, { focus: true });
         dialog.scrollTop = previous.scroll;
@@ -336,57 +400,58 @@ export function createWorkspace(
     kind: "navigate" | "history" | "import" | "capture" | "export",
   ): Promise<"apply" | "discard" | "stay"> {
     return new Promise((resolve) => {
-      const dialog = el("dialog", { "aria-label": "Unapplied changes" });
+      const dialog = el("dialog", { class: "confirmation-dialog", "aria-label": "Unapplied changes" });
       const title =
         kind === "capture"
           ? `Capture the current map? ${editor.pendingDraftLabel()} is pending.`
           : kind === "export"
             ? `Export the assessment? ${editor.pendingDraftLabel()} is pending.`
             : `${editor.pendingDraftLabel()} is pending. Choose how to continue.`;
-      const choices: readonly [string, "apply" | "discard" | "stay"][] =
+      const choices: readonly [string, "apply" | "discard"][] =
         kind === "history"
-          ? [
-              ["Discard draft and continue", "discard"],
-              ["Keep editing", "stay"],
-            ]
+          ? [["Discard draft and continue", "discard"]]
           : kind === "capture"
             ? [
                 ["Apply and capture", "apply"],
                 ["Capture current view", "discard"],
-                ["Cancel", "stay"],
               ]
             : kind === "export"
               ? [
                   ["Apply and export", "apply"],
                   ["Export current recorded state", "discard"],
-                  ["Cancel", "stay"],
                 ]
               : [
                   ["Apply and continue", "apply"],
                   ["Discard and continue", "discard"],
-                  ["Stay", "stay"],
                 ];
       const settle = (choice: "apply" | "discard" | "stay"): void => {
         dialog.close();
         dialog.remove();
         resolve(choice);
       };
-      dialog.append(
+      const panel = assessmentPanel(
+        dialog,
+        el("h2", {}, "Unapplied changes"),
+        () => {
+          settle("stay");
+        },
         el("p", {}, title),
-        ...choices.map(([label, choice]) => {
-          const control = el("button", { type: "button" }, label);
-          control.addEventListener("click", () => {
-            settle(choice);
-          });
-          return control;
-        }),
+        el(
+          "div",
+          { class: "confirmation-choices" },
+          ...choices.map(([label, choice]) =>
+            button(label, () => {
+              settle(choice);
+            }),
+          ),
+        ),
       );
-      dialog.addEventListener("cancel", (event) => {
-        event.preventDefault();
-        settle("stay");
-      });
+      panel.dismiss.textContent =
+        kind === "history" ? "Keep editing" : kind === "capture" || kind === "export" ? "Cancel" : "Stay";
+      dialog.addEventListener("cancel", panel.cancel);
       document.body.append(dialog);
       dialog.showModal();
+      panel.dismiss.focus();
     });
   }
 
@@ -441,10 +506,12 @@ export function createWorkspace(
 
   function focusResults(): void {
     const target =
-      surface === "inventory"
-        ? (list.element.querySelector<HTMLElement>('[aria-current="true"]') ??
-          list.element.querySelector<HTMLElement>("#list-filter"))
-        : map.element.querySelector<HTMLElement>("#map-find");
+      surface === "map"
+        ? map.element.querySelector<HTMLElement>("#map-find")
+        : list.viewContext().collapsed
+          ? list.element.querySelector<HTMLElement>(".list-toggle")
+          : (list.element.querySelector<HTMLElement>('[aria-current="true"]') ??
+            list.element.querySelector<HTMLElement>("#list-filter"));
     target?.focus();
   }
 
@@ -517,6 +584,7 @@ export function createWorkspace(
 
   const editor = createEditor({
     repo: () => repo,
+    requestCloseInspector: returnToResults,
     selectionChanged: () => {
       list.render();
       syncSurface();
@@ -527,18 +595,7 @@ export function createWorkspace(
       onDraftChanged();
     },
     requestAssessment: (id) => {
-      const identity = repo.exchangeIdentities("service").get(String(id));
-      const target = repo.assessmentTargets().find((row) => row.kind === "service" && row.id === identity);
-      if (!target) return;
-      const dialog = openAssessmentNotes(
-        repo,
-        (pending) => {
-          recordNoteDraft = pending;
-        },
-        target,
-      );
-      inspectionDialogs.add(dialog);
-      dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
+      serviceNotes(id);
     },
     requestServiceOnNetwork: (networkId) => {
       void openServiceOnNetwork(networkId);
@@ -548,31 +605,7 @@ export function createWorkspace(
       else void open(target.type, target.id, true, target.type === "service" ? "connections" : undefined);
     },
     requestCancel: () => {
-      void (async () => {
-        const previous = editor.selection();
-        const draft = editor.activeDraftId();
-        const section = readSection(editor.viewContext().section);
-        const origin = navigationHistory.at(-1);
-        const owner = repo;
-        const session = sessionId;
-        const request = ++navigationRequest;
-        if (
-          !(await resolveActiveDraft("navigate")) ||
-          owner !== repo ||
-          session !== sessionId ||
-          request !== navigationRequest
-        )
-          return;
-        resolveDraftFeedback(draft);
-        if (previous?.id === null && origin && navigationHistory.at(-1) === origin) {
-          await back();
-          return;
-        }
-        if (previous?.id !== null && previous && descriptor(previous.type).get(repo, previous.id) !== undefined)
-          editor.inspect(previous.type, previous.id, section);
-        else editor.close();
-        syncSurface();
-      })();
+      void cancelEditing();
     },
     requestSimilar: (sourceId) => {
       void (async () => {
@@ -614,6 +647,7 @@ export function createWorkspace(
   });
   const map = createMapView({
     snapshot: () => repo.snapshot(),
+    describeProposal: (change, all) => describeChange(repo, change, all),
     resolveNavigation: async () => {
       const accepted = await prepareNavigation();
       return accepted;
@@ -622,9 +656,10 @@ export function createWorkspace(
       pendingReturn = null;
     },
     projectionChanged: () => {
+      findReturn = null;
       if (projectedOrigin) {
-        editor.close();
         projectedOrigin = null;
+        editor.close();
         setNavigationStatus("Projection changed. Select a record in the current view.");
       }
     },
@@ -681,7 +716,8 @@ export function createWorkspace(
         const s = projected.services.find((item) => item.id === id);
         return `${s?.name ?? "Unavailable"} (${projected.networks.find((n) => n.id === s?.networkId)?.name ?? "Unknown network"})`;
       };
-      const before = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      const before = focused?.closest("details.connection-actions")?.querySelector("summary") ?? focused;
       const dialog = el("dialog", { "aria-label": "Connection inspector" });
       inspectionDialogs.add(dialog);
       const owner = repo;
@@ -693,7 +729,12 @@ export function createWorkspace(
         inspectionDialogs.delete(dialog);
       };
       dialog.append(
-        el("h2", {}, stateLabel ?? "Recorded dependency"),
+        el(
+          "header",
+          { class: "connection-heading" },
+          el("h2", {}, stateLabel ?? "Recorded dependency"),
+          button("Close", close),
+        ),
         el("p", {}, `${qualify(consumer)} → ${qualify(provider)}`),
         ...(readOnly && projection
           ? [
@@ -751,7 +792,6 @@ export function createWorkspace(
               }
               void open("service", consumer, true, "connections");
             }),
-        button("Close", close),
       );
       dialog.addEventListener("cancel", (event) => {
         event.preventDefault();
@@ -828,15 +868,84 @@ export function createWorkspace(
     },
   });
   const element = el("main", { class: "workspace" }, list.element, map.element, editor.element);
-  const inventoryButton = button("Inventory", () => {
-    inspectorParked = editor.selection() !== null || projectedOrigin !== null;
-    surface = "inventory";
-    syncSurface();
-  });
-  const mapButton = button("Map", () => {
+  const inventoryButton = button(
+    "Inventory",
+    () => {
+      inspectorParked = editor.selection() !== null || projectedOrigin !== null;
+      surface = "inventory";
+      syncSurface();
+    },
+    { "data-atlas-action": "inventory" },
+  );
+  function showMap(): void {
     inspectorParked = editor.selection() !== null || projectedOrigin !== null;
     surface = "map";
     syncSurface();
+  }
+  const mapButton = button("Map", showMap, { "data-atlas-action": "map" });
+  const findButton = button(
+    "Find anything",
+    () => {
+      openFind();
+    },
+    {
+      "data-atlas-action": "find",
+      "aria-keyshortcuts": "Control+K Meta+K",
+      title: "Find anything (Ctrl+K or ⌘K)",
+    },
+  );
+
+  function openFind(resume?: FindReturn): void {
+    if (document.querySelector("dialog[open]")) return;
+    const owner = repo;
+    const session = sessionId;
+    const revision = repo.currentRevision();
+    const source = surface;
+    const sourceMap = source === "map" ? map.captureView() : null;
+    const from =
+      !resume && document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+        ? document.activeElement
+        : findButton;
+    const records: readonly FindRecord[] =
+      surface === "map"
+        ? map.findRecords()
+        : inventoryRecords(repo.snapshot()).map(({ target, label, detail }) => ({
+            value: `${target.type}:${String(target.id)}`,
+            label,
+            detail,
+            inspect: async () => {
+              if (!(await prepareNavigation())) return false;
+              await open(target.type, target.id);
+              return true;
+            },
+          }));
+    activeFind = openAtlasFind(
+      records,
+      from,
+      () => owner === repo && session === sessionId && revision === repo.currentRevision(),
+      (position) => {
+        if (owner !== repo || session !== sessionId) return;
+        findReturn = { position, surface: source, map: sourceMap };
+        editor.element.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+      },
+      () => {
+        activeFind = null;
+      },
+      resume?.position,
+    );
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key.toLowerCase() !== "k" ||
+      !(event.ctrlKey || event.metaKey) ||
+      event.altKey ||
+      event.shiftKey ||
+      event.isComposing
+    )
+      return;
+    event.preventDefault();
+    if (!event.repeat) openFind();
   });
   const viewpointsButton = button("Saved views", () => {
     const dialog = manageViewpoints(
@@ -875,9 +984,10 @@ export function createWorkspace(
       const owner = repo;
       const dialog = openDecisionViews(
         output,
-        (service, position) => {
+        (service, position, leave) => {
           void (async () => {
             if (repo !== owner || !(await prepareNavigation()) || repo !== owner) return;
+            leave();
             if (pendingReturn) pendingReturn.decision = position;
             const baselineId = [...repo.exchangeIdentities("service")].find(
               ([, identity]) => identity === service.id,
@@ -919,6 +1029,7 @@ export function createWorkspace(
           })();
         },
         previous,
+        mapState?.scopeNotes,
       );
       inspectionDialogs.add(dialog);
       dialog.addEventListener("close", () => inspectionDialogs.delete(dialog), { once: true });
@@ -934,7 +1045,9 @@ export function createWorkspace(
       const dialog = openBatchAssignment(
         repo,
         (count) => {
-          setNavigationStatus(`${String(count)} service assignments changed. Save file to keep them.`);
+          setNavigationStatus(
+            `${String(count)} service assignment${count === 1 ? "" : "s"} changed. Save file to keep them.`,
+          );
         },
         (pending) => {
           batchDraft = pending;
@@ -952,25 +1065,77 @@ export function createWorkspace(
     "details",
     { class: "workspace-assessment" },
     el("summary", {}, "Assessment"),
-    el("div", { class: "file-menu-actions" }, decisionButton, viewpointsButton, batchButton),
+    el(
+      "div",
+      { class: "file-menu-actions" },
+      button("Evidence and questions", () => {
+        showNotes();
+      }),
+      decisionButton,
+      viewpointsButton,
+      batchButton,
+    ),
   );
-  const returnButton = button("Return to results", () => {
+  async function cancelEditing(): Promise<void> {
+    const previous = editor.selection();
+    const draft = editor.activeDraftId();
+    const section = readSection(editor.viewContext().section);
+    const origin = navigationHistory.at(-1);
+    const owner = repo;
+    const session = sessionId;
+    const request = ++navigationRequest;
+    if (
+      !(await resolveActiveDraft("navigate")) ||
+      owner !== repo ||
+      session !== sessionId ||
+      request !== navigationRequest
+    )
+      return;
+    resolveDraftFeedback(draft);
+    if (previous?.id === null && origin && navigationHistory.at(-1) === origin) {
+      await back();
+      return;
+    }
+    if (previous?.id !== null && previous && descriptor(previous.type).get(repo, previous.id) !== undefined)
+      editor.inspect(previous.type, previous.id, section);
+    else editor.close();
+    syncSurface();
+  }
+  function returnToResults(): void {
+    if (!findReturn && navigationHistory.at(-1)?.decision) {
+      void back();
+      return;
+    }
     inspectorParked = true;
+    if (findReturn) {
+      surface = findReturn.surface;
+      syncSurface();
+      if (findReturn.map) map.restoreView(findReturn.map);
+      openFind(findReturn);
+      return;
+    }
     syncSurface();
     focusResults();
-  });
-  const returnToEditor = button("Return to draft", () => {
-    inspectorParked = false;
-    syncSurface();
-    if (editorFocus?.isConnected) editorFocus.focus({ preventScroll: true });
-    else editor.element.querySelector<HTMLElement>("input:not([hidden]), button, h2")?.focus();
-  });
+  }
+  const returnButton = button("Return to results", returnToResults, { "data-atlas-action": "return" });
+  const returnToEditor = button(
+    "Return to draft",
+    () => {
+      inspectorParked = false;
+      syncSurface();
+      if (editorFocus?.isConnected) editorFocus.focus({ preventScroll: true });
+      else editor.element.querySelector<HTMLElement>("input:not([hidden]), button, h2")?.focus();
+    },
+    { "data-atlas-action": "resume" },
+  );
   editor.element.addEventListener("focusin", (event) => {
     if (event.target instanceof HTMLElement) editorFocus = event.target;
   });
   function syncSurface(): void {
     list.element.hidden = surface !== "inventory";
     map.element.hidden = surface !== "map";
+    const startHost = surface === "inventory" ? list.element : map.element;
+    if (startPanel && startPanel.parentElement !== startHost) startHost.prepend(startPanel);
     inventoryButton.setAttribute("aria-pressed", String(surface === "inventory"));
     mapButton.setAttribute("aria-pressed", String(surface === "map"));
     viewpointsButton.hidden = surface !== "map";
@@ -990,12 +1155,13 @@ export function createWorkspace(
       { class: "workspace-navigation", "aria-label": "Workspace" },
       inventoryButton,
       mapButton,
+      findButton,
       assessmentActions,
       backButton,
       returnButton,
       returnToEditor,
-      navigationStatus,
     ),
+    navigationStatus,
   );
   element.addEventListener("keydown", (event) => {
     if (event.key !== "F2" || editor.isEditing()) return;
@@ -1006,7 +1172,35 @@ export function createWorkspace(
     }
   });
 
+  document.addEventListener("keydown", (event) => {
+    const target = event.target;
+    if (
+      event.key !== "Escape" ||
+      event.defaultPrevented ||
+      event.repeat ||
+      event.isComposing ||
+      editor.element.hidden ||
+      !(target instanceof Element) ||
+      document.querySelector("dialog[open]") ||
+      target.closest("details[open]")
+    )
+      return;
+    if (
+      target !== document.body &&
+      !editor.element.contains(target) &&
+      !target.closest('.entity-list [aria-current="true"], .map-canvas, .workspace-navigation')
+    )
+      return;
+    if (target instanceof HTMLInputElement && target.type === "search" && target.value) return;
+    event.preventDefault();
+    if (editor.isEditing()) void cancelEditing();
+    else returnToResults();
+  });
+
   function setRepository(next: Repository): void {
+    activeFind?.close();
+    activeFind = null;
+    findReturn = null;
     for (const dialog of inspectionDialogs) {
       dialog.close();
       dialog.remove();
@@ -1044,8 +1238,8 @@ export function createWorkspace(
         }
       }
       if (projectedOrigin) {
-        editor.close();
         projectedOrigin = null;
+        editor.close();
         setNavigationStatus("The dataset changed. Select the projected record again to inspect its current state.");
       }
       if (errors.length > 0) throw new AggregateError(errors, "The workspace could not fully refresh.");
@@ -1060,11 +1254,16 @@ export function createWorkspace(
   return {
     element,
     setRepository,
-    historyChanged: () => {
+    travelHistory: (direction) => {
+      const priorMessage = navigationStatus.textContent;
+      const changed = direction === "undo" ? repo.undo() : repo.redo();
+      if (!changed) return;
       editor.reload();
+      if (navigationStatus.textContent === priorMessage)
+        setNavigationStatus(direction === "undo" ? "Change undone." : "Change reapplied.");
       if (projectedOrigin && !map.inspectOrigin(projectedOrigin)) {
-        editor.close();
         projectedOrigin = null;
+        editor.close();
         setNavigationStatus("The projected target is no longer available.");
       }
     },
@@ -1074,6 +1273,12 @@ export function createWorkspace(
     },
     hasAssessmentDraft: () => viewpointDraft || batchDraft || recordNoteDraft,
     mapIsOpen: () => surface === "map",
+    showMap,
+    startNetwork: async () => {
+      surface = "inventory";
+      await open("network", null, true);
+      editor.element.querySelector<HTMLInputElement>("#field-name")?.focus();
+    },
     hasPendingDraft: () => editor.hasPendingDraft(),
     pendingDraftLabel: () => editor.pendingDraftLabel(),
     applyActiveDraft,

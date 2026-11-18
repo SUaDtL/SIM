@@ -1,0 +1,236 @@
+dialog.help-dialog[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(66rem, calc(100vw - 3rem));
+  height: min(44rem, calc(100dvh - 4rem));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  background: var(--surface);
+  color: var(--ink);
+}
+.help-dialog .guide-header,
+.help-dialog .guide-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 22px;
+  background: var(--panel);
+}
+.help-dialog .guide-header {
+  border-bottom: 1px solid var(--line);
+}
+.help-dialog .guide-header h2 {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--ink);
+  font-size: 25px;
+  line-height: 1.15;
+}
+.help-dialog .guide-header .guide-close {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+  font-weight: 650;
+}
+.help-dialog .guide-close:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.help-dialog .guide-footer {
+  justify-content: flex-end;
+  padding-block: 5px;
+  border-top: 1px solid var(--line);
+}
+.help-dialog .guide-footer button {
+  min-height: 32px;
+  padding: 4px 7px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+}
+.help-dialog .guide-body {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+.help-dialog .guide-index {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 0;
+  padding: 22px 12px;
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  background: var(--ground);
+}
+.help-dialog .guide-index h3 {
+  margin: 0 10px 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.help-dialog .guide-index button {
+  flex: none;
+  justify-content: start;
+  min-height: 38px;
+  padding: 8px 10px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink);
+  text-align: start;
+}
+.help-dialog .guide-index button:hover,
+.help-dialog .guide-index button[aria-current="page"] {
+  background: var(--panel);
+}
+.help-dialog .guide-index button[aria-current="page"] {
+  border-color: var(--line);
+  box-shadow: inset 3px 0 var(--accent);
+  color: var(--accent);
+  font-weight: 650;
+}
+.help-dialog .guide-choose {
+  display: none;
+}
+.help-dialog .guide-reader {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(18px, 3vw, 38px);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.help-dialog .guide-reader:focus-visible {
+  outline-offset: -4px;
+}
+.help-dialog .guide-reader section {
+  max-width: 66ch;
+  margin-inline: auto;
+}
+.help-dialog .guide-reader h3 {
+  margin: 0 0 1rem;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.help-dialog .guide-reader h4,
+.help-dialog .guide-reader dt {
+  margin: 1.35em 0 0.25em;
+  font-size: 1em;
+  font-weight: 680;
+}
+.help-dialog .guide-reader p,
+.help-dialog .guide-reader dd {
+  margin: 0.3em 0 0.8em;
+  color: var(--ink);
+}
+.help-dialog .guide-reader ol {
+  padding-inline-start: 1.6em;
+}
+.help-dialog .guide-reader li {
+  margin: 0 0 0.9em;
+  padding-inline-start: 0.4em;
+}
+.help-dialog .guide-reader li::marker {
+  color: var(--accent);
+  font-weight: 650;
+}
+.guide-dependency {
+  padding: clamp(14px, 3vw, 22px);
+  margin: 0 0 1.2rem;
+  color: #f3f3e9;
+  background: #183331;
+  border: 1px solid #476a5e;
+  border-radius: 7px;
+}
+.guide-route {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(2rem, 0.55fr) minmax(0, 1fr);
+  align-items: center;
+}
+.guide-route > div {
+  display: grid;
+  padding: 7px 11px;
+  border: 1px solid #91b7a9;
+  border-radius: 5px;
+  background: #294943;
+}
+.guide-route small {
+  color: #c1dbce;
+}
+.guide-route strong {
+  font: 500 1.45rem/1.25 var(--atlas-display);
+}
+.guide-route > span {
+  text-align: center;
+  color: #edc993;
+  font-size: 1.75rem;
+}
+.guide-dependency figcaption {
+  margin-top: 12px;
+  line-height: 1.48;
+}
+@media (max-width: 640px) {
+  dialog.help-dialog[open] {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    width: calc(100vw - 16px);
+    height: min(46rem, calc(100dvh - 24px));
+  }
+  .help-dialog .guide-header {
+    gap: 5px;
+    padding: 10px 12px;
+  }
+  .help-dialog .guide-header h2 {
+    font-size: 21px;
+  }
+  .help-dialog .guide-header button {
+    min-height: 36px;
+    padding-inline: 8px;
+  }
+  .help-dialog .guide-index {
+    display: none;
+  }
+  .help-dialog .guide-choose {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--ground);
+  }
+  .help-dialog .guide-choose label {
+    flex: none;
+    white-space: nowrap;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .help-dialog .guide-choose select {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
+  .help-dialog .guide-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .help-dialog .guide-footer {
+    padding-inline: 12px;
+  }
+}
+@media (max-height: 350px) {
+  dialog.help-dialog[open] {
+    height: calc(100dvh - 8px);
+  }
+  .help-dialog .guide-header,
+  .help-dialog .guide-choose,
+  .help-dialog .guide-footer {
+    padding-block: 3px;
+  }
+}

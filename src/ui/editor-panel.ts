@@ -5,6 +5,7 @@ import type { Snapshot } from "../domain/types";
 import type { GraphNode, MapEntity } from "../map/graph";
 import { dependencyKey, type Comparison, type ProjectedSnapshot } from "../scenario/scenario";
 import { button, el, focusPagingControl, option } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 import {
   descriptor,
   type EntityType,
@@ -43,6 +44,7 @@ export interface EditorContext {
     pending?: { snapshot: Snapshot; label: string; scope?: "pending" | "recorded" | "projected" },
   ): void;
   requestCancel?(): void;
+  requestCloseInspector?: () => void;
   requestSimilar?(sourceId: number): void;
   requestAssessment?(id: number): void;
   /** Successful guarded deletion has closed the editor and any confirmation modal. */
@@ -101,6 +103,18 @@ function describe(error: unknown): string {
 
 export function createEditor(ctx: EditorContext): EditorPanel {
   const element = el("aside", { class: "editor", "data-testid": "editor", "aria-label": "Editor" });
+  function showInspection(summary: HTMLElement): void {
+    if (ctx.requestCloseInspector)
+      summary.prepend(
+        el(
+          "div",
+          { class: "inspector-navigation" },
+          summary.querySelector(".summary-kind") ?? el("span", {}, "Record"),
+          button("Close", ctx.requestCloseInspector, { "aria-label": "Close inspector" }),
+        ),
+      );
+    element.replaceChildren(summary);
+  }
   function keepConnectionFeedbackVisible(): void {
     const cue = element.querySelector<HTMLElement>("#connection-task-error");
     const action = document.activeElement;
@@ -202,7 +216,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         : {}),
       onDelete: () => {
         const trigger = element.querySelector<HTMLElement>("details.record-secondary-actions > summary");
-        const dialog = el("dialog", { "aria-label": `Delete ${nounOf(type)}` });
+        const dialog = el("dialog", { class: "confirmation-dialog", "aria-label": `Delete ${nounOf(type)}` });
         const message = el("p", { role: "alert" });
         let cleaned = false;
         const cleanup = (): void => {
@@ -216,7 +230,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
           cleanup();
         };
         const control = deleteControl(type, id, nounOf(type), message, { afterDelete: finish, cancel: finish });
-        dialog.append(el("h2", {}, `Delete ${nounOf(type)}`), control, message, button("Close", finish));
+        const panel = assessmentPanel(dialog, el("h2", {}, `Delete ${nounOf(type)}`), finish, control, message);
         dialog.addEventListener("cancel", (event) => {
           event.preventDefault();
           finish();
@@ -224,6 +238,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         dialog.addEventListener("close", cleanup, { once: true });
         document.body.append(dialog);
         dialog.showModal();
+        panel.dismiss.focus();
       },
     });
     if (type === "network")
@@ -234,7 +249,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       );
     const completion = el("p", { role: "status", class: "notice" }, notice);
     (summary.querySelector(".record-summary-heading") ?? summary).append(completion);
-    element.replaceChildren(summary);
+    showInspection(summary);
     if (initialView) restoreRecordSummaryView(summary, initialView);
     ctx.selectionChanged();
     if (notify) draftChanged();
@@ -573,7 +588,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       );
     }
     if (technical.length) summary.append(el("details", {}, el("summary", {}, "Projection details"), ...technical));
-    element.replaceChildren(summary);
+    showInspection(summary);
     ctx.selectionChanged();
     draftChanged();
   }
@@ -1374,7 +1389,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     modal?: { afterDelete: () => void; cancel: () => void },
   ): HTMLElement {
     const owner = ctx.repo();
-    const box = el("span", { class: "delete" });
+    const box = el("div", { class: "delete" });
     let restoreMenu: (() => void) | undefined;
     const ask = (): void => {
       let plan;
@@ -1386,35 +1401,47 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       }
       if (!modal) restoreMenu ??= exposeMenuTask(box, `Delete ${noun}`);
       box.replaceChildren(
-        el("p", {}, `Delete ${noun}? This cannot be undone by cancelling, but Undo can restore a completed deletion.`),
+        el("p", {}, "Review the effect on related records. Undo can restore a completed deletion."),
         ...(hasPendingDraft()
           ? [el("p", {}, "Your unapplied changes to this record will be discarded if deletion succeeds.")]
           : []),
         el("ul", {}, ...plan.details.map((detail) => el("li", {}, detail))),
         ...(plan.blocked ? [el("p", { class: "field-error", id: "delete-blocked-reason" }, plan.blocked)] : []),
-        ...plan.blockers.map((target) =>
-          button(target.label, () => {
-            ctx.requestNavigate?.({ type: target.type, id: target.id }, "peek");
-          }),
+        ...(plan.blockers.length
+          ? [
+              el(
+                "div",
+                { class: "delete-references" },
+                ...plan.blockers.map((target) =>
+                  button(target.label, () => {
+                    ctx.requestNavigate?.({ type: target.type, id: target.id }, "peek");
+                  }),
+                ),
+              ),
+            ]
+          : []),
+        el(
+          "div",
+          { class: "confirmation-choices" },
+          button(
+            "Confirm delete",
+            () => {
+              try {
+                if (ctx.repo() !== owner)
+                  throw new ValidationError("STALE", "record", "The dataset changed. Review deletion again.");
+                owner.deleteWithPlan(type, id, plan.signature);
+                close();
+                modal?.afterDelete();
+                ctx.recordDeleted?.(type, id);
+              } catch (error) {
+                message.textContent = describe(error);
+                if (error instanceof ValidationError && error.code === "STALE") ask();
+              }
+            },
+            { class: "danger", ...(plan.blocked ? { disabled: "", "aria-describedby": "delete-blocked-reason" } : {}) },
+          ),
+          button("Cancel", modal?.cancel ?? reset),
         ),
-        button(
-          "Confirm delete",
-          () => {
-            try {
-              if (ctx.repo() !== owner)
-                throw new ValidationError("STALE", "record", "The dataset changed. Review deletion again.");
-              owner.deleteWithPlan(type, id, plan.signature);
-              close();
-              modal?.afterDelete();
-              ctx.recordDeleted?.(type, id);
-            } catch (error) {
-              message.textContent = describe(error);
-              if (error instanceof ValidationError && error.code === "STALE") ask();
-            }
-          },
-          { class: "danger", ...(plan.blocked ? { disabled: "", "aria-describedby": "delete-blocked-reason" } : {}) },
-        ),
-        button("Cancel", modal?.cancel ?? reset),
       );
       if (restoreMenu) {
         box.tabIndex = -1;
@@ -1937,10 +1964,10 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     showSection(activeSection);
   }
 
-  function refresh(): void {
+  function refresh(clearNotice = false): void {
     if (!current) return;
     if (!editing) {
-      const notice = element.querySelector<HTMLElement>(".notice")?.textContent ?? "";
+      const notice = clearNotice ? "" : (element.querySelector<HTMLElement>(".notice")?.textContent ?? "");
       const summary = element.querySelector<HTMLElement>(".record-summary");
       const view = summary ? captureRecordSummaryView(summary) : undefined;
       const scrollTop = element.scrollTop;
@@ -1979,7 +2006,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
       if (hasPendingDraft()) reportExternalChange?.("deleted");
       else close();
     } else if (editing) open(current.type, current.id);
-    else refresh();
+    else refresh(true);
   }
 
   placeholder();

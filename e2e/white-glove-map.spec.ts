@@ -96,7 +96,7 @@ test("WG05 network focus has no undefined expansion while preserving complete bo
   await inspect(page, "Orders", "Amber");
   const before = await mapState(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Network connections Amber: 1 dependency");
+  await expect(page.getByTestId("focus-status")).toContainText("Cross-network links for Amber: 1 dependency");
   const focused = await mapState(page);
   expect(focused.services).toEqual([`service-${String(data.orders)}`, `service-${String(data.identity)}`].sort());
   expect(focused.dependencies).toEqual([`${String(data.orders)}-${String(data.identity)}`]);

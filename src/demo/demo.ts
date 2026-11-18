@@ -1,4 +1,5 @@
 import type { Repository } from "../domain/repository";
+import type { NodePosition } from "../domain/types";
 
 /**
  * A fictional enterprise for demos, screenshots and tests (WORK-014): six internal networks and a
@@ -55,6 +56,24 @@ const COMMON = [
 ] as const;
 
 const CLOUD = ["Office Suite", "CRM", "Service Desk", "Video Meetings", "Code Hosting"] as const;
+
+/** Slot numbers run left to right in each row. Keep gateway and cloud endpoints on the facing border. */
+function placeRegion(
+  services: ReadonlyMap<string, number> | undefined,
+  x: number,
+  y: number,
+  columns: number,
+  landmarks: Readonly<Record<string, number>>,
+): NodePosition[] {
+  if (!services) throw new Error("Missing demo region");
+  const reserved = new Set(Object.values(landmarks));
+  let next = 0;
+  return Array.from(services, ([name, id]) => {
+    while (reserved.has(next)) next++;
+    const slot = landmarks[name] ?? next++;
+    return { entity: "service", id, x: x + (slot % columns) * 118, y: y + Math.floor(slot / columns) * 110 };
+  });
+}
 
 const CATEGORY_OF: Record<string, string> = {
   Identity: "Infrastructure",
@@ -132,6 +151,54 @@ export function populateDemo(repo: Repository): void {
   const partner = repo.createCds({ name: "Partner gateway", networkIds: [net(1), net(2), net(5)] });
   const research = repo.createCds({ name: "Research guard", networkIds: [net(1), net(3)] });
 
+  // Southwest enterprise and eastern operations meet at their guard. Training and Mission
+  // Partner fan into Operations from the north, and Research reaches it from the east.
+  repo.setPositions([
+    ...placeRegion(services[0], 270, 375, 5, {
+      Tickets: 0,
+      Video: 1,
+      Email: 3,
+      Calendar: 8,
+      Patching: 9,
+      Backup: 5,
+      "File Share": 10,
+    }),
+    ...placeRegion(services[1], 1035, 340, 4, {
+      Chat: 0,
+      Planning: 2,
+      "Common Picture": 3,
+      Email: 4,
+      Calendar: 5,
+      Maps: 7,
+      Patching: 13,
+    }),
+    ...placeRegion(services[2], 1250, -260, 4, {
+      "Partner Portal": 0,
+      Chat: 12,
+      Email: 6,
+      Calendar: 7,
+    }),
+    ...placeRegion(services[3], 1700, 390, 4, {
+      Analytics: 0,
+      "Data Lake": 4,
+      Backup: 8,
+      "File Share": 9,
+      Patching: 12,
+    }),
+    ...placeRegion(services[4], -340, -25, 4, { "Code Review": 2, Build: 3, Backup: 11, "File Share": 10 }),
+    ...placeRegion(services[5], 570, -125, 4, { Learning: 3, Email: 8 }),
+    ...placeRegion(cloud, 165, -425, 3, {
+      "Code Hosting": 0,
+      CRM: 2,
+      "Service Desk": 3,
+      "Video Meetings": 4,
+      "Office Suite": 5,
+    }),
+    { entity: "cds", id: guard.id, x: 875, y: 475 },
+    { entity: "cds", id: partner.id, x: 1080, y: 45 },
+    { entity: "cds", id: research.id, x: 1555, y: 460 },
+  ]);
+
   const svc = (i: number, name: string) => services[i]?.get(name);
   const link = (consumer: number | undefined, provider: number | undefined, viaCdsId?: number) => {
     if (consumer === undefined || provider === undefined) return;
@@ -187,6 +254,24 @@ export function populateDemo(repo: Repository): void {
   for (const name of ["Build", "Code Review"]) {
     const id = svc(4, name);
     if (engineers && id !== undefined) repo.addConsumption(engineers.id, id);
+  }
+
+  const proposal = repo.createScenario({
+    name: "Shared planning hub",
+    description: "Combine Planning and Common Picture on Operations so planners and partner services use one hub.",
+  });
+  const hub = repo.addScenarioChange(proposal.id, {
+    kind: "add",
+    name: "Planning Hub",
+    networkId: net(1),
+    providerOrgId: ops.id,
+    marking: "UNCLASSIFIED",
+    description: "Proposed home for the shared operational picture and planning workspace.",
+  });
+  for (const name of ["Planning", "Common Picture"]) {
+    const serviceId = svc(1, name);
+    if (serviceId === undefined) throw new Error(`Missing demo service on Operations: ${name}`);
+    repo.addScenarioChange(proposal.id, { kind: "merge", serviceId, intoChangeId: hub.id });
   }
 
   repo.setCaveat(DEMO_CAVEAT);

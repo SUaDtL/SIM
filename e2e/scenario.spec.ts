@@ -73,16 +73,14 @@ async function fixture(): Promise<{ bytes: Uint8Array; metrics: string }> {
   };
 }
 
-async function openFile(page: Page, bytes: Uint8Array, saved: "Saved" | "Unsaved"): Promise<void> {
+async function openFile(page: Page, bytes: Uint8Array): Promise<void> {
   const chooser = page.waitForEvent("filechooser");
   await openFileMenu(page);
   await page.getByRole("button", { name: "Open", exact: true }).click();
   await (
     await chooser
   ).setFiles({ name: "demo.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
-  await expect(page.getByTestId("dataset-status")).toHaveText(
-    `${DEMO_NAME} | demo.sqlite | ${saved === "Unsaved" ? "Changes not saved to file" : "Saved"}`,
-  );
+  await expect(page.getByTestId("dataset-status")).toHaveText(`${DEMO_NAME} | demo.sqlite | Saved`);
 }
 
 async function save(page: Page): Promise<Uint8Array> {
@@ -133,8 +131,8 @@ test("switches between As-Is, To-Be and Compare without writing, with the reduct
   await page.setViewportSize({ width: 1600, height: 1000 });
   const problems = await load(page);
   const { bytes, metrics } = await fixture();
-  await openFile(page, bytes, "Unsaved");
-  await openFile(page, await save(page), "Saved");
+  await openFile(page, bytes);
+  await openFile(page, await save(page));
   const view = page.getByLabel("View", { exact: true });
   await expect.poll(async () => (await readMap(page)).services.length).toBe(92);
   expect((await readMap(page)).locked).toBe(false);
@@ -251,6 +249,7 @@ test("an invalidated CDS route stays visibly unresolved in the map, summary and 
   await showMap(page);
   await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Move provider" });
   await expect(page.getByTestId("map-summary")).toContainText("1 unresolved former-CDS route");
+  await expect(page.getByTestId("map-legend").getByText("Unresolved former-CDS route", { exact: true })).toBeVisible();
   const find = page.getByLabel("Find on map");
   await find.fill("consumer (a)");
   await find.press("Enter");

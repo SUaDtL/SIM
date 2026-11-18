@@ -6,18 +6,28 @@ export interface PickerOption {
   readonly detail?: string;
 }
 
+/** Where to resume a search after inspecting one of its results. */
+export interface PickerPosition {
+  readonly query: string;
+  readonly page: number;
+  readonly value: string;
+}
+
 export interface ReferencePickerOptions {
   readonly label: string;
+  readonly title?: string;
   readonly options: () => readonly PickerOption[];
   readonly selectedValue?: string;
+  readonly initialPosition?: PickerPosition;
   readonly allowNone?: boolean;
   /** Explain the caller's empty-value semantics; ordinary reference clearing keeps its default. */
   readonly noneLabel?: string;
   /** The caller can explain why its complete eligible option set is empty. */
   readonly emptyMessage?: string;
-  readonly onSelect: (value: string) => void;
+  readonly onSelect: (value: string, position: PickerPosition) => void;
   readonly isCurrent?: () => boolean;
   readonly returnFocus: HTMLElement;
+  readonly onClose?: () => void;
   readonly onDraftChanged?: () => void;
   /** The child uses the normal validated write path. No write happens merely by opening it. */
   readonly create?: (
@@ -36,21 +46,27 @@ export interface ReferencePicker {
 }
 
 /** Discovery is pure and preserves caller order and identity, including duplicate display names. */
-export function pickerPage(options: readonly PickerOption[], query: string, requestedPage: number) {
+export function pickerPage(
+  options: readonly PickerOption[],
+  query: string,
+  requestedPage: number,
+  locateValue?: string,
+) {
   const needle = query.trim().toLowerCase();
   const matches = needle
     ? options.filter((option) => `${option.label} ${option.detail ?? ""}`.toLowerCase().includes(needle))
     : options;
   const pageCount = Math.max(1, Math.ceil(matches.length / 20));
   const requested = Number.isFinite(requestedPage) ? Math.max(0, Math.floor(requestedPage)) : 0;
-  const page = Math.min(requested, pageCount - 1);
+  const located = locateValue === undefined ? -1 : matches.findIndex((option) => option.value === locateValue);
+  const page = located >= 0 ? Math.floor(located / 20) : Math.min(requested, pageCount - 1);
   return { items: matches.slice(page * 20, page * 20 + 20), page, pageCount, total: matches.length };
 }
 
 /** One bounded, searchable selection dialog. A highlighted or blurred candidate never assigns. */
 export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicker {
   let closed = false;
-  let page = 0;
+  let page = ctx.initialPosition?.page ?? 0;
   let inChild = false;
   let childDraft: (() => boolean) | null = null;
   const hasPendingDraft = (): boolean => !closed && inChild && (childDraft?.() ?? false);
@@ -62,6 +78,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     "data-testid": "picker-query",
   });
   const results = el("ul", { class: "picker-results", "data-testid": "picker-results" });
+  query.value = ctx.initialPosition?.query ?? "";
   const count = el("p", { class: "hint", role: "status", "data-testid": "picker-count" });
   const assignment = el("p", { class: "picker-current hint", "data-testid": "picker-current" });
   const message = el("p", { class: "hint", role: "status", "data-testid": "picker-message" });
@@ -70,7 +87,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   const searchBody = el("div", { class: "picker-search" }, query, results, count);
   const dialog = el("dialog", {
     class: "reference-picker",
-    "aria-label": `Choose ${ctx.label}`,
+    "aria-label": ctx.title ?? `Choose ${ctx.label}`,
     "data-testid": "record-picker",
   });
 
@@ -85,6 +102,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     else if (ctx.returnFocus.id && (ctx.isCurrent?.() ?? true)) {
       document.getElementById(ctx.returnFocus.id)?.focus({ preventScroll: true });
     }
+    ctx.onClose?.();
   };
   const current = (): boolean => {
     if (closed) return false;
@@ -99,7 +117,7 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
       if (!inChild) render();
       return;
     }
-    ctx.onSelect(value);
+    ctx.onSelect(value, { query: query.value, page, value });
     close();
   };
   const previous = button("Previous results", () => {
@@ -135,7 +153,6 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     child.hidden = false;
     child.replaceChildren(
       button("Back to existing records", back, { class: "subtle" }),
-      el("p", { class: "hint" }, "This shared record remains available if you later cancel the parent task."),
       ctx.create(query.value, choose, back, (read) => {
         childDraft = read;
       }),
@@ -145,10 +162,10 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   });
   create.hidden = ctx.create === undefined;
 
-  function render(): void {
+  function render(locateValue?: string): void {
     if (closed || inChild) return;
     const available = ctx.options().filter((item) => item.value !== "");
-    const discovered = pickerPage(available, query.value, page);
+    const discovered = pickerPage(available, query.value, page, locateValue);
     page = discovered.page;
     const rows = discovered.items.map((item) => {
       const select = button(
@@ -204,7 +221,9 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     count.textContent =
       discovered.total === 0
         ? "0 matching records."
-        : `Showing ${String(page * 20 + 1)}-${String(Math.min((page + 1) * 20, discovered.total))} of ${String(discovered.total)} matching records.`;
+        : discovered.total === 1
+          ? "1 matching record."
+          : `Showing ${String(page * 20 + 1)}-${String(Math.min((page + 1) * 20, discovered.total))} of ${String(discovered.total)} matching records.`;
     previous.disabled = page === 0;
     next.disabled = page + 1 >= discovered.pageCount;
     pagination.hidden = discovered.pageCount === 1;
@@ -250,7 +269,12 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
     close();
   });
   dialog.append(
-    el("header", { class: "picker-header" }, el("h2", {}, `Choose ${ctx.label}`), button("Close picker", close)),
+    el(
+      "header",
+      { class: "picker-header" },
+      el("h2", {}, ctx.title ?? `Choose ${ctx.label}`),
+      button("Close picker", close),
+    ),
     message,
     searchBody,
     create,
@@ -258,9 +282,14 @@ export function openReferencePicker(ctx: ReferencePickerOptions): ReferencePicke
   );
   searchBody.prepend(assignment);
   document.body.append(dialog);
-  render();
+  render(ctx.initialPosition?.value);
   dialog.showModal();
-  query.focus();
+  const inspected = ctx.initialPosition
+    ? [...results.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")].find(
+        (row) => row.dataset["pickerValue"] === ctx.initialPosition?.value,
+      )
+    : undefined;
+  (inspected ?? query).focus();
   return {
     close,
     refresh: render,

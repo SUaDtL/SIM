@@ -75,7 +75,7 @@ test("row selection and Back retain the browse position and focus without an edi
   await page.getByLabel("Filter", { exact: true }).fill("Service");
   await page.getByRole("button", { name: "Next records", exact: true }).click();
   const panel = page.getByTestId("list-panel");
-  const first = page.getByTestId("entity-list").getByRole("button").nth(8);
+  const first = page.getByTestId("entity-list").getByRole("button").nth(18);
   await first.scrollIntoViewIfNeeded();
   const scroll = await panel.evaluate((node) => node.scrollTop);
   expect(scroll).toBeGreaterThan(0);
@@ -85,7 +85,7 @@ test("row selection and Back retain the browse position and focus without an edi
   await expect(first).toHaveAttribute("aria-current", "true");
   await expect(first).toBeFocused();
   expect(await panel.evaluate((node) => node.scrollTop)).toBe(scroll);
-  const second = page.getByTestId("entity-list").getByRole("button").nth(9);
+  const second = page.getByTestId("entity-list").getByRole("button").nth(19);
   await second.click();
   const returnScroll = await panel.evaluate((node) => node.scrollTop);
   const returnId = await second.getAttribute("id");
@@ -149,6 +149,7 @@ for (const width of [1366, 320]) {
     const fixture = await inventoryFixture();
     await page.setViewportSize({ width, height: 900 });
     await openDatasetFile(page, fixture.bytes, "synthetic-keyboard.sqlite");
+    await showInventory(page);
     const rows = page.getByTestId("entity-list").getByRole("button");
     await rows.last().focus();
     for (let index = 28; index >= 0; index--) {

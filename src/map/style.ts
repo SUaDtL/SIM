@@ -3,8 +3,8 @@ import type { StylesheetJson } from "cytoscape";
 // Edge colors follow the layout spike: grey stays local, orange passes a CDS, red crosses a boundary
 // with no CDS (the risk to notice), tan reaches an external network.
 export const MAP_BACKGROUND = "#0d141c";
-const ink = "#d9e5ef";
-const muted = "#88a5bc";
+const ink = "#f0f3e9";
+const serviceBorder = "#9abfb8";
 
 export const mapStyle: StylesheetJson = [
   {
@@ -17,7 +17,7 @@ export const mapStyle: StylesheetJson = [
       "text-wrap": "wrap",
       "text-max-width": "140px",
       // The canvas-colored halo keeps labels legible across edges and network borders.
-      "text-outline-color": "#0d141c",
+      "text-outline-color": MAP_BACKGROUND,
       "text-outline-width": 2,
       "text-outline-opacity": 0.85,
     },
@@ -26,9 +26,9 @@ export const mapStyle: StylesheetJson = [
     selector: "node.network",
     style: {
       shape: "round-rectangle",
-      "background-color": "#172431",
-      "border-color": "#6c8296",
-      "border-width": 1.5,
+      "background-color": "#19302f",
+      "border-color": "#66867a",
+      "border-width": 2,
       padding: "20px",
       "text-valign": "top",
       "text-halign": "center",
@@ -41,22 +41,22 @@ export const mapStyle: StylesheetJson = [
   },
   {
     selector: "node.network.external",
-    style: { "background-color": "#2c2921", "border-color": "#c7ad80", "border-style": "dashed" },
+    style: { "background-color": "#2a2825", "border-color": "#c7ad80", "border-style": "dashed" },
   },
   {
     selector: "node.service",
     style: {
       shape: "round-rectangle",
-      width: 30,
-      height: 30,
+      width: 42,
+      height: 24,
       "background-color": "#2b4356",
-      "border-color": muted,
-      "border-width": 1.5,
+      "border-color": serviceBorder,
+      "border-width": 2,
       "text-valign": "bottom",
       "text-margin-y": 4,
     },
   },
-  { selector: "node.service.foundational", style: { "background-color": "#21323f", "border-style": "dotted" } },
+  { selector: "node.service.foundational", style: { "background-color": "#30433e", "border-style": "dotted" } },
   {
     selector: "node.cds",
     style: {
@@ -78,10 +78,12 @@ export const mapStyle: StylesheetJson = [
     style: {
       "curve-style": "bezier",
       width: 2,
-      "line-color": "#6c8296",
-      "target-arrow-color": "#6c8296",
+      "line-color": "#91a8af",
+      "target-arrow-color": "#91a8af",
       "target-arrow-shape": "triangle",
       "arrow-scale": 0.8,
+      "underlay-color": "#7edbcb",
+      "underlay-padding": 6,
     },
   },
   { selector: "edge.via-cds", style: { width: 3.5, "line-color": "#f3ac58", "target-arrow-color": "#f3ac58" } },
@@ -129,10 +131,13 @@ export const mapStyle: StylesheetJson = [
   },
   // Zoomed out, service labels are hidden ("quiet") unless hovered or part of a highlighted chain.
   { selector: "node.service.quiet", style: { label: "" } },
-  { selector: "node.service.quiet.hover, node.service.quiet.chain", style: { label: "data(label)" } },
+  {
+    selector: "node.service.quiet.hover, node.service.quiet.chain, node.service.quiet.chain-root",
+    style: { label: "data(label)" },
+  },
   {
     selector: "node.hover",
-    style: { "z-index": 20, "text-background-color": "#0d141c", "text-background-opacity": 0.9 },
+    style: { "z-index": 20, "text-background-color": MAP_BACKGROUND, "text-background-opacity": 0.9 },
   },
   // Later rules win: a chain shows its foundational links (Q-021), and a filter hides even those.
   { selector: ".hidden", style: { display: "none" } },

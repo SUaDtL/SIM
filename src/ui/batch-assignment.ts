@@ -3,14 +3,15 @@ import { SensitiveInputWarning } from "../domain/errors";
 import { applyBatch, previewBatch, type Assignment, type AssignmentTarget, type BatchPlan } from "../assessment/upkeep";
 import type { Repository } from "../domain/repository";
 import type { Tier } from "../domain/types";
-import { button, el, option } from "./dom";
+import { button, el, option, focusPagingControl } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 
 export function openBatchAssignment(
   repo: Repository,
   done: (count: number) => void,
   draftChanged: (pending: boolean) => void,
 ): HTMLDialogElement {
-  const origin = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const origin = document.querySelector<HTMLElement>("details.workspace-assessment > summary");
   const snapshot = repo.snapshot();
   const networks = new Map(snapshot.networks.map(({ id, name }) => [id, name]));
   const identities = repo.exchangeIdentities("service");
@@ -62,6 +63,11 @@ export function openBatchAssignment(
           "form",
           {},
           el("label", { class: "assessment-field" }, `New ${label} name`, input),
+          el(
+            "p",
+            { class: "hint" },
+            "Creating this shared record keeps it in the dataset even if you cancel the batch assignment.",
+          ),
           message,
           el("div", { class: "actions" }, button("Cancel", back), el("button", { type: "submit" }, "Create and use")),
         );
@@ -101,90 +107,113 @@ export function openBatchAssignment(
   function syncTarget(): void {
     choose.textContent = available().find((row) => String(row.id) === targetId)?.name ?? "Choose record to assign";
   }
+  const list = el("fieldset");
+  const count = el("p", { role: "status" });
+  const tierField = el("label", { class: "assessment-field" }, "Support tier", tier);
+  const previous = button("Previous", () => {
+    page--;
+    showRows();
+    focusPagingControl(previous, next);
+  });
+  const next = button("Next", () => {
+    page++;
+    showRows();
+    focusPagingControl(next, previous);
+  });
+  const previewButton = button("Preview assignments", () => {
+    try {
+      if (!targetId) throw new Error("Choose a record to assign.");
+      preview = previewBatch(
+        repo,
+        [...chosen.values()],
+        field.value as Assignment,
+        Number(tier.value) as Tier,
+        Number(targetId),
+      );
+      review(preview);
+      panel.body.scrollTop = 0;
+      heading.focus();
+    } catch (error) {
+      alert.textContent = error instanceof Error ? error.message : "Could not prepare this batch.";
+      alert.scrollIntoView({ block: "nearest" });
+    }
+  });
+  const selection = el(
+    "div",
+    {},
+    el("p", {}, "Choose services and an assignment, then preview the changes before applying them."),
+    el("label", { class: "assessment-field" }, "Find services", query),
+    count,
+    list,
+    el("div", { class: "actions" }, previous, next),
+    el("label", { class: "assessment-field" }, "Assignment", field),
+    el("div", { class: "assessment-field" }, "Record to assign", choose),
+    tierField,
+    el("div", { class: "actions" }, previewButton),
+  );
   field.addEventListener("change", () => {
     targetId = "";
     syncTarget();
-    select();
+    tierField.hidden = field.value !== "support";
   });
   query.addEventListener("input", () => {
     page = 0;
-    select();
+    showRows();
   });
 
-  function select(): void {
-    preview = null;
+  function showRows(): void {
     const matching = rows.filter(({ label }) => label.toLowerCase().includes(query.value.trim().toLowerCase()));
-    const previous = button("Previous", () => {
-      page--;
-      select();
-      heading.focus();
-    });
-    const next = button("Next", () => {
-      page++;
-      select();
-      heading.focus();
-    });
     previous.disabled = page === 0;
     next.disabled = (page + 1) * 20 >= matching.length;
-    const count = el("p", { role: "status" });
-    const list = el("fieldset", {}, el("legend", {}, "Services to include"));
-    for (const item of matching.slice(page * 20, (page + 1) * 20)) {
+    previous.hidden = next.hidden = matching.length <= 20;
+    const visible = matching.slice(page * 20, (page + 1) * 20);
+    const updateCount = (): void => {
+      const start = page * 20 + 1;
+      const result =
+        matching.length === 0
+          ? "No matching services"
+          : `${String(start)}–${String(start + visible.length - 1)} of ${String(matching.length)} services`;
+      count.textContent = `${result} · ${String(chosen.size)} selected across all pages.`;
+    };
+    list.replaceChildren(el("legend", {}, "Services to include"));
+    list.hidden = visible.length === 0;
+    for (const item of visible) {
       const check = el("input", { type: "checkbox" });
       check.checked = chosen.has(item.id);
       check.addEventListener("change", () => {
         if (check.checked) chosen.set(item.id, item);
         else chosen.delete(item.id);
-        count.textContent = `${String(chosen.size)} selected across all pages.`;
+        updateCount();
       });
       list.append(el("label", { class: "batch-choice" }, check, item.label));
     }
-    count.textContent = `${String(chosen.size)} selected across all pages.`;
-    body.replaceChildren(
-      el("label", { class: "assessment-field" }, "Find services", query),
-      count,
-      list,
-      el("div", { class: "actions" }, previous, next),
-      el("label", { class: "assessment-field" }, "Assignment", field),
-      el("div", { class: "assessment-field" }, "Record to assign", choose),
-      ...(field.value === "support" ? [el("label", { class: "assessment-field" }, "Support tier", tier)] : []),
-      el(
-        "div",
-        { class: "actions" },
-        button("Cancel", () => {
-          dialog.close();
-        }),
-        button("Preview assignments", () => {
-          try {
-            if (!targetId) throw new Error("Choose a record to assign.");
-            preview = previewBatch(
-              repo,
-              [...chosen.values()],
-              field.value as Assignment,
-              Number(tier.value) as Tier,
-              Number(targetId),
-            );
-            review(preview);
-            heading.focus();
-          } catch (error) {
-            alert.textContent = error instanceof Error ? error.message : "Could not prepare this batch.";
-          }
-        }),
-      ),
-    );
+    updateCount();
+  }
+
+  function select(): void {
+    preview = null;
+    panel.setBack("", null);
+    tierField.hidden = field.value !== "support";
+    showRows();
+    body.replaceChildren(selection);
   }
 
   function review(plan: BatchPlan): void {
+    panel.setBack("Back to selection", () => {
+      select();
+      previewButton.focus();
+    });
     alert.textContent = "";
     const changes = plan.changes.filter((row) => row.before !== plan.to);
     body.replaceChildren(
       el(
         "p",
         {},
-        `${String(plan.changes.length)} selected. ${String(changes.length)} assignments will change. Support notes and map positions are retained.`,
+        `${String(plan.changes.length)} selected. ${String(changes.length)} ${changes.length === 1 ? "assignment" : "assignments"} will change. Support notes and map positions are retained.`,
       ),
       el(
         "ul",
-        {},
+        { class: "workflow-list" },
         ...plan.changes.map((row) =>
           el(
             "li",
@@ -196,10 +225,6 @@ export function openBatchAssignment(
       el(
         "div",
         { class: "actions" },
-        button("Back to selection", () => {
-          select();
-          heading.focus();
-        }),
         button("Apply assignments", () => {
           if (preview !== plan) return;
           try {
@@ -224,7 +249,16 @@ export function openBatchAssignment(
     },
     { once: true },
   );
-  dialog.append(heading, alert, body);
+  const panel = assessmentPanel(
+    dialog,
+    heading,
+    () => {
+      dialog.close();
+    },
+    alert,
+    body,
+  );
+  dialog.addEventListener("cancel", panel.cancel);
   document.body.append(dialog);
   select();
   dialog.showModal();

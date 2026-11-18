@@ -137,6 +137,49 @@ test("T03 a service can be understood and browsed without opening a draft or a l
   expect(await savedSnapshot(page)).toEqual(data.snapshot);
 });
 
+test("following a dependency keeps the related service's evidence in reach", async ({ page }) => {
+  const data = await fixture();
+  await openDatasetFile(page, data.bytes, "related-evidence.sqlite");
+  await selectInventory(page, "service", "Identity");
+  const editor = page.getByTestId("editor");
+  await editor.getByRole("tab", { name: "Connections" }).click();
+  await editor
+    .getByRole("region", { name: "Used by services" })
+    .getByRole("button", { name: "Orders (Amber)", exact: true })
+    .click();
+  const peek = page.getByRole("dialog", { name: "Inspect related record" });
+  const evidence = peek.getByRole("button", { name: "Evidence and questions" });
+  await evidence.click();
+  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  await notes.getByRole("button", { name: "Add question" }).click();
+  await notes.getByLabel("Question or unresolved observation").fill("Who owns this dependency?");
+  await notes.getByRole("button", { name: "Apply note" }).click();
+  await notes.getByRole("button", { name: "Close" }).click();
+  await expect(peek).toContainText("1 open question");
+  await expect(evidence).toBeFocused();
+  await peek.getByRole("button", { name: "Close" }).click();
+  await expect(editor.getByRole("tab", { name: "Connections" })).toHaveAttribute("aria-selected", "true");
+  await expect(editor.getByRole("button", { name: "Orders (Amber)", exact: true })).toBeFocused();
+});
+
+test("undo and redo replace the service's last apply confirmation", async ({ page }) => {
+  const data = await fixture();
+  await openDatasetFile(page, data.bytes, "service-history.sqlite");
+  await selectInventory(page, "service", "Orders");
+  const editor = page.getByTestId("editor");
+  await editSelected(page);
+  await editor.getByLabel("Description", { exact: true }).fill("Updated field notes.");
+  await editor.getByRole("button", { name: "Apply changes" }).click();
+  await expect(editor).toContainText("Service changes applied.");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(editor).toContainText("Synthetic source description");
+  await expect(editor).not.toContainText("Service changes applied.");
+  await expect(page.getByTestId("navigation-status")).toHaveText("Change undone.");
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(editor).toContainText("Updated field notes.");
+  await expect(page.getByTestId("navigation-status")).toHaveText("Change reapplied.");
+});
+
 test("T06 Create similar makes one independent service with reviewed shared references and optional support only", async ({
   page,
 }) => {

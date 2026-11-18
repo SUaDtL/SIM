@@ -10,6 +10,7 @@ import {
 } from "../import/engine";
 import { readTemplate, TEMPLATES, type TemplateFile } from "../import/templates";
 import { button, el, focusPagingControl } from "./dom";
+import { assessmentPanel } from "./assessment-panel";
 import { isMarking } from "../db/markings";
 import {
   createImportReceipt,
@@ -233,22 +234,41 @@ export function openImportDialog(ctx: ImportDialogContext): void {
     );
   }
 
-  const dialog = el(
-    "dialog",
-    { class: "import-dialog", "aria-labelledby": "import-title" },
-    el("h2", { id: "import-title" }, "Import CSV"),
+  const templateSection = el("details", {}, el("summary", {}, "Download templates"), templates);
+  const dialog = el("dialog", { class: "import-dialog", "aria-labelledby": "import-title" });
+  const heading = el("h2", { id: "import-title", tabindex: "-1" }, "Import CSV");
+  const panel = assessmentPanel(
+    dialog,
+    heading,
+    close,
     el(
       "p",
       { class: "hint" },
       "Fill in one CSV file per template and choose them together; rows may refer to records in other files " +
         "or already in the dataset. Records that already exist are left as they are.",
     ),
-    el("details", {}, el("summary", {}, "Download templates"), templates),
-    lastReceipt ? last : null,
+    templateSection,
+    ...(lastReceipt ? [last] : []),
     el("div", { class: "field" }, el("label", { for: "import-files" }, "CSV files"), input),
     preview,
-    el("div", { class: "actions" }, importButton, button("Cancel", close)),
+    el("div", { class: "actions" }, importButton),
   );
+  panel.dismiss.textContent = "Cancel";
+  dialog.addEventListener("cancel", panel.cancel);
+  for (const section of [templateSection, last]) {
+    section.addEventListener("toggle", () => {
+      const active = section.open ? section : [last, templateSection].find((item) => item.open);
+      panel.setBack(
+        "Back to import",
+        active
+          ? () => {
+              active.open = false;
+              active.querySelector("summary")?.focus();
+            }
+          : null,
+      );
+    });
+  }
 
   function close(): void {
     closed = true;
@@ -451,4 +471,5 @@ export function openImportDialog(ctx: ImportDialogContext): void {
 
   document.body.append(dialog);
   dialog.showModal();
+  heading.focus();
 }

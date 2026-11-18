@@ -91,7 +91,7 @@ test("R04 deleting the focused service ends focus without hiding the remaining m
   await inspect(page, "Caller");
   const before = await mapState(page);
   await page.getByRole("button", { name: "Depends on", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller");
   const editor = page.getByTestId("editor");
   await editor.locator("details.record-secondary-actions > summary").click();
   await editor.getByRole("button", { name: "Delete record", exact: true }).click();
@@ -117,7 +117,7 @@ test("R04 deleting the focused service ends focus without hiding the remaining m
   const svg = await pending;
   await svg.saveAs(info.outputPath("focus-ended.svg"));
   const text = await readFile(info.outputPath("focus-ended.svg"), "utf8");
-  expect(text).not.toContain("Depends on Caller");
+  expect(text).not.toContain("Dependencies of Caller");
   expect(text).toContain("Focus ended");
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   expect((await mapState(page)).visible).toContain(`service-${String(data.caller)}`);
@@ -275,7 +275,7 @@ test("V02 workspace Back restores a focused view together with a working Back fr
   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
   await expect(page.getByTestId("focus-status")).toBeEmpty();
   await page.getByRole("button", { name: "Back", exact: true }).click();
-  await expect(page.getByTestId("focus-status")).toContainText("Depends on Caller");
+  await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller");
   await page.getByRole("button", { name: "Back from focus", exact: true }).click();
   await expect(page.getByTestId("focus-status")).toBeEmpty();
   expect(await mapState(page)).toEqual(before);

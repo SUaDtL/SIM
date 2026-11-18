@@ -41,10 +41,12 @@ import {
   writeToHandle,
 } from "./file/dataset-file";
 import "./ui/app.css";
+import "./ui/atlas.css";
 import { createBanner } from "./ui/banner";
 import { openImportDialog } from "./ui/import-dialog";
 import type { ImportReceipt } from "./ui/import-receipt";
 import { openHelp } from "./ui/help";
+import { assessmentOpener, assessmentPanel } from "./ui/assessment-panel";
 import { installMenuDismissal } from "./ui/menu-dismissal";
 import { createWorkspace, type Workspace } from "./ui/workspace";
 import { button as uiButton, el, focusPagingControl } from "./ui/dom";
@@ -58,6 +60,7 @@ interface State {
   name: string;
   fileName: string | null;
   handle: FileHandle | null;
+  initialWorkspace?: true;
   importReceipt?: ImportReceipt;
   correctionReceipt?: Blob;
   recovery?: { handle: FileHandle; controller: Recovery; unsubscribe: () => void };
@@ -73,6 +76,16 @@ let replacementRequest = 0;
 let saveIntent = false;
 const status = document.createElement("p");
 status.dataset["testid"] = "dataset-status";
+const documentName = el("strong", { class: "document-name" });
+const documentFile = el("span", { class: "document-file" });
+const saveState = el("span", { class: "save-state" });
+status.append(
+  documentName,
+  el("span", { class: "sr-only" }, " | "),
+  documentFile,
+  el("span", { class: "file-divider" }, " | "),
+  saveState,
+);
 const draftStatus = document.createElement("p");
 draftStatus.dataset["testid"] = "draft-status";
 const message = document.createElement("p");
@@ -90,6 +103,30 @@ let recoveryIntent = false;
 let recoveryRequest = 0;
 const undoButton = button("Undo", () => travel("undo"));
 const redoButton = button("Redo", () => travel("redo"));
+const startPanel = el(
+  "section",
+  { class: "atlas-start", "aria-labelledby": "atlas-start-title" },
+  el("div", { class: "atlas-cover-art", "aria-hidden": "true" }),
+  el(
+    "div",
+    { class: "atlas-start-copy" },
+    el("h2", { id: "atlas-start-title" }, "Start a service map"),
+    el("p", {}, "Map the services each network provides and trace the dependencies between them."),
+    el(
+      "div",
+      { class: "atlas-start-actions" },
+      button("Open dataset", onOpen),
+      button("Explore fictional demo", () => onDemo(true)),
+      uiButton(
+        "Create first network",
+        () => {
+          void workspace.startNetwork();
+        },
+        { class: "start-network" },
+      ),
+    ),
+  ),
+);
 const refreshViewButton = button("Refresh view", () => {
   try {
     workspace.refreshView();
@@ -126,7 +163,15 @@ function render(): void {
   if (!workspaceReady) return;
   state.name = state.repo.datasetName();
   const where = state.session.fileName() ?? "not saved yet";
-  status.textContent = `${state.name} | ${where} | ${state.session.fileStatus()}`;
+  status.dataset["hasFile"] = String(state.session.fileName() !== null);
+  documentName.textContent = state.name;
+  documentFile.textContent = where;
+  saveState.textContent = state.session.fileStatus();
+  startPanel.hidden =
+    !state.initialWorkspace ||
+    state.session.fileName() !== null ||
+    state.repo.currentRevision() !== 0 ||
+    workspace.hasPendingDraft();
   draftStatus.textContent = workspace.hasPendingDraft() ? workspace.pendingDraftLabel() : "";
   banner.update(state.repo.datasetMarking(), state.repo.datasetCaveat());
   undoButton.disabled = !state.repo.canUndo();
@@ -150,8 +195,7 @@ function hasUnsavedEdits(): boolean {
 
 async function travel(direction: "undo" | "redo"): Promise<void> {
   if (!(await workspace.resolveActiveDraft("history"))) return;
-  const done = direction === "undo" ? state.repo.undo() : state.repo.redo();
-  if (done) workspace.historyChanged();
+  workspace.travelHistory(direction);
   render();
 }
 
@@ -192,6 +236,7 @@ function openDataIssues(): void {
   const rows = el("ul", { class: "rows" });
   const count = el("p", { role: "status" });
   let page = 0;
+  let openingRecord = false;
   const close = (): void => {
     dialog.close();
   };
@@ -221,6 +266,7 @@ function openDataIssues(): void {
               "p",
               {},
               uiButton(record.name, () => {
+                openingRecord = true;
                 close();
                 if (state === owner) void workspace.inspectRecord({ type: record.type, id: record.id });
               }),
@@ -240,6 +286,7 @@ function openDataIssues(): void {
     if (!candidates.length) duplicateRows.append(el("li", {}, "No matching duplicate suggestions."));
     previousDuplicates.disabled = duplicatePage === 0;
     nextDuplicates.disabled = (duplicatePage + 1) * 12 >= candidates.length;
+    duplicatePaging.hidden = candidates.length <= 12;
   }
   const previousDuplicates = uiButton("Previous suggestions", () => {
     duplicatePage--;
@@ -251,7 +298,8 @@ function openDataIssues(): void {
     drawDuplicates();
     focusPagingControl(nextDuplicates, previousDuplicates);
   });
-  duplicates.append(duplicateRows, el("div", { class: "actions" }, previousDuplicates, nextDuplicates));
+  const duplicatePaging = el("div", { class: "actions" }, previousDuplicates, nextDuplicates);
+  duplicates.append(duplicateRows, duplicatePaging);
   duplicates.addEventListener("toggle", drawDuplicates);
   const previous = uiButton("Previous issues", () => {
     page--;
@@ -293,6 +341,7 @@ function openDataIssues(): void {
           ...(target
             ? [
                 uiButton(`Review ${label}`, () => {
+                  openingRecord = true;
                   close();
                   if (state === owner) void workspace.inspectRecord(target);
                 }),
@@ -306,19 +355,23 @@ function openDataIssues(): void {
       : "No current data issues.";
     previous.disabled = page === 0;
     next.disabled = (page + 1) * 20 >= issues.length;
+    issuePaging.hidden = issues.length <= 20;
     drawDuplicates();
   }
-  dialog.append(
+  const issuePaging = el("div", { class: "actions" }, previous, next);
+  assessmentPanel(
+    dialog,
     heading,
+    close,
     el(
       "p",
       {},
-      "These existing issues remain in the dataset until you explicitly repair the affected records. Opening this list does not change your file.",
+      "Review incomplete records and possible duplicates in this dataset. Open an affected record to see its details and decide whether to repair it.",
     ),
     count,
     rows,
+    issuePaging,
     duplicates,
-    el("div", { class: "actions" }, previous, next, uiButton("Close", close)),
   );
   const stop = owner.repo.subscribe(draw);
   dialog.addEventListener(
@@ -326,7 +379,7 @@ function openDataIssues(): void {
     () => {
       stop();
       dialog.remove();
-      origin?.focus();
+      if (!openingRecord) origin?.focus();
     },
     { once: true },
   );
@@ -442,48 +495,46 @@ function fileActionOrigin(): HTMLElement | null {
   return document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
 }
 
-function chooseReplacement(): Promise<ReplacementChoice> {
+function chooseReplacement(origin: HTMLElement | null): Promise<ReplacementChoice> {
   return new Promise((resolve) => {
-    const origin = fileActionOrigin();
-    const dialog = document.createElement("dialog");
-    dialog.setAttribute("aria-label", "Unsaved changes");
-    const heading = document.createElement("p");
-    heading.textContent = `Save changes to ${state.name} before continuing?`;
-    dialog.append(heading);
-    const choices: readonly [string, ReplacementChoice][] = [
-      ["Save and continue", "save"],
-      ["Discard all and continue", "discard"],
-      ["Stay", "stay"],
-    ];
-    const settle = (choice: ReplacementChoice): void => {
+    const dialog = el("dialog", { "aria-label": "Unsaved changes", class: "confirmation-dialog" });
+    function settle(choice: ReplacementChoice): void {
       dialog.close();
       dialog.remove();
-      if (origin?.isConnected) origin.focus();
+      if (origin?.isConnected) origin.focus({ preventScroll: true });
       resolve(choice);
-    };
-    for (const [label, choice] of choices) {
-      const control = document.createElement("button");
-      control.type = "button";
-      control.textContent = label;
-      control.addEventListener("click", () => {
-        settle(choice);
-      });
-      dialog.append(control);
     }
-    dialog.addEventListener("cancel", (event) => {
-      event.preventDefault();
-      settle("stay");
-    });
+    const panel = assessmentPanel(
+      dialog,
+      el("h2", {}, "Unsaved changes"),
+      () => {
+        settle("stay");
+      },
+      el("p", {}, `Save changes to ${state.name} before continuing?`),
+      el(
+        "div",
+        { class: "confirmation-choices" },
+        uiButton("Save and continue", () => {
+          settle("save");
+        }),
+        uiButton("Discard all and continue", () => {
+          settle("discard");
+        }),
+      ),
+    );
+    panel.dismiss.textContent = "Stay";
+    dialog.addEventListener("cancel", panel.cancel);
     document.body.append(dialog);
     dialog.showModal();
+    panel.dismiss.focus();
   });
 }
 
-async function resolveReplacement(owner: State): Promise<boolean> {
+async function resolveReplacement(owner: State, origin: HTMLElement | null): Promise<boolean> {
   while (state === owner && hasUnsavedEdits()) {
     const contentBefore = owner.session.currentContent();
     const draftBefore = workspace.activeDraftToken();
-    const choice = await chooseReplacement();
+    const choice = await chooseReplacement(origin);
     if (state !== owner || choice === "stay") return false;
     if (choice === "discard") {
       // Another edit during the decision requires a fresh choice.
@@ -508,12 +559,13 @@ async function installCandidate(
   fileName: string | null,
   handle: FileHandle | null,
   opened: boolean,
+  origin: HTMLElement | null,
 ): Promise<void> {
   const owner = state;
   try {
     if (
       request !== replacementRequest ||
-      !(await resolveReplacement(owner)) ||
+      !(await resolveReplacement(owner, origin)) ||
       request !== replacementRequest ||
       state !== owner
     ) {
@@ -528,6 +580,7 @@ async function installCandidate(
 }
 
 async function onNew(): Promise<void> {
+  const origin = assessmentOpener();
   const request = ++replacementRequest;
   const name = window.prompt("Name for the new dataset", "Untitled dataset");
   if (name === null) return;
@@ -535,7 +588,7 @@ async function onNew(): Promise<void> {
   if (matches.length > 0 && !window.confirm(new SensitiveInputWarning([{ field: "Dataset name", matches }]).message))
     return;
   try {
-    await installCandidate(await createDataset(name), request, null, null, false);
+    await installCandidate(await createDataset(name), request, null, null, false, origin);
   } catch (error) {
     show(error instanceof DatasetError ? error.message : "Could not create the dataset.", "error");
   }
@@ -559,7 +612,7 @@ function onCaveat(): Promise<void> {
 }
 
 /** Open the fictional demo enterprise as a new, unsaved dataset (WORK-014). */
-async function onDemo(): Promise<void> {
+async function onDemo(openMap = false, origin = assessmentOpener()): Promise<void> {
   const request = ++replacementRequest;
   try {
     const db = await createDataset(DEMO_NAME);
@@ -570,7 +623,8 @@ async function onDemo(): Promise<void> {
       throw error;
     }
     // Opening it gives a fresh repository, so building the demo is not in the undo history.
-    await installCandidate(db, request, null, null, false);
+    await installCandidate(db, request, null, null, false, origin);
+    if (openMap && state.db === db) workspace.showMap();
   } catch {
     show("Could not prepare the demo dataset.", "error");
   }
@@ -617,13 +671,14 @@ async function onImport(): Promise<void> {
 }
 
 async function onOpen(): Promise<void> {
+  const origin = assessmentOpener();
   const request = ++replacementRequest;
   try {
     const picked = await pickDatasetFile();
     if (!picked) return;
     const candidate = await openDataset(picked.bytes);
     const issues = inspectDatasetSemantics(candidate).filter((issue) => issue.severity === "legacy");
-    await installCandidate(candidate, request, picked.fileName, picked.handle, true);
+    await installCandidate(candidate, request, picked.fileName, picked.handle, true, origin);
     if (state.db === candidate && issues.length > 0) {
       show(
         `Opened with ${String(issues.length)} existing data issue${issues.length === 1 ? "" : "s"}. Use File → Review data issues to inspect every issue and its affected records. The file was not rewritten.`,
@@ -808,6 +863,7 @@ function button(label: string, action: () => unknown): HTMLButtonElement {
 async function boot(): Promise<void> {
   const app = document.getElementById("app");
   if (!app) throw new Error("missing #app root");
+  app.setAttribute("aria-busy", "true");
   configureSqliteWasm(dataUrlToBytes(wasmUrl));
   const db = await createDataset("Untitled dataset");
   const repo = new Repository(db);
@@ -815,6 +871,7 @@ async function boot(): Promise<void> {
     db,
     repo,
     session: new DatasetSession(db, repo, { fileName: null, opened: false }),
+    initialWorkspace: true,
     name: datasetName(db),
     fileName: null,
     handle: null,
@@ -826,6 +883,7 @@ async function boot(): Promise<void> {
       if (workspaceReady) render();
     },
     () => state.session.fileStatus(false) !== "Saved",
+    startPanel,
   );
   workspaceReady = true;
 
@@ -836,7 +894,10 @@ async function boot(): Promise<void> {
   const product = document.createElement("span");
   product.className = "app-product";
   product.textContent = "Service Integration Map";
-  title.append(brand, document.createTextNode(" "), product);
+  title.append(
+    el("span", { class: "atlas-symbol", "aria-hidden": "true" }),
+    el("span", { class: "brand-type" }, brand, " ", product),
+  );
   const version = document.createElement("p");
   version.dataset["testid"] = "sqlite-version";
   version.textContent = `SQLite ${sqliteVersion(db)}`;
@@ -848,70 +909,89 @@ async function boot(): Promise<void> {
   const fileTitle = document.createElement("summary");
   fileTitle.textContent = "File";
   const fileActions = document.createElement("div");
-  fileActions.className = "file-menu-actions";
+  fileActions.className = "file-menu-actions file-directory";
+  const group = (name: string, ...actions: HTMLButtonElement[]) =>
+    el(
+      "div",
+      { class: "file-action-group", role: "group", "aria-label": name },
+      el("p", { "aria-hidden": "true" }, name),
+      ...actions,
+    );
   fileActions.append(
-    button("New", onNew),
-    button("Open", onOpen),
-    button("Import CSV", onImport),
-    button("Export assessment or inventory", onAssessmentExport),
-    button("Prepare owner review", async () => {
-      const owner = state;
-      if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
-      ownerReviewDialog = openReviewIssuance(
-        owner.repo,
-        (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
-        async () => {
-          if (state !== owner) return;
-          const result = await onSave(false);
-          if (state === owner && result === "saved") {
-            show("Review base saved. Open Prepare owner review to download the package.");
-          } else if (state === owner && result === "download-requested") {
-            show("Dataset download requested. Reopen the downloaded dataset before exporting its review package.");
-          }
-        },
-      );
-    }),
-    button("Apply reviewed corrections", async () => {
-      const owner = state;
-      if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
-      ownerReviewDialog = openCorrectionReview(
-        owner.repo,
-        (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
-        (count, receipt) => {
-          owner.correctionReceipt = receipt;
-          render();
-          show(`${String(count)} reviewed corrections applied. Save file to retain them.`);
-        },
-      );
-    }),
-    correctionReceiptButton,
-    button("Save As", () => onSave(true)),
-    button("Rename dataset", onRename),
-    button("Assessment details", () => {
-      const owner = state;
-      assessmentDetails = openAssessmentDetails(
-        owner.repo,
-        () => state === owner,
-        () => {
-          show("Assessment details applied. Save file to retain them.");
-        },
-      );
-    }),
-    button("Assessment evidence and questions", () => {
-      noteDialog = openAssessmentNotes(state.repo, (pending) => {
-        noteDraft = pending;
-      });
-    }),
-    dataIssuesButton,
-    button("Choose recovery file", onRecovery),
-    stopRecoveryButton,
-    button("Banner caveat", onCaveat),
+    group(
+      "Dataset",
+      button("New", onNew),
+      button("Open", onOpen),
+      button("Import CSV", onImport),
+      button("Save As", () => onSave(true)),
+      button("Rename dataset", onRename),
+    ),
+    group(
+      "Review and export",
+      button("Export assessment or inventory", onAssessmentExport),
+      button("Prepare owner review", async () => {
+        const owner = state;
+        if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
+        ownerReviewDialog = openReviewIssuance(
+          owner.repo,
+          (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
+          async () => {
+            if (state !== owner) return;
+            const result = await onSave(false);
+            if (state === owner && result === "saved") {
+              show("Review base saved. Open Prepare owner review to download the package.");
+            } else if (state === owner && result === "download-requested") {
+              show("Dataset download requested. Reopen the downloaded dataset before exporting its review package.");
+            }
+          },
+        );
+      }),
+      button("Apply reviewed corrections", async () => {
+        const owner = state;
+        if (!(await workspace.resolveActiveDraft("navigate")) || state !== owner) return;
+        ownerReviewDialog = openCorrectionReview(
+          owner.repo,
+          (id, digest) => state === owner && owner.session.hasSavedReview(id, digest),
+          (count, receipt) => {
+            owner.correctionReceipt = receipt;
+            render();
+            show(`${String(count)} reviewed correction${count === 1 ? "" : "s"} applied. Save file to retain them.`);
+          },
+        );
+      }),
+      correctionReceiptButton,
+    ),
+    group(
+      "Assessment",
+      button("Assessment details", () => {
+        const owner = state;
+        assessmentDetails = openAssessmentDetails(
+          owner.repo,
+          () => state === owner,
+          () => {
+            show("Assessment details applied. Save file to retain them.");
+          },
+        );
+      }),
+      button("Assessment evidence and questions", () => {
+        noteDialog = openAssessmentNotes(state.repo, (pending) => {
+          noteDraft = pending;
+        });
+      }),
+      dataIssuesButton,
+    ),
+    group(
+      "File safeguards",
+      button("Choose recovery file", onRecovery),
+      stopRecoveryButton,
+      button("Banner caveat", onCaveat),
+    ),
   );
   file.append(fileTitle, fileActions);
   const about = document.createElement("details");
   about.className = "file-menu about-menu";
   const aboutTitle = document.createElement("summary");
-  aboutTitle.textContent = "About and demo";
+  aboutTitle.append(el("span", {}, "About", el("span", { class: "about-detail" }, " and demo")));
   const aboutBody = document.createElement("div");
   aboutBody.className = "file-menu-actions";
   const aboutDescription = document.createElement("p");
@@ -921,6 +1001,9 @@ async function boot(): Promise<void> {
     const dialog = document.getElementById("sim-license-dialog");
     if (dialog instanceof HTMLDialogElement) {
       licenseOrigin = origin;
+      dialog.scrollTop = 0;
+      const chooser = dialog.querySelector<HTMLSelectElement>("#sim-license-component");
+      if (chooser) chooser.value = "";
       dialog.showModal();
     } else show("License notices are unavailable in this build.", "error");
     return Promise.resolve();
@@ -929,12 +1012,54 @@ async function boot(): Promise<void> {
     const dialog = document.getElementById("sim-license-dialog");
     if (dialog instanceof HTMLDialogElement) dialog.close();
   });
+  const component = document.querySelector<HTMLSelectElement>("#sim-license-component");
+  component?.addEventListener("change", () => {
+    const heading = document.getElementById(component.value);
+    heading?.focus({ preventScroll: true });
+    heading?.scrollIntoView({ block: "start" });
+  });
   document.getElementById("sim-license-dialog")?.addEventListener("close", () => {
     if (licenseOrigin?.isConnected) licenseOrigin.focus();
   });
   const supportInformation = `${buildInformation()}\nData format ${String(LATEST_VERSION)}\nSQLite ${sqliteVersion(db)}\nBrowser: ${navigator.userAgent}\nOffline single-file application. No inventory contents included.`;
-  const identity = el("pre", { "data-testid": "build-information", tabindex: "0" }, supportInformation);
+  const identity = el(
+    "pre",
+    { id: "support-information", "data-testid": "build-information", tabindex: "0", hidden: "" },
+    supportInformation,
+  );
+  function showDiagnostics(open: boolean): void {
+    identity.hidden = !open;
+    diagnostics.setAttribute("aria-expanded", String(open));
+  }
+  const diagnostics = uiButton(
+    "Technical information",
+    () => {
+      showDiagnostics(identity.hasAttribute("hidden"));
+    },
+    {
+      "aria-expanded": "false",
+      "aria-controls": identity.id,
+      "data-keep-menu-open": "",
+    },
+  );
+  const aboutProduct = el(
+    "section",
+    { class: "about-product" },
+    el("h2", {}, "Service Integration Map"),
+    el(
+      "p",
+      {},
+      "Inventory the services your networks provide, trace their dependencies, and compare a proposed change.",
+    ),
+    el("p", { class: "about-version" }, `SIM ${BUILD.version} · `, version),
+  );
+  aboutBody.classList.add("about-card");
   aboutBody.append(
+    aboutProduct,
+    aboutDescription,
+    button("Open demo", onDemo),
+    button("Licenses and notices", licenses),
+    diagnostics,
     identity,
     button("Copy support information", async () => {
       try {
@@ -942,21 +1067,20 @@ async function boot(): Promise<void> {
         show("Support information copied. No inventory contents included.");
       } catch {
         show("Clipboard is unavailable. Select and copy the support information in About.");
+        about.open = true;
+        showDiagnostics(true);
+        identity.focus();
       }
     }),
-    version,
-    aboutDescription,
-    button("Open demo", onDemo),
-    button("Licenses and notices", licenses),
   );
   about.append(aboutTitle, aboutBody);
   const helpButton = button("Help", () => {
     openHelp({
       demo: () => {
-        void onDemo();
+        void onDemo(false, helpButton);
       },
-      licenses: () => {
-        void licenses(helpButton);
+      licenses: (origin) => {
+        void licenses(origin);
       },
     });
     return Promise.resolve();
@@ -974,8 +1098,8 @@ async function boot(): Promise<void> {
   const documentStatus = document.createElement("div");
   documentStatus.className = "document-status";
   status.setAttribute("role", "status");
-  documentStatus.append(status, draftStatus, recoveryStatus, retryRecoveryButton, message, refreshViewButton);
-  header.append(title, toolbar, documentStatus);
+  documentStatus.append(draftStatus, recoveryStatus, retryRecoveryButton, message, refreshViewButton);
+  header.append(title, status, toolbar, documentStatus);
   app.replaceChildren(banner.top, header, workspace.element, banner.bottom);
   app.removeAttribute("aria-busy");
   installMenuDismissal(document);
@@ -1012,14 +1136,14 @@ void boot().catch(() => {
   app.replaceChildren(
     el(
       "section",
-      { role: "alert", tabindex: "-1" },
+      { class: "boot-panel", role: "alert", tabindex: "-1" },
       el("h1", {}, "SIM could not start"),
       el(
         "p",
         {},
         "Your dataset files remain on disk. Open an intact SIM HTML file in Edge or Chrome and then reopen your dataset. Keep your original dataset files; do not overwrite them while troubleshooting.",
       ),
-      el("pre", {}, buildInformation()),
+      el("details", {}, el("summary", {}, "Technical information"), el("pre", {}, buildInformation())),
     ),
   );
   app.querySelector<HTMLElement>("[role=alert]")?.focus();

@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Enterprise Atlas implementation · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-ENTERPRISE-ATLAS</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/enterprise-atlas.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Enterprise Atlas implementation</h1><p class="deck">Integrate shell, map and record navigation, then check the production build.</p><div class="meta"><span>PLAN-ENTERPRISE-ATLAS</span><span>Revision 48 · schema 0.3.2</span><span>20 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-ENTERPRISE-ATLAS</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>f7d22b6afbac51c1ac35ffb5d7e9b59660721f958bd15ef787f76ea1844ce739</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:TASK-01 -->
+<article class="record" id="TASK-01" data-ca-symbol="TASK-01" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-01">TASK-01</a><h3>Atlas shell and task surfaces</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-01</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-01">SPEC-ENTERPRISE-ATLAS#AC-01</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-01</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/app.css</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>create</td><td><code>e2e/atlas-shell.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Implemented the document header, rail and narrow inspection sheet, and checked touch selection and dismissal in the offline build. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T02:51:11Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>220296915adec454901353c0e7a80d0b8680052360de544453f8729d9dcca6dd</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.</div><div class="field"><span class="label">Summary</span>Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-01 -->
+
+<!-- CA:BEGIN:TASK-02 -->
+<article class="record" id="TASK-02" data-ca-symbol="TASK-02" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-02">TASK-02</a><h3>Map and capture</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-02</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-02">SPEC-ENTERPRISE-ATLAS#AC-02</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-02</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>src/map/style.ts</code></td></tr><tr><td>modify</td><td><code>src/map/market.css</code></td></tr><tr><td>modify</td><td><code>src/map/svg-scene.ts</code></td></tr><tr><td>create</td><td><code>e2e/atlas-map.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Implemented scope-aware map labels, stable PNG and SVG capture, directed motion and a paged, named scenario proposal list. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T02:51:11Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>5b3f01b1dc0cb416c97b0571ffcfdc568da2474a48ab239fdd9d6f14624ec378</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.</div><div class="field"><span class="label">Summary</span>Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-02 -->
+
+<!-- CA:BEGIN:TASK-03 -->
+<article class="record" id="TASK-03" data-ca-symbol="TASK-03" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-03">TASK-03</a><h3>Find and inspect</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-03</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-03">SPEC-ENTERPRISE-ATLAS#AC-03</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-03</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr><tr><td>modify</td><td><code>src/ui/record-summary.ts</code></td></tr><tr><td>create</td><td><code>src/ui/atlas-find.ts</code></td></tr><tr><td>create</td><td><code>e2e/atlas-navigation.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Implemented qualified cross-surface search, guarded inspection, scoped evidence and keyboard-safe assessment filtering. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T02:51:11Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>d5f06008b0c68aa4813c1c1cb8bf89f306e5ff2bec1891bfdd118a2f41dcd93b</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.</div><div class="field"><span class="label">Summary</span>Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-03 -->
+
+<!-- CA:BEGIN:TASK-04 -->
+<article class="record" id="TASK-04" data-ca-symbol="TASK-04" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-04">TASK-04</a><h3>Offline browser qualification</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-04</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-04">SPEC-ENTERPRISE-ATLAS#AC-04</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-04</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>e2e</code></td></tr><tr><td>inspect</td><td><code>src</code></td></tr><tr><td>inspect</td><td><code>dist/sim.html</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Compared offline builds, checked six viewport sizes, gathered three runs per build at 15, 100 and 500 services, and documented independent human, native and screen-reader acceptance limits. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>1</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T02:49:04Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>d5ed22a3dc0bf775cfe5162a961dd5f1c1fb90f3c9b044c76d867a73ba3d41ad</div><div class="field"><span class="label">Reported outcome</span>fail</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local npm run check console output and check.log.</div><div class="field"><span class="label">Summary</span>Initial integration run reported 18 browser failures and 1050 passes. Capture geometry, empty-filter recovery, menu placement and layout test assumptions required follow-up. The application had also been rebuilt during this run.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T02:51:12Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>d5ed22a3dc0bf775cfe5162a961dd5f1c1fb90f3c9b044c76d867a73ba3d41ad</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.</div><div class="field"><span class="label">Summary</span>Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-04 -->
+
+<!-- CA:BEGIN:TASK-05 -->
+<article class="record" id="TASK-05" data-ca-symbol="TASK-05" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-05">TASK-05</a><h3>Atlas visual design</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-05</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-05">SPEC-ENTERPRISE-ATLAS#AC-05</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-05</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui</code></td></tr><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/map/market.css</code></td></tr><tr><td>modify</td><td><code>src/map/style.ts</code></td></tr><tr><td>modify</td><td><code>e2e/atlas-shell.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Validated welcome and record reading, phone first-network creation, exact Find return, nested evidence, Undo, exported report navigation and print layout. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T04:58:47Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>ac105f41955821f59d2914647de699681b4924b5cb334c34a6b1e56cd7472d25</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1102 browser cases. Validated welcome and record reading, phone first-network creation, exact Find return, nested evidence, Undo, exported report navigation and print layout.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-05 -->
+
+<!-- CA:BEGIN:TASK-06 -->
+<article class="record" id="TASK-06" data-ca-symbol="TASK-06" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-06">TASK-06</a><h3>Dependency path crossings</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-06</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-06">SPEC-ENTERPRISE-ATLAS#AC-06</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-06</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/route-offset.ts</code></td></tr><tr><td>modify</td><td><code>src/map/route-offset.test.ts</code></td></tr><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>src/map/svg-scene.ts</code></td></tr><tr><td>modify</td><td><code>e2e/atlas-map.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Verified stable saved positions, four-to-one path crossings on the reference layout, zero on the seeded demo, phone Fit and PNG/SVG fidelity. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T04:58:51Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>0d3e4b734dd0ca9cb67ffe7801369fdf133e96f04424bdaba140d8352e4d92e5</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1102 browser cases. Verified stable saved positions, four-to-one path crossings on the reference layout, zero on the seeded demo, phone Fit and PNG/SVG fidelity.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-06 -->
+
+<!-- CA:BEGIN:TASK-07 -->
+<article class="record" id="TASK-07" data-ca-symbol="TASK-07" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-07">TASK-07</a><h3>Working To-Be demo</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-07</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-07">SPEC-ENTERPRISE-ATLAS#AC-07</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-07</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/demo/demo.ts</code></td></tr><tr><td>modify</td><td><code>src/demo/demo.test.ts</code></td></tr><tr><td>modify</td><td><code>e2e/demo.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Verified the bundled Shared planning hub scenario can be inspected, compared, saved and reopened with the original 92-service As-Is preserved. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T04:58:53Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>2b7ef1bb06c04ac55b9a14426946ec560f0386530b0d961d0f181ea4571c5f65</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1102 browser cases. Verified the bundled Shared planning hub scenario can be inspected, compared, saved and reopened with the original 92-service As-Is preserved.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-07 -->
+
+<!-- CA:BEGIN:TASK-08 -->
+<article class="record" id="TASK-08" data-ca-symbol="TASK-08" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-08">TASK-08</a><h3>Navigable field guide</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-08</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-08">SPEC-ENTERPRISE-ATLAS#AC-08</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-08</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/help.ts</code></td></tr><tr><td>create</td><td><code>src/ui/help.css</code></td></tr><tr><td>create</td><td><code>e2e/atlas-help.spec.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Verified seven topic sections, pinned Close, keyboard and focus return, and phone topic selection in offline Chrome and Edge. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T04:58:54Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>e5709ef892e781e2da6f50267ba37b9bb31c6aeab01b9f8d67e808a8fbf60b65</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1102 browser cases. Verified seven topic sections, pinned Close, keyboard and focus return, and phone topic selection in offline Chrome and Edge.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-08 -->
+
+<!-- CA:BEGIN:TASK-09 -->
+<article class="record" id="TASK-09" data-ca-symbol="TASK-09" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-09">TASK-09</a><h3>Dismiss dialogs, inspectors and expanded controls</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-09</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-09">SPEC-ENTERPRISE-ATLAS#AC-09</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>A reader can find a local dismissal action in opened records and dialogs without scrolling the full content. Escape handles the innermost open surface, preserves guarded edits and restores a usable focus target on laptop and phone.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-09</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>e2e</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Audit primary, nested and long-document surfaces. Reuse guarded close actions, persistent headers, and keyboard return paths. Exercise short and narrow screens.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Verified pinned and local exits on dialogs, map and record surfaces, long legal and deletion lists; draft guards focus the safe action and nested returns restore their origin. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T05:50:32Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>59f8078b298d5f974338d3014218337a439cafda155562f7f081817c0d0da0f4</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local exit 0, whole-app-gate.log, Field Atlas usability audit.html, verified-copy.json. HTML SHA-256 fb7cccf93aa5c341876be638110d0ffcf3fa2615768f8eacdf90e0e32433b20a.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1162 browser cases. Verified pinned and local exits on dialogs, map and record surfaces, long legal and deletion lists; draft guards focus the safe action and nested returns restore their origin.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-09 -->
+
+<!-- CA:BEGIN:TASK-10 -->
+<article class="record" id="TASK-10" data-ca-symbol="TASK-10" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#TASK-10">TASK-10</a><h3>Whole-application usability review</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-10</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/enterprise-atlas.html#AC-10">SPEC-ENTERPRISE-ATLAS#AC-10</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>An explicit surface inventory and checklist precede a production walkthrough of every surface family. Each surface explains its purpose, current scope and next action. The matrix and other dense views remain legible on phone and short desktop screens. The final ledger names findings, repairs, evidence and any limits.</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-10</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/main.ts</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr><tr><td>modify</td><td><code>e2e</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert the presentation diff for this task on the feature branch and rebuild the single file.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Inventory every user-facing surface first, walk the live application and compare the resulting evidence to the plan. Fix the issues found and run browser, responsive, and export checks.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Supported offline application gate passes.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Recorded the review plan before implementation, matched 42 distinct screens at 320, 615 and 1440 pixels, inspected nested workflows and actual outputs, and verified the delivered file in offline Edge and Chrome. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T05:50:35Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>59f8078b298d5f974338d3014218337a439cafda155562f7f081817c0d0da0f4</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local exit 0, whole-app-gate.log, Field Atlas usability audit.html, verified-copy.json. HTML SHA-256 fb7cccf93aa5c341876be638110d0ffcf3fa2615768f8eacdf90e0e32433b20a.</div><div class="field"><span class="label">Summary</span>Windows offline gate passed with 453 unit and 1162 browser cases. Recorded the review plan before implementation, matched 42 distinct screens at 320, 615 and 1440 pixels, inspected nested workflows and actual outputs, and verified the delivered file in offline Edge and Chrome.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:TASK-10 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-01 -->
+<article class="record" id="CP-01" data-ca-symbol="CP-01" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-01">CP-01</a><h3>Atlas shell and task surfaces</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-01">TASK-01</a></li></ul></div></article>
+<!-- CA:END:CP-01 -->
+
+<!-- CA:BEGIN:CP-02 -->
+<article class="record" id="CP-02" data-ca-symbol="CP-02" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-02">CP-02</a><h3>Map and capture</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-02">TASK-02</a></li></ul></div></article>
+<!-- CA:END:CP-02 -->
+
+<!-- CA:BEGIN:CP-03 -->
+<article class="record" id="CP-03" data-ca-symbol="CP-03" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-03">CP-03</a><h3>Find and inspect</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-03">TASK-03</a></li></ul></div></article>
+<!-- CA:END:CP-03 -->
+
+<!-- CA:BEGIN:CP-04 -->
+<article class="record" id="CP-04" data-ca-symbol="CP-04" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-04">CP-04</a><h3>Offline browser qualification</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-04">TASK-04</a></li></ul></div></article>
+<!-- CA:END:CP-04 -->
+
+<!-- CA:BEGIN:CP-05 -->
+<article class="record" id="CP-05" data-ca-symbol="CP-05" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-05">CP-05</a><h3>Atlas visual design</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-05">TASK-05</a></li></ul></div></article>
+<!-- CA:END:CP-05 -->
+
+<!-- CA:BEGIN:CP-06 -->
+<article class="record" id="CP-06" data-ca-symbol="CP-06" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-06">CP-06</a><h3>Dependency path crossings</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-06">TASK-06</a></li></ul></div></article>
+<!-- CA:END:CP-06 -->
+
+<!-- CA:BEGIN:CP-07 -->
+<article class="record" id="CP-07" data-ca-symbol="CP-07" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-07">CP-07</a><h3>Working To-Be demo</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-07">TASK-07</a></li></ul></div></article>
+<!-- CA:END:CP-07 -->
+
+<!-- CA:BEGIN:CP-08 -->
+<article class="record" id="CP-08" data-ca-symbol="CP-08" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-08">CP-08</a><h3>Navigable field guide</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-08">TASK-08</a></li></ul></div></article>
+<!-- CA:END:CP-08 -->
+
+<!-- CA:BEGIN:CP-09 -->
+<article class="record" id="CP-09" data-ca-symbol="CP-09" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-09">CP-09</a><h3>Dismiss dialogs, inspectors and expanded controls</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>A reader can find a local dismissal action in opened records and dialogs without scrolling the full content. Escape handles the innermost open surface, preserves guarded edits and restores a usable focus target on laptop and phone.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-09">TASK-09</a></li></ul></div></article>
+<!-- CA:END:CP-09 -->
+
+<!-- CA:BEGIN:CP-10 -->
+<article class="record" id="CP-10" data-ca-symbol="CP-10" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-10">CP-10</a><h3>Whole-application usability review</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>An explicit surface inventory and checklist precede a production walkthrough of every surface family. Each surface explains its purpose, current scope and next action. The matrix and other dense views remain legible on phone and short desktop screens. The final ledger names findings, repairs, evidence and any limits.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#TASK-10">TASK-10</a></li></ul></div></article>
+<!-- CA:END:CP-10 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2><span class="missing">None recorded</span></section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Observed date</span>2026-11-18</div><div class="field"><span class="label">Repository</span><span class="missing">Not yet supplied</span></div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: 1b89aaa91a6d9069348644e0a672b572cc7767302dcc0c8025e409fc16968a92<br>Model SHA-256: 0a538e20294059edbac4085f1e9d25a7890e12e196069c18cc22a7322f0b2116</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-ENTERPRISE-ATLAS",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "TASK-01": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "b1479e96f340d09165a904cc2c3e7b57460553da609958d37935614c88868ded",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T02:51:11Z",
+          "recording_operation_id": "atlas-final-gate-01",
+          "scoped_inputs_sha256": "220296915adec454901353c0e7a80d0b8680052360de544453f8729d9dcca6dd",
+          "source": "Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.",
+          "source_normative_sha256": "b9edacda839b54c3aa769279f537e55701c006c1f704668f021daecb8a40ceb6",
+          "summary": "Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.",
+          "task_subject_sha256": "53b0622dcaa262566b7ac0e815ec76f1ee62eab87f96a591a8a9c3f559c80f03"
+        }
+      ],
+      "TASK-02": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "5425bc241f4cd82032d3996f72b5e28bc1ad73bc3c16b20a938c0fe17d9aa957",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T02:51:11Z",
+          "recording_operation_id": "atlas-final-gate-02",
+          "scoped_inputs_sha256": "5b3f01b1dc0cb416c97b0571ffcfdc568da2474a48ab239fdd9d6f14624ec378",
+          "source": "Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.",
+          "source_normative_sha256": "b9edacda839b54c3aa769279f537e55701c006c1f704668f021daecb8a40ceb6",
+          "summary": "Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.",
+          "task_subject_sha256": "a5022c6ce4723e57f25c8055a6df50b093132d5cc6dafd76fdaba29bdc12ee1a"
+        }
+      ],
+      "TASK-03": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "f81241f9997e51a0a911e804c99478c3167d950a1747b82e9fdb9d82f1b8f5b7",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T02:51:11Z",
+          "recording_operation_id": "atlas-final-gate-03",
+          "scoped_inputs_sha256": "d5f06008b0c68aa4813c1c1cb8bf89f306e5ff2bec1891bfdd118a2f41dcd93b",
+          "source": "Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.",
+          "source_normative_sha256": "b9edacda839b54c3aa769279f537e55701c006c1f704668f021daecb8a40ceb6",
+          "summary": "Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.",
+          "task_subject_sha256": "83443a57dfc07aa5e5976de252d20b633d6a44134dec62c785f85e25e7459997"
+        }
+      ],
+      "TASK-04": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "52bbf6aff71a0d4f2333447df477137ab9bb8389c478cc7a61fe1caf9ff62fe9",
+          "cwd": ".",
+          "exit_code": 1,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "fail",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T02:49:04Z",
+          "recording_operation_id": "atlas-initial-browser-result",
+          "scoped_inputs_sha256": "d5ed22a3dc0bf775cfe5162a961dd5f1c1fb90f3c9b044c76d867a73ba3d41ad",
+          "source": "Local npm run check console output and check.log.",
+          "source_normative_sha256": "b9edacda839b54c3aa769279f537e55701c006c1f704668f021daecb8a40ceb6",
+          "summary": "Initial integration run reported 18 browser failures and 1050 passes. Capture geometry, empty-filter recovery, menu placement and layout test assumptions required follow-up. The application had also been rebuilt during this run.",
+          "task_subject_sha256": "c412864ad4f0d0b5ad9264592367333d857cc214de016bc945172051903343d5"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "52bbf6aff71a0d4f2333447df477137ab9bb8389c478cc7a61fe1caf9ff62fe9",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T02:51:12Z",
+          "recording_operation_id": "atlas-final-gate-04",
+          "scoped_inputs_sha256": "d5ed22a3dc0bf775cfe5162a961dd5f1c1fb90f3c9b044c76d867a73ba3d41ad",
+          "source": "Local process exit 0 and atlas-final-gate.log. Tested HTML SHA-256 d6afa2e4d81e6553893a5466e7177c0c2a8f6f0e6a1d510e953c6237194624bd.",
+          "source_normative_sha256": "b9edacda839b54c3aa769279f537e55701c006c1f704668f021daecb8a40ceb6",
+          "summary": "Complete offline Windows gate passed. Typecheck, lint, formatting, single-file build, 447 unit tests and 1072 Edge and Chrome browser cases passed. Browser suite duration 7.3 minutes.",
+          "task_subject_sha256": "c412864ad4f0d0b5ad9264592367333d857cc214de016bc945172051903343d5"
+        }
+      ],
+      "TASK-05": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "c8364ddfe5f8f51bfe935707a46698bd349266d9c63788e07dd6cc9ddcfd6dcf",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T04:58:47Z",
+          "recording_operation_id": "atlas-field-result-05",
+          "scoped_inputs_sha256": "ac105f41955821f59d2914647de699681b4924b5cb334c34a6b1e56cd7472d25",
+          "source": "Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.",
+          "source_normative_sha256": "c90d05be6f5a188e2d669063c03199afb90b0d07dd80c0e945071209ffae3601",
+          "summary": "Windows offline gate passed with 453 unit and 1102 browser cases. Validated welcome and record reading, phone first-network creation, exact Find return, nested evidence, Undo, exported report navigation and print layout.",
+          "task_subject_sha256": "59fbb855b72de630c274be9643f7eb470bea7a395d2f6c036c38c068a660fc34"
+        }
+      ],
+      "TASK-06": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "9e7b51bd95ac0a6a577f3cbc6d728692d462359ac18eddcc3922019c83868126",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T04:58:51Z",
+          "recording_operation_id": "atlas-field-result-06",
+          "scoped_inputs_sha256": "0d3e4b734dd0ca9cb67ffe7801369fdf133e96f04424bdaba140d8352e4d92e5",
+          "source": "Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.",
+          "source_normative_sha256": "c90d05be6f5a188e2d669063c03199afb90b0d07dd80c0e945071209ffae3601",
+          "summary": "Windows offline gate passed with 453 unit and 1102 browser cases. Verified stable saved positions, four-to-one path crossings on the reference layout, zero on the seeded demo, phone Fit and PNG/SVG fidelity.",
+          "task_subject_sha256": "b361a099b69dd8523fe487446508bf2e575812f5bd76ac1181523c3405a8daf2"
+        }
+      ],
+      "TASK-07": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "b38afdecb51275595ec4fbd3f6f702e5706a7dec1c0ad69f5f8f82c0f85b5e30",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T04:58:53Z",
+          "recording_operation_id": "atlas-field-result-07",
+          "scoped_inputs_sha256": "2b7ef1bb06c04ac55b9a14426946ec560f0386530b0d961d0f181ea4571c5f65",
+          "source": "Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.",
+          "source_normative_sha256": "c90d05be6f5a188e2d669063c03199afb90b0d07dd80c0e945071209ffae3601",
+          "summary": "Windows offline gate passed with 453 unit and 1102 browser cases. Verified the bundled Shared planning hub scenario can be inspected, compared, saved and reopened with the original 92-service As-Is preserved.",
+          "task_subject_sha256": "3ea6a9c46e826f7cf1fbcaada266896b4615d65e080fa2837ece4059d27bbac4"
+        }
+      ],
+      "TASK-08": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "a7bd9fbfb131090969a51ebcdf1fb62f1a0c11c0bf5fc9af2800a68f3cd202d2",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T04:58:54Z",
+          "recording_operation_id": "atlas-field-result-08",
+          "scoped_inputs_sha256": "e5709ef892e781e2da6f50267ba37b9bb31c6aeab01b9f8d67e808a8fbf60b65",
+          "source": "Local command exit 0, field-final-gate.log; HTML SHA-256 dc772192f222a6d24ab91a057a4eb02764cef141a9d79fcf1f4d7afa37971c4b.",
+          "source_normative_sha256": "c90d05be6f5a188e2d669063c03199afb90b0d07dd80c0e945071209ffae3601",
+          "summary": "Windows offline gate passed with 453 unit and 1102 browser cases. Verified seven topic sections, pinned Close, keyboard and focus return, and phone topic selection in offline Chrome and Edge.",
+          "task_subject_sha256": "5d869c4f0038471c20428c64cd20e0648aac34df6f747c18041cc7888f8fd6e7"
+        }
+      ],
+      "TASK-09": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "7b6633239aa4c84d94b6f38a204cff142ce12228b10f66efb83edaaa53873e57",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T05:50:32Z",
+          "recording_operation_id": "atlas-whole-result-09",
+          "scoped_inputs_sha256": "59f8078b298d5f974338d3014218337a439cafda155562f7f081817c0d0da0f4",
+          "source": "Local exit 0, whole-app-gate.log, Field Atlas usability audit.html, verified-copy.json. HTML SHA-256 fb7cccf93aa5c341876be638110d0ffcf3fa2615768f8eacdf90e0e32433b20a.",
+          "source_normative_sha256": "f7d22b6afbac51c1ac35ffb5d7e9b59660721f958bd15ef787f76ea1844ce739",
+          "summary": "Windows offline gate passed with 453 unit and 1162 browser cases. Verified pinned and local exits on dialogs, map and record surfaces, long legal and deletion lists; draft guards focus the safe action and nested returns restore their origin.",
+          "task_subject_sha256": "a05649ca481ea32ad7e7cd139ad6e9146a0500d5995971b2f02c14675b13e3e2"
+        }
+      ],
+      "TASK-10": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "d55963b30050b047cc30aae33040e7afad1930192424fa70e73158dcdff800df",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T05:50:35Z",
+          "recording_operation_id": "atlas-whole-result-10",
+          "scoped_inputs_sha256": "59f8078b298d5f974338d3014218337a439cafda155562f7f081817c0d0da0f4",
+          "source": "Local exit 0, whole-app-gate.log, Field Atlas usability audit.html, verified-copy.json. HTML SHA-256 fb7cccf93aa5c341876be638110d0ffcf3fa2615768f8eacdf90e0e32433b20a.",
+          "source_normative_sha256": "f7d22b6afbac51c1ac35ffb5d7e9b59660721f958bd15ef787f76ea1844ce739",
+          "summary": "Windows offline gate passed with 453 unit and 1162 browser cases. Recorded the review plan before implementation, matched 42 distinct screens at 320, 615 and 1440 pixels, inspected nested workflows and actual outputs, and verified the delivered file in offline Edge and Chrome.",
+          "task_subject_sha256": "e2bfeda4f2d791178bb1c33e93c106de3ad458cdddac37c9e14d40b7bd27bde5"
+        }
+      ]
+    },
+    "tasks": {
+      "TASK-01": {
+        "evidence_refs": [],
+        "reason": "Implemented the document header, rail and narrow inspection sheet, and checked touch selection and dismissal in the offline build. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-02": {
+        "evidence_refs": [],
+        "reason": "Implemented scope-aware map labels, stable PNG and SVG capture, directed motion and a paged, named scenario proposal list. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-03": {
+        "evidence_refs": [],
+        "reason": "Implemented qualified cross-surface search, guarded inspection, scoped evidence and keyboard-safe assessment filtering. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-04": {
+        "evidence_refs": [],
+        "reason": "Compared offline builds, checked six viewport sizes, gathered three runs per build at 15, 100 and 500 services, and documented independent human, native and screen-reader acceptance limits. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-05": {
+        "evidence_refs": [],
+        "reason": "Validated welcome and record reading, phone first-network creation, exact Find return, nested evidence, Undo, exported report navigation and print layout. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-06": {
+        "evidence_refs": [],
+        "reason": "Verified stable saved positions, four-to-one path crossings on the reference layout, zero on the seeded demo, phone Fit and PNG/SVG fidelity. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-07": {
+        "evidence_refs": [],
+        "reason": "Verified the bundled Shared planning hub scenario can be inspected, compared, saved and reopened with the original 92-service As-Is preserved. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-08": {
+        "evidence_refs": [],
+        "reason": "Verified seven topic sections, pinned Close, keyboard and focus return, and phone topic selection in offline Chrome and Edge. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-09": {
+        "evidence_refs": [],
+        "reason": "Verified pinned and local exits on dialogs, map and record surfaces, long legal and deletion lists; draft guards focus the safe action and nested returns restore their origin. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "TASK-10": {
+        "evidence_refs": [],
+        "reason": "Recorded the review plan before implementation, matched 42 distinct screens at 320, 615 and 1440 pixels, inspected nested workflows and actual outputs, and verified the delivered file in offline Edge and Chrome. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "0a538e20294059edbac4085f1e9d25a7890e12e196069c18cc22a7322f0b2116",
+    "normative_sha256": "1b89aaa91a6d9069348644e0a672b572cc7767302dcc0c8025e409fc16968a92",
+    "symbol_count": 20
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": null,
+      "observed_date": "2026-11-18",
+      "repository": null
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map.",
+        "id": "CP-01",
+        "tasks": [
+          "TASK-01"
+        ],
+        "title": "Atlas shell and task surfaces"
+      },
+      {
+        "depends_on": [],
+        "exit": "The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope.",
+        "id": "CP-02",
+        "tasks": [
+          "TASK-02"
+        ],
+        "title": "Map and capture"
+      },
+      {
+        "depends_on": [],
+        "exit": "A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work.",
+        "id": "CP-03",
+        "tasks": [
+          "TASK-03"
+        ],
+        "title": "Find and inspect"
+      },
+      {
+        "depends_on": [],
+        "exit": "Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits.",
+        "id": "CP-04",
+        "tasks": [
+          "TASK-04"
+        ],
+        "title": "Offline browser qualification"
+      },
+      {
+        "depends_on": [],
+        "exit": "The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths.",
+        "id": "CP-05",
+        "tasks": [
+          "TASK-05"
+        ],
+        "title": "Atlas visual design"
+      },
+      {
+        "depends_on": [],
+        "exit": "Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance.",
+        "id": "CP-06",
+        "tasks": [
+          "TASK-06"
+        ],
+        "title": "Dependency path crossings"
+      },
+      {
+        "depends_on": [],
+        "exit": "The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state.",
+        "id": "CP-07",
+        "tasks": [
+          "TASK-07"
+        ],
+        "title": "Working To-Be demo"
+      },
+      {
+        "depends_on": [],
+        "exit": "Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens.",
+        "id": "CP-08",
+        "tasks": [
+          "TASK-08"
+        ],
+        "title": "Navigable field guide"
+      },
+      {
+        "depends_on": [],
+        "exit": "A reader can find a local dismissal action in opened records and dialogs without scrolling the full content. Escape handles the innermost open surface, preserves guarded edits and restores a usable focus target on laptop and phone.",
+        "id": "CP-09",
+        "tasks": [
+          "TASK-09"
+        ],
+        "title": "Dismiss dialogs, inspectors and expanded controls"
+      },
+      {
+        "depends_on": [],
+        "exit": "An explicit surface inventory and checklist precede a production walkthrough of every surface family. Each surface explains its purpose, current scope and next action. The matrix and other dense views remain legible on phone and short desktop screens. The final ledger names findings, repairs, evidence and any limits.",
+        "id": "CP-10",
+        "tasks": [
+          "TASK-10"
+        ],
+        "title": "Whole-application usability review"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [],
+    "spec_ref": {
+      "artifact_id": "SPEC-ENTERPRISE-ATLAS",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "f7d22b6afbac51c1ac35ffb5d7e9b59660721f958bd15ef787f76ea1844ce739"
+    },
+    "summary": "Integrate shell, map and record navigation, then check the production build.",
+    "tasks": [
+      {
+        "checkpoint": "CP-01",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-01"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map."
+        ],
+        "execution_scope": "CP-01",
+        "id": "TASK-01",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/app.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/atlas-shell.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "A compact document header, desktop navigation rail and shared panel hierarchy make landscape, inventory and assessment actions reachable across desktop and narrow viewports. The map inspector is a dismissible bottom sheet on phones with space for the map."
+        ],
+        "title": "Atlas shell and task surfaces",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-02",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-02"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope."
+        ],
+        "execution_scope": "CP-02",
+        "id": "TASK-02",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/style.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/market.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/svg-scene.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/atlas-map.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "The map makes regions, selected services and directed focus legible at different scales. Explicit traces have a finite reduced-motion-aware reveal. PNG and SVG preserve route meaning, stable highlights, marking and scope."
+        ],
+        "title": "Map and capture",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-03",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-03"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work."
+        ],
+        "execution_scope": "CP-03",
+        "id": "TASK-03",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui/record-summary.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/ui/atlas-find.ts"
+          },
+          {
+            "action": "create",
+            "path": "e2e/atlas-navigation.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "A discoverable Ctrl+K command opens accessible qualified record lookup from both surfaces. Selection uses draft-safe inspection, keeps projection identity explicit, and gives access to recorded evidence and existing assessment work."
+        ],
+        "title": "Find and inspect",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-04",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-04"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits."
+        ],
+        "execution_scope": "CP-04",
+        "id": "TASK-04",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "e2e"
+          },
+          {
+            "action": "inspect",
+            "path": "src"
+          },
+          {
+            "action": "inspect",
+            "path": "dist/sim.html"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "Compare the real offline build before and after, validate the supported browsers and report observed scale and human acceptance limits."
+        ],
+        "title": "Offline browser qualification",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-05",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-05"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths."
+        ],
+        "execution_scope": "CP-05",
+        "id": "TASK-05",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui"
+          },
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/market.css"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/style.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/atlas-shell.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "The pristine workspace offers a distinctive illustrated entry with functional file and demo actions. The inventory, inspection, assessment and map surfaces share clear responsive typography, selection and focus affordances, with legible status and marking at supported widths."
+        ],
+        "title": "Atlas visual design",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-06",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-06"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance."
+        ],
+        "execution_scope": "CP-06",
+        "id": "TASK-06",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/route-offset.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/route-offset.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/svg-scene.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/atlas-map.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "Visible dependency lines choose deterministic paths that avoid unnecessary crossings, including in a fixed-node demonstration. Preserve direction, CDS identities, recorded positions, capture parity, and responsive performance."
+        ],
+        "title": "Dependency path crossings",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-07",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-07"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state."
+        ],
+        "execution_scope": "CP-07",
+        "id": "TASK-07",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/demo/demo.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/demo/demo.test.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e/demo.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "The built-in fictional demo includes a selectable named To-Be and Compare scenario. The projected map shows its actual changes, and returning to As-Is restores the original records and undo state."
+        ],
+        "title": "Working To-Be demo",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-08",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-08"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens."
+        ],
+        "execution_scope": "CP-08",
+        "id": "TASK-08",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/help.ts"
+          },
+          {
+            "action": "create",
+            "path": "src/ui/help.css"
+          },
+          {
+            "action": "create",
+            "path": "e2e/atlas-help.spec.ts"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "Help has an accessible topic index and a visible close control at the top that stays reachable after scrolling. Escape or Close restores focus to Help on desktop and narrow screens."
+        ],
+        "title": "Navigable field guide",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-09",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-09"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "A reader can find a local dismissal action in opened records and dialogs without scrolling the full content. Escape handles the innermost open surface, preserves guarded edits and restores a usable focus target on laptop and phone."
+        ],
+        "execution_scope": "CP-09",
+        "id": "TASK-09",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "Audit primary, nested and long-document surfaces. Reuse guarded close actions, persistent headers, and keyboard return paths. Exercise short and narrow screens."
+        ],
+        "title": "Dismiss dialogs, inspectors and expanded controls",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-10",
+        "criterion_refs": [
+          "SPEC-ENTERPRISE-ATLAS#AC-10"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "An explicit surface inventory and checklist precede a production walkthrough of every surface family. Each surface explains its purpose, current scope and next action. The matrix and other dense views remain legible on phone and short desktop screens. The final ledger names findings, repairs, evidence and any limits."
+        ],
+        "execution_scope": "CP-10",
+        "id": "TASK-10",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/main.ts"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          },
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          },
+          {
+            "action": "modify",
+            "path": "e2e"
+          }
+        ],
+        "rollback": "Revert the presentation diff for this task on the feature branch and rebuild the single file.",
+        "steps": [
+          "Inventory every user-facing surface first, walk the live application and compare the resulting evidence to the plan. Fix the issues found and run browser, responsive, and export checks."
+        ],
+        "title": "Whole-application usability review",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "Supported offline application gate passes.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "Enterprise Atlas implementation"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/enterprise-atlas.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 48,
+  "schema_version": "0.3.2",
+  "slug": "enterprise-atlas"
+}
+</script>
+</body></html>
