@@ -81,6 +81,39 @@ test("the desktop task rail sits beside the map and its assessment actions are k
   await expect(page.getByRole("button", { name: "Saved views", exact: true })).toBeInViewport();
 });
 
+test("the Assessment label stays on one line and inside its nav control with larger text", async ({ page }) => {
+  await page.goto(simUrl);
+  const assessment = page.getByRole("navigation", { name: "Workspace" }).getByText("Assessment", { exact: true });
+  for (const [width, height] of [
+    [1440, 900],
+    [980, 520],
+    [979, 700],
+    [320, 640],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    for (const fontSize of [12, 16, 20]) {
+      const label = await assessment.evaluate((summary, size) => {
+        summary.style.fontSize = `${String(size)}px`;
+        const range = document.createRange();
+        range.selectNodeContents(summary);
+        const text = range.getBoundingClientRect();
+        const control = summary.getBoundingClientRect();
+        const nav = summary.closest("nav")?.getBoundingClientRect();
+        return {
+          lines: range.getClientRects().length,
+          fits:
+            !!nav &&
+            text.left >= control.left &&
+            text.right <= control.right &&
+            control.left >= nav.left &&
+            control.right <= nav.right,
+        };
+      }, fontSize);
+      expect(label, `Assessment at ${String(width)}px, ${String(fontSize)}px text`).toEqual({ lines: 1, fits: true });
+    }
+  }
+});
+
 test("phone inspection keeps part of the map visible and returns to the same saved dataset", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openDatasetFile(page, await whiteGloveFixture(), "atlas-phone.sqlite");
