@@ -61,13 +61,19 @@ test("global Find disambiguates records and opens scoped evidence without editin
   await expect(editor.getByRole("heading", { name: "Service: Portal" })).toBeFocused();
   await expect(editor).toContainText("Amber");
   await editor.getByRole("button", { name: "Evidence and questions", exact: true }).click();
-  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  const notes = page.getByRole("region", { name: "Assessment evidence and questions" });
   await expect(notes).toBeVisible();
   await page.keyboard.press("Control+k");
   await expect(dialog).toHaveCount(0);
   await notes.getByRole("button", { name: "Add question" }).click();
-  await notes.getByRole("textbox", { name: "Question or unresolved observation" }).fill("Who owns this service?");
-  await notes.getByRole("button", { name: "Apply note" }).click();
+  await page
+    .getByRole("dialog", { name: "Add question", exact: true })
+    .getByRole("textbox", { name: "Question or unresolved observation" })
+    .fill("Who owns this service?");
+  await page
+    .getByRole("dialog", { name: "Add question", exact: true })
+    .getByRole("button", { name: "Apply note" })
+    .click();
   await notes.getByRole("button", { name: "Close", exact: true }).click();
   await expect(editor).toContainText("1 open question");
   await expect(editor.getByRole("button", { name: "Evidence and questions", exact: true })).toBeFocused();

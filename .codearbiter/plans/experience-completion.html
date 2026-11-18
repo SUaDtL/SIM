@@ -1,0 +1,1430 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Experience completion implementation and local qualification · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-EXPERIENCE-COMPLETION</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/experience-completion.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Experience completion implementation and local qualification</h1><p class="deck">An engineer can understand and question recorded relationships, change and reuse inventory, and explain a proposed state with a detached capture.</p><div class="meta"><span>PLAN-EXPERIENCE-COMPLETION</span><span>Revision 51 · schema 0.3.2</span><span>29 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-EXPERIENCE-COMPLETION</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:WP00 -->
+<article class="record" id="WP00" data-ca-symbol="WP00" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP00">WP00</a><h3>Reconcile current source and establish the evidence baseline</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP00</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-PK-01">SPEC-EXPERIENCE-COMPLETION#A-PK-01</a></li><li><a href="../specs/experience-completion.html#A-PK-02">SPEC-EXPERIENCE-COMPLETION#A-PK-02</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Reconcile every finding with the current checkout and deployed identity</li><li>Create reproducible fictional fixtures and independent semantic oracles</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP00</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>tests/helpers</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Read current source, AGENTS.md and relevant governance. Record HEAD/main/worktree status, compare intervening changes with the pinned review, and classify every F01–F16. Reproduce source-only F12 before stating a phone symptom as observed. Preserve later valid fixes.</li><li>Freeze deterministic D15/D100/D500 fixtures, the original demo regression and focused edge-case variants. Create a truth sheet with exact IDs/origins, counts, expected dependency directions/routes, markings, questions, view scope and scenario outcomes. Derive expected outcomes independently of the implementation under test. Record data/generator hashes.</li><li>**Supply:** intake report with immutable source links; finding reconciliation table; fixture generator/data manifest and oracle; current build artifact/digest; initial before storyboard where available. Missing historic screenshots are disclosed, not recreated and labeled historical. Baseline evidence does not close candidate acceptance.</li><li>**Exit:** every finding has a disposition, every fixture has reproducible identity, and the package&#39;s requirements are reconciled without deleting unresolved outcomes.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Intake, 16 source-bound finding classifications, 75 entries and deterministic fixture truth sheets are present. Engineering completion only. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;tests/unit/experience-fixtures.test.ts&#34;,&#34;src/assessment/note-target.test.ts&#34;,&#34;src/demo/demo.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:31:53Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>db0836ef61ac851464f8603f889202032929d0a6aa9cae033f77e7ed92fd2d83</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/fixture-verification.log</div><div class="field"><span class="label">Summary</span>18/18 assertions in all three files passed. Independent SQLite truth sheets are in ../evidence/fixtures.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:26Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>db0836ef61ac851464f8603f889202032929d0a6aa9cae033f77e7ed92fd2d83</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP00 -->
+
+<!-- CA:BEGIN:WP01 -->
+<article class="record" id="WP01" data-ca-symbol="WP01" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP01">WP01</a><h3>Define shared interaction and provenance contracts</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP01</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-PK-03">SPEC-EXPERIENCE-COMPLETION#A-PK-03</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP00">WP00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Establish one state owner and typed transition contract</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP01</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Map actual state owners in workspace, editor, map, session and repository. Implement the minimum typed context needed for one inspector/history, selected origin, requested perspective, worklist return, active/parked draft and dataset-session invalidation. Reuse existing request guards. Use an explicit destination table for all supported note target kinds.</li><li>Resolve contracts before parallel UI changes: unavailable/filtered selection behavior; Back versus Undo; source/exchange identity; same-kind revision and diagnostics policy; capture snapshot; strict version 1 saved-view definitions. Record accepted invariants in repository governance using supported tooling. Challenge presentation decisions when needed with a new disposition, not historical ADR edits.</li><li>**Supply:** concise owner/transition map, typed routing table, decisions and risk-based test selection. Existing tests may satisfy invariants; add tests only where new branches need proof.</li><li>**Exit:** agents cannot independently invent competing navigation stores or origin adapters, and stale callbacks cannot cross a dataset/session boundary.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:27Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP01 -->
+
+<!-- CA:BEGIN:WP02 -->
+<article class="record" id="WP02" data-ca-symbol="WP02" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP02">WP02</a><h3>Unify populated working surfaces</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP02</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-VI-01">SPEC-EXPERIENCE-COMPLETION#A-VI-01</a></li><li><a href="../specs/experience-completion.html#A-VI-02">SPEC-EXPERIENCE-COMPLETION#A-VI-02</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>One coherent visual system on populated working surfaces</li><li>Readable typography and deliberate action emphasis</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP02</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/atlas.css</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Consolidate app/map semantic tokens for surfaces, readable text, spacing, borders, selection/focus and purposeful motion. Apply the existing enterprise direction to actual Map+inspector, Inventory, questions, views, owner/correction review and commit dialogs. Remove contradictory local overrides rather than adding another stylesheet to fight them. Keep authoritative marking colors independent.</li><li>Give each local task at most two primary-emphasis actions. Keep secondary actions labeled and reachable; destructive actions remain deliberate. Inspect long names, errors, unsaved state, missing values, empty datasets and dense relationships, not only the welcome plate.</li><li>**Likely files:** app.css, atlas.css, inspector.css, assessment-workflows.css, map/market.css, map/style.ts and relevant DOM constructors. Verify actual consumers before editing.</li><li>**Supply:** token-to-consumer map; populated before/after storyboard; text/control/contrast measurements; human design disposition against C10. No new theme preference system is required.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:28Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>bbc0b3f01f05c56e30f63552e2d2c9c8e60575b40b263b8bb3a044fbf1db9042</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP02 -->
+
+<!-- CA:BEGIN:WP03 -->
+<article class="record" id="WP03" data-ca-symbol="WP03" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP03">WP03</a><h3>Complete one contextual inspector</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP03</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-01">SPEC-EXPERIENCE-COMPLETION#A-WF-01</a></li><li><a href="../specs/experience-completion.html#A-WF-02">SPEC-EXPERIENCE-COMPLETION#A-WF-02</a></li><li><a href="../specs/experience-completion.html#A-WF-03">SPEC-EXPERIENCE-COMPLETION#A-WF-03</a></li><li><a href="../specs/experience-completion.html#A-WF-04">SPEC-EXPERIENCE-COMPLETION#A-WF-04</a></li><li><a href="../specs/experience-completion.html#A-WF-05">SPEC-EXPERIENCE-COMPLETION#A-WF-05</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li><li><a href="#WP02">WP02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Explore related records, connections, and evidence in one reading inspector</li><li>Navigation preserves the entire active service draft</li><li>Back, Undo, and unavailable history targets have distinct outcomes</li><li>Find and decision drilldowns return to the exact investigation context</li><li>Dataset replacement invalidates old navigation and write callbacks</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP03</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Move ordinary related record, connection and evidence/question reading into one inspector with typed history and useful Back. Keep transactional forms, imports and warnings appropriately bounded. Preserve read-first behavior, explicit Edit, selected map context, list/Find/decision origin, section scroll and invoking focus.</li><li>Exercise the full draft aggregate across navigation: details, support, consumers, outgoing dependencies and pending row intent. Stay/Escape and failed Apply retain everything; Apply is atomic; Discard affects only the parent intent. Preserve current session/request guards and refuse stale callbacks after Open/New.</li><li>**Likely files:** workspace.ts, editor-panel.ts, record-summary.ts, assessment-notes.ts, relationship-collection.ts, inspector styles and current navigation tests.</li><li>**Supply:** visible-control journey and keyboard record; transition matrix; actual draft payload and repository/history checkpoints; unavailable-history and dataset-replacement negative controls. Closing a stack of dialogs with correct focus alone cannot pass.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:30Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP03 -->
+
+<!-- CA:BEGIN:WP04 -->
+<article class="record" id="WP04" data-ca-symbol="WP04" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP04">WP04</a><h3>Make questions and evidence actionable</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP04</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-06">SPEC-EXPERIENCE-COMPLETION#A-WF-06</a></li><li><a href="../specs/experience-completion.html#A-WF-07">SPEC-EXPERIENCE-COMPLETION#A-WF-07</a></li><li><a href="../specs/experience-completion.html#A-WF-08">SPEC-EXPERIENCE-COMPLETION#A-WF-08</a></li><li><a href="../specs/experience-completion.html#A-WF-09">SPEC-EXPERIENCE-COMPLETION#A-WF-09</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP03">WP03</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>A saved question remains actionable without entering Edit</li><li>Question links navigate by assertion identity and return to the worklist</li><li>Detached notes remain readable and cannot navigate to replacement records</li><li>Note editing preserves validation, evidence semantics, and safe cancellation</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP04</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/assessment-notes.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Show responsible team and Next action on question read cards using existing fields. Preserve source semantics for evidence, reviewed-versus-needs-review derivation, resolution requirements and optional values. Add typed target navigation for assessment, service, service_dependency and org_consumes. Keep detached targets readable and non-navigable until an explicit supported retarget.</li><li>Return to the same query/filter/page/scroll after inspection. Provide clear labels and wrapping at narrow widths. Do not invent separate note target types, duplicate assignee/action columns or an unrelated task-management module.</li><li>**Supply:** persisted-to-visible field comparisons including reopen; all four routing outcomes; renamed/replaced/detached-target negative controls; read-card screenshot and human ownership/action comprehension; validation and cancellation logs.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:31Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>c4d121507db6598720d59f5859846705308162f9d5128beebcd76df5743c9bc6</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP04 -->
+
+<!-- CA:BEGIN:WP05 -->
+<article class="record" id="WP05" data-ca-symbol="WP05" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP05">WP05</a><h3>Give the map a readable information hierarchy</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP05</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-VI-03">SPEC-EXPERIENCE-COMPLETION#A-VI-03</a></li><li><a href="../specs/experience-completion.html#A-VI-04">SPEC-EXPERIENCE-COMPLETION#A-VI-04</a></li><li><a href="../specs/experience-completion.html#A-VI-05">SPEC-EXPERIENCE-COMPLETION#A-VI-05</a></li><li><a href="../specs/experience-completion.html#A-VI-06">SPEC-EXPERIENCE-COMPLETION#A-VI-06</a></li><li><a href="../specs/experience-completion.html#A-VI-07">SPEC-EXPERIENCE-COMPLETION#A-VI-07</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li><li><a href="#WP02">WP02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Enterprise overview communicates domains at realistic scale</li><li>Service neighborhoods reveal readable, qualified identities</li><li>Connection grammar communicates recorded dependency meaning</li><li>Purposeful motion terminates and preserves meaning</li><li>Map controls stay calm while selection and focus deepen</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP05</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map/map-view.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Build overview, neighborhood and selected-detail behavior using current snapshot and renderer. Show recorded network kind and qualified counts at overview. Readable full selected identity and relevant neighbor names take priority over showing every tiny caption. Use bounded focus/progressive detail for density; never enlarge every one of 500 services into a competing card.</li><li>Consolidate controls: two directional questions by the subject, one focus return, reachable secondary network/highlight actions, stable zoom/fit and secondary layout. Preserve logical consumer-to-provider traversal, CDS provenance, foundational-dependency omission disclosure and route grammar. Retain finite trace, cancellation, reduced motion and stable export semantics.</li><li>**Supply:** D15/D100/D500 overview, qualified neighborhood and route-key evidence; rendered-size and bounds measurements; semantic IDs/counts; unchanged positions/history on cosmetic operations; motion/cancellation clips. Do not replace saved layouts with nicer demonstration positions during ordinary selection.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:32Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>bb8ba076353147c3b646d7ea0e3e10f283f9581f6d760014a9f17bae2e2f8772</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP05 -->
+
+<!-- CA:BEGIN:WP06 -->
+<article class="record" id="WP06" data-ca-symbol="WP06" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP06">WP06</a><h3>Make Compare a connected explanation</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP06</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-10">SPEC-EXPERIENCE-COMPLETION#A-WF-10</a></li><li><a href="../specs/experience-completion.html#A-WF-11">SPEC-EXPERIENCE-COMPLETION#A-WF-11</a></li><li><a href="../specs/experience-completion.html#A-WF-12">SPEC-EXPERIENCE-COMPLETION#A-WF-12</a></li><li><a href="../specs/experience-completion.html#A-WF-13">SPEC-EXPERIENCE-COMPLETION#A-WF-13</a></li><li><a href="../specs/experience-completion.html#A-VI-08">SPEC-EXPERIENCE-COMPLETION#A-VI-08</a></li><li><a href="../specs/experience-completion.html#A-VI-09">SPEC-EXPERIENCE-COMPLETION#A-VI-09</a></li><li><a href="../specs/experience-completion.html#A-VI-10">SPEC-EXPERIENCE-COMPLETION#A-VI-10</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP03">WP03</a></li><li><a href="#WP05">WP05</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Switching perspective reconciles map selection and inspector identity</li><li>Planned origins cannot be confused with signed baseline IDs</li><li>A proposal summary opens its exact subject and preserves investigation scope</li><li>Perspective changes respect active and parked drafts</li><li>Perspective changes preserve or explicitly resolve selected identity</li><li>Proposed changes form a navigable comparison explanation</li><li>Comparison totals and consequences remain honest and legible</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP06</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/workspace.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Reconcile typed selection and inspector on every perspective change. Handle unchanged, rehomed, retired, merged and planned-only subjects deliberately. Preserve filters; offer explicit reveal with a reversible scope change when a subject is hidden. Keep all active/parked drafts guarded.</li><li>Make proposal rows keyboard/pointer navigable to their actual authored change and affected subject. Show recorded/proposed facts and named source/destination roles. Return restores comparison scope/list position/framing. Separate baseline service count, target service count and drawn representations; use user language without claiming business benefit or verified connectivity.</li><li>**Supply:** full perspective/absence transition matrix; numeric-origin collision fixture; proposal-to-origin map; named-change screenshots and count oracle; invalid-draft refusal proof. Workflow and visual criteria can share the same transition trace with separate assertions.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:34Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP06 -->
+
+<!-- CA:BEGIN:WP07 -->
+<article class="record" id="WP07" data-ca-symbol="WP07" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP07">WP07</a><h3>Make assessment tasks and views easy to find and reuse</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP07</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-14">SPEC-EXPERIENCE-COMPLETION#A-WF-14</a></li><li><a href="../specs/experience-completion.html#A-WF-15">SPEC-EXPERIENCE-COMPLETION#A-WF-15</a></li><li><a href="../specs/experience-completion.html#A-WF-16">SPEC-EXPERIENCE-COMPLETION#A-WF-16</a></li><li><a href="../specs/experience-completion.html#A-WF-17">SPEC-EXPERIENCE-COMPLETION#A-WF-17</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li><li><a href="#WP03">WP03</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Core assessment tasks have a stable, discoverable home</li><li>Saved views are recognizable, accessible reusable assets</li><li>Save, rename, replace, and restore view definitions preserve their meaning</li><li>Unavailable saved-view subjects fail safely and can be deliberately repaired</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP07</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/saved-viewpoints.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Provide stable task destinations from Map and Inventory for Questions/Evidence, Decision views, Saved views and Brief/Review. Retain existing commands and their session/file semantics; inventory the old entry points before consolidating menus.</li><li>Place Save view near Capture. Make saved views recognizable using perspective/scenario, scope, subject and derived preview or diagram summary. Keep strict version 1 persisted definitions unchanged. Previews describe current data/positions, not historical screenshots. Name/caption edits preserve definition; explicit replacement updates scope. Missing references fail restoration atomically with a useful repair path.</li><li>**Supply:** destination-to-command map; same-name view recognition task; card-to-definition assertions; actual file roundtrip; rename/replace/stale-reference negative controls. Do not require a new thumbnail store, tags or view folders for this increment.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:35Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>f7c44826dad347cc1c0611f36df69cc2e94c4e4d7a265f188d088417c558880c</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP07 -->
+
+<!-- CA:BEGIN:WP08 -->
+<article class="record" id="WP08" data-ca-symbol="WP08" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP08">WP08</a><h3>Finish capture composition</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP08</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-VI-11">SPEC-EXPERIENCE-COMPLETION#A-VI-11</a></li><li><a href="../specs/experience-completion.html#A-VI-12">SPEC-EXPERIENCE-COMPLETION#A-VI-12</a></li><li><a href="../specs/experience-completion.html#A-VI-13">SPEC-EXPERIENCE-COMPLETION#A-VI-13</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP05">WP05</a></li><li><a href="#WP06">WP06</a></li><li><a href="#WP07">WP07</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Screen, SVG, and PNG share a semantic capture contract</li><li>A detached capture is a readable briefing artifact</li><li>Capture freezes truthful scope without altering the working session</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP08</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Compose a shared semantic scene/frame for PNG and SVG using existing graph geometry. Include a readable title/subject, perspective, scope, actual route/node swatches, named relevant proposals and complete marking/caveat/source/unsaved context. Keep detail in a clear hierarchy. Dense whole-enterprise overviews can prioritize regions; selected-change briefs must name their subjects.</li><li>Inspect full output at declared presentation size. If it cannot fit legibly, make capture scope/focus choices explicit before export. Do not silently crop caveats, shrink required names to unreadability, rewrite coordinates or introduce a slide editor.</li><li>**Supply:** actual PNG and SVG pairs, frozen scene manifests, direction/identity/key assertions, independent-viewer screenshots, capture failure recovery and unchanged-session proof, detached recipient test. A screenshot of the export button or a recolored white frame is insufficient.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:36Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>fac8ce9f37778d619977f49cac0771bfc0e23d97ed670a268c409633c2ee93d7</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP08 -->
+
+<!-- CA:BEGIN:WP09 -->
+<article class="record" id="WP09" data-ca-symbol="WP09" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP09">WP09</a><h3>Preserve inline creation and make service defaults deliberate</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP09</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-18">SPEC-EXPERIENCE-COMPLETION#A-WF-18</a></li><li><a href="../specs/experience-completion.html#A-WF-19">SPEC-EXPERIENCE-COMPLETION#A-WF-19</a></li><li><a href="../specs/experience-completion.html#A-WF-20">SPEC-EXPERIENCE-COMPLETION#A-WF-20</a></li><li><a href="../specs/experience-completion.html#A-WF-21">SPEC-EXPERIENCE-COMPLETION#A-WF-21</a></li><li><a href="../specs/experience-completion.html#A-WF-22">SPEC-EXPERIENCE-COMPLETION#A-WF-22</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>New service network assignment is deliberate or inherited from explicit scope</li><li>Create missing shared references inline and continue the same service draft</li><li>Child cancellation and parent cancellation preserve honest shared-record semantics</li><li>Create similar service reuses shared assets without copying unintended relationships</li><li>Inline creation and reuse retain validation and exact-payload confirmation</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP09</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui/forms.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Remove first-network defaults for unscoped creation. Keep deliberate scoped defaults and manual marking choices. Protect inline Create and use for network, organization, application and category. Preserve all parent fields/relationships and focus after child creation, cancellation, warning or validation failure. Explain the separately committed shared child&#39;s lifetime.</li><li>Keep Create similar service as independent service creation reusing shared identities. Destination network remains deliberate; optional support copy remains explicit; consumers, dependencies, positions and history are not copied. Do not expand the generic child form to service/CDS without a separate source-proven requirement and full transaction design.</li><li>**Supply:** scope/default matrix; parent/child transaction and Undo ledger; full-draft visible-control recording; copied/reused/omitted field diff; exact-payload warning negative controls; uncoached inline creation segment. This is a protected user requirement even though the baseline already implements much of it.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:38Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>3245ba6828b019077bc91a805229b4a6f11d10289599a1d4e197a08d2be8548c</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP09 -->
+
+<!-- CA:BEGIN:WP10 -->
+<article class="record" id="WP10" data-ca-symbol="WP10" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP10">WP10</a><h3>Add safe same-kind scenario revision</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP10</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-WF-23">SPEC-EXPERIENCE-COMPLETION#A-WF-23</a></li><li><a href="../specs/experience-completion.html#A-WF-24">SPEC-EXPERIENCE-COMPLETION#A-WF-24</a></li><li><a href="../specs/experience-completion.html#A-WF-25">SPEC-EXPERIENCE-COMPLETION#A-WF-25</a></li><li><a href="../specs/experience-completion.html#A-WF-26">SPEC-EXPERIENCE-COMPLETION#A-WF-26</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Revise an existing proposal without remove-and-recreate</li><li>Revising a planned merge target preserves dependent proposals and saved identity</li><li>Proposal revision validates the complete scenario and refuses invalid updates atomically</li><li>Revised scenarios survive file roundtrip and remain consistent across presentations</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP10</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain/repository.ts</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Add a repository revision command and a prefilled Edit change flow. Preserve row ID, exchange identity, scenario, kind, order and dependent merge links. Same-kind scope: add&#39;s existing fields; rehome source/network/provider; merge source/target; retire source. Keep kind conversion and scenario reassignment out of scope.</li><li>Validate the entire resulting projection while excluding the edited row from conflict checks against other changes. Compare projected name-collision keys before/after: permit repairs and unrelated valid edits with pre-existing collisions, refuse new collision keys, and retain disclosed unresolved-route diagnostics after valid changes. Reject invalid revised input and newly introduced structural violations; revalidate references affected by the revision. Leave unchanged, unrelated admitted legacy issues visible and unmodified. Keep null-provider meaning, exact sensitive confirmation and removal consequence signatures unchanged. Integrate active revision intent with existing Save/draft lifecycle.</li><li>**Supply:** transaction/identity assertions, cancel/Undo/Redo, planned-target-with-two-merges preservation, invalid revision and pre-existing diagnostic oracles, actual save/reopen evidence across Find/To-Be/Compare/saved view. No migration is assumed; never implement delete/add behind Edit.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:39Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>73fa464aa6be7a6a202612d89ef0a3461268694ba90b5b81f5e50c62f893ce64</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP10 -->
+
+<!-- CA:BEGIN:WP11 -->
+<article class="record" id="WP11" data-ca-symbol="WP11" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP11">WP11</a><h3>Qualify responsive, input, accessibility and performance behavior</h3><span class="badge">IN_PROGRESS</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP11</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-PK-04">SPEC-EXPERIENCE-COMPLETION#A-PK-04</a></li><li><a href="../specs/experience-completion.html#A-PK-05">SPEC-EXPERIENCE-COMPLETION#A-PK-05</a></li><li><a href="../specs/experience-completion.html#A-PK-06">SPEC-EXPERIENCE-COMPLETION#A-PK-06</a></li><li><a href="../specs/experience-completion.html#A-VI-14">SPEC-EXPERIENCE-COMPLETION#A-VI-14</a></li><li><a href="../specs/experience-completion.html#A-VI-15">SPEC-EXPERIENCE-COMPLETION#A-VI-15</a></li><li><a href="../specs/experience-completion.html#A-VI-16">SPEC-EXPERIENCE-COMPLETION#A-VI-16</a></li><li><a href="../specs/experience-completion.html#A-VI-17">SPEC-EXPERIENCE-COMPLETION#A-VI-17</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP02">WP02</a></li><li><a href="#WP05">WP05</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Preserve architecture, trust and transaction invariants</li><li>Complete the current repository gate on the reviewed source</li><li>Close the existing-feature regression inventory without losing commands</li><li>Responsive layouts retain usable map and record context</li><li>Actual browser zoom reflows surrounding task controls</li><li>Keyboard and actual screen-reader journeys expose equivalent meaning</li><li>Measured performance at 15, 100, and 500 services</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP11</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>e2e</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Run the sparse viewport plan, actual 200%/400% browser zoom, pointer/touch/keyboard, real screen-reader journey, long-content/marking states, reduced motion and error recovery. Implement a useful compact/expanded phone inspector with accessible controls. Remove nonfunctional affordances. Provide nonvisual equivalents for topology meaning without putting hundreds of nodes in a tab sequence.</li><li>Measure D15/D100/D500 intent-to-usable latency using declared hardware, raw samples and honest boundaries. Profile concrete failures; avoid new infrastructure solely to satisfy a screenshot. Re-run the current full project gate under actual repository requirements and preserve all regression families in document 09.</li><li>**Supply:** viewport storyboard/metrics, native zoom and AT logs, contrast measurements, raw performance samples/trace, full command/CI reports, remaining limitations and owners. Native work is blocked if its actual environment is unavailable; headless substitution is not a pass.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>IN_PROGRESS</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T19:41:40Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>aa8cc26e77de6d511538a0bbe6df66f7048d2d1df3b62c6b15a6cd4d0397c05c</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-07.log</div><div class="field"><span class="label">Summary</span>All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Command index</span>0</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>true</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T20:01:24Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>b46a3f228cfa8cc573a72f6cc64a92dd2be17da9c17a6c5cb9ce3149a967acff</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>../evidence/reports/check-08.log</div><div class="field"><span class="label">Summary</span>WP11 compact inspector regression. Restored D100 at 320 x 640: both installed browsers failed the client-rectangle oracle before the correction and passed on the final reviewed file. Full gate passed on 943c661a93d37ecf6fe88e6c94d72a8a4a0785570d7c30a79444dd1918e06033.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP11 -->
+
+<!-- CA:BEGIN:WP12 -->
+<article class="record" id="WP12" data-ca-symbol="WP12" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP12">WP12</a><h3>Demonstrate one coherent fictional story and run UAT</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP12</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-PK-07">SPEC-EXPERIENCE-COMPLETION#A-PK-07</a></li><li><a href="../specs/experience-completion.html#A-PK-08">SPEC-EXPERIENCE-COMPLETION#A-PK-08</a></li><li><a href="../specs/experience-completion.html#A-VI-18">SPEC-EXPERIENCE-COMPLETION#A-VI-18</a></li><li><a href="../specs/experience-completion.html#A-VI-19">SPEC-EXPERIENCE-COMPLETION#A-VI-19</a></li><li><a href="../specs/experience-completion.html#A-VI-20">SPEC-EXPERIENCE-COMPLETION#A-VI-20</a></li><li><a href="../specs/experience-completion.html#A-VI-21">SPEC-EXPERIENCE-COMPLETION#A-VI-21</a></li><li><a href="../specs/experience-completion.html#A-VI-22">SPEC-EXPERIENCE-COMPLETION#A-VI-22</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP11">WP11</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Remove placeholder and developer-facing leakage from shipped workflows</li><li>Preserve all original acceptance outcomes and label synthetic review honestly</li><li>Shipped offline artifact preserves native operation</li><li>Fictional demo demonstrates one complete evidence-to-view story</li><li>An uncoached solutions engineer completes the core enterprise journey</li><li>An independent recipient understands the detached brief</li><li>Portable evidence closes requirements without overstating results</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP12</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>src/demo</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Add a small coherent source/question/view story to the existing fictional demo or clearly labeled bundled UAT fixture using existing APIs. Keep real new datasets empty. Run synthetic adversarial review as defect discovery, then real uncoached engineer and independent detached-recipient sessions. Audit visible copy for placeholders, implementation jargon, false status and dead commands across every task family.</li><li>Retain failures and observations. A single successful participant supports that task outcome only; do not claim statistical research. Use the native standalone artifact in supported Windows Chrome and Edge for file operations and offline proof. Do not advertise Pages-only verification as standalone qualification.</li><li>**Supply:** demo fixture/oracle; full story recording; synthetic findings labeled simulated; real task scripts/notes/results; native files and hashes; original AT-001–030 disposition; independent evidence readability review. Missing real participants leaves their acceptance open while agents finish all other work.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:WP12 -->
+
+<!-- CA:BEGIN:WP13 -->
+<article class="record" id="WP13" data-ca-symbol="WP13" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP13">WP13</a><h3>Prepare reviewable delivery and verify publication</h3><span class="badge">PENDING</span></div><div class="field"><span class="label">Checkpoint</span>CP-LOCAL</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/experience-completion.html#A-PK-09">SPEC-EXPERIENCE-COMPLETION#A-PK-09</a></li><li><a href="../specs/experience-completion.html#A-PK-10">SPEC-EXPERIENCE-COMPLETION#A-PK-10</a></li><li><a href="../specs/experience-completion.html#A-PK-11">SPEC-EXPERIENCE-COMPLETION#A-PK-11</a></li><li><a href="../specs/experience-completion.html#A-PK-12">SPEC-EXPERIENCE-COMPLETION#A-PK-12</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP12">WP12</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Prepare a concrete reviewable delivery candidate</li><li>Verify the independently downloaded published offline release</li><li>Verify the deployed Pages preview and its channel identity</li><li>Independently review evidence integrity and the exact completion claim</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-LOCAL</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>AGENTS.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Prepare a focused PR body, release notes/version candidate, durable evidence packet and explicit open-issue list. Describe user outcomes, preserved data invariants, current exact source/build and affected tests. Follow repository CI, version/changelog and release workflows. Use the current release process instead of inventing a second distribution mechanism.</li><li>After authorized publication, independently download the release HTML and published checksum, open the downloaded bytes offline and record identity/smoke results. Inspect Pages About and the actual page artifact against its workflow source. Build timestamps may produce different hashes from the same source; register each artifact with its own provenance and smoke. A green publish job alone does not close this step.</li><li>**Supply:** full accepted ledger, strict validator output, PR/release references, local copies of complete CI reports, artifact/dataset digests, published checksum, release/Pages provenance and smoke reports, reviewer closure. Release readiness and post-publication completion are separate gates. Publication occurs only under existing authorization; do not pause routine implementation work for hypothetical approval.</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>PENDING</div></div></details></article>
+<!-- CA:END:WP13 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-WP00 -->
+<article class="record" id="CP-WP00" data-ca-symbol="CP-WP00" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP00">CP-WP00</a><h3>Reconcile current source and establish the evidence baseline</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP00">WP00</a></li></ul></div></article>
+<!-- CA:END:CP-WP00 -->
+
+<!-- CA:BEGIN:CP-WP01 -->
+<article class="record" id="CP-WP01" data-ca-symbol="CP-WP01" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP01">CP-WP01</a><h3>Define shared interaction and provenance contracts</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP00">CP-WP00</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div></article>
+<!-- CA:END:CP-WP01 -->
+
+<!-- CA:BEGIN:CP-WP02 -->
+<article class="record" id="CP-WP02" data-ca-symbol="CP-WP02" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP02">CP-WP02</a><h3>Unify populated working surfaces</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP02">WP02</a></li></ul></div></article>
+<!-- CA:END:CP-WP02 -->
+
+<!-- CA:BEGIN:CP-WP03 -->
+<article class="record" id="CP-WP03" data-ca-symbol="CP-WP03" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP03">CP-WP03</a><h3>Complete one contextual inspector</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li><li><a href="#CP-WP02">CP-WP02</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP03">WP03</a></li></ul></div></article>
+<!-- CA:END:CP-WP03 -->
+
+<!-- CA:BEGIN:CP-WP04 -->
+<article class="record" id="CP-WP04" data-ca-symbol="CP-WP04" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP04">CP-WP04</a><h3>Make questions and evidence actionable</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP03">CP-WP03</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP04">WP04</a></li></ul></div></article>
+<!-- CA:END:CP-WP04 -->
+
+<!-- CA:BEGIN:CP-WP05 -->
+<article class="record" id="CP-WP05" data-ca-symbol="CP-WP05" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP05">CP-WP05</a><h3>Give the map a readable information hierarchy</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li><li><a href="#CP-WP02">CP-WP02</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP05">WP05</a></li></ul></div></article>
+<!-- CA:END:CP-WP05 -->
+
+<!-- CA:BEGIN:CP-WP06 -->
+<article class="record" id="CP-WP06" data-ca-symbol="CP-WP06" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP06">CP-WP06</a><h3>Make Compare a connected explanation</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP03">CP-WP03</a></li><li><a href="#CP-WP05">CP-WP05</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP06">WP06</a></li></ul></div></article>
+<!-- CA:END:CP-WP06 -->
+
+<!-- CA:BEGIN:CP-WP07 -->
+<article class="record" id="CP-WP07" data-ca-symbol="CP-WP07" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP07">CP-WP07</a><h3>Make assessment tasks and views easy to find and reuse</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li><li><a href="#CP-WP03">CP-WP03</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP07">WP07</a></li></ul></div></article>
+<!-- CA:END:CP-WP07 -->
+
+<!-- CA:BEGIN:CP-WP08 -->
+<article class="record" id="CP-WP08" data-ca-symbol="CP-WP08" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP08">CP-WP08</a><h3>Finish capture composition</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP05">CP-WP05</a></li><li><a href="#CP-WP06">CP-WP06</a></li><li><a href="#CP-WP07">CP-WP07</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP08">WP08</a></li></ul></div></article>
+<!-- CA:END:CP-WP08 -->
+
+<!-- CA:BEGIN:CP-WP09 -->
+<article class="record" id="CP-WP09" data-ca-symbol="CP-WP09" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP09">CP-WP09</a><h3>Preserve inline creation and make service defaults deliberate</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP09">WP09</a></li></ul></div></article>
+<!-- CA:END:CP-WP09 -->
+
+<!-- CA:BEGIN:CP-WP10 -->
+<article class="record" id="CP-WP10" data-ca-symbol="CP-WP10" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP10">CP-WP10</a><h3>Add safe same-kind scenario revision</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP10">WP10</a></li></ul></div></article>
+<!-- CA:END:CP-WP10 -->
+
+<!-- CA:BEGIN:CP-WP11 -->
+<article class="record" id="CP-WP11" data-ca-symbol="CP-WP11" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP11">CP-WP11</a><h3>Qualify responsive, input, accessibility and performance behavior</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP02">CP-WP02</a></li><li><a href="#CP-WP05">CP-WP05</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP11">WP11</a></li></ul></div></article>
+<!-- CA:END:CP-WP11 -->
+
+<!-- CA:BEGIN:CP-WP12 -->
+<article class="record" id="CP-WP12" data-ca-symbol="CP-WP12" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP12">CP-WP12</a><h3>Demonstrate one coherent fictional story and run UAT</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP11">CP-WP11</a></li></ul></div><div class="field"><span class="label">Exit</span>Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP12">WP12</a></li></ul></div></article>
+<!-- CA:END:CP-WP12 -->
+
+<!-- CA:BEGIN:CP-LOCAL -->
+<article class="record" id="CP-LOCAL" data-ca-symbol="CP-LOCAL" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-LOCAL">CP-LOCAL</a><h3>Integrated local candidate</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP12">CP-WP12</a></li></ul></div><div class="field"><span class="label">Exit</span>Local source, built artifact, checks, disposition for every case, signed-off limitations and reproducible evidence paths.</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP13">WP13</a></li></ul></div></article>
+<!-- CA:END:CP-LOCAL -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SOURCE-PACKET -->
+<article class="record" id="SOURCE-PACKET" data-ca-symbol="SOURCE-PACKET" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SOURCE-PACKET">SOURCE-PACKET</a><h3>SIM-EXP-2026-11-18 revision 1</h3></div><div class="field"><span class="label">Locator</span>../packet/SIM-Experience-Completion-Work-Package/acceptance.json</div><div class="field"><span class="label">Note</span>Canonical sixty cases and required evidence classes.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SOURCE-PACKET -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>1412778cdb0e4230c67392860fc4c4f231724f80</div><div class="field"><span class="label">Observed date</span>2026-11-18</div><div class="field"><span class="label">Repository</span>SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: ed8ac6174d9110bbc45e1072c39ca83a8c8df892dd64c073564d791178bd5ab8<br>Model SHA-256: 51e50ffc09eefb0376cbbb487353d7c7b012d3d7e136cfa7a3afad2289c8da83</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-EXPERIENCE-COMPLETION",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "WP00": [
+        {
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "tests/unit/experience-fixtures.test.ts",
+            "src/assessment/note-target.test.ts",
+            "src/demo/demo.test.ts"
+          ],
+          "criterion_subject_sha256": "818320b515f6898354483a182420d058909e5b1ce669f4016e5de41b596fb0f6",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:31:53Z",
+          "recording_operation_id": "experiencer1-wp00-fixtures2",
+          "scoped_inputs_sha256": "db0836ef61ac851464f8603f889202032929d0a6aa9cae033f77e7ed92fd2d83",
+          "source": "../evidence/reports/fixture-verification.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "18/18 assertions in all three files passed. Independent SQLite truth sheets are in ../evidence/fixtures.",
+          "task_subject_sha256": "b9dda967902549836ed39afebceca90701d795f8e192a2a5770106e93ad2fdbe"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "818320b515f6898354483a182420d058909e5b1ce669f4016e5de41b596fb0f6",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:26Z",
+          "recording_operation_id": "simexperience-final-WP00-suite",
+          "scoped_inputs_sha256": "db0836ef61ac851464f8603f889202032929d0a6aa9cae033f77e7ed92fd2d83",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "b9dda967902549836ed39afebceca90701d795f8e192a2a5770106e93ad2fdbe"
+        }
+      ],
+      "WP01": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "ec8dd08f33c27da8de94fc762121eb9c4f8239a29cb7960fa291551525e06c39",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:27Z",
+          "recording_operation_id": "simexperience-final-WP01-suite",
+          "scoped_inputs_sha256": "14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "aad082e7e1326662926e84c1a275d75cb368218f5a4007f86e4c7f77f3da86ad"
+        }
+      ],
+      "WP02": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "1631bbd3dc791728e92a3db37bf7915643b1b0e96d03548ccb710324db430f63",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:28Z",
+          "recording_operation_id": "simexperience-final-WP02-suite",
+          "scoped_inputs_sha256": "bbc0b3f01f05c56e30f63552e2d2c9c8e60575b40b263b8bb3a044fbf1db9042",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "4a89a39181422c5c5c3822cac414d89dcc5bf2e747b8605379406adbc7f59287"
+        }
+      ],
+      "WP03": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "837cea2baf205769af26db325d0ad82353f0fa043b6fa8149bb3553373bbfb12",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:30Z",
+          "recording_operation_id": "simexperience-final-WP03-suite",
+          "scoped_inputs_sha256": "14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "30eb7da9a0b4e5948a7c5f037a9d86951f758408a55054bc73d16a85ac20a30d"
+        }
+      ],
+      "WP04": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "2948398fc995182715dd26ac7cb047ce7d29f727b918800879b04b203e930f2a",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:31Z",
+          "recording_operation_id": "simexperience-final-WP04-suite",
+          "scoped_inputs_sha256": "c4d121507db6598720d59f5859846705308162f9d5128beebcd76df5743c9bc6",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "11ca129fa6fbd6be6bb6e4ca33cbd44c03cfd7cfcd5ae01ccdb110237ff4de0a"
+        }
+      ],
+      "WP05": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "6230ffe20b65248a6f7073305c18f1529a1d03a0868c0f4e1a2fe2c73d406887",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:32Z",
+          "recording_operation_id": "simexperience-final-WP05-suite",
+          "scoped_inputs_sha256": "bb8ba076353147c3b646d7ea0e3e10f283f9581f6d760014a9f17bae2e2f8772",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "80f7364faa661fe205a495fed95d4612124599421bb8013e659f490f2d5509ee"
+        }
+      ],
+      "WP06": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "b742b0bc2d04c33971499c601e191d8c52f4504b6874a3f33e356aefb16bcd68",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:34Z",
+          "recording_operation_id": "simexperience-final-WP06-suite",
+          "scoped_inputs_sha256": "14c6dd94b8b6c8f8f2f67a90791fe26ade728fb344c5f26d03082a94e5bb5dd3",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "61ec18922f1329ca21c545dd5293392d8c21c3ce6bc5ea77ee804018d5c50dfe"
+        }
+      ],
+      "WP07": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "ce5f5b9aa1fb1eff28ae182b31726cd82289b56e3ff87c8ae323ea0c0fc836bb",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:35Z",
+          "recording_operation_id": "simexperience-final-WP07-suite",
+          "scoped_inputs_sha256": "f7c44826dad347cc1c0611f36df69cc2e94c4e4d7a265f188d088417c558880c",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "6f9446900fe0d3951a18c1b3fb0e31ff73cf71db52f20ef6a8bbc0e7a7888fa3"
+        }
+      ],
+      "WP08": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "9ccf4013342f166cfbf7821184296c84252cdc7147d72d2e4bdac5435250289a",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:36Z",
+          "recording_operation_id": "simexperience-final-WP08-suite",
+          "scoped_inputs_sha256": "fac8ce9f37778d619977f49cac0771bfc0e23d97ed670a268c409633c2ee93d7",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "2a482480a3fbeebc93a79e602cbaf97584e5970409c0ff421f21677a0589401a"
+        }
+      ],
+      "WP09": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "7fe6a05561f8bb021931e3f3fc05fa6fac534d6fd4cddf01b03fd784d92aa327",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:38Z",
+          "recording_operation_id": "simexperience-final-WP09-suite",
+          "scoped_inputs_sha256": "3245ba6828b019077bc91a805229b4a6f11d10289599a1d4e197a08d2be8548c",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "e2e7143379fe4b701bba27495d195dcd75662190d0eb7a99dc715213416192b4"
+        }
+      ],
+      "WP10": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "ae151d68259d3a90d22474cf81b9e4d4c04da3070c676473dad9db13604de06d",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:39Z",
+          "recording_operation_id": "simexperience-final-WP10-suite",
+          "scoped_inputs_sha256": "73fa464aa6be7a6a202612d89ef0a3461268694ba90b5b81f5e50c62f893ce64",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "ec8d1b89893a92666e1a0005777df8a1354a5e563c6a92d65db7bc0df5d6c0bc"
+        }
+      ],
+      "WP11": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "18caa260ffffe82425beac66604aeef73338977e3f912e88b9dadd6207c5f9c2",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T19:41:40Z",
+          "recording_operation_id": "simexperience-final-WP11-suite",
+          "scoped_inputs_sha256": "aa8cc26e77de6d511538a0bbe6df66f7048d2d1df3b62c6b15a6cd4d0397c05c",
+          "source": "../evidence/reports/check-07.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "All repository stages passed on Windows: typecheck, lint, format, standalone build, 467 unit and 1,246 installed Edge/Chrome tests. See build-equivalence.json for frozen candidate and gate-build bytes.",
+          "task_subject_sha256": "ee27aba5f12c92aba3383bec330e1a000372fd46122d022f8db9e4ee68a9942d"
+        },
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check"
+          ],
+          "command_index": 0,
+          "criterion_subject_sha256": "18caa260ffffe82425beac66604aeef73338977e3f912e88b9dadd6207c5f9c2",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T20:01:24Z",
+          "recording_operation_id": "simexperience-local-WP11-compact-identity-check08",
+          "scoped_inputs_sha256": "b46a3f228cfa8cc573a72f6cc64a92dd2be17da9c17a6c5cb9ce3149a967acff",
+          "source": "../evidence/reports/check-08.log",
+          "source_normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33",
+          "summary": "WP11 compact inspector regression. Restored D100 at 320 x 640: both installed browsers failed the client-rectangle oracle before the correction and passed on the final reviewed file. Full gate passed on 943c661a93d37ecf6fe88e6c94d72a8a4a0785570d7c30a79444dd1918e06033.",
+          "task_subject_sha256": "ee27aba5f12c92aba3383bec330e1a000372fd46122d022f8db9e4ee68a9942d"
+        }
+      ]
+    },
+    "tasks": {
+      "WP00": {
+        "evidence_refs": [],
+        "reason": "Intake, 16 source-bound finding classifications, 75 entries and deterministic fixture truth sheets are present. Engineering completion only. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP01": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP02": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP03": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP04": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP05": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP06": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP07": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP08": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP09": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP10": {
+        "evidence_refs": [],
+        "reason": "Local engineering and task-scoped checks are recorded in the sixty-case ledger. Independent acceptance status and real human or native obligations remain explicit. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP11": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "IN_PROGRESS"
+      },
+      "WP12": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      },
+      "WP13": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "PENDING"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "51e50ffc09eefb0376cbbb487353d7c7b012d3d7e136cfa7a3afad2289c8da83",
+    "normative_sha256": "ed8ac6174d9110bbc45e1072c39ca83a8c8df892dd64c073564d791178bd5ab8",
+    "symbol_count": 29
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "1412778cdb0e4230c67392860fc4c4f231724f80",
+      "observed_date": "2026-11-18",
+      "repository": "SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP00",
+        "tasks": [
+          "WP00"
+        ],
+        "title": "Reconcile current source and establish the evidence baseline"
+      },
+      {
+        "depends_on": [
+          "CP-WP00"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP01",
+        "tasks": [
+          "WP01"
+        ],
+        "title": "Define shared interaction and provenance contracts"
+      },
+      {
+        "depends_on": [
+          "CP-WP01"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP02",
+        "tasks": [
+          "WP02"
+        ],
+        "title": "Unify populated working surfaces"
+      },
+      {
+        "depends_on": [
+          "CP-WP01",
+          "CP-WP02"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP03",
+        "tasks": [
+          "WP03"
+        ],
+        "title": "Complete one contextual inspector"
+      },
+      {
+        "depends_on": [
+          "CP-WP03"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP04",
+        "tasks": [
+          "WP04"
+        ],
+        "title": "Make questions and evidence actionable"
+      },
+      {
+        "depends_on": [
+          "CP-WP01",
+          "CP-WP02"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP05",
+        "tasks": [
+          "WP05"
+        ],
+        "title": "Give the map a readable information hierarchy"
+      },
+      {
+        "depends_on": [
+          "CP-WP03",
+          "CP-WP05"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP06",
+        "tasks": [
+          "WP06"
+        ],
+        "title": "Make Compare a connected explanation"
+      },
+      {
+        "depends_on": [
+          "CP-WP01",
+          "CP-WP03"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP07",
+        "tasks": [
+          "WP07"
+        ],
+        "title": "Make assessment tasks and views easy to find and reuse"
+      },
+      {
+        "depends_on": [
+          "CP-WP05",
+          "CP-WP06",
+          "CP-WP07"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP08",
+        "tasks": [
+          "WP08"
+        ],
+        "title": "Finish capture composition"
+      },
+      {
+        "depends_on": [
+          "CP-WP01"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP09",
+        "tasks": [
+          "WP09"
+        ],
+        "title": "Preserve inline creation and make service defaults deliberate"
+      },
+      {
+        "depends_on": [
+          "CP-WP01"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP10",
+        "tasks": [
+          "WP10"
+        ],
+        "title": "Add safe same-kind scenario revision"
+      },
+      {
+        "depends_on": [
+          "CP-WP02",
+          "CP-WP05"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP11",
+        "tasks": [
+          "WP11"
+        ],
+        "title": "Qualify responsive, input, accessibility and performance behavior"
+      },
+      {
+        "depends_on": [
+          "CP-WP11"
+        ],
+        "exit": "Local implementation and evidence for this work package are reported. Independent acceptance and any outstanding obligations remain in the sixty-case ledger.",
+        "id": "CP-WP12",
+        "tasks": [
+          "WP12"
+        ],
+        "title": "Demonstrate one coherent fictional story and run UAT"
+      },
+      {
+        "depends_on": [
+          "CP-WP12"
+        ],
+        "exit": "Local source, built artifact, checks, disposition for every case, signed-off limitations and reproducible evidence paths.",
+        "id": "CP-LOCAL",
+        "tasks": [
+          "WP13"
+        ],
+        "title": "Integrated local candidate"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [
+      {
+        "id": "SOURCE-PACKET",
+        "locator": "../packet/SIM-Experience-Completion-Work-Package/acceptance.json",
+        "note": "Canonical sixty cases and required evidence classes.",
+        "title": "SIM-EXP-2026-11-18 revision 1",
+        "type": "local_document",
+        "url": null
+      }
+    ],
+    "spec_ref": {
+      "artifact_id": "SPEC-EXPERIENCE-COMPLETION",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "0e5daec0f091e87e055e4a5b011b0969411a23a23f0bd1be8492ee1ecf39ad33"
+    },
+    "summary": "An engineer can understand and question recorded relationships, change and reuse inventory, and explain a proposed state with a detached capture.",
+    "tasks": [
+      {
+        "checkpoint": "CP-WP00",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-01",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-02"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "Reconcile every finding with the current checkout and deployed identity",
+          "Create reproducible fictional fixtures and independent semantic oracles"
+        ],
+        "execution_scope": "CP-WP00",
+        "id": "WP00",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "tests/helpers"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Read current source, AGENTS.md and relevant governance. Record HEAD/main/worktree status, compare intervening changes with the pinned review, and classify every F01–F16. Reproduce source-only F12 before stating a phone symptom as observed. Preserve later valid fixes.",
+          "Freeze deterministic D15/D100/D500 fixtures, the original demo regression and focused edge-case variants. Create a truth sheet with exact IDs/origins, counts, expected dependency directions/routes, markings, questions, view scope and scenario outcomes. Derive expected outcomes independently of the implementation under test. Record data/generator hashes.",
+          "**Supply:** intake report with immutable source links; finding reconciliation table; fixture generator/data manifest and oracle; current build artifact/digest; initial before storyboard where available. Missing historic screenshots are disclosed, not recreated and labeled historical. Baseline evidence does not close candidate acceptance.",
+          "**Exit:** every finding has a disposition, every fixture has reproducible identity, and the package's requirements are reconciled without deleting unresolved outcomes."
+        ],
+        "title": "Reconcile current source and establish the evidence baseline",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP01",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-03"
+        ],
+        "depends_on": [
+          "WP00"
+        ],
+        "done_when": [
+          "Establish one state owner and typed transition contract"
+        ],
+        "execution_scope": "CP-WP01",
+        "id": "WP01",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Map actual state owners in workspace, editor, map, session and repository. Implement the minimum typed context needed for one inspector/history, selected origin, requested perspective, worklist return, active/parked draft and dataset-session invalidation. Reuse existing request guards. Use an explicit destination table for all supported note target kinds.",
+          "Resolve contracts before parallel UI changes: unavailable/filtered selection behavior; Back versus Undo; source/exchange identity; same-kind revision and diagnostics policy; capture snapshot; strict version 1 saved-view definitions. Record accepted invariants in repository governance using supported tooling. Challenge presentation decisions when needed with a new disposition, not historical ADR edits.",
+          "**Supply:** concise owner/transition map, typed routing table, decisions and risk-based test selection. Existing tests may satisfy invariants; add tests only where new branches need proof.",
+          "**Exit:** agents cannot independently invent competing navigation stores or origin adapters, and stale callbacks cannot cross a dataset/session boundary."
+        ],
+        "title": "Define shared interaction and provenance contracts",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP02",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-01",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-02"
+        ],
+        "depends_on": [
+          "WP01"
+        ],
+        "done_when": [
+          "One coherent visual system on populated working surfaces",
+          "Readable typography and deliberate action emphasis"
+        ],
+        "execution_scope": "CP-WP02",
+        "id": "WP02",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/atlas.css"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Consolidate app/map semantic tokens for surfaces, readable text, spacing, borders, selection/focus and purposeful motion. Apply the existing enterprise direction to actual Map+inspector, Inventory, questions, views, owner/correction review and commit dialogs. Remove contradictory local overrides rather than adding another stylesheet to fight them. Keep authoritative marking colors independent.",
+          "Give each local task at most two primary-emphasis actions. Keep secondary actions labeled and reachable; destructive actions remain deliberate. Inspect long names, errors, unsaved state, missing values, empty datasets and dense relationships, not only the welcome plate.",
+          "**Likely files:** app.css, atlas.css, inspector.css, assessment-workflows.css, map/market.css, map/style.ts and relevant DOM constructors. Verify actual consumers before editing.",
+          "**Supply:** token-to-consumer map; populated before/after storyboard; text/control/contrast measurements; human design disposition against C10. No new theme preference system is required."
+        ],
+        "title": "Unify populated working surfaces",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP03",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-01",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-02",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-03",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-04",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-05"
+        ],
+        "depends_on": [
+          "WP01",
+          "WP02"
+        ],
+        "done_when": [
+          "Explore related records, connections, and evidence in one reading inspector",
+          "Navigation preserves the entire active service draft",
+          "Back, Undo, and unavailable history targets have distinct outcomes",
+          "Find and decision drilldowns return to the exact investigation context",
+          "Dataset replacement invalidates old navigation and write callbacks"
+        ],
+        "execution_scope": "CP-WP03",
+        "id": "WP03",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Move ordinary related record, connection and evidence/question reading into one inspector with typed history and useful Back. Keep transactional forms, imports and warnings appropriately bounded. Preserve read-first behavior, explicit Edit, selected map context, list/Find/decision origin, section scroll and invoking focus.",
+          "Exercise the full draft aggregate across navigation: details, support, consumers, outgoing dependencies and pending row intent. Stay/Escape and failed Apply retain everything; Apply is atomic; Discard affects only the parent intent. Preserve current session/request guards and refuse stale callbacks after Open/New.",
+          "**Likely files:** workspace.ts, editor-panel.ts, record-summary.ts, assessment-notes.ts, relationship-collection.ts, inspector styles and current navigation tests.",
+          "**Supply:** visible-control journey and keyboard record; transition matrix; actual draft payload and repository/history checkpoints; unavailable-history and dataset-replacement negative controls. Closing a stack of dialogs with correct focus alone cannot pass."
+        ],
+        "title": "Complete one contextual inspector",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP04",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-06",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-07",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-08",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-09"
+        ],
+        "depends_on": [
+          "WP03"
+        ],
+        "done_when": [
+          "A saved question remains actionable without entering Edit",
+          "Question links navigate by assertion identity and return to the worklist",
+          "Detached notes remain readable and cannot navigate to replacement records",
+          "Note editing preserves validation, evidence semantics, and safe cancellation"
+        ],
+        "execution_scope": "CP-WP04",
+        "id": "WP04",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/assessment-notes.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Show responsible team and Next action on question read cards using existing fields. Preserve source semantics for evidence, reviewed-versus-needs-review derivation, resolution requirements and optional values. Add typed target navigation for assessment, service, service_dependency and org_consumes. Keep detached targets readable and non-navigable until an explicit supported retarget.",
+          "Return to the same query/filter/page/scroll after inspection. Provide clear labels and wrapping at narrow widths. Do not invent separate note target types, duplicate assignee/action columns or an unrelated task-management module.",
+          "**Supply:** persisted-to-visible field comparisons including reopen; all four routing outcomes; renamed/replaced/detached-target negative controls; read-card screenshot and human ownership/action comprehension; validation and cancellation logs."
+        ],
+        "title": "Make questions and evidence actionable",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP05",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-03",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-04",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-05",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-06",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-07"
+        ],
+        "depends_on": [
+          "WP01",
+          "WP02"
+        ],
+        "done_when": [
+          "Enterprise overview communicates domains at realistic scale",
+          "Service neighborhoods reveal readable, qualified identities",
+          "Connection grammar communicates recorded dependency meaning",
+          "Purposeful motion terminates and preserves meaning",
+          "Map controls stay calm while selection and focus deepen"
+        ],
+        "execution_scope": "CP-WP05",
+        "id": "WP05",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map/map-view.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Build overview, neighborhood and selected-detail behavior using current snapshot and renderer. Show recorded network kind and qualified counts at overview. Readable full selected identity and relevant neighbor names take priority over showing every tiny caption. Use bounded focus/progressive detail for density; never enlarge every one of 500 services into a competing card.",
+          "Consolidate controls: two directional questions by the subject, one focus return, reachable secondary network/highlight actions, stable zoom/fit and secondary layout. Preserve logical consumer-to-provider traversal, CDS provenance, foundational-dependency omission disclosure and route grammar. Retain finite trace, cancellation, reduced motion and stable export semantics.",
+          "**Supply:** D15/D100/D500 overview, qualified neighborhood and route-key evidence; rendered-size and bounds measurements; semantic IDs/counts; unchanged positions/history on cosmetic operations; motion/cancellation clips. Do not replace saved layouts with nicer demonstration positions during ordinary selection."
+        ],
+        "title": "Give the map a readable information hierarchy",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP06",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-10",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-11",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-12",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-13",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-08",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-09",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-10"
+        ],
+        "depends_on": [
+          "WP03",
+          "WP05"
+        ],
+        "done_when": [
+          "Switching perspective reconciles map selection and inspector identity",
+          "Planned origins cannot be confused with signed baseline IDs",
+          "A proposal summary opens its exact subject and preserves investigation scope",
+          "Perspective changes respect active and parked drafts",
+          "Perspective changes preserve or explicitly resolve selected identity",
+          "Proposed changes form a navigable comparison explanation",
+          "Comparison totals and consequences remain honest and legible"
+        ],
+        "execution_scope": "CP-WP06",
+        "id": "WP06",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/workspace.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Reconcile typed selection and inspector on every perspective change. Handle unchanged, rehomed, retired, merged and planned-only subjects deliberately. Preserve filters; offer explicit reveal with a reversible scope change when a subject is hidden. Keep all active/parked drafts guarded.",
+          "Make proposal rows keyboard/pointer navigable to their actual authored change and affected subject. Show recorded/proposed facts and named source/destination roles. Return restores comparison scope/list position/framing. Separate baseline service count, target service count and drawn representations; use user language without claiming business benefit or verified connectivity.",
+          "**Supply:** full perspective/absence transition matrix; numeric-origin collision fixture; proposal-to-origin map; named-change screenshots and count oracle; invalid-draft refusal proof. Workflow and visual criteria can share the same transition trace with separate assertions."
+        ],
+        "title": "Make Compare a connected explanation",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP07",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-14",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-15",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-16",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-17"
+        ],
+        "depends_on": [
+          "WP01",
+          "WP03"
+        ],
+        "done_when": [
+          "Core assessment tasks have a stable, discoverable home",
+          "Saved views are recognizable, accessible reusable assets",
+          "Save, rename, replace, and restore view definitions preserve their meaning",
+          "Unavailable saved-view subjects fail safely and can be deliberately repaired"
+        ],
+        "execution_scope": "CP-WP07",
+        "id": "WP07",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/saved-viewpoints.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Provide stable task destinations from Map and Inventory for Questions/Evidence, Decision views, Saved views and Brief/Review. Retain existing commands and their session/file semantics; inventory the old entry points before consolidating menus.",
+          "Place Save view near Capture. Make saved views recognizable using perspective/scenario, scope, subject and derived preview or diagram summary. Keep strict version 1 persisted definitions unchanged. Previews describe current data/positions, not historical screenshots. Name/caption edits preserve definition; explicit replacement updates scope. Missing references fail restoration atomically with a useful repair path.",
+          "**Supply:** destination-to-command map; same-name view recognition task; card-to-definition assertions; actual file roundtrip; rename/replace/stale-reference negative controls. Do not require a new thumbnail store, tags or view folders for this increment."
+        ],
+        "title": "Make assessment tasks and views easy to find and reuse",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP08",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-11",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-12",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-13"
+        ],
+        "depends_on": [
+          "WP05",
+          "WP06",
+          "WP07"
+        ],
+        "done_when": [
+          "Screen, SVG, and PNG share a semantic capture contract",
+          "A detached capture is a readable briefing artifact",
+          "Capture freezes truthful scope without altering the working session"
+        ],
+        "execution_scope": "CP-WP08",
+        "id": "WP08",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Compose a shared semantic scene/frame for PNG and SVG using existing graph geometry. Include a readable title/subject, perspective, scope, actual route/node swatches, named relevant proposals and complete marking/caveat/source/unsaved context. Keep detail in a clear hierarchy. Dense whole-enterprise overviews can prioritize regions; selected-change briefs must name their subjects.",
+          "Inspect full output at declared presentation size. If it cannot fit legibly, make capture scope/focus choices explicit before export. Do not silently crop caveats, shrink required names to unreadability, rewrite coordinates or introduce a slide editor.",
+          "**Supply:** actual PNG and SVG pairs, frozen scene manifests, direction/identity/key assertions, independent-viewer screenshots, capture failure recovery and unchanged-session proof, detached recipient test. A screenshot of the export button or a recolored white frame is insufficient."
+        ],
+        "title": "Finish capture composition",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP09",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-18",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-19",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-20",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-21",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-22"
+        ],
+        "depends_on": [
+          "WP01"
+        ],
+        "done_when": [
+          "New service network assignment is deliberate or inherited from explicit scope",
+          "Create missing shared references inline and continue the same service draft",
+          "Child cancellation and parent cancellation preserve honest shared-record semantics",
+          "Create similar service reuses shared assets without copying unintended relationships",
+          "Inline creation and reuse retain validation and exact-payload confirmation"
+        ],
+        "execution_scope": "CP-WP09",
+        "id": "WP09",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui/forms.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Remove first-network defaults for unscoped creation. Keep deliberate scoped defaults and manual marking choices. Protect inline Create and use for network, organization, application and category. Preserve all parent fields/relationships and focus after child creation, cancellation, warning or validation failure. Explain the separately committed shared child's lifetime.",
+          "Keep Create similar service as independent service creation reusing shared identities. Destination network remains deliberate; optional support copy remains explicit; consumers, dependencies, positions and history are not copied. Do not expand the generic child form to service/CDS without a separate source-proven requirement and full transaction design.",
+          "**Supply:** scope/default matrix; parent/child transaction and Undo ledger; full-draft visible-control recording; copied/reused/omitted field diff; exact-payload warning negative controls; uncoached inline creation segment. This is a protected user requirement even though the baseline already implements much of it."
+        ],
+        "title": "Preserve inline creation and make service defaults deliberate",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP10",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-23",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-24",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-25",
+          "SPEC-EXPERIENCE-COMPLETION#A-WF-26"
+        ],
+        "depends_on": [
+          "WP01"
+        ],
+        "done_when": [
+          "Revise an existing proposal without remove-and-recreate",
+          "Revising a planned merge target preserves dependent proposals and saved identity",
+          "Proposal revision validates the complete scenario and refuses invalid updates atomically",
+          "Revised scenarios survive file roundtrip and remain consistent across presentations"
+        ],
+        "execution_scope": "CP-WP10",
+        "id": "WP10",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain/repository.ts"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Add a repository revision command and a prefilled Edit change flow. Preserve row ID, exchange identity, scenario, kind, order and dependent merge links. Same-kind scope: add's existing fields; rehome source/network/provider; merge source/target; retire source. Keep kind conversion and scenario reassignment out of scope.",
+          "Validate the entire resulting projection while excluding the edited row from conflict checks against other changes. Compare projected name-collision keys before/after: permit repairs and unrelated valid edits with pre-existing collisions, refuse new collision keys, and retain disclosed unresolved-route diagnostics after valid changes. Reject invalid revised input and newly introduced structural violations; revalidate references affected by the revision. Leave unchanged, unrelated admitted legacy issues visible and unmodified. Keep null-provider meaning, exact sensitive confirmation and removal consequence signatures unchanged. Integrate active revision intent with existing Save/draft lifecycle.",
+          "**Supply:** transaction/identity assertions, cancel/Undo/Redo, planned-target-with-two-merges preservation, invalid revision and pre-existing diagnostic oracles, actual save/reopen evidence across Find/To-Be/Compare/saved view. No migration is assumed; never implement delete/add behind Edit."
+        ],
+        "title": "Add safe same-kind scenario revision",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP11",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-04",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-05",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-06",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-14",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-15",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-16",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-17"
+        ],
+        "depends_on": [
+          "WP02",
+          "WP05"
+        ],
+        "done_when": [
+          "Preserve architecture, trust and transaction invariants",
+          "Complete the current repository gate on the reviewed source",
+          "Close the existing-feature regression inventory without losing commands",
+          "Responsive layouts retain usable map and record context",
+          "Actual browser zoom reflows surrounding task controls",
+          "Keyboard and actual screen-reader journeys expose equivalent meaning",
+          "Measured performance at 15, 100, and 500 services"
+        ],
+        "execution_scope": "CP-WP11",
+        "id": "WP11",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "e2e"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Run the sparse viewport plan, actual 200%/400% browser zoom, pointer/touch/keyboard, real screen-reader journey, long-content/marking states, reduced motion and error recovery. Implement a useful compact/expanded phone inspector with accessible controls. Remove nonfunctional affordances. Provide nonvisual equivalents for topology meaning without putting hundreds of nodes in a tab sequence.",
+          "Measure D15/D100/D500 intent-to-usable latency using declared hardware, raw samples and honest boundaries. Profile concrete failures; avoid new infrastructure solely to satisfy a screenshot. Re-run the current full project gate under actual repository requirements and preserve all regression families in document 09.",
+          "**Supply:** viewport storyboard/metrics, native zoom and AT logs, contrast measurements, raw performance samples/trace, full command/CI reports, remaining limitations and owners. Native work is blocked if its actual environment is unavailable; headless substitution is not a pass."
+        ],
+        "title": "Qualify responsive, input, accessibility and performance behavior",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP12",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-07",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-08",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-18",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-19",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-20",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-21",
+          "SPEC-EXPERIENCE-COMPLETION#A-VI-22"
+        ],
+        "depends_on": [
+          "WP11"
+        ],
+        "done_when": [
+          "Remove placeholder and developer-facing leakage from shipped workflows",
+          "Preserve all original acceptance outcomes and label synthetic review honestly",
+          "Shipped offline artifact preserves native operation",
+          "Fictional demo demonstrates one complete evidence-to-view story",
+          "An uncoached solutions engineer completes the core enterprise journey",
+          "An independent recipient understands the detached brief",
+          "Portable evidence closes requirements without overstating results"
+        ],
+        "execution_scope": "CP-WP12",
+        "id": "WP12",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "src/demo"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Add a small coherent source/question/view story to the existing fictional demo or clearly labeled bundled UAT fixture using existing APIs. Keep real new datasets empty. Run synthetic adversarial review as defect discovery, then real uncoached engineer and independent detached-recipient sessions. Audit visible copy for placeholders, implementation jargon, false status and dead commands across every task family.",
+          "Retain failures and observations. A single successful participant supports that task outcome only; do not claim statistical research. Use the native standalone artifact in supported Windows Chrome and Edge for file operations and offline proof. Do not advertise Pages-only verification as standalone qualification.",
+          "**Supply:** demo fixture/oracle; full story recording; synthetic findings labeled simulated; real task scripts/notes/results; native files and hashes; original AT-001–030 disposition; independent evidence readability review. Missing real participants leaves their acceptance open while agents finish all other work."
+        ],
+        "title": "Demonstrate one coherent fictional story and run UAT",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-LOCAL",
+        "criterion_refs": [
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-09",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-10",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-11",
+          "SPEC-EXPERIENCE-COMPLETION#A-PK-12"
+        ],
+        "depends_on": [
+          "WP12"
+        ],
+        "done_when": [
+          "Prepare a concrete reviewable delivery candidate",
+          "Verify the independently downloaded published offline release",
+          "Verify the deployed Pages preview and its channel identity",
+          "Independently review evidence integrity and the exact completion claim"
+        ],
+        "execution_scope": "CP-LOCAL",
+        "id": "WP13",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "AGENTS.md"
+          }
+        ],
+        "rollback": "Retain the prior source and evidence. Isolate a failed change and recheck its affected behavior before integration.",
+        "steps": [
+          "Prepare a focused PR body, release notes/version candidate, durable evidence packet and explicit open-issue list. Describe user outcomes, preserved data invariants, current exact source/build and affected tests. Follow repository CI, version/changelog and release workflows. Use the current release process instead of inventing a second distribution mechanism.",
+          "After authorized publication, independently download the release HTML and published checksum, open the downloaded bytes offline and record identity/smoke results. Inspect Pages About and the actual page artifact against its workflow source. Build timestamps may produce different hashes from the same source; register each artifact with its own provenance and smoke. A green publish job alone does not close this step.",
+          "**Supply:** full accepted ledger, strict validator output, PR/release references, local copies of complete CI reports, artifact/dataset digests, published checksum, release/Pages provenance and smoke reports, reviewer closure. Release readiness and post-publication completion are separate gates. Publication occurs only under existing authorization; do not pause routine implementation work for hypothetical approval."
+        ],
+        "title": "Prepare reviewable delivery and verify publication",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "All configured static, unit, Edge and Chrome checks pass. Additional evidence is measured per case.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "Experience completion implementation and local qualification"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/experience-completion.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 51,
+  "schema_version": "0.3.2",
+  "slug": "experience-completion"
+}
+</script>
+</body></html>

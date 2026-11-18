@@ -1,3 +1,4 @@
+import { showExploration } from "./helpers/map-controls";
 import { chooseReference, editSelected, mapFilters, openFileMenu, showInventory, showMap } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -243,6 +244,7 @@ test("finds a node by name, clearing a filter that hides it", async ({ page }) =
   await map.getByLabel("Find on map").press("Enter");
   await expect(editor(page).getByRole("heading", { name: "Service: Chat", exact: true })).toBeVisible();
   await showMap(page);
+  await showExploration(page);
   await page.getByRole("button", { name: "Highlight chain", exact: true }).click();
   await mapFilters(page);
   await expect(map.getByLabel("Network", { exact: true })).toHaveValue("");

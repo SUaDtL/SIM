@@ -115,14 +115,15 @@ test("Edit As-Is reveals a rehomed service at its real baseline identity despite
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
 
-test("switching View closes the old projected inspector with an actionable current-view message", async ({ page }) => {
+test("switching View retains a planned origin and explicitly explains its absence in As-Is", async ({ page }) => {
   await page.getByLabel("View", { exact: true }).selectOption({ label: "Compare: Plan" });
   await findRecord(page, "portal", "Portal (Blue) · service · projected");
   await expect(page.getByTestId("editor")).toContainText("Planned service added");
   await page.getByLabel("View", { exact: true }).selectOption({ label: "To-Be: Plan" });
-  await expect(page.getByTestId("editor")).not.toContainText("Planned service added");
-  await expect(page.getByTestId("navigation-status")).toContainText("Projection changed");
-  await expect(page.getByTestId("navigation-status")).toContainText("Select a record");
+  await expect(page.getByTestId("editor")).toContainText("Planned service added");
+  await expect(page.getByTestId("editor")).toContainText("To-Be: Plan");
+  await page.getByLabel("View", { exact: true }).selectOption("as-is");
+  await expect(page.getByRole("region", { name: "Inspect related record" })).toContainText("planned service");
   await expect(page.getByTestId("editor")).toBeHidden();
   await expect(page.getByTestId("editor").getByRole("button", { name: "Edit As-Is", exact: true })).toHaveCount(0);
 });

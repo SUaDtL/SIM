@@ -94,13 +94,15 @@ describe("form model", () => {
     });
   });
 
-  it("defaults a new service to the first network and offers network options", () => {
+  it("keeps an unscoped new service unassigned regardless of network ordering", () => {
     const s = seed();
     const d = descriptor("service");
-    expect(d.values(repo, null)["networkId"]).toBe(String(s.nipr.id));
-    expect(d.values(repo, null)["marking"]).toBe("CUI");
+    expect(d.values(repo, null)["networkId"]).toBe("");
+    expect(d.values(repo, null)["marking"]).toBe("UNCLASSIFIED");
     const networkField = d.fields.find((f) => f.key === "networkId");
     expect(networkField?.options?.(repo, null).map((o) => o.label)).toEqual(["NIPR", "SIPR"]);
+    repo.updateNetwork(s.sipr.id, { ...s.sipr, name: "A first network" });
+    expect(d.values(repo, null)["networkId"]).toBe("");
   });
 
   it("excludes an organization from its own parent options", () => {
@@ -175,7 +177,7 @@ describe("error field mapping", () => {
       ],
     ];
     for (const [type, id, values, expected] of cases) {
-      const keys = keysFor(type, id, values);
+      const keys = keysFor(type, id, type === "service" ? { networkId: String(s.nipr.id), ...values } : values);
       expect({ type, values, keys }).toEqual({ type, values, keys: expected });
       const fieldKeys = descriptor(type).fields.map((f) => f.key);
       for (const key of keys) expect(fieldKeys).toContain(key);

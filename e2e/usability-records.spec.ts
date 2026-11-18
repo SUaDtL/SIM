@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { writeFileSync } from "node:fs";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
@@ -147,13 +148,19 @@ test("following a dependency keeps the related service's evidence in reach", asy
     .getByRole("region", { name: "Used by services" })
     .getByRole("button", { name: "Orders (Amber)", exact: true })
     .click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record" });
+  const peek = page.getByRole("region", { name: "Inspect related record" });
   const evidence = peek.getByRole("button", { name: "Evidence and questions" });
   await evidence.click();
-  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  const notes = page.getByRole("region", { name: "Assessment evidence and questions" });
   await notes.getByRole("button", { name: "Add question" }).click();
-  await notes.getByLabel("Question or unresolved observation").fill("Who owns this dependency?");
-  await notes.getByRole("button", { name: "Apply note" }).click();
+  await page
+    .getByRole("dialog", { name: "Add question", exact: true })
+    .getByLabel("Question or unresolved observation")
+    .fill("Who owns this dependency?");
+  await page
+    .getByRole("dialog", { name: "Add question", exact: true })
+    .getByRole("button", { name: "Apply note" })
+    .click();
   await notes.getByRole("button", { name: "Close" }).click();
   await expect(peek).toContainText("1 open question");
   await expect(evidence).toBeFocused();
@@ -180,11 +187,136 @@ test("undo and redo replace the service's last apply confirmation", async ({ pag
   await expect(page.getByTestId("navigation-status")).toHaveText("Change reapplied.");
 });
 
-test("T06 Create similar makes one independent service with reviewed shared references and optional support only", async ({
+for (const copySupport of [false, true]) {
+  test(`T06 Create similar makes one independent service with reviewed shared references (copy support: ${String(copySupport)})`, async ({
+    page,
+  }, info) => {
+    const data = await fixture();
+    await openDatasetFile(page, data.bytes, "similar-source.sqlite");
+    await selectInventory(page, "service", "Orders");
+    const editor = page.getByTestId("editor");
+    await editor
+      .locator("summary")
+      .filter({ hasText: /^More service actions$/ })
+      .click();
+    await editor.getByRole("button", { name: "Create similar service", exact: true }).click();
+    await expect(editor.getByTestId("similar-source")).toContainText("new independent service");
+    await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+    await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
+    await expect(editor.getByLabel("Foundational (e.g. identity, DNS)", { exact: true })).toBeChecked();
+    await expect(editor.getByRole("button", { name: "Choose Network", exact: true })).toHaveText("Choose network");
+    await editor.getByRole("button", { name: "Add service", exact: true }).click();
+    await expect(editor.getByTestId("error-networkId")).not.toBeEmpty();
+    await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
+    await chooseReference(page, "Network", "Blue");
+    await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
+    await editorSection(page, "Support");
+    await expect(editor.locator("#support-1")).toHaveValue("");
+    await editorSection(page, "Connections");
+    await expect(editor.getByTestId("dependencies")).not.toContainText("Identity");
+    await expect(editor.getByTestId("consumers")).not.toContainText("Operations");
+    await editorSection(page, "Details");
+    await editor.getByLabel("Also copy support assignments and notes", { exact: true }).setChecked(copySupport);
+    await editor.getByRole("button", { name: "Add service", exact: true }).click();
+    await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
+    const after = await savedSnapshot(page);
+    const created = after.services.find((service) => service.id !== data.ids.orders && service.name === "Orders");
+    expect(created).toBeDefined();
+    if (!created) throw new Error("Independent Orders service missing");
+    expect(created).toMatchObject({
+      networkId: data.ids.blue,
+      marking: "CUI",
+      foundational: true,
+      providerOrgId: data.ids.operations,
+      applicationId: data.ids.application,
+      categoryId: data.ids.category,
+      description: "Synthetic source description",
+    });
+    expect(after.services.find((service) => service.id === data.ids.orders)).toEqual(
+      data.snapshot.services.find((service) => service.id === data.ids.orders),
+    );
+    expect(after.organizations).toEqual(data.snapshot.organizations);
+    expect(after.applications).toEqual(data.snapshot.applications);
+    expect(after.categories).toEqual(data.snapshot.categories);
+    expect(
+      after.support
+        .filter((row) => row.serviceId === created.id)
+        .map(({ tier, orgId, notes }) => ({ tier, orgId, notes })),
+    ).toEqual(
+      (copySupport ? data.snapshot.support : [])
+        .filter((row) => row.serviceId === data.ids.orders)
+        .map(({ tier, orgId, notes }) => ({ tier, orgId, notes })),
+    );
+    expect(after.consumption.filter((row) => row.serviceId === created.id)).toEqual([]);
+    expect(
+      after.dependencies.filter((row) => row.consumerServiceId === created.id || row.providerServiceId === created.id),
+    ).toEqual([]);
+    expect(after.scenarioChanges).toEqual(data.snapshot.scenarioChanges);
+    const sourcePosition = data.snapshot.positions.find(
+      (row) => row.entity === "service" && row.id === data.ids.orders,
+    );
+    const newPosition = after.positions.find((row) => row.entity === "service" && row.id === created.id);
+    expect(newPosition && { x: newPosition.x, y: newPosition.y }).not.toEqual(
+      sourcePosition && { x: sourcePosition.x, y: sourcePosition.y },
+    );
+    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    expect(await savedSnapshot(page)).toEqual(data.snapshot);
+    await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+    await page.getByRole("button", { name: "Redo", exact: true }).click();
+    expect((await savedSnapshot(page)).services.find((service) => service.id === created.id)).toEqual(created);
+    await showInventory(page);
+    await page.getByLabel("Show", { exact: true }).selectOption("service");
+    await page.getByLabel("Filter", { exact: true }).fill("Orders");
+    await page
+      .getByTestId("entity-list")
+      .getByRole("button", { name: /^Orders.*Blue/ })
+      .click();
+    await editSelected(page);
+    await editor.getByLabel("Name", { exact: true }).fill("Independent destination service");
+    await editor.getByRole("button", { name: "Apply changes", exact: true }).click();
+    const edited = await savedSnapshot(page);
+    const source = data.snapshot.services.find((row) => row.id === data.ids.orders);
+    expect(edited.services.find((row) => row.id === data.ids.orders)).toEqual(source);
+    const newService = edited.services.find((row) => row.id === created.id);
+    expect(newService?.name).toBe("Independent destination service");
+    writeFileSync(
+      info.outputPath("reuse-diff.json"),
+      JSON.stringify(
+        {
+          source,
+          created,
+          newService,
+          copySupport,
+          reused: { application: created.applicationId, category: created.categoryId, provider: created.providerOrgId },
+          copied: {
+            marking: created.marking,
+            foundational: created.foundational,
+            description: created.description,
+            support: after.support.filter((row) => row.serviceId === created.id),
+          },
+          sourcePosition,
+          newPosition,
+          sourceDependencies: data.snapshot.dependencies,
+          omitted: {
+            dependencies: after.dependencies.filter(
+              (row) => row.consumerServiceId === created.id || row.providerServiceId === created.id,
+            ),
+            consumption: after.consumption.filter((row) => row.serviceId === created.id),
+          },
+          undoRestoredSourceSnapshot: true,
+        },
+        null,
+        2,
+      ),
+    );
+  });
+}
+
+test("reused service conflicts and changed warnings preserve the source and authorize only the final aggregate", async ({
   page,
-}) => {
+}, info) => {
   const data = await fixture();
-  await openDatasetFile(page, data.bytes, "similar-source.sqlite");
+  await openDatasetFile(page, data.bytes, "reused-validation.sqlite");
   await selectInventory(page, "service", "Orders");
   const editor = page.getByTestId("editor");
   await editor
@@ -192,68 +324,47 @@ test("T06 Create similar makes one independent service with reviewed shared refe
     .filter({ hasText: /^More service actions$/ })
     .click();
   await editor.getByRole("button", { name: "Create similar service", exact: true }).click();
-  await expect(editor.getByTestId("similar-source")).toContainText("new independent service");
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
-  await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
-  await expect(editor.getByLabel("Foundational (e.g. identity, DNS)", { exact: true })).toBeChecked();
-  await expect(editor.getByRole("button", { name: "Choose Network", exact: true })).toHaveText("Choose network");
-  await editor.getByRole("button", { name: "Add service", exact: true }).click();
-  await expect(editor.getByTestId("error-networkId")).not.toBeEmpty();
-  await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");
-  await chooseReference(page, "Network", "Blue");
-  await expect(editor.getByLabel("Marking", { exact: true })).toHaveValue("CUI");
-  await editorSection(page, "Support");
-  await expect(editor.locator("#support-1")).toHaveValue("");
-  await editorSection(page, "Connections");
-  await expect(editor.getByTestId("dependencies")).not.toContainText("Identity");
-  await expect(editor.getByTestId("consumers")).not.toContainText("Operations");
-  await editorSection(page, "Details");
-  await editor.getByLabel("Also copy support assignments and notes", { exact: true }).check();
-  await editor.getByRole("button", { name: "Add service", exact: true }).click();
-  await expect(editor.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
-  const after = await savedSnapshot(page);
-  const created = after.services.find((service) => service.id !== data.ids.orders && service.name === "Orders");
-  expect(created).toBeDefined();
-  if (!created) throw new Error("Independent Orders service missing");
-  expect(created).toMatchObject({
-    networkId: data.ids.blue,
-    marking: "CUI",
-    foundational: true,
-    providerOrgId: data.ids.operations,
-    applicationId: data.ids.application,
-    categoryId: data.ids.category,
-    description: "Synthetic source description",
-  });
-  expect(after.services.find((service) => service.id === data.ids.orders)).toEqual(
-    data.snapshot.services.find((service) => service.id === data.ids.orders),
-  );
-  expect(after.organizations).toEqual(data.snapshot.organizations);
-  expect(after.applications).toEqual(data.snapshot.applications);
-  expect(after.categories).toEqual(data.snapshot.categories);
-  expect(
-    after.support
-      .filter((row) => row.serviceId === created.id)
-      .map(({ tier, orgId, notes }) => ({ tier, orgId, notes })),
-  ).toEqual(
-    data.snapshot.support
-      .filter((row) => row.serviceId === data.ids.orders)
-      .map(({ tier, orgId, notes }) => ({ tier, orgId, notes })),
-  );
-  expect(after.consumption.filter((row) => row.serviceId === created.id)).toEqual([]);
-  expect(
-    after.dependencies.filter((row) => row.consumerServiceId === created.id || row.providerServiceId === created.id),
-  ).toEqual([]);
-  expect(after.scenarioChanges).toEqual(data.snapshot.scenarioChanges);
-  const sourcePosition = data.snapshot.positions.find((row) => row.entity === "service" && row.id === data.ids.orders);
-  const newPosition = after.positions.find((row) => row.entity === "service" && row.id === created.id);
-  expect(newPosition && { x: newPosition.x, y: newPosition.y }).not.toEqual(
-    sourcePosition && { x: sourcePosition.x, y: sourcePosition.y },
-  );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
-  expect(await savedSnapshot(page)).toEqual(data.snapshot);
+  await chooseReference(page, "Network", "Amber");
+  const submit = editor.getByRole("button", { name: "Add service", exact: true });
+  await submit.click();
+  await expect(editor.getByTestId("error-name")).not.toBeEmpty();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
-  expect((await savedSnapshot(page)).services.find((service) => service.id === created.id)).toEqual(created);
+  const attempts: { payload: string; outcome: string }[] = [
+    { payload: "Orders on Amber", outcome: await editor.getByTestId("error-name").innerText() },
+  ];
+  const name = editor.getByLabel("Name", { exact: true });
+  await name.fill("draft.example.test");
+  await submit.click();
+  const warning = editor.getByTestId("sensitive-warning");
+  await expect(warning).toContainText("draft.example.test");
+  attempts.push({ payload: "draft.example.test", outcome: await warning.innerText() });
+  await name.fill("revised.example.test");
+  await expect(warning).toBeHidden();
+  await editorSection(page, "Connections");
+  await chooseReference(page, "Depends on service", "Identity (Blue)");
+  await submit.click();
+  await expect(editor.getByTestId("editor-message")).toContainText("Finish adding or cancel this connection");
+  await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  attempts.push({
+    payload: "revised.example.test with unfinished dependency",
+    outcome: await editor.getByTestId("editor-message").innerText(),
+  });
+  await editor.getByRole("button", { name: "Add dependency", exact: true }).click();
+  await submit.click();
+  await expect(warning).toContainText("revised.example.test");
+  await expect(warning).not.toContainText("draft.example.test");
+  await warning.getByRole("button", { name: "Save anyway", exact: true }).click();
+  const applied = await savedSnapshot(page);
+  const added = applied.services.find((row) => row.name === "revised.example.test");
+  expect(added).toBeDefined();
+  expect(applied.dependencies.filter((row) => row.consumerServiceId === added?.id)).toHaveLength(1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  const undone = await savedSnapshot(page);
+  expect(undone).toEqual(data.snapshot);
+  writeFileSync(
+    info.outputPath("parent-validation-attempts.json"),
+    JSON.stringify({ attempts, confirmed: "revised.example.test", before: data.snapshot, applied, undone }, null, 2),
+  );
 });
 
 test("T07 a 500-service organization collection exposes explicit role filters, search and every result page", async ({
@@ -277,7 +388,7 @@ test("T07 a 500-service organization collection exposes explicit role filters, s
   await expect(collection.locator(".relationship-row")).toHaveCount(1);
   const target = collection.getByRole("button", { name: /^Synthetic service 497 \(Synthetic network 48\)$/ });
   await target.click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(peek.getByRole("heading", { name: "Service: Synthetic service 497", exact: true })).toBeVisible();
   await peek.getByRole("button", { name: "Close", exact: true }).click();
   await expect(target).toBeFocused();
@@ -343,7 +454,7 @@ test("T07/T08 relationship search, role, page, scroll and row focus survive Back
   const scrollTop = await editor.evaluate((node) => node.scrollTop);
   expect(scrollTop).toBeGreaterThan(0);
   await origin.click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await peek.getByRole("button", { name: "Edit service", exact: true }).click();
   await editor.getByLabel("Description", { exact: true }).fill("Synthetic changed description");
   await editor.getByRole("button", { name: "Apply changes", exact: true }).click();

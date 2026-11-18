@@ -131,13 +131,14 @@ test("Create similar Cancel restores the source Support inspector and menu trigg
   await expect(editor.locator("details.record-secondary-actions > summary")).toBeFocused();
   await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
 });
-test("Nested related-record Back restores the previous query and record within the modal", async ({ page }) => {
+test("Related records share one reading inspector and Back restores the query and focus", async ({ page }) => {
   await clickNode(page, "Backup");
   const editor = page.getByTestId("editor");
   await editor.getByRole("tab", { name: "Support", exact: true }).click();
   const origin = editor.getByRole("button", { name: "Contractor A", exact: true });
   await origin.click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  await expect(page.locator("dialog[open]")).toHaveCount(0);
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(peek.getByRole("heading", { name: "Organization: Contractor A", exact: true })).toBeVisible();
   const query = peek.getByRole("searchbox", { name: "Search service relationships", exact: true });
   await query.fill("Backup");
@@ -200,7 +201,7 @@ test("Connection inspector editing lands on Connections for the exact consuming 
   await editor.getByRole("tab", { name: "Connections", exact: true }).click();
   await editor.getByRole("button", { name: "Connection details for File Share (Enterprise)", exact: true }).click();
   await page
-    .getByRole("dialog", { name: "Connection inspector", exact: true })
+    .getByRole("region", { name: "Connection inspector", exact: true })
     .getByRole("button", { name: "Edit consuming service", exact: true })
     .click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Backup");

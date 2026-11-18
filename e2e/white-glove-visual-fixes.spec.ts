@@ -1,3 +1,4 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { readFileSync, writeFileSync } from "node:fs";
 import { sha256 } from "../scripts/verification-artifact";
@@ -23,7 +24,7 @@ async function legacyFixture() {
 }
 
 async function issues(page: Page) {
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   return page.getByRole("dialog", { name: "Data issues", exact: true });
 }

@@ -42,7 +42,10 @@ test("connection inspector Edit consuming service enters the owner's edit task",
   const editor = page.getByTestId("editor");
   await editor.getByRole("tab", { name: "Connections", exact: true }).click();
   await editor.getByRole("button", { name: /Connection details for/ }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Edit consuming service", exact: true }).click();
+  await page
+    .getByRole("region", { name: "Connection inspector" })
+    .getByRole("button", { name: "Edit consuming service", exact: true })
+    .click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Synthetic consumer");
   await expect(editor).toHaveAttribute("data-mode", "edit");
 });

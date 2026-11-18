@@ -1,14 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { readFileSync } from "node:fs";
 import type { Core } from "cytoscape";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { openFileMenu, showMap } from "./helpers/usability";
-import { showCaptureOptions, showFilters } from "./helpers/map-controls";
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
+import { openFileMenu, showMap, simUrl as url } from "./helpers/usability";
+import { showExploration, showCaptureOptions, showFilters } from "./helpers/map-controls";
 
 async function load(page: Page): Promise<{ errors: string[]; requests: string[] }> {
   const errors: string[] = [];
@@ -194,6 +191,7 @@ test("a detached focus capture explains its scope once", async ({ page }) => {
   await page.getByTestId("map-canvas").evaluate((container) => {
     (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy.getElementById("service-1").emit("tap");
   });
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   await showCaptureOptions(page);
   const download = page.waitForEvent("download");

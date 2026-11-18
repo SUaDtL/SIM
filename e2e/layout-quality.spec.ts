@@ -1,7 +1,6 @@
-import { openFileMenu, showMap } from "./helpers/usability";
+import { openFileMenu, showMap, simUrl } from "./helpers/usability";
 
 import { expect, type Page, test } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset } from "../src/db/dataset";
 import { DEMO_NAME, populateDemo } from "../src/demo/demo";
 import { Repository } from "../src/domain/repository";
@@ -10,7 +9,6 @@ import { wasm } from "../tests/helpers/sqlite";
 // Layout regression check (WORK-018): the layout spike's metrics on the demo enterprise, a map of its size, so a style or
 // layout change cannot quietly make the map harder to read. Thresholds sit above the worst observed
 // run; tighten them as the layout improves.
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 /** The demo enterprise (WORK-014): six networks and SaaS, ~100 services, 3 CDS. */
 async function enterprise(): Promise<Buffer> {
@@ -36,7 +34,7 @@ interface Metrics {
 
 /** The spike's metrics, measured on the drawn map through Cytoscape's registry. */
 function measure(page: Page): Promise<Metrics> {
-  return page.getByTestId("map-canvas").evaluate((container) => {
+  return page.getByTestId("map-canvas").evaluate(async (container) => {
     interface Box {
       x1: number;
       y1: number;
@@ -58,6 +56,7 @@ function measure(page: Page): Promise<Metrics> {
       nodes(): Ele[] & { filter(f: (e: Ele) => boolean): Ele[] };
       edges(): Ele[] & { filter(f: (e: Ele) => boolean): Ele[] };
       zoom(): number;
+      style(): { update(): void };
     }
     const cy = (container as unknown as { _cyreg: { cy: Cy } })._cyreg.cy;
     const overlap = (a: Box, b: Box) => a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
@@ -87,8 +86,17 @@ function measure(page: Page): Promise<Metrics> {
     // Label overlaps count every label, as an export (or zooming in) shows them.
     const quiet = leaves.filter((n) => (n as unknown as { hasClass(c: string): boolean }).hasClass("quiet"));
     for (const n of quiet) (n as unknown as { removeClass(c: string): void }).removeClass("quiet");
-    const labels = leaves.map((n) => n.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true }));
+    cy.style().update();
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => {
+        resolve();
+      }),
+    );
+    const labels = leaves.map((n) =>
+      n.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true, useCache: false }),
+    );
     for (const n of quiet) (n as unknown as { addClass(c: string): void }).addClass("quiet");
+    cy.style().update();
     const labelWidth = Math.min(...labels.map((b) => b.x2 - b.x1));
     let labelOverlaps = 0;
     for (let i = 0; i < labels.length; i++) {
@@ -260,7 +268,7 @@ test("network and CDS labels retain their readable screen size on wide map zooms
           };
         }),
       )
-      .toEqual({ network: 13, cds: 11 });
+      .toEqual({ network: 14, cds: 12 });
   }
   expect(await positions()).toEqual(before);
 });
@@ -327,8 +335,8 @@ test("hides unreadably small service labels until hovered or zoomed into", async
 
   await page.mouse.move(box.x + 5, box.y + box.height - 5);
   await expect.poll(async () => (await service(fitted.id)).label).toBe("");
-  // Zoomed in until service labels render at 8 px or more (zoom 0.5), they show without hovering.
-  for (let i = 0; i < 30 && (await zoom()) < 0.55; i++) await page.mouse.wheel(0, -200);
-  expect(await zoom()).toBeGreaterThanOrEqual(0.55);
+  // At neighborhood scale, service names render at 12 px or larger without hovering.
+  for (let i = 0; i < 30 && (await zoom()) < 0.8; i++) await page.mouse.wheel(0, -200);
+  expect(await zoom()).toBeGreaterThanOrEqual(0.8);
   await expect.poll(async () => (await service(fitted.id)).label).toBe(fitted.name);
 });

@@ -3,14 +3,83 @@ import type { Core } from "cytoscape";
 import { readFileSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { openDatasetFile, openFileMenu, savedSnapshot, showMap, simUrl } from "./helpers/usability";
-import { highlightSelected, showAbout, showCaptureOptions } from "./helpers/map-controls";
+import { showExploration, highlightSelected, showAbout, showCaptureOptions } from "./helpers/map-controls";
 import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 import { sha256 } from "../scripts/verification-artifact";
 import { pr29Fixture } from "./helpers/pr29";
+import { createExperienceFixture } from "../tests/helpers/experience-fixtures";
 
 const arrangement = await pr29Fixture("demo-arrangement");
+
+test("D100 distinguishes recorded, proposed and comparison dependency totals on screen and in a capture", async ({
+  page,
+}) => {
+  await openDatasetFile(page, await createExperienceFixture(100), "D100.sqlite");
+  await showMap(page);
+  // The two D100 merges redirect both source identifiers onto the Planning Hub.
+  // Removing its resulting self-link leaves 122 proposed pairs; the union contains 130.
+  for (const [mode, totals, qualification] of [
+    ["as-is", "of 123 recorded dependencies in scope", "Recorded dependencies; connectivity is not verified"],
+    ["to-be:1", "of 122 proposed dependencies in scope", "Proposed dependencies; connectivity is not verified"],
+    [
+      "compare:1",
+      "of 130 dependency representations in scope",
+      "Recorded and proposed dependencies; connectivity is not verified",
+    ],
+  ] as const) {
+    await page.getByLabel("View", { exact: true }).selectOption(mode);
+    await expect(page.getByTestId("map-scope")).toContainText(totals);
+    await expect(page.getByTestId("map-legend")).toContainText(qualification);
+    await showCaptureOptions(page);
+    const downloaded = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Export SVG", exact: true }).click();
+    const svg = readFileSync(await (await downloaded).path(), "utf8");
+    expect(svg).toContain(totals);
+    expect(svg).toContain(qualification);
+  }
+});
+
+test("a detached D100 dependency brief keeps every visible name and key readable at slide fit", async ({
+  page,
+}, info) => {
+  const fixture = await createExperienceFixture(100);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openDatasetFile(page, fixture, "D100.sqlite");
+  await showMap(page);
+  const query = page.getByLabel("Find on map", { exact: true });
+  await query.fill("Learning (Training)");
+  await query.press("Enter");
+  await page.getByRole("button", { name: "Depends on", exact: true }).click();
+  await showCaptureOptions(page);
+  const downloaded = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export SVG", exact: true }).click();
+  const file = info.outputPath("recorded-dependency.svg");
+  await (await downloaded).saveAs(file);
+  const viewer = await page.context().newPage();
+  try {
+    await viewer.goto(pathToFileURL(file).href);
+    const labels = await viewer.evaluate(() => {
+      const root = document.querySelector("svg");
+      if (!root) throw new Error("Missing detached SVG");
+      const fit = Math.min(1280 / root.width.baseVal.value, 720 / root.height.baseVal.value);
+      return [...root.querySelectorAll("text")].map((label) => ({
+        text: label.textContent,
+        size: parseFloat(getComputedStyle(label).fontSize) * (label.getScreenCTM()?.a ?? 0) * fit,
+      }));
+    });
+    await info.attach("fitted-labels", { body: JSON.stringify(labels), contentType: "application/json" });
+    expect(labels.map((label) => label.text)).toEqual(
+      expect.arrayContaining(["Planning", "Learning", "Partner gateway"]),
+    );
+    for (const label of labels) {
+      expect(label.size, label.text).toBeGreaterThanOrEqual(label.text.startsWith("Service ·") ? 16 : 12);
+    }
+  } finally {
+    await viewer.close();
+  }
+});
 
 async function headings(page: Page) {
   return page.getByTestId("map-canvas").evaluate((element) => {
@@ -407,6 +476,7 @@ test("PR29 overview, scenario and focus captures separate headings without writi
   const query = page.getByLabel("Find on map", { exact: true });
   await query.fill("Operations");
   await query.press("Enter");
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   await page.getByRole("button", { name: "Fit focus", exact: true }).click();
   await renderOutputs(page, info, "focus");

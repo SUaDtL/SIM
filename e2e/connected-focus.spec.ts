@@ -1,14 +1,11 @@
-import { openFileMenu, showMap, editSelected } from "./helpers/usability";
-import { showFilters, showCaptureOptions, highlightSelected } from "./helpers/map-controls";
+import { openFileMenu, showMap, editSelected, simUrl } from "./helpers/usability";
+import { showExploration, showFilters, showCaptureOptions, highlightSelected } from "./helpers/map-controls";
 import { expect, test, type Page } from "@playwright/test";
 import type { Core } from "cytoscape";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import { createDataset, openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-
-const simUrl = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function fixture(withScenario: boolean | "unresolved" = false) {
   const db = await createDataset("Synthetic connected focus", wasm);
@@ -171,13 +168,20 @@ for (const viewport of [
     await select(page, data.ids.a);
     await showFilters(page);
     await filter.selectOption({ label: "Network A" });
-    await page.getByTestId("map-canvas").evaluate((container) => {
+    await page.getByTestId("map-canvas").evaluate(async (container) => {
       const cy = (container as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
       cy.zoom(0.7);
       cy.pan({ x: 31, y: 47 });
+      // Zoom-label visibility is derived on the next animation frame. Compare two settled maps.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          resolve();
+        });
+      });
     });
     const before = await readMap(page);
     expect(before.nodes.find((n) => n.id === data.ids.identity)?.visible).toBe(false);
+    await showExploration(page);
     await page.getByRole("button", { name: "Network connections", exact: true }).click();
     await expect(page.getByTestId("focus-status")).toContainText("Cross-network links for Network A: 1 dependency");
     await expect(page.getByTestId("focus-status")).toContainText("Strict inventory filters are suspended");
@@ -273,7 +277,7 @@ test("both CDS segments open the same owning connection inspector without writin
     const id = `dep-${data.ids.dependency}-${suffix}`;
     expect((await readMap(page)).edges.find((edge) => edge.id === id)?.visible).toBe(true);
     await tapEdge(page, id);
-    const inspector = page.getByRole("dialog", { name: "Connection inspector" });
+    const inspector = page.getByRole("region", { name: "Connection inspector" });
     await expect(inspector).toContainText("Caller (Network A) → Identity (Network B)");
     await expect(inspector).toContainText("Via CDS: Boundary guard");
     await expect(inspector.getByRole("button", { name: "Edit consuming service" })).toBeVisible();
@@ -309,7 +313,7 @@ test("projected focused routes remain read-only and retain full marking in To-Be
       await focusControl.press("Enter");
       await expect(page.getByTestId("focus-status")).toContainText("Dependencies of Caller: 1 dependency");
       await tapEdge(page, `dep-${data.ids.dependency}-in`);
-      const inspector = page.getByRole("dialog", { name: "Connection inspector" });
+      const inspector = page.getByRole("region", { name: "Connection inspector" });
       await expect(inspector).toContainText("Projected connection, read-only");
       await expect(inspector.getByRole("button", { name: "Edit consuming service" })).toHaveCount(0);
       await inspector.press("Escape");
@@ -367,7 +371,7 @@ test("unresolved projected connection inspector preserves former CDS provenance"
     .getByLabel("View", { exact: true })
     .selectOption(`to-be:${String(data.ids.scenario)}`);
   await tapEdge(page, `dep-${data.ids.dependency}`);
-  const dialog = page.getByRole("dialog", { name: "Connection inspector" });
+  const dialog = page.getByRole("region", { name: "Connection inspector" });
   await expect(dialog).toContainText("Unresolved route previously via Boundary guard");
   await expect(dialog).toContainText("CDS no longer joins both projected networks");
   await expect(dialog).toContainText("Projected connection, read-only");

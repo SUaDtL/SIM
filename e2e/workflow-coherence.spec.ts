@@ -1,3 +1,4 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { chooseReference, editSelected, editorSection, openFileMenu, showInventory } from "./helpers/usability";
 import { expect, test } from "@playwright/test";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -29,6 +30,7 @@ test("an existing service keeps fields and relations in one pending edit", async
   await page.getByLabel("Show", { exact: true }).selectOption("Services");
   await page.getByRole("button", { name: "Add service" }).click();
   await page.getByLabel("Name", { exact: true }).fill("Mail");
+  await chooseReference(page, "Network", "Amber");
   await page.getByRole("button", { name: "Add service" }).last().click();
   await editSelected(page);
   await page.getByLabel("Name", { exact: true }).fill("Mail revised");
@@ -110,7 +112,7 @@ test("opening readable legacy data reports its existing semantic issue", async (
   await (await chooser).setFiles({ name: "legacy.sqlite", mimeType: "application/x-sqlite3", buffer: bytes });
   await expect(page.getByTestId("dataset-status")).toContainText("Legacy");
   await expect(page.getByTestId("dataset-message")).toContainText("1 existing data issue");
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   const issues = page.getByRole("dialog", { name: "Data issues", exact: true });
   await expect(issues).toContainText("The organization hierarchy forms a loop: Ops → Desk → Ops");

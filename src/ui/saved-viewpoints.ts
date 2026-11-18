@@ -3,14 +3,16 @@ import type { Repository } from "../domain/repository";
 import type { Viewpoint } from "../map/viewpoint";
 import { button, el, focusPagingControl } from "./dom";
 import { assessmentOpener, assessmentPanel } from "./assessment-panel";
+import { viewSummaryReader } from "../assessment/view-summary";
 
 type SavedView = ReturnType<Repository["listViewpoints"]>[number];
 
 export function manageViewpoints(
   repo: Repository,
   capture: () => Viewpoint,
-  restore: (view: SavedView) => void,
+  restore: ((view: SavedView) => void) | ((view: SavedView) => Promise<boolean>),
   onDraft: (pending: boolean) => void,
+  startAt: "list" | "new" = "list",
 ): HTMLDialogElement {
   const origin = assessmentOpener();
   const heading = el("h2", { id: "saved-views-heading", tabindex: "-1" }, "Saved views");
@@ -84,7 +86,10 @@ export function manageViewpoints(
     const count = `${String(matching.length)} ${matching.length === 1 ? "view" : "views"}`;
     status.textContent = lastPage ? `${count} · Page ${String(page + 1)} of ${String(lastPage + 1)}` : count;
     const list = el("ul", { class: "saved-view-list" });
+    const describe = viewSummaryReader(repo);
     for (const row of matching.slice(page * 12, (page + 1) * 12)) {
+      const summary = describe(row.definition);
+      const metadataId = `view-${row.id}-metadata`;
       list.append(
         el(
           "li",
@@ -93,18 +98,20 @@ export function manageViewpoints(
           row.caption ? el("p", {}, row.caption) : null,
           el(
             "div",
+            { id: metadataId, class: "saved-view-context" },
+            el("strong", {}, summary.perspective),
+            el("p", {}, summary.scope),
+            el("p", {}, summary.detail),
+          ),
+          el(
+            "div",
             { class: "actions" },
             button(
               "Restore",
               () => {
-                try {
-                  restore(row);
-                  dialog.close();
-                } catch (error) {
-                  problem.textContent = error instanceof Error ? error.message : "Could not restore this saved view.";
-                }
+                void restoreSaved(row);
               },
-              { "aria-label": `Restore ${row.name}` },
+              { "aria-label": `Restore ${row.name}`, "aria-describedby": metadataId },
             ),
             button(
               "Edit",
@@ -128,6 +135,14 @@ export function manageViewpoints(
       );
     }
     results.replaceChildren(list);
+  }
+
+  async function restoreSaved(row: SavedView): Promise<void> {
+    try {
+      if ((await restore(row)) !== false && dialog.open) dialog.close();
+    } catch (error) {
+      problem.textContent = error instanceof Error ? error.message : "Could not restore this saved view.";
+    }
   }
 
   function edit(row?: SavedView): void {
@@ -206,6 +221,7 @@ export function manageViewpoints(
   document.body.append(dialog);
   showAll();
   dialog.showModal();
-  heading.focus();
+  if (startAt === "new") edit();
+  else heading.focus();
   return dialog;
 }

@@ -8,10 +8,10 @@ import {
 import { SensitiveInputWarning, ValidationError } from "../domain/errors";
 import type { Repository } from "../domain/repository";
 import { button, el } from "./dom";
-import { assessmentPanel } from "./assessment-panel";
+import { assessmentOpener, assessmentPanel } from "./assessment-panel";
 
 export function openAssessmentDetails(repo: Repository, active: () => boolean, saved: () => void) {
-  const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
+  const origin = assessmentOpener();
   const initial = repo.assessmentContext();
   const dialog = el("dialog", { class: "assessment-dialog", "aria-labelledby": "assessment-heading" });
   const heading = el("h2", { id: "assessment-heading", tabindex: "-1" }, "Assessment details");

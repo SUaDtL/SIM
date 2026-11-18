@@ -7,7 +7,7 @@ import { pathToFileURL } from "node:url";
 import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { showCaptureOptions } from "./helpers/map-controls";
+import { showExploration, showCaptureOptions } from "./helpers/map-controls";
 import { openDatasetFile, showMap } from "./helpers/usability";
 import { captureEnterprise } from "./helpers/white-glove-capture";
 
@@ -283,6 +283,7 @@ test("CAP08 ordinary wheel zoom produces a readable detail capture with explicit
   await query.fill("Orders (Amber)");
   await query.press("Enter");
   await expect(page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   const overviewFiles = await capture(page, info, "overview");
   const overview = await inspectSvg(page, overviewFiles.svgPath);
@@ -355,6 +356,7 @@ test("MAP12 E2 network focus fits every logical endpoint after its controls resi
   await query.fill("Orders (Amber)");
   await query.press("Enter");
   await expect(page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   const canvas = page.getByTestId("map-canvas");
   await expect
@@ -404,6 +406,7 @@ test("E2 seven-domain discovery preserves exact boundary membership and renders 
   await query.fill("Orders (Amber)");
   await query.press("Enter");
   await expect(page.getByTestId("editor").getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
+  await showExploration(page);
   await page.getByRole("button", { name: "Network connections", exact: true }).click();
   const boundary = await mapState(page);
   expect(boundary.services).toEqual(

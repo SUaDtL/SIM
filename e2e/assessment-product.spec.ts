@@ -1,9 +1,10 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { openDataset, createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { mapFilters, openDatasetFile, openFileMenu, showMap } from "./helpers/usability";
+import { mapFilters, openDatasetFile, showMap } from "./helpers/usability";
 
 async function asterFixture() {
   const db = await createDataset("Aster Works", wasm);
@@ -38,8 +39,8 @@ test("Assessment note filtering keeps keyboard focus and reports the visible ran
         marking: "UNCLASSIFIED",
         basis: "unspecified",
         finding: "not assessed",
-        source: "",
-        responsible: "",
+        source: index === 13 ? "Request the fictional route diagram" : "",
+        responsible: index === 13 ? "Copper assessment team" : "",
         checkedOn: "",
         resolution: "",
       });
@@ -48,9 +49,9 @@ test("Assessment note filtering keeps keyboard focus and reports the visible ran
   } finally {
     db.close();
   }
-  await openFileMenu(page);
-  await page.getByRole("button", { name: "Assessment evidence and questions", exact: true }).click();
-  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  await openAssessmentMenu(page);
+  await page.getByRole("button", { name: "Evidence and questions", exact: true }).click();
+  const notes = page.getByRole("region", { name: "Assessment evidence and questions" });
   const close = notes.getByRole("button", { name: "Close", exact: true });
   await expect(close).toBeInViewport({ ratio: 1 });
   await notes.getByRole("listitem").last().scrollIntoViewIfNeeded();
@@ -61,6 +62,13 @@ test("Assessment note filtering keeps keyboard focus and reports the visible ran
   await expect(query).toBeFocused();
   await expect(notes.getByRole("listitem")).toHaveCount(1);
   await expect(notes.getByRole("status")).toHaveText("1 matching note");
+  const card = notes.getByRole("listitem");
+  await expect(card.getByText("Responsible team", { exact: true })).toBeVisible();
+  await expect(card.getByText("Copper assessment team", { exact: true })).toBeVisible();
+  await expect(card.getByText("Next action", { exact: true })).toBeVisible();
+  await expect(card.getByText("Request the fictional route diagram", { exact: true })).toBeVisible();
+  await query.fill("route diagram");
+  await expect(card).toHaveCount(1);
   await query.fill("");
   await notes.getByRole("button", { name: "Next", exact: true }).click();
   await expect(notes.getByRole("status")).toHaveText("13 of 13 notes");
@@ -69,7 +77,7 @@ test("Assessment note filtering keeps keyboard focus and reports the visible ran
 
 test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen", async ({ page }) => {
   await openDatasetFile(page, await asterFixture(), "aster.sqlite");
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Assessment details", exact: true }).click();
   const context = page.getByRole("dialog", { name: "Assessment details" });
   await context.getByLabel("Scope", { exact: true }).fill("Operations interview");
@@ -91,6 +99,8 @@ test("AC-AP-011 and AC-AP-016 save optional details and a live view, then reopen
   await expect(filterViews).toHaveValue("briefing");
   await expect(filterViews).toBeFocused();
   await expect(views.getByRole("button", { name: "Restore Operations briefing" })).toBeVisible();
+  await expect(views.getByRole("listitem")).toContainText("As-Is");
+  await expect(views.getByRole("listitem")).toContainText("Network: Operations");
   await views.getByRole("button", { name: "Close", exact: true }).click();
   await expect(page.locator("details.workspace-assessment > summary")).toBeFocused();
   const download = page.waitForEvent("download");
@@ -131,7 +141,7 @@ test("AC-AP-024 and AC-AP-027 scoped export and dependency drill-down use record
   await showMap(page);
   await mapFilters(page);
   await page.locator("#map-filter-network").selectOption({ label: "Operations" });
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Export assessment or inventory", exact: true }).click();
   const exportDialog = page.getByRole("dialog", { name: "Export assessment or inventory" });
   const download = page.waitForEvent("download");
@@ -145,7 +155,7 @@ test("AC-AP-024 and AC-AP-027 scoped export and dependency drill-down use record
 
 test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo it", async ({ page }) => {
   const openReview = async () => {
-    await openFileMenu(page);
+    await openAssessmentMenu(page);
     await page.getByRole("button", { name: "Prepare owner review", exact: true }).click();
     return page.getByRole("dialog", { name: "Prepare owner review" });
   };
@@ -173,7 +183,7 @@ test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo 
   };
   await dialog.getByRole("button", { name: "Close", exact: true }).click();
 
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Apply reviewed corrections", exact: true }).click();
   const review = page.getByRole("dialog", { name: "Apply reviewed corrections" });
   await review.getByLabel("Returned review file").setInputFiles({
@@ -202,7 +212,7 @@ test("AC-AP-043 and AC-AP-049 reopen a saved issuance, accept a return and undo 
   expect(readFileSync(await (await receipt).path(), "utf8")).toContain('"applied": true');
   await review.getByRole("button", { name: "Close", exact: true }).click();
   await page.getByRole("button", { name: "Undo", exact: true }).click();
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await expect(page.getByRole("button", { name: "Download latest correction receipt" })).toBeVisible();
   await page.keyboard.press("Escape");
   const again = page.waitForEvent("download");
@@ -227,12 +237,13 @@ test("AC-AP-037 and AC-AP-052 keep a contextual question and inline-created assi
     .click();
   await page.getByText("More service actions", { exact: true }).click();
   await page.getByRole("button", { name: "Assessment notes", exact: true }).click();
-  const notes = page.getByRole("dialog", { name: "Assessment evidence and questions" });
+  const notes = page.getByRole("region", { name: "Assessment evidence and questions" });
   await notes.getByRole("button", { name: "Add question" }).click();
-  await notes
+  const composer = page.getByRole("dialog", { name: "Add question", exact: true });
+  await composer
     .getByRole("textbox", { name: "Question or unresolved observation" })
     .fill("Confirm who maintains the order interface.");
-  await notes.getByRole("button", { name: "Apply note" }).click();
+  await composer.getByRole("button", { name: "Apply note" }).click();
   await expect(notes.getByText("Confirm who maintains the order interface.")).toBeVisible();
   await notes.getByRole("button", { name: "Close", exact: true }).click();
 

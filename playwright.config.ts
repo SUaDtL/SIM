@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { platform, release } from "node:os";
 import { sha256 } from "./scripts/verification-artifact";
 
-const candidate = new URL("./dist/sim.html", import.meta.url);
+const candidate = process.env["SIM_TEST_HTML"] ?? new URL("./dist/sim.html", import.meta.url);
 
 // Uses the installed Edge and Chrome (no browser download), matching what SIM's users run.
 export default defineConfig({

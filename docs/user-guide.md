@@ -4,18 +4,18 @@ Detailed workflows for the Service Integration Map. For an overview see the [REA
 
 ## Qualify an assessment and hand it off
 
-**File → Assessment details** records optional scope, exclusions, assessor/team and dates
-under the dataset title. **File → Assessment evidence and questions** records optional
+**Assessment → Assessment details** records optional scope, exclusions, assessor/team and dates
+under the dataset title. **Assessment → Evidence and questions** records optional
 findings, sources and follow-up actions. A service’s **More service actions → Assessment notes** opens its linked notes. Questions can be attached later. When a linked
 record disappears, its notes retain the former link and stay visible. Evidence reviewed
 against an earlier value returns to needs review when the value changes.
 
-**Map → Assessment → Saved views** stores the current question, filters, selected projection and framing.
+**Assessment → Saved views** stores the current question, filters, selected projection and framing.
 A saved view opens over current records and positions. If its subject or scope has
 disappeared, edit the definition to replace it with the current map. Saving a definition
 is undoable and takes effect on disk after Save file.
 
-**File → Export assessment or inventory** creates read-only HTML, typed inventory JSON or a
+**Assessment → Export assessment or inventory** creates read-only HTML, typed inventory JSON or a
 display CSV. Open Map for the current map scope and a frozen capture. A focused export
 omits assessment-level details and uses the full original handling marking and caveat.
 Review the scope before distributing it. JSON preserves exact values. The display CSV
@@ -28,13 +28,13 @@ changes and apply them in one Undo step. **Create and use** saves a shared recor
 the selected services without renaming the organization. **Review data issues** also
 provides optional duplicate suggestions with each shared record's usage.
 
-**File → Prepare owner review** previews the organization scope and saves its issuance
+**Assessment → Prepare owner review** previews the organization scope and saves its issuance
 base. If the browser downloads files instead of saving in place, reopen the resulting
 dataset before downloading the review. Reviewers put typed proposals in the downloaded
 JSON. **Apply reviewed corrections** shows the issued, current and proposed values,
 including conflicts. Select only the fields to apply. The existing CSV import continues
 to add new rows. Review receipts describe what happened when applied and stay historical
-after Undo or another edit. Use **File → Download latest correction receipt** until you switch datasets.
+after Undo or another edit. Use **Assessment → Download latest correction receipt** until you switch datasets.
 
 Files saved by this build use data format 7. Keep an untouched copy before saving an
 upgrade. To open the data in an older build, use the pre-upgrade copy.
@@ -72,7 +72,7 @@ Organizational consumption is separate. **Edit route** changes a staged dependen
 without removing it first. A cross-network connection may have no CDS; selecting a CDS
 requires it to join both endpoints' networks. Rehoming services validates the resulting
 incoming and outgoing routes. Existing legacy issues are retained until explicitly repaired.
-**File → Review data issues** keeps the complete paginated issue list available after other edits,
+**Assessment → Review data issues** keeps the complete paginated issue list available after other edits,
 with links to the affected records. Opening a file or reviewing its issues does not repair it.
 
 **Create similar service** starts an independent draft from the selected service;
@@ -85,9 +85,9 @@ Consumers, dependency routes and positions are not copied; the source remains un
 
 **Find on map** offers partial, case-insensitive results with record type and network
 or scenario identity. Use the explicit result buttons to distinguish matching names.
-Reference inspection opens a read-only peek without applying the parent draft. Reverse
+Reference inspection uses the same contextual inspector and preserves a parked parent draft. Back restores the invoking record and control. Reverse
 relations show recorded provider, support, consumer, application, category and route roles.
-**Edit** in a peek follows a reference through the unapplied-work decision.
+**Edit** in the inspector follows a reference through the unapplied-work decision.
 **Back** restores navigation context, including filters and framing; Undo changes data.
 Choosing Stay leaves the current task intact.
 

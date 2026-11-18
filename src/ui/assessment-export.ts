@@ -1,6 +1,6 @@
 import type { OutputFormat } from "../assessment/output";
 import { button, el, option } from "./dom";
-import { assessmentPanel } from "./assessment-panel";
+import { assessmentOpener, assessmentPanel } from "./assessment-panel";
 
 export interface ExportChoice {
   readonly format: OutputFormat;
@@ -9,7 +9,7 @@ export interface ExportChoice {
 }
 
 export function chooseAssessmentExport(canExportMap: boolean): Promise<ExportChoice | null> {
-  const origin = document.querySelector<HTMLElement>("details.file-menu:not(.about-menu) > summary");
+  const origin = assessmentOpener();
   return new Promise((resolve) => {
     const dialog = el("dialog", { class: "assessment-dialog", "aria-labelledby": "assessment-export-heading" });
     const scope = el(

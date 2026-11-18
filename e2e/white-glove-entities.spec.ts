@@ -309,8 +309,10 @@ for (const item of cases) {
     await openDatasetFile(page, await whiteGloveFixture(), "white-glove-minimal.sqlite");
     const before = await readback(page, info, "minimal-baseline");
     await add(page, item);
+    if (item.type === "service") await chooseReference(page, "Network", "Amber");
     const name = `Minimal ${item.type}`;
     await editor(page).getByLabel("Name", { exact: true }).fill(name);
+    if (item.type === "service") await chooseReference(page, "Network", "Amber");
     if (item.type === "cds") {
       await editor(page).getByLabel("Amber", { exact: true }).check();
       await editor(page).getByLabel("Blue", { exact: true }).check();
@@ -520,7 +522,7 @@ for (const item of cases) {
       : null;
     await expect(reference).toHaveText(targetRecord.name + (targetNetwork ? ` (${targetNetwork.name})` : ""));
     await reference.click();
-    const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+    const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
     await expect(
       peek.getByRole("heading", { name: `${targetCase.label}: ${targetRecord.name}`, exact: true }),
     ).toBeVisible();

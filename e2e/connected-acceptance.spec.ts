@@ -260,7 +260,7 @@ test("network and CDS reverse lists distinguish membership from boundary routes 
   await expect(boundary.locator(".relationship-row")).toHaveCount(1);
   await expect(boundary).toContainText("Orders (Amber) → Identity (Blue) · CDS: Guard Amber Blue");
   await boundary.getByRole("button", { name: "Orders (Amber)", exact: true }).click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(peek.getByRole("heading", { name: "Service: Orders", exact: true })).toBeVisible();
   await peek.getByRole("button", { name: "Edit service", exact: true }).click();
   await expect(editor.getByLabel("Name", { exact: true })).toHaveValue("Orders");

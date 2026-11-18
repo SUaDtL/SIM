@@ -199,7 +199,7 @@ for (const composer of ["consumer", "dependency"] as const) {
         await editor.getByRole("tab", { name: "Support", exact: true }).click();
         await editor.getByRole("button", { name: "Inspect Tier 3 support", exact: true }).click();
         await page
-          .getByRole("dialog", { name: "Inspect related record", exact: true })
+          .getByRole("region", { name: "Inspect related record", exact: true })
           .getByRole("button", { name: "Edit organization", exact: true })
           .click();
         await page
@@ -330,7 +330,7 @@ test("R03 changed staged route is pending; applied inspection matches the saved 
   await editor.getByLabel("Route for Beta", { exact: true }).selectOption({ label: "Second guard" });
   await editor.getByRole("button", { name: "Use route", exact: true }).click();
   await connectionAction(page, "Inspect connection to Beta (Blue)");
-  const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+  const inspector = page.getByRole("region", { name: "Connection inspector", exact: true });
   await expect(inspector).toContainText(/Pending changes/);
   await expect(inspector).toContainText("Via CDS: Second guard");
   await inspector.getByRole("button", { name: "Close", exact: true }).click();
@@ -352,7 +352,7 @@ test("R03 newly staged connection inspection shows pending state and its chosen 
   await editor.getByLabel("Via CDS", { exact: true }).selectOption({ label: "Second guard" });
   await editor.getByRole("button", { name: "Add dependency", exact: true }).click();
   await connectionAction(page, "Inspect connection to Beta (Blue)");
-  const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+  const inspector = page.getByRole("region", { name: "Connection inspector", exact: true });
   await expect(inspector).toBeVisible();
   await expect(inspector).toContainText(/Pending changes/);
   await expect(inspector).toContainText("Via CDS: Second guard");
@@ -457,7 +457,7 @@ test("R10 removed service connection is explicitly recorded history, never a pen
     .getByRole("region", { name: "Used by services", exact: true })
     .getByRole("button", { name: "Connection details for Alpha (Amber)", exact: true })
     .click();
-  const dialog = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+  const dialog = page.getByRole("region", { name: "Connection inspector", exact: true });
   await expect(dialog).toContainText("Current As-Is connection");
   await expect(dialog).toContainText("Via CDS: First guard");
   await expect(dialog.getByRole("button", { name: "Edit consuming service", exact: true })).toHaveCount(0);
@@ -477,11 +477,13 @@ test("R17 Back restores the actual editor body scroll after deep Support navigat
     node.scrollTop = node.scrollHeight;
     return node.scrollTop;
   });
-  await editor.getByRole("button", { name: "Inspect Tier 3 support", exact: true }).click();
+  const origin = editor.getByRole("button", { name: "Inspect Tier 3 support", exact: true });
+  await origin.scrollIntoViewIfNeeded();
   const before = await body.evaluate((node) => node.scrollTop);
   expect(before).toBeGreaterThan(20);
+  await origin.click();
   await page
-    .getByRole("dialog", { name: "Inspect related record", exact: true })
+    .getByRole("region", { name: "Inspect related record", exact: true })
     .getByRole("button", { name: "Edit organization", exact: true })
     .click();
   await page.getByRole("button", { name: "Back", exact: true }).click();

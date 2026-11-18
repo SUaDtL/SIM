@@ -1,3 +1,4 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, type Page, test } from "@playwright/test";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
@@ -42,9 +43,9 @@ async function prepare(page: Page, withReview = false) {
   }
 }
 
-async function open(page: Page, title: string, fromFile = true) {
-  if (fromFile) await openFileMenu(page);
-  else await page.locator("details.workspace-assessment > summary").click();
+async function open(page: Page, title: string) {
+  if (title === "Import CSV") await openFileMenu(page);
+  else await openAssessmentMenu(page);
   await page.getByRole("button", { name: title, exact: true }).press("Enter");
   return page.getByRole("dialog", { name: title, exact: true });
 }
@@ -62,21 +63,24 @@ test("assessment forms keep a visible guarded exit and return from note and save
   await expect(details.getByLabel("Scope", { exact: true })).toHaveValue("Scope to preserve");
   page.once("dialog", (d) => d.accept());
   await close.click();
-  await expect(page.locator("details.file-menu:not(.about-menu) > summary")).toBeFocused();
-  const notes = await open(page, "Assessment evidence and questions");
+  await expect(page.locator("details.workspace-assessment > summary")).toBeFocused();
+  await openAssessmentMenu(page);
+  await page.getByRole("button", { name: "Evidence and questions", exact: true }).press("Enter");
+  const notes = page.getByRole("region", { name: "Assessment evidence and questions" });
   await notes.getByRole("button", { name: "Add evidence", exact: true }).click();
-  await notes.getByLabel("Evidence details").fill("Reviewed synthetic reference");
-  const back = notes.getByRole("button", { name: "Back to notes" });
-  await notes.getByRole("combobox", { name: "Marking", exact: true }).scrollIntoViewIfNeeded();
+  const composer = page.getByRole("dialog", { name: "Add evidence", exact: true });
+  await composer.getByLabel("Evidence details").fill("Reviewed synthetic reference");
+  const back = composer.getByRole("button", { name: "Back to notes" });
+  await composer.getByRole("combobox", { name: "Marking", exact: true }).scrollIntoViewIfNeeded();
   await expect(back).toBeInViewport({ ratio: 1 });
   page.once("dialog", (d) => d.dismiss());
   await back.click();
-  await expect(notes.getByLabel("Evidence details")).toHaveValue("Reviewed synthetic reference");
+  await expect(composer.getByLabel("Evidence details")).toHaveValue("Reviewed synthetic reference");
   page.once("dialog", (d) => d.accept());
   await page.keyboard.press("Escape");
   await expect(notes.getByRole("button", { name: "Add evidence", exact: true })).toBeFocused();
   await page.keyboard.press("Escape");
-  const views = await open(page, "Saved views", false);
+  const views = await open(page, "Saved views");
   await views.getByRole("button", { name: "Save current view" }).click();
   await views.getByLabel("View name").fill("Synthetic view");
   page.once("dialog", (d) => d.accept());
@@ -89,7 +93,7 @@ test("batch selection supports typing and returns from preview with its filter, 
 }) => {
   await page.setViewportSize({ width: 1280, height: 620 });
   await prepare(page);
-  const batch = await open(page, "Batch assignments", false);
+  const batch = await open(page, "Batch assignments");
   const query = batch.getByRole("searchbox", { name: "Find services" });
   await query.pressSequentially("service 2");
   await expect(query).toHaveValue("service 2");
@@ -177,5 +181,5 @@ test("returned corrections retain selected rows across pages and local Back, the
   await review.getByRole("button", { name: "Review another file" }).press("Enter");
   await expect(review.getByLabel("Returned review file")).toBeFocused();
   await review.getByRole("button", { name: "Close", exact: true }).press("Enter");
-  await expect(page.locator("details.file-menu:not(.about-menu) > summary")).toBeFocused();
+  await expect(page.locator("details.workspace-assessment > summary")).toBeFocused();
 });

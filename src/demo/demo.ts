@@ -274,5 +274,55 @@ export function populateDemo(repo: Repository): void {
     repo.addScenarioChange(proposal.id, { kind: "merge", serviceId, intoChangeId: hub.id });
   }
 
+  const learning = svc(5, "Learning");
+  const planning = svc(1, "Planning");
+  if (learning === undefined || planning === undefined) throw new Error("Missing Training planning relationship");
+  const routeId = repo.exchangeIdentities("service_dependency").get([learning, planning].join(":"));
+  const targets = repo.assessmentTargets();
+  const route = targets.find((target) => target.kind === "service_dependency" && target.id === routeId);
+  const learningIdentity = repo.exchangeIdentities("service").get(String(learning));
+  if (!route || !learningIdentity) throw new Error("Missing Training planning identity");
+  const note = {
+    target: route,
+    aspect: "Presence",
+    marking: "UNCLASSIFIED",
+    finding: "reported or present",
+    responsible: "Operations Support",
+    checkedOn: "",
+    resolution: "",
+  } as const;
+  repo.saveAssessmentNote({
+    ...note,
+    kind: "Evidence",
+    basis: "reported",
+    state: "needs review",
+    text: "The fictional workshop reported that Learning uses Planning through the Partner gateway.",
+    source: "Fictional Training workshop, planning exercise",
+  });
+  repo.saveAssessmentNote({
+    ...note,
+    kind: "Question",
+    basis: "unspecified",
+    state: "open",
+    finding: "not assessed",
+    text: "Will the proposed shared planning hub preserve the Training use case?",
+    source: "Confirm the exercise workflow with the Training representative.",
+  });
+  const subject = { kind: "service", identity: learningIdentity } as const;
+  repo.saveViewpoint({
+    name: "Training planning dependencies",
+    caption: "Which recorded services does Learning depend on?",
+    definition: {
+      version: 1,
+      projection: "as-is",
+      scenario: null,
+      filters: { network: null, organization: null, category: null },
+      focus: { kind: "depends-on", subject, depth: 1 },
+      chain: null,
+      selection: subject,
+      foundational: false,
+      framing: { zoom: 0.72, x: 975, y: 115, width: 1100, height: 650 },
+    },
+  });
   repo.setCaveat(DEMO_CAVEAT);
 }

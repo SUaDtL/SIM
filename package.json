@@ -1,6 +1,6 @@
 {
   "name": "sim",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SIM - Service Integration Map: offline single-file service and network visualization",
   "scripts": {
     "build": "vite build",

@@ -2,7 +2,14 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
-import { chooseReference, editSelected, openDatasetFile, savedSnapshot, showInventory } from "./helpers/usability";
+import {
+  chooseReference,
+  editSelected,
+  openDatasetFile,
+  openFileMenu,
+  savedSnapshot,
+  showInventory,
+} from "./helpers/usability";
 
 async function load(page: Page, type = "service", name = "Alpha"): Promise<void> {
   const db = await createDataset("Synthetic action editing", wasm);
@@ -138,6 +145,53 @@ for (const kind of ["retire", "merge", "rehome"] as const) {
   }
 }
 
+test("detached editor submit, child and related-record controls cannot address matching IDs in a replacement file", async ({
+  page,
+}) => {
+  await load(page);
+  const editor = page.getByTestId("editor");
+  const oldLink = await editor.getByRole("button", { name: "Amber", exact: true }).elementHandle();
+  await editSelected(page);
+  const oldForm = await editor.locator("form.entity-form").elementHandle();
+  await editor.getByRole("button", { name: "Choose Provided by", exact: true }).click();
+  const picker = page.getByTestId("record-picker");
+  await picker.getByRole("button", { name: /^Create new / }).click();
+  const oldChild = await picker.getByTestId("inline-child").elementHandle();
+  await picker.getByRole("button", { name: "Close picker", exact: true }).click();
+  const db = await createDataset("Replacement with overlapping identities", wasm);
+  const next = new Repository(db);
+  const network = next.createNetwork({ name: "Replacement network", kind: "internal", marking: "UNCLASSIFIED" });
+  next.createService({ name: "Replacement service", networkId: network.id, marking: "UNCLASSIFIED" });
+  const expected = next.snapshot();
+  const bytes = db.export();
+  db.close();
+  await openFileMenu(page);
+  const opened = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await (
+    await opened
+  ).setFiles({ name: "replacement.sqlite", mimeType: "application/x-sqlite3", buffer: Buffer.from(bytes) });
+  await expect(page.getByTestId("dataset-status")).toContainText("replacement.sqlite");
+  const loaded = await savedSnapshot(page);
+  expect(loaded.services).toEqual(expected.services);
+  for (const old of [oldForm, oldChild]) {
+    await old.evaluate((node) => {
+      if (node.isConnected) throw new Error("Expected the former form to be detached.");
+      const name = node.querySelector("input");
+      if (name) name.value = "Stale replacement attempt";
+      node.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    });
+  }
+  await oldLink.evaluate((node) => {
+    if (!(node instanceof HTMLButtonElement) || node.isConnected)
+      throw new Error("Expected a detached related-record button.");
+    node.click();
+  });
+  await expect.soft(page.getByRole("region", { name: "Inspect related record" })).toHaveCount(0);
+  await expect.soft(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+  expect(await savedSnapshot(page)).toEqual(loaded);
+});
+
 test("ACT-UX-10 scenario guidance names immediate Add Remove and Undo boundaries", async ({ page }) => {
   await load(page, "scenario", "Plan");
   await editSelected(page);
@@ -145,7 +199,8 @@ test("ACT-UX-10 scenario guidance names immediate Add Remove and Undo boundaries
   await expect(editor.locator(".editor-heading")).toContainText("Apply changes saves the name, description");
   const commands = editor.getByTestId("scenario-command-guidance");
   await expect(commands).toContainText("Add change and Remove take effect immediately");
-  await expect(commands).toContainText("Undo reverses them");
+  await expect(commands).toContainText("Apply revision saves a correction to the selected proposal");
+  await expect(commands).toContainText("Undo reverses each action");
   await expect(commands).toContainText("Cancel or Discard drops only changes you have not applied");
   await expect(editor.locator(".editor-heading")).not.toContainText("Use Apply changes for all sections");
 });
@@ -159,7 +214,7 @@ test("ACT-UX-11 blocked deletion disables confirmation while inspection and canc
   await expect(editor.getByRole("button", { name: "Confirm delete", exact: true })).toBeDisabled();
   await expect(editor.locator(".delete")).toContainText(/services/i);
   await editor.locator(".delete").getByRole("button", { name: /Alpha/ }).click();
-  const peek = page.getByRole("dialog", { name: "Inspect related record", exact: true });
+  const peek = page.getByRole("region", { name: "Inspect related record", exact: true });
   await expect(peek).toContainText("Alpha");
   await peek.getByRole("button", { name: "Close", exact: true }).click();
   await editor.locator(".delete").getByRole("button", { name: "Cancel", exact: true }).click();

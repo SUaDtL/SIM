@@ -42,7 +42,7 @@ test("incoming rehome and CDS membership refusals link to exact owners without l
   await editor.getByRole("button", { name: "Apply changes" }).click();
   await expect(editor.getByTestId("error-networkId")).toContainText("break the route");
   await editor.getByRole("button", { name: "Inspect consuming service Orders", exact: true }).click();
-  const owner = page.getByRole("dialog", { name: "Inspect related record" });
+  const owner = page.getByRole("region", { name: "Inspect related record" });
   await expect(owner).toContainText("Service: Orders");
   await owner.getByRole("button", { name: "Close", exact: true }).click();
   await expect(editor.getByLabel("Network", { exact: true }).locator("option:checked")).toHaveText("Copper");

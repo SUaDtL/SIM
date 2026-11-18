@@ -3,7 +3,7 @@ import "./assessment-workflows.css";
 
 /** Keep the close action and the document title outside the scrolling records. */
 export function assessmentPanel(
-  dialog: HTMLDialogElement,
+  dialog: HTMLElement,
   heading: HTMLElement,
   close: () => void,
   ...content: HTMLElement[]

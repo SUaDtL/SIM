@@ -1,4 +1,5 @@
 import type { StylesheetJson } from "cytoscape";
+import { routeColors } from "./key";
 
 // Edge colors follow the layout spike: grey stays local, orange passes a CDS, red crosses a boundary
 // with no CDS (the risk to notice), tan reaches an external network.
@@ -78,26 +79,44 @@ export const mapStyle: StylesheetJson = [
     style: {
       "curve-style": "bezier",
       width: 2,
-      "line-color": "#91a8af",
-      "target-arrow-color": "#91a8af",
+      "line-color": routeColors.local,
+      "target-arrow-color": routeColors.local,
       "target-arrow-shape": "triangle",
       "arrow-scale": 0.8,
       "underlay-color": "#7edbcb",
       "underlay-padding": 6,
     },
   },
-  { selector: "edge.via-cds", style: { width: 3.5, "line-color": "#f3ac58", "target-arrow-color": "#f3ac58" } },
+  {
+    selector: "edge.via-cds",
+    style: { width: 3.5, "line-color": routeColors["via-cds"], "target-arrow-color": routeColors["via-cds"] },
+  },
   {
     selector: "edge.cross-domain",
-    style: { width: 3.5, "line-color": "#f27575", "target-arrow-color": "#f27575", "line-style": "dashed" },
+    style: {
+      width: 3.5,
+      "line-color": routeColors["cross-domain"],
+      "target-arrow-color": routeColors["cross-domain"],
+      "line-style": "dashed",
+    },
   },
   {
     selector: "edge.unresolved",
-    style: { width: 4, "line-color": "#ba9df5", "target-arrow-color": "#ba9df5", "line-style": "dashed" },
+    style: {
+      width: 4,
+      "line-color": routeColors.unresolved,
+      "target-arrow-color": routeColors.unresolved,
+      "line-style": "dashed",
+    },
   },
   {
     selector: "edge.external",
-    style: { width: 3, "line-color": "#c7ad80", "target-arrow-color": "#c7ad80", "line-style": "dotted" },
+    style: {
+      width: 3,
+      "line-color": routeColors.external,
+      "target-arrow-color": routeColors.external,
+      "line-style": "dotted",
+    },
   },
   // Compare view (WORK-013): what a scenario adds or keeps is green, what it moves is purple and
   // dashed, and what it removes stays as a faded ghost (red border when retired).

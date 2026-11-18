@@ -1,3 +1,4 @@
+import { openAssessmentMenu } from "./helpers/assessment";
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { createDataset, datasetName, openDataset } from "../src/db/dataset";
@@ -101,7 +102,7 @@ test("R15 all legacy issues remain available after unrelated edits and repair li
   page,
 }) => {
   await openDatasetFile(page, await fixture(true), "synthetic-legacy.sqlite");
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: /Review data issues/ }).click();
   const dialog = page.getByRole("dialog", { name: "Data issues", exact: true });
   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(5);
@@ -110,7 +111,7 @@ test("R15 all legacy issues remain available after unrelated edits and repair li
   await openFileMenu(page);
   page.once("dialog", (d) => d.accept("SYNTHETIC ONLY"));
   await page.getByRole("button", { name: "Banner caveat", exact: true }).click();
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: /Review data issues/ }).click();
   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(5);
   await dialog.getByRole("button", { name: "Review Synthetic guard 5", exact: true }).click();
@@ -167,7 +168,7 @@ test("R20 offline About identifies application version, source build and data fo
   await openDatasetFile(page, await fixture(), "synthetic.sqlite");
   await page.locator("details.about-menu > summary").click();
   const identity = page.getByTestId("build-information");
-  await expect(identity).toContainText("SIM 0.1.0");
+  await expect(identity).toContainText("SIM 0.2.0");
   await expect(identity).toContainText(/Build [a-f0-9]{40}/);
   await expect(identity).toContainText(`Data format ${String(LATEST_VERSION)}`);
   await expect(identity).not.toContainText("Orders");
@@ -236,7 +237,7 @@ for (const modifier of ["Control", "Meta"]) {
 
 test("R15 issue pagination preserves complete access and enabled keyboard focus at boundaries", async ({ page }) => {
   await openDatasetFile(page, await fixture(24), "synthetic-legacy.sqlite");
-  await openFileMenu(page);
+  await openAssessmentMenu(page);
   await page.getByRole("button", { name: "Review data issues", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Data issues", exact: true });
   await expect(dialog.getByTestId("data-issue-row")).toHaveCount(20);

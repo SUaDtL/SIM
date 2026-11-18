@@ -274,7 +274,8 @@ test("a new service takes its network's marking and success is not shown as an e
   await show(page, "Services");
   await page.getByRole("button", { name: "Add service", exact: true }).click();
   const e = editor(page);
-  await expect(e.getByLabel("Marking")).toHaveValue("CUI");
+  await expect(e.getByLabel("Network", { exact: true })).toHaveValue("");
+  await expect(e.getByLabel("Marking")).toHaveValue("UNCLASSIFIED");
   await pick(page, "Network", "SIPR");
   await expect(e.getByLabel("Marking")).toHaveValue("SECRET");
   await fill(page, { Name: "Video" });
@@ -379,6 +380,7 @@ test("a new service named Identity or DNS starts out foundational unless the use
   const e = editor(page);
   const box = e.getByLabel("Foundational (e.g. identity, DNS)");
   const name = e.getByLabel("Name", { exact: true });
+  await pick(page, "Network", "NIPR");
   await name.fill("Email");
   await expect(box).not.toBeChecked();
   await name.fill(" dns ");

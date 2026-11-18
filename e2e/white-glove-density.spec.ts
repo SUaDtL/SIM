@@ -176,9 +176,9 @@ test("REL10 UX05 E3 hub has 120 outgoing relationships with bounded pages and ex
     .last()
     .getByRole("button", { name: /^Connection details/ });
   await target.click();
-  await expect(page.getByRole("dialog", { name: "Connection inspector", exact: true })).toContainText("Density hub");
+  await expect(page.getByRole("region", { name: "Connection inspector", exact: true })).toContainText("Density hub");
   await page
-    .getByRole("dialog", { name: "Connection inspector", exact: true })
+    .getByRole("region", { name: "Connection inspector", exact: true })
     .getByRole("button", { name: "Close", exact: true })
     .click();
   await expect(target).toBeFocused();

@@ -1,10 +1,10 @@
 import { expect, test, type Page, type Locator } from "@playwright/test";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { writeFileSync } from "node:fs";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
-import { editSelected, chooseReference, openFileMenu } from "./helpers/usability";
+import { editSelected, chooseReference, openFileMenu, savedSnapshot, simUrl as url } from "./helpers/usability";
 
 async function sectionFor(page: Page, label: string): Promise<void> {
   const section = /^Tier \d support/.test(label)
@@ -35,8 +35,6 @@ async function discard(page: Page): Promise<void> {
   await page.getByTestId("editor").getByText("More edit actions", { exact: true }).click();
   await page.getByTestId("editor").getByRole("button", { name: "Discard changes", exact: true }).click();
 }
-
-const url = pathToFileURL(fileURLToPath(new URL("../dist/sim.html", import.meta.url))).href;
 
 async function openConnectedFixture(page: Page): Promise<void> {
   const db = await createDataset("Synthetic connected acceptance", wasm);
@@ -83,7 +81,88 @@ test.beforeEach(async ({ page }) => {
   await openConnectedFixture(page);
 });
 
-for (const dismissal of ["Cancel", "Escape"] as const) {
+for (const disposition of ["Apply", "Discard"] as const) {
+  test(
+    "A-WF-02 Back guards all service fields, staged rows and unfinished intent through " + disposition,
+    async ({ page }, info) => {
+      const initial = await savedSnapshot(page);
+      const e = page.getByTestId("editor"),
+        back = page.locator('[data-atlas-action="back"]'),
+        decision = page.getByRole("dialog", { name: "Unapplied changes" });
+      await editSelected(page);
+      await e.getByLabel("Name", { exact: true }).fill("Draft Orders");
+      await e.getByLabel("Description", { exact: true }).fill("Draft service details");
+      await e.getByLabel("Marking", { exact: true }).selectOption("CUI");
+      for (const tier of [1, 2, 3]) {
+        await pick(page, "Tier " + String(tier) + " support", "Operations");
+        await e.getByLabel("Tier " + String(tier) + " support notes").fill("Draft tier " + String(tier));
+      }
+      await pick(page, "Consuming organization", "Partners");
+      await e.getByRole("button", { name: "Add consumer", exact: true }).click();
+      await pick(page, "Depends on service", "Archive (Amber)");
+      const payload = async () => ({
+        fields: await e.locator("form input, form select, form textarea").evaluateAll((nodes) =>
+          nodes.map((node) => {
+            const field = node as HTMLInputElement;
+            return { id: field.id, value: field.value, checked: field.checked };
+          }),
+        ),
+        consumers: await e.getByTestId("consumers").textContent(),
+        dependencies: await e.getByTestId("dependencies").textContent(),
+      });
+      const before = await payload(),
+        events = [];
+      for (const method of ["Stay", "Escape"]) {
+        await back.click();
+        await expect(decision).toBeVisible();
+        if (method === "Escape") await page.keyboard.press("Escape");
+        else await decision.getByRole("button", { name: "Stay", exact: true }).click();
+        expect(await payload()).toEqual(before);
+        events.push({ method, payload: before });
+      }
+      if (disposition === "Apply") {
+        await back.click();
+        await decision.getByRole("button", { name: "Apply and continue" }).click();
+        await expect(e.getByTestId("editor-message")).toContainText(/Finish adding or cancel/i);
+        expect(await payload()).toEqual(before);
+        events.push({
+          refused: "unfinished relationship",
+          feedback: await e.getByTestId("editor-message").innerText(),
+        });
+        await e.getByRole("button", { name: "Add dependency", exact: true }).click();
+        await sectionFor(page, "Name");
+        await e.getByLabel("Name", { exact: true }).fill("");
+        await back.click();
+        await decision.getByRole("button", { name: "Apply and continue" }).click();
+        await expect(e.getByTestId("error-name")).toContainText("required");
+        await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        events.push({
+          refused: "required field with staged relationship",
+          feedback: await e.getByTestId("error-name").innerText(),
+        });
+        await e.getByLabel("Name", { exact: true }).fill("Draft Orders");
+      }
+      await back.click();
+      await decision.getByRole("button", { name: disposition + " and continue" }).click();
+      const after = await savedSnapshot(page);
+      if (disposition === "Apply") {
+        expect(after.services.find((row) => row.id === 1)?.name).toBe("Draft Orders");
+        expect(after.support.filter((row) => row.serviceId === 1)).toHaveLength(3);
+        expect(after.dependencies.length).toBe(initial.dependencies.length + 1);
+        expect(after.consumption.length).toBe(initial.consumption.length + 1);
+        await page.getByRole("button", { name: "Undo", exact: true }).click();
+        await expect(page.getByRole("button", { name: "Undo", exact: true })).toBeDisabled();
+        expect(await savedSnapshot(page)).toEqual(initial);
+      } else expect(after).toEqual(initial);
+      writeFileSync(
+        info.outputPath("draft-branches.json"),
+        JSON.stringify({ disposition, initial, events, after }, null, 2),
+      );
+    },
+  );
+}
+
+for (const dismissal of ["Cancel", "Back to existing records", "Close picker", "Escape"] as const) {
   test(`UX1-003 child ${dismissal} preserves the complete parent draft, scroll and invoking focus without history`, async ({
     page,
   }) => {
@@ -114,8 +193,10 @@ for (const dismissal of ["Cancel", "Escape"] as const) {
     await child.getByRole("button", { name: /^Create new / }).click();
     await child.getByLabel("Name", { exact: true }).fill("Cancelled Organization");
     if (dismissal === "Escape") await page.keyboard.press("Escape");
+    else if (dismissal === "Close picker")
+      await child.getByRole("button", { name: "Close picker", exact: true }).click();
     else {
-      await child.getByTestId("inline-child").getByRole("button", { name: "Cancel", exact: true }).click();
+      await child.getByRole("button", { name: dismissal, exact: true }).click();
       await expect(child.getByTestId("inline-child")).toHaveCount(0);
       await child.getByRole("button", { name: "Close picker", exact: true }).click();
     }

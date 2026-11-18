@@ -1,5 +1,6 @@
 import { bannerText, type Marking } from "../db/markings";
 import { BANNER_COLORS, bandHeight, type FrameLayout } from "./export";
+import { keyColor, keyDash, type MapKey } from "./key";
 
 /**
  * SVG export (WORK-012): a drawn map as plain SVG shapes and text, framed by the classification
@@ -263,21 +264,45 @@ export function svgDocument(scene: SvgScene, marking: Marking, caveat: string | 
       ? tag("rect", { x: v.x, y: v.y, width: v.width, height: v.height, fill: scene.background })
       : "") + [...scene.containers.map(node), ...scene.edges.map(edge), ...scene.nodes.map(node)].join(""),
   );
+  const keyShape = (key: MapKey, x: number, y: number, size: number) => {
+    const color = keyColor(key);
+    const shape =
+      key === "service"
+        ? tag("rect", { x: 5, y: 4, width: 17, height: 8, rx: 2, fill: "none", stroke: color, "stroke-width": 2 })
+        : key === "cds"
+          ? tag("polygon", { points: "13,2 20,8 13,14 6,8", fill: color })
+          : tag("path", {
+              d: "M2 8 H19",
+              stroke: color,
+              "stroke-width": 2,
+              "stroke-dasharray": keyDash(key).join(" ") || null,
+            }) + tag("polygon", { points: "18,4 24,8 18,12", fill: color });
+    return tag(
+      "g",
+      {
+        "data-key": key,
+        transform: `translate(${num(x - 2 * size)} ${num(y - 0.88 * size)}) scale(${num(size / 16)})`,
+      },
+      tag("rect", { x: 0, y: 0, width: 27, height: 16, fill: "#0d141c" }) + shape,
+    );
+  };
   const frameLines = (lines: FrameLayout["topLines"], offset: number) =>
     lines
-      .map((line) =>
-        tag(
-          "text",
-          {
-            x: Math.max(16, Math.round(width * 0.025)),
-            y: offset + line.y,
-            "font-family": FONT,
-            "font-size": line.size,
-            "font-weight": line.bold ? "bold" : null,
-            fill: "#1f2933",
-          },
-          escapeXml(line.text),
-        ),
+      .map(
+        (line) =>
+          (line.key ? keyShape(line.key, line.x ?? 0, offset + line.y, line.size) : "") +
+          tag(
+            "text",
+            {
+              x: line.x ?? Math.max(16, Math.round(width * 0.025)),
+              y: offset + line.y,
+              "font-family": FONT,
+              "font-size": line.size,
+              "font-weight": line.bold ? "bold" : null,
+              fill: "#1f2933",
+            },
+            escapeXml(line.text),
+          ),
       )
       .join("");
   return (

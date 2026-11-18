@@ -1204,16 +1204,69 @@ export class Repository {
         "scenario_id, kind, service_id, into_service_id, into_change_id, network_id, provider_org_id, name, marking, description",
         [scenarioId, input.kind, ...values],
       );
-      const newIssue = this.scenarioNameCollisions(scenarioId).find((issue) => !before.has(issue.key));
-      if (newIssue) {
-        throw new ValidationError(
-          "DUPLICATE",
-          input.kind === "add" ? "service name" : "network",
-          input.kind === "add" ? "That service already exists on that network." : newIssue.message,
-        );
-      }
+      this.refuseNewScenarioCollision(scenarioId, before, input);
       return this.mustGet(this.listScenarioChanges(scenarioId).find((c) => c.id === id));
     });
+  }
+
+  /** Correct one authored proposal in place, retaining its exchange identity and inbound merge targets. */
+  reviseScenarioChange(id: number, input: ScenarioChangeInput, options: WriteOptions = {}): ScenarioChange {
+    const row = this.row("SELECT * FROM scenario_change WHERE id = ?", [id]);
+    if (!row) throw new ValidationError("NOT_FOUND", "scenario change", "The proposed change no longer exists.");
+    const current = toScenarioChange(row);
+    if (current.kind !== input.kind) {
+      throw new ValidationError("INVALID_VALUE", "kind", "A revision must keep the original change kind.");
+    }
+    const { scenarioId } = current;
+    const peers = this.listScenarioChanges(scenarioId).filter((change) => change.id !== id);
+    const values = this.scenarioChange(input, peers, options);
+    const columns = [
+      "service_id",
+      "into_service_id",
+      "into_change_id",
+      "network_id",
+      "provider_org_id",
+      "name",
+      "marking",
+      "description",
+    ];
+    if (columns.every((column, index) => row[column] === values[index])) return current;
+    const before = new Set(this.scenarioNameCollisions(scenarioId).map((issue) => issue.key));
+    return this.atomic(() => {
+      this.update(
+        `UPDATE scenario_change SET ${columns.map((column) => `${column} = ?`).join(", ")} WHERE id = ?`,
+        [...values, id],
+        "scenario change",
+      );
+      const revised = this.listScenarioChanges(scenarioId);
+      for (const peer of peers) {
+        if (peer.kind !== "merge") continue;
+        if (peer.intoChangeId === id || (input.kind !== "add" && peer.intoServiceId === input.serviceId)) {
+          this.scenarioChange(
+            peer,
+            revised.filter((change) => change.id !== peer.id),
+            options,
+          );
+        }
+      }
+      this.refuseNewScenarioCollision(scenarioId, before, input);
+      return this.mustGet(revised.find((change) => change.id === id));
+    });
+  }
+
+  private refuseNewScenarioCollision(
+    scenarioId: number,
+    before: ReadonlySet<string>,
+    input: ScenarioChangeInput,
+  ): void {
+    const newIssue = this.scenarioNameCollisions(scenarioId).find((issue) => !before.has(issue.key));
+    if (newIssue) {
+      throw new ValidationError(
+        "DUPLICATE",
+        input.kind === "add" ? "service name" : "network",
+        input.kind === "add" ? "That service already exists on that network." : newIssue.message,
+      );
+    }
   }
 
   /** Mirror the scenario-local foreign-key cascade without writing or depending on unrelated drafts. */

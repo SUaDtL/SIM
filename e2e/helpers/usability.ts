@@ -5,7 +5,9 @@ import { openDataset } from "../../src/db/dataset";
 import { Repository } from "../../src/domain/repository";
 import { wasm } from "../../tests/helpers/sqlite";
 
-export const simUrl = pathToFileURL(fileURLToPath(new URL("../../dist/sim.html", import.meta.url))).href;
+export const simUrl = pathToFileURL(
+  process.env["SIM_TEST_HTML"] ?? fileURLToPath(new URL("../../dist/sim.html", import.meta.url)),
+).href;
 
 export async function openFileMenu(page: Page): Promise<void> {
   const menu = page.locator("details.file-menu").filter({ has: page.locator("summary").filter({ hasText: /^File$/ }) });

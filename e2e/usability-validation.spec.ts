@@ -1,5 +1,13 @@
 import { expect, test, type Download, type Page } from "@playwright/test";
-import { openDatasetFile, openFileMenu, savedSnapshot, showInventory, showMap, simUrl } from "./helpers/usability";
+import {
+  chooseReference,
+  openDatasetFile,
+  openFileMenu,
+  savedSnapshot,
+  showInventory,
+  showMap,
+  simUrl,
+} from "./helpers/usability";
 
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
@@ -91,6 +99,7 @@ test("Apply and capture reveals a parked invalid draft, then captures only after
     db.close();
   }
   await startDraft(page, "");
+  await chooseReference(page, "Network", "Synthetic network");
   await showMap(page);
   await expect(page.getByTestId("editor")).toBeHidden();
   await page.getByRole("button", { name: "Capture", exact: true }).click();
@@ -174,7 +183,7 @@ test("a connection inspector from a pending Open becomes inert when a same-ID da
     .toBe(true);
 
   await editor.getByRole("button", { name: /^Connection details for Old Provider/ }).click();
-  const inspector = page.getByRole("dialog", { name: "Connection inspector", exact: true });
+  const inspector = page.getByRole("region", { name: "Connection inspector", exact: true });
   await expect(inspector).toContainText("Old Caller");
   await expect(inspector).toContainText("Old Provider");
   const staleEdit = await inspector

@@ -135,11 +135,11 @@ test("AC082: Save file refuses invalid scenario builder, then saves metadata and
   await select(page, "Scenarios", "Plan");
   await editSelected(page);
   const editor = page.getByTestId("editor");
-  await editor.getByLabel("Description").fill("Combined planning note");
+  await editor.getByLabel("Description", { exact: true }).fill("Combined planning note");
   await editor.getByLabel("Change", { exact: true }).selectOption("add");
   await page.getByRole("button", { name: "Save file", exact: true }).click();
   await expect(editor.getByTestId("change-message")).toContainText("required");
-  await expect(editor.getByLabel("Description")).toHaveValue("Combined planning note");
+  await expect(editor.getByLabel("Description", { exact: true })).toHaveValue("Combined planning note");
   await expect(page.getByRole("button", { name: "Undo" })).toBeDisabled();
 
   await editor.getByLabel("New service name").fill("Portal");
