@@ -6,6 +6,13 @@ All notable changes to SIM are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Choose network markings such as SEC-REL, TS/SCI and NATO SECRET in one searchable picker.
+  Create reusable custom labels and use them in inventory searches, map filters and exports.
+- Data format 8 saves network labels alongside the existing classification grouping. Older
+  datasets keep their current network markings when opened.
+
 ## [0.2.0] - 2026-11-18
 
 - Follow related records, connections and assessment notes in one inspector. Back restores the previous investigation, and perspective changes reconcile the selected record.
