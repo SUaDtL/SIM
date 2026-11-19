@@ -6,14 +6,7 @@ All notable changes to SIM are documented here. The format follows
 
 ## [Unreleased]
 
-### Added
-
-- Choose network markings such as SEC-REL, TS/SCI and NATO SECRET in one searchable picker.
-  Create reusable custom labels and use them in inventory searches, map filters and exports.
-- Data format 8 saves network labels alongside the existing classification grouping. Older
-  datasets keep their current network markings when opened.
-
-## [0.2.0] - 2026-11-18
+## [0.2.0] - 2026-11-19
 
 - Follow related records, connections and assessment notes in one inspector. Back restores the previous investigation, and perspective changes reconcile the selected record.
 - Edit a scenario proposal in place, keeping its identity and dependent merges. New services require a deliberate network unless started on a specific network.
@@ -21,9 +14,13 @@ All notable changes to SIM are documented here. The format follows
 
 ### Added
 
+- Choose network markings such as SEC-REL, TS/SCI and NATO SECRET in one searchable picker.
+  Create reusable custom labels and use them in inventory searches, map filters and exports.
+- Data format 8 saves network labels alongside the existing classification grouping. Older
+  datasets keep their current network markings when opened.
 - Optional assessment details, durable exchange identities, live saved viewpoints, and scoped HTML, JSON, and CSV exports.
 - Dependency and responsibility views, assertion-level evidence, unresolved questions, bounded batch assignments, and team-scoped owner review with explicit correction acceptance.
-- Forward-only dataset upgrades through schema 7. Retain a pre-upgrade copy for use with earlier builds.
+- Forward-only dataset upgrades through schema 8. Retain a pre-upgrade copy for use with earlier builds.
 - Public README, user guide, contributing and security docs, and a GitHub Pages deployment of the current `main` build.
 
 - Dataset renaming with Undo, persistent paginated data-issue review, keyboard Save, offline build/support identity and an accessible startup failure shell.
