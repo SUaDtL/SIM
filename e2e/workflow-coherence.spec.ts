@@ -1,6 +1,13 @@
 import { candidateUrl as simUrl } from "./helpers/candidate";
 import { openAssessmentMenu } from "./helpers/assessment";
-import { chooseReference, editSelected, editorSection, openFileMenu, showInventory } from "./helpers/usability";
+import {
+  chooseNetworkMarking,
+  chooseReference,
+  editSelected,
+  editorSection,
+  openFileMenu,
+  showInventory,
+} from "./helpers/usability";
 import { expect, test } from "@playwright/test";
 import { createDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
@@ -61,7 +68,7 @@ test("new service defaults stop following after a deliberate marking choice", as
     await showInventory(page);
     await page.getByRole("button", { name: "Add network" }).first().click();
     await page.getByLabel("Name", { exact: true }).fill(name);
-    await page.getByLabel("Marking", { exact: true }).selectOption(marking);
+    await chooseNetworkMarking(page, marking);
     await page.getByRole("button", { name: "Add network" }).last().click();
   }
   await showInventory(page);

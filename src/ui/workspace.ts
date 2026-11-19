@@ -1387,10 +1387,11 @@ export function createWorkspace(
     const records: readonly FindRecord[] =
       surface === "map"
         ? map.findRecords()
-        : inventoryRecords(repo.snapshot()).map(({ target, label, detail }) => ({
+        : inventoryRecords(repo.snapshot()).map(({ target, label, detail, searchText }) => ({
             value: `${target.type}:${String(target.id)}`,
             label,
             detail,
+            ...(searchText ? { searchText } : {}),
             inspect: async () => {
               if (!(await prepareNavigation())) return false;
               await open(target.type, target.id);

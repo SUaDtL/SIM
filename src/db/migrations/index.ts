@@ -1,4 +1,5 @@
 import type { Migration } from "../migrate";
+import { networkMarkings } from "./0008-network-markings";
 import { initial } from "./0001-initial";
 import { mapPositions } from "./0002-map-positions";
 import { scenarios } from "./0003-scenarios";
@@ -16,4 +17,5 @@ export const MIGRATIONS: readonly Migration[] = [
   savedViewpoints,
   assessmentNotes,
   reviewIssuance,
+  networkMarkings,
 ];

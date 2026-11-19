@@ -27,6 +27,8 @@ import {
   type SummarySection,
 } from "./record-summary";
 import { openReferencePicker } from "./reference-picker";
+import { readMarkingSelection } from "../domain/network-markings";
+import { openNetworkMarkingPicker } from "./network-marking-picker";
 import { collectionPage } from "./relationship-collection";
 
 export interface EditorContext {
@@ -139,6 +141,26 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   let serviceBase: ServiceEditBase | null = null;
   let scenarioBuilder: ScenarioChangeBuilder | null = null;
   let activePicker: ReturnType<typeof openReferencePicker> | null = null;
+  let activeMarkingPicker: ReturnType<typeof openNetworkMarkingPicker> | null = null;
+
+  function closeMarkingPicker(): void {
+    activeMarkingPicker?.close();
+    activeMarkingPicker = null;
+  }
+
+  function markingPicker(trigger: HTMLButtonElement, selected: string, onSelect: (value: string) => void): void {
+    const repo = ctx.repo();
+    const owner = current;
+    closeMarkingPicker();
+    activeMarkingPicker = openNetworkMarkingPicker({
+      repo,
+      trigger,
+      selected,
+      onSelect,
+      isCurrent: () => current === owner && ctx.repo() === repo && trigger.isConnected,
+      onDraftChanged: draftChanged,
+    });
+  }
   let editing = false;
   let activeSection = "details";
   let draftId = 0;
@@ -177,6 +199,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
         ? captureRecordSummaryView(element.querySelector<HTMLElement>(".record-summary") ?? element)?.section
         : undefined;
     section ??= previousSection ?? "overview";
+    closeMarkingPicker();
     activePicker?.close();
     activePicker = null;
     editing = false;
@@ -328,7 +351,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   } | null = null;
 
   function hasPendingDraft(): boolean {
-    if (activePicker?.hasPendingDraft()) return true;
+    if (activePicker?.hasPendingDraft() || activeMarkingPicker?.hasPendingDraft()) return true;
     if (relationIntent.touched) return true;
     if (routeIntents.size > 0) return true;
     if (scenarioBuilder?.hasPendingIntent()) return true;
@@ -626,6 +649,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
 
   function close(): void {
     draftId++;
+    closeMarkingPicker();
     activePicker?.close();
     activePicker = null;
     editing = false;
@@ -647,6 +671,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
   function open(type: EntityType, id: number | null, noticeText = "", section = "details"): void {
     const owner = ++draftId;
     sectionScroll.clear();
+    closeMarkingPicker();
     activePicker?.close();
     activePicker = null;
     editing = true;
@@ -679,7 +704,7 @@ export function createEditor(ctx: EditorContext): EditorPanel {
 
     const errors = new Map<string, HTMLElement>();
     const controls = new Map<string, () => FormValues[string]>();
-    const fields = d.fields.map((f) => renderField(repo, f, values, id, errors, controls));
+    const fields = d.fields.map((f) => renderField(repo, f, values, id, errors, controls, markingPicker));
 
     const message = el("p", { class: "message", "data-testid": "editor-message", role: "alert", tabindex: "-1" });
     const reveal = (target: HTMLElement): void => {
@@ -804,8 +829,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
 
     function save(input: FormValues, confirmSensitive: boolean): boolean {
       if (!editing || owner !== draftId || ctx.repo() !== repo || !form.isConnected) return false;
-      if (activePicker?.hasPendingDraft()) {
-        activePicker.revealPendingDraft();
+      const child = activeMarkingPicker?.hasPendingDraft() ? activeMarkingPicker : activePicker;
+      if (child?.hasPendingDraft()) {
+        child.revealPendingDraft();
         return false;
       }
       clearErrors();
@@ -1216,7 +1242,9 @@ export function createEditor(ctx: EditorContext): EditorPanel {
                   const controls = new Map<string, () => FormValues[string]>();
                   const errors = new Map<string, HTMLElement>();
                   const defaults = { ...d.values(repo, null), name: query };
-                  const fields = d.fields.map((f) => renderField(repo, f, defaults, null, errors, controls));
+                  const fields = d.fields.map((f) =>
+                    renderField(repo, f, defaults, null, errors, controls, markingPicker),
+                  );
                   const ids = new Map<string, string>();
                   for (const part of fields)
                     for (const node of part.querySelectorAll<HTMLElement>("[id]")) {
@@ -2023,6 +2051,8 @@ export function createEditor(ctx: EditorContext): EditorPanel {
     if (current.type === "scenario") scenarioBuilder?.refresh();
     else if (!hasPendingDraft()) renderRelations();
     updateEditingIdentity();
+    for (const trigger of document.querySelectorAll(".network-marking-field"))
+      trigger.dispatchEvent(new Event("marking-refresh"));
   }
 
   function reload(): void {
@@ -2095,6 +2125,7 @@ function renderField(
   editingId: number | null,
   errors: Map<string, HTMLElement>,
   controls: Map<string, () => FormValues[string]>,
+  openMarking: (trigger: HTMLButtonElement, selected: string, onSelect: (value: string) => void) => void,
 ): HTMLElement {
   const id = `field-${f.key}`;
   const error = el("p", { class: "field-error", "data-testid": `error-${f.key}`, id: `${id}-error` });
@@ -2106,6 +2137,41 @@ function renderField(
   const described = { id, "aria-describedby": `${id}-error` };
 
   switch (f.kind) {
+    case "network-marking": {
+      let selected = text;
+      label.id = `${id}-label`;
+      const display = el("span", { id: `${id}-value` });
+      const detail = el("small", { class: "hint", id: `${id}-detail` });
+      const trigger = button(
+        "",
+        () => {
+          openMarking(trigger, selected, (next) => {
+            selected = next;
+            sync();
+            trigger.dispatchEvent(new Event("input", { bubbles: true }));
+          });
+        },
+        {
+          ...described,
+          class: "reference-field network-marking-field",
+          "aria-haspopup": "dialog",
+          "aria-labelledby": `${label.id} ${display.id}`,
+          "aria-describedby": `${error.id} ${detail.id}`,
+        },
+      );
+      function sync(): void {
+        const choice = readMarkingSelection(selected);
+        const marking = choice && repo.getNetworkMarking(choice);
+        display.textContent = marking?.fullLabel ?? (choice ? "Unavailable marking" : selected);
+        detail.textContent = marking?.description ?? "";
+        detail.hidden = !detail.textContent;
+      }
+      trigger.append(display);
+      trigger.addEventListener("marking-refresh", sync);
+      sync();
+      controls.set(f.key, () => selected);
+      return el("div", { class: "field" }, label, trigger, detail, error);
+    }
     case "text": {
       const input = el("input", { ...described, type: "text", autocomplete: "off" });
       input.value = text;

@@ -36,16 +36,43 @@ including conflicts. Select only the fields to apply. The existing CSV import co
 to add new rows. Review receipts describe what happened when applied and stay historical
 after Undo or another edit. Use **Assessment → Download latest correction receipt** until you switch datasets.
 
-Files saved by this build use data format 7. Keep an untouched copy before saving an
+Files saved by this build use data format 8. Keep an untouched copy before saving an
 upgrade. To open the data in an older build, use the pre-upgrade copy.
+
+## Choose a network marking
+
+Open **Inventory → Networks → Add network**, then open **Network marking**. Choose
+**SEC-REL** from **Quick picks**, or search by full label, short label or a term such as
+“NATO”. **More markings** contains specialized examples. **Legacy** contains U//FOUO.
+Use the arrow keys to reach a result, Enter to select it and Escape to return to the form.
+Use **Add network** or **Apply changes** to save the selection with the network in one
+Undo step.
+
+Choose **Create custom marking** to enter the displayed label, a short map label of up
+to 20 characters, a display grouping and an optional description. **Create and use**
+saves the shared label to this dataset and selects it in the pending network form.
+Cancelling the network form leaves that label available in the picker. Choose **Edit**
+beside a custom marking to see how many networks use it before renaming it. Its grouping
+is fixed while in use, and a marking can be deleted once no networks use it. To adapt a
+preset, select it, reopen the picker and choose **Duplicate as custom**.
+
+Network markings describe environments. SEC-REL and TS/SCI are shorthand. SEC-REL uses
+the SECRET display grouping, which contributes to the dataset banner along with the
+other stored markings. Service markings are edited on their own records. Access and
+release decisions are handled outside SIM.
+
+The map shows the short label. Inspect a network to see its full label, short label,
+description and display grouping. Inventory search matches both labels. **Map → Filters
+→ Network marking** limits the map to matching networks. PNG and SVG captures show
+the short label in the captured view, and assessment HTML, JSON and CSV include the full
+label, short label, source and display grouping.
 
 ## Add and connect services
 
 Open **Inventory**, choose **Services**, then **Add service**, even in an empty dataset.
 Select an existing record to read its summary; choose **Edit** (or F2) to change it.
 In a reference field, use **Choose** to search qualified records or create and use a
-missing record without losing the service form. The child dialog is one level
-deep. Cancel or Escape leaves the parent intact. An explicitly created shared record
+missing record. Cancel or Escape returns to the parent form. An explicitly created shared record
 has its own Undo step and remains if you later cancel the service.
 
 Stage support assignments, consuming organizations and outgoing service dependencies

@@ -31,7 +31,8 @@ Your data lives in a local SQLite (`.sqlite`) file that you open and save yourse
 
 1. Open the [main preview](https://suadtl.github.io/SIM/) or a downloaded `sim.html`.
 2. **File → New** (or try the demo under **About and demo**), then **File → Rename dataset**.
-3. **Inventory → Services → Add service** to record services and their dependencies.
+3. **Inventory → Networks → Add network** to choose a network marking such as SEC-REL,
+   then use **Services → Add service** to record services and their dependencies.
 4. Switch to **Map** to see how they connect; capture it as PNG or SVG.
 5. **Save file** (Ctrl+S) to a durable `.sqlite` location. Open it again later with **Open**.
 

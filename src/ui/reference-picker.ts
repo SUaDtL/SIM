@@ -4,6 +4,7 @@ export interface PickerOption {
   readonly value: string;
   readonly label: string;
   readonly detail?: string;
+  readonly searchText?: string;
 }
 
 /** Where to resume a search after inspecting one of its results. */
@@ -54,7 +55,9 @@ export function pickerPage(
 ) {
   const needle = query.trim().toLowerCase();
   const matches = needle
-    ? options.filter((option) => `${option.label} ${option.detail ?? ""}`.toLowerCase().includes(needle))
+    ? options.filter((option) =>
+        [option.label, option.detail, option.searchText].join(" ").toLowerCase().includes(needle),
+      )
     : options;
   const pageCount = Math.max(1, Math.ceil(matches.length / 20));
   const requested = Number.isFinite(requestedPage) ? Math.max(0, Math.floor(requestedPage)) : 0;

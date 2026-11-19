@@ -3,6 +3,7 @@ import { wasm } from "../../tests/helpers/sqlite";
 import { createDataset } from "../db/dataset";
 import { Repository } from "../domain/repository";
 import { applyScenario } from "../scenario/scenario";
+import { createViewpoint, parseViewpoint, resolveViewpoint } from "./viewpoint";
 import { buildGraph, filterGraph, type Graph, type GraphEdge, nodeId, summarize, traceChain } from "./graph";
 
 let repo: Repository;
@@ -30,6 +31,62 @@ const edgesFrom = (graph: Graph, dependency: string): GraphEdge[] =>
   graph.edges.filter((e) => e.data.dependency === dependency);
 
 describe("buildGraph", () => {
+  it("uses one compact network marking and resolves saved filters after label and network renames", () => {
+    const { nipr, sipr, chat, mail } = seed();
+    repo.addDependency({ consumerServiceId: chat.id, providerServiceId: mail.id });
+    const input = {
+      fullLabel: "Joint Alpha // Planning",
+      shortLabel: "ALPHA PLAN",
+      base: "SECRET",
+      description: null,
+    } as const;
+    const marking = repo.saveCustomNetworkMarking(input);
+    repo.updateNetwork(sipr.id, { ...sipr, diagramMarking: marking });
+    const scenario = repo.createScenario({ name: "Move" });
+    repo.addScenarioChange(scenario.id, { kind: "rehome", serviceId: chat.id, networkId: nipr.id });
+    const before = repo.snapshot();
+    const graph = buildGraph(before);
+    const planned = applyScenario(before, scenario.id);
+    expect(planned.networks.find((network) => network.id === sipr.id)?.diagramMarking?.key).toBe(marking.key);
+    const region = nodeId("network", sipr.id);
+    const service = nodeId("service", chat.id);
+    expect(graph.nodes.find(({ data }) => data.id === region)?.data.label).toBe("SIPR\nALPHA PLAN");
+    expect(traceChain(graph, service).nodes.has(nodeId("service", mail.id))).toBe(true);
+    const markingKey = `custom:${marking.key}`;
+    expect(filterGraph(before, graph, { markingKey })).toContain(nodeId("service", mail.id));
+    expect(filterGraph(before, graph, { markingKey })).not.toContain(service);
+    const dimensions = { width: 1200, height: 600 };
+    const lookup = repo.exchangeIdentities.bind(repo);
+    const view = createViewpoint(
+      {
+        view: { kind: "as-is" },
+        filter: { markingKey },
+        chainRoot: null,
+        selectedNode: region,
+        foundational: false,
+        focus: null,
+        zoom: 1,
+        pan: { x: 0, y: 0 },
+      },
+      graph,
+      dimensions,
+      lookup,
+    );
+
+    repo.saveCustomNetworkMarking(
+      { ...input, fullLabel: "Joint Beta // Planning", shortLabel: "BETA PLAN" },
+      {},
+      marking.key,
+    );
+    const current = repo.getNetwork(sipr.id);
+    if (!current) throw new Error("Fixture network missing");
+    repo.updateNetwork(sipr.id, { ...current, name: "Bravo" });
+    const renamed = buildGraph(repo.snapshot());
+    const restored = resolveViewpoint(parseViewpoint(JSON.stringify(view)), lookup, () => renamed, dimensions);
+    expect(restored.state.filter.markingKey).toBe(markingKey);
+    expect(restored.state.selectedNode).toBe(region);
+    expect(renamed.nodes.find(({ data }) => data.id === region)?.data.label).toBe("Bravo\nBETA PLAN");
+  });
   it("marks a projected former-CDS route unresolved instead of presenting it as a direct crossing", () => {
     const s = seed();
     const ops = repo.createNetwork({ name: "Ops", kind: "internal", marking: "SECRET" });

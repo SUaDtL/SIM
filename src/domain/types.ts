@@ -1,4 +1,5 @@
 import type { Marking } from "../db/markings";
+import type { MarkingSelection, NetworkMarking } from "./network-marking-catalog";
 
 export type NetworkKind = "internal" | "external";
 export type Tier = 1 | 2 | 3;
@@ -8,6 +9,7 @@ export interface Network {
   readonly name: string;
   readonly kind: NetworkKind;
   readonly marking: Marking;
+  readonly diagramMarking?: NetworkMarking;
   readonly description: string | null;
 }
 
@@ -72,6 +74,7 @@ export interface NetworkInput {
   name: string;
   kind: NetworkKind;
   marking: Marking;
+  diagramMarking?: MarkingSelection | null;
   description?: string | null;
 }
 

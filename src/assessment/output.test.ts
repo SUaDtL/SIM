@@ -58,6 +58,34 @@ async function fixture() {
 }
 
 describe("assessment identity and disclosure", () => {
+  it("preserves exact label text in JSON, escapes HTML, and quotes formula-like CSV cells", async () => {
+    const { db, repo, operations } = await fixture();
+    const fullLabel = '=Fictional <img src="example"> & Network';
+    const asset = repo.saveCustomNetworkMarking({
+      fullLabel,
+      shortLabel: "+FICTION",
+      description: null,
+      base: "SECRET",
+    });
+    repo.updateNetwork(operations.id, { ...operations, diagramMarking: asset });
+    const output = freezeAssessment(repo, source);
+    const row = output.inventories[0]?.tables["Networks"]?.find((network) => network["name"] === operations.name);
+    expect(row).toMatchObject({
+      networkMarkingFull: fullLabel,
+      networkMarkingShort: "+FICTION",
+      networkMarkingSource: "custom",
+      marking: "SECRET",
+    });
+    const json = await renderAssessment(output, "json", "test").text();
+    expect(json).toContain(JSON.stringify(fullLabel));
+    const html = await renderAssessment(output, "html", "test").text();
+    expect(html).toContain("=Fictional &lt;img src=&quot;example&quot;&gt; &amp; Network");
+    expect(html).not.toContain('<img src="example">');
+    const csv = await renderAssessment(output, "csv", "test").text();
+    expect(csv).toContain('"\'=Fictional <img src=""example""');
+    expect(csv).toContain("'+FICTION");
+    db.close();
+  });
   it("upgrades actual version-three bytes without claiming the new identities are durable", async () => {
     const old = await rawDatabase();
     migrate(old, MIGRATIONS.slice(0, 3));

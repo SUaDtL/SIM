@@ -42,6 +42,19 @@ import type {
 } from "./types";
 import { checkSensitive, cleanName, cleanText } from "./validate";
 import {
+  MARKING_PRESETS,
+  type CustomMarking,
+  type MarkingFields,
+  type MarkingSelection,
+  type NetworkMarking,
+} from "./network-marking-catalog";
+import {
+  findMarkingPreset,
+  normalizeMarkingLabel,
+  parseStoredNetworkMarking,
+  validateMarkingFields,
+} from "./network-markings";
+import {
   ASSESSMENT_FIELDS,
   ASSESSMENT_FIELDS_LIST,
   EXCHANGE_KEYS,
@@ -53,6 +66,11 @@ import {
 } from "./assessment-context";
 
 type Row = Record<string, SqlValue>;
+
+const NETWORK_SELECT = `SELECT n.*, m.exchange_id AS diagram_id, m.preset_key, m.full_label,
+  m.short_label, m.base_marking, m.description AS diagram_description, m.normalized_label
+  FROM network n LEFT JOIN network_marking_assignment a ON n.id = a.network_id
+  LEFT JOIN diagram_marking m ON m.exchange_id = a.marking_id`;
 export interface RepositoryChange {
   readonly revision: number;
   readonly entity: string;
@@ -383,32 +401,167 @@ export class Repository {
   // ---- networks ----
 
   listNetworks(): Network[] {
-    return this.rows("SELECT * FROM network ORDER BY name").map(toNetwork);
+    return this.rows(NETWORK_SELECT + " ORDER BY n.name").map(toNetwork);
   }
 
   getNetwork(id: number): Network | undefined {
-    const row = this.row("SELECT * FROM network WHERE id = ?", [id]);
+    const row = this.row(NETWORK_SELECT + " WHERE n.id = ?", [id]);
     return row && toNetwork(row);
   }
 
   createNetwork(input: NetworkInput, options: WriteOptions = {}): Network {
-    const v = this.network(input, options);
-    return this.write(() => {
-      const id = this.insertExchangeRow("network", "name, kind, marking, description", v);
-      return this.mustGet(this.getNetwork(id));
-    }, "network");
+    return this.saveNetwork(null, input, options);
   }
 
   updateNetwork(id: number, input: NetworkInput, options: WriteOptions = {}): Network {
-    const v = this.network(input, options, this.getNetwork(id));
+    return this.saveNetwork(id, input, options);
+  }
+
+  private saveNetwork(id: number | null, input: NetworkInput, options: WriteOptions): Network {
     return this.write(() => {
-      this.update(
-        "UPDATE network SET name = ?, kind = ?, marking = ?, description = ? WHERE id = ?",
-        [...v, id],
-        "network",
-      );
-      return this.mustGet(this.getNetwork(id));
+      const current = id === null ? undefined : this.getNetwork(id);
+      const choice = input.diagramMarking;
+      const marking = choice ? this.getNetworkMarking(choice) : undefined;
+      if (choice && !marking)
+        throw new ValidationError(
+          "NOT_FOUND",
+          "marking",
+          "That network marking is unavailable. Choose another marking.",
+        );
+      const values = this.network({ ...input, marking: marking?.base ?? input.marking }, options, current);
+      const networkId = id ?? this.insertExchangeRow("network", "name, kind, marking, description", values);
+      if (id !== null)
+        this.update(
+          "UPDATE network SET name = ?, kind = ?, marking = ?, description = ? WHERE id = ?",
+          [...values, id],
+          "network",
+        );
+      if (marking) {
+        const markingId = marking.source === "builtin" ? this.materializeMarkingPreset(marking) : marking.key;
+        this.db.run(
+          `INSERT INTO network_marking_assignment (network_id, marking_id) VALUES (?, ?)
+          ON CONFLICT(network_id) DO UPDATE SET marking_id = excluded.marking_id WHERE marking_id <> excluded.marking_id`,
+          [networkId, markingId],
+        );
+      } else if (choice === null || (current?.diagramMarking && current.marking !== input.marking)) {
+        // Older callers can still independently change the grouping.
+        this.db.run("DELETE FROM network_marking_assignment WHERE network_id = ?", [networkId]);
+      }
+      return this.mustGet(this.getNetwork(networkId));
     }, "network");
+  }
+
+  listCustomNetworkMarkings(): CustomMarking[] {
+    return this.rows("SELECT * FROM diagram_marking WHERE preset_key IS NULL ORDER BY full_label COLLATE NOCASE")
+      .map((row) => toStoredMarking(row))
+      .filter((marking): marking is CustomMarking => marking.source === "custom");
+  }
+
+  getNetworkMarking(selection: MarkingSelection): NetworkMarking | undefined {
+    if (selection.source === "builtin") return findMarkingPreset(selection.key);
+    const row = this.row("SELECT * FROM diagram_marking WHERE exchange_id = ? AND preset_key IS NULL", [selection.key]);
+    return row && toStoredMarking(row);
+  }
+
+  findMatchingNetworkMarking(fullLabel: string): NetworkMarking | undefined {
+    const normalized = normalizeMarkingLabel(fullLabel);
+    const preset = MARKING_PRESETS.find((entry) => normalizeMarkingLabel(entry.fullLabel) === normalized);
+    if (preset) return preset;
+    const row = this.row("SELECT * FROM diagram_marking WHERE normalized_label = ?", [normalized]);
+    return row && toStoredMarking(row);
+  }
+
+  networkMarkingUsage(key: string): Network[] {
+    return this.rows(NETWORK_SELECT + " WHERE m.exchange_id = ? AND m.preset_key IS NULL ORDER BY n.name", [key]).map(
+      toNetwork,
+    );
+  }
+
+  saveCustomNetworkMarking(input: MarkingFields, options: WriteOptions = {}, key?: string): CustomMarking {
+    const fields = validateMarkingFields(input);
+    return this.write(() => {
+      const current = key === undefined ? undefined : this.requireCustomNetworkMarking(key);
+      const duplicate = this.findMatchingNetworkMarking(fields.fullLabel);
+      if (duplicate && duplicate.key !== current?.key)
+        throw new ValidationError(
+          "DUPLICATE",
+          "Displayed marking",
+          "A matching network marking already exists. Choose it to reuse it.",
+        );
+      if (current && current.base !== fields.base && this.networkMarkingUsage(current.key).length)
+        throw new ValidationError(
+          "IN_USE",
+          "Display grouping",
+          "Display grouping is fixed while networks use this marking.",
+        );
+      checkSensitive(
+        {
+          "Displayed marking": fields.fullLabel === current?.fullLabel ? null : fields.fullLabel,
+          "Short map label": fields.shortLabel === current?.shortLabel ? null : fields.shortLabel,
+          Description: fields.description === current?.description ? null : fields.description,
+        },
+        options.confirmSensitive === true,
+      );
+      const id = current?.key ?? newExchangeIdentity();
+      const values = markingValues(fields);
+      if (current) {
+        const before = markingValues(current);
+        if (values.some((value, index) => value !== before[index]))
+          this.update(
+            `UPDATE diagram_marking SET full_label = ?, normalized_label = ?, short_label = ?, base_marking = ?, description = ?
+            WHERE exchange_id = ? AND preset_key IS NULL`,
+            [...values, id],
+            "network marking",
+          );
+      } else this.insertMarking(id, null, values);
+      return { source: "custom", key: id, ...fields };
+    }, "network marking");
+  }
+
+  deleteCustomNetworkMarking(key: string): void {
+    this.write(() => {
+      this.requireCustomNetworkMarking(key);
+      const networks = this.networkMarkingUsage(key);
+      if (networks.length > 0) {
+        const examples = networks
+          .slice(0, 3)
+          .map((network) => network.name)
+          .join(", ");
+        throw new ValidationError(
+          "IN_USE",
+          "network marking",
+          `This marking is used by ${String(networks.length)} network(s) (${examples}${networks.length > 3 ? ", …" : ""}). Choose another marking on those networks first.`,
+        );
+      }
+      this.update("DELETE FROM diagram_marking WHERE exchange_id = ? AND preset_key IS NULL", [key], "network marking");
+    }, "network marking");
+  }
+
+  private requireCustomNetworkMarking(key: string): CustomMarking {
+    const marking = this.getNetworkMarking({ source: "custom", key });
+    if (marking?.source !== "custom")
+      throw new ValidationError(
+        "NOT_FOUND",
+        "network marking",
+        "That custom marking is unavailable. Use Duplicate as custom to adapt a preset.",
+      );
+    return marking;
+  }
+
+  private materializeMarkingPreset(marking: Extract<NetworkMarking, { source: "builtin" }>): string {
+    const row = this.row("SELECT exchange_id FROM diagram_marking WHERE preset_key = ?", [marking.key]);
+    if (typeof row?.["exchange_id"] === "string") return row["exchange_id"];
+    const id = newExchangeIdentity();
+    this.insertMarking(id, marking.key, markingValues(marking));
+    return id;
+  }
+
+  private insertMarking(id: string, presetKey: string | null, fields: SqlValue[]): void {
+    this.db.run(
+      `INSERT INTO diagram_marking (exchange_id, preset_key, full_label, normalized_label, short_label, base_marking, description)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [id, presetKey, ...fields],
+    );
   }
 
   deleteNetwork(id: number): void {
@@ -2261,12 +2414,35 @@ const text = (value: SqlValue | undefined): string | null => (typeof value === "
 const id = (value: SqlValue | undefined): number | null =>
   value === null || value === undefined ? null : Number(value);
 
+function markingValues(marking: MarkingFields): SqlValue[] {
+  return [
+    marking.fullLabel,
+    normalizeMarkingLabel(marking.fullLabel),
+    marking.shortLabel,
+    marking.base,
+    marking.description,
+  ];
+}
+
+function toStoredMarking(row: Row, projected = false): NetworkMarking {
+  return parseStoredNetworkMarking(
+    row[projected ? "diagram_id" : "exchange_id"],
+    row["preset_key"],
+    row["full_label"],
+    row["short_label"],
+    row["base_marking"],
+    row[projected ? "diagram_description" : "description"],
+    row["normalized_label"],
+  );
+}
+
 const toNetwork = (r: Row): Network => ({
   id: Number(r["id"]),
   name: String(r["name"]),
   kind: r["kind"] === "external" ? "external" : "internal",
   marking: requireMarking(r["marking"]),
   description: text(r["description"]),
+  ...(r["diagram_id"] === null || r["diagram_id"] === undefined ? {} : { diagramMarking: toStoredMarking(r, true) }),
 });
 
 const toOrganization = (r: Row): Organization => ({

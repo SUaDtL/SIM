@@ -5,7 +5,14 @@ import { openDataset } from "../src/db/dataset";
 import { Repository } from "../src/domain/repository";
 import { wasm } from "../tests/helpers/sqlite";
 
-import { editSelected, chooseReference, openFileMenu, showMap, showInventory } from "./helpers/usability";
+import {
+  chooseNetworkMarking,
+  editSelected,
+  chooseReference,
+  openFileMenu,
+  showMap,
+  showInventory,
+} from "./helpers/usability";
 
 interface Watch {
   errors: string[];
@@ -78,6 +85,8 @@ async function fill(page: Page, values: Fill): Promise<void> {
       for (const name of value) await e.getByRole("checkbox", { name, exact: true }).check();
     } else if (typeof value === "boolean") {
       await e.getByLabel(label, { exact: true }).setChecked(value);
+    } else if (label === "Network marking") {
+      await chooseNetworkMarking(page, value);
     } else {
       const field = e.getByLabel(label, { exact: true });
       if ((await field.evaluate((el) => el.tagName)) === "SELECT") await pick(page, label, value);
@@ -108,8 +117,8 @@ async function select(page: Page, plural: string, name: string): Promise<void> {
 }
 
 async function seed(page: Page): Promise<void> {
-  await add(page, "Networks", "network", { Name: "NIPR", Marking: "CUI" });
-  await add(page, "Networks", "network", { Name: "SIPR", Marking: "SECRET" });
+  await add(page, "Networks", "network", { Name: "NIPR", "Network marking": "CUI" });
+  await add(page, "Networks", "network", { Name: "SIPR", "Network marking": "SECRET" });
   await add(page, "Organizations", "organization", { Name: "J6" });
   await add(page, "Organizations", "organization", { Name: "J7", "Part of": "J6" });
   await add(page, "Applications", "application", { Name: "Exchange", Vendor: "Microsoft" });

@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><meta name="ca-artifact-format" content="codearbiter.artifact/0.1.0"><title>Implement network marking picker v2 · codeArbiter</title><style>
+:root{color-scheme:light;--ink:#172332;--muted:#516173;--line:#d5dde5;--paper:#fff;--soft:#f4f6f9;--accent:#81530b;--nav:#101923;--gold:#efba4a;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box;min-width:0}html{scroll-behavior:auto;scroll-padding-top:1rem}body{margin:0;background:var(--soft);color:var(--ink);overflow-wrap:anywhere}a{color:#235a86;text-decoration-thickness:.08em;text-underline-offset:.16em}a:focus-visible,summary:focus-visible{outline:3px solid #b36b00;outline-offset:4px}a:hover{text-decoration:underline}.skip{position:absolute;left:1rem;top:-8rem;z-index:5;background:white;padding:1rem}.skip:focus{top:1rem}.layout{display:grid;grid-template-columns:17rem minmax(0,1fr);max-width:112rem;margin:auto}.sidebar{background:var(--nav);color:#dbe4ee;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow:auto}.sidebar img{max-width:100%;height:40px;width:auto;object-fit:contain;object-position:left}.sidebar h2{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#b3c2d1;margin-top:2rem}.sidebar a{display:block;color:#dbe4ee;padding:.4rem 0;text-decoration:none;font-size:.9rem}.sidebar a:hover{color:var(--gold)}.sidebar p{font-size:.8rem;color:#aebdcc}.sidebar .companion{border-top:1px solid #3a4654;margin-top:1.5rem;padding-top:1.5rem}.main{padding:3rem clamp(1rem,4vw,5rem);max-width:90rem}.hero{padding-bottom:2rem;border-bottom:3px solid #26374a;margin-bottom:2rem}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:700}.status{display:inline-block;font-size:.77rem;font-weight:700;background:#ece6db;color:#624513;padding:.3rem .65rem;border:1px solid #cec2ae;border-radius:.3rem}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.15;letter-spacing:-.035em;margin:1.2rem 0}.deck{font-size:1.1rem;max-width:75ch}.meta{display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}h2{font-size:1.6rem;line-height:1.3}h3{font-size:1.15rem;line-height:1.35}.group{margin:2.5rem 0}.group>h2{padding-bottom:.65rem;border-bottom:1px solid var(--line)}.record{padding:1.5rem;background:var(--paper);border:1px solid var(--line);border-radius:.5rem;margin:1rem 0;box-shadow:0 1px 2px #17233205}.record .record{box-shadow:none;background:var(--soft);padding:1rem}.record-head{display:flex;gap:.65rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.85rem}.record-head h3{margin:0;flex:1 1 20rem}.id{font:700 .78rem/1.5 ui-monospace,Consolas,monospace;color:#654f28;text-decoration:none;background:#f1ece0;border-radius:.2rem;padding:.15rem .4rem}.kind,.badge{font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.retired{border-style:dashed;background:#f7f7f7}.field{margin:.9rem 0}.label{display:block;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:.25rem}.field p{margin:.2rem 0;white-space:pre-wrap}.missing{font-size:.9rem;color:#765810;font-style:italic}.items{padding-left:1.4rem;margin:.4rem 0}.items li{margin:.4rem 0}.fields{border-left:2px solid var(--line);padding-left:1rem}.table-wrap{overflow:auto;max-width:100%;border:1px solid var(--line);border-radius:.3rem;margin:1rem 0}table{border-collapse:collapse;width:100%;font-size:.9rem;table-layout:fixed}th,td{padding:.7rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:#e9eef3;font-weight:700}tr:last-child td{border:0}pre{padding:1rem;background:#edf1f5;border:1px solid var(--line);border-radius:.3rem;white-space:pre-wrap;overflow-wrap:anywhere;font:.84rem/1.6 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}.refs{font-size:.82rem;display:flex;gap:.6rem;flex-wrap:wrap}.block{margin:.8rem 0}.block p{white-space:pre-wrap}.notice{border-left:4px solid #a37825;padding:.8rem 1rem;background:#f4eddc}.footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem;margin-top:3rem}.digest{font: .75rem/1.6 ui-monospace,Consolas,monospace;word-break:break-all}details{border:1px solid var(--line);border-radius:.3rem;padding:.7rem 1rem}summary{cursor:pointer;font-weight:600}.back{font-size:.8rem;float:right;margin-left:1rem}.record:target{outline:3px solid #b5812a;outline-offset:3px}@media(max-width:850px){.layout{display:block}.sidebar{position:relative;height:auto;padding:1.2rem 1rem}.sidebar nav{display:flex;flex-wrap:wrap;gap:.1rem 1rem}.sidebar nav a{padding:.2rem 0}.sidebar h2,.sidebar .identity{display:none}.sidebar .companion{margin-top:.7rem;padding-top:.7rem}.main{padding:1.5rem 1rem}.record{padding:1rem}.hero h1{font-size:2rem}table{font-size:.82rem}.record-head h3{flex-basis:100%}}@media print{.layout{display:block}.sidebar,.skip,.back{display:none}.main{max-width:none;padding:0}.record{box-shadow:none;break-inside:avoid;border-color:#888}.record .record{break-inside:auto}.hero h1{font-size:26pt}.group{break-before:auto}.group>h2{break-after:avoid}a{color:inherit}.table-wrap{overflow:visible}body{font-size:10pt;background:white}pre{white-space:pre-wrap}details{display:block}.footer{font-size:8pt}}
+</style></head><body><a class="skip" href="#main-content">Skip to document</a><div class="layout"><aside class="sidebar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==" alt="codeArbiter"><p class="identity">PLAN-NETWORK-MARKING-PICKER</p><h2>In this document</h2><nav aria-label="Document sections"><a href="#group-spec_ref">Specification binding</a><a href="#group-prerequisites">Prerequisites</a><a href="#group-tasks">Tasks</a><a href="#group-checkpoints">Checkpoints</a><a href="#group-sections">Sections</a><a href="#group-sources">Sources</a><a href="#group-baseline">Baseline</a><a href="#group-retired_symbols">Retired symbols</a></nav><a class="companion" href="../specs/network-marking-picker.html">Open companion specification</a><p>Generated from the embedded model. Edit through the artifact engine, not the HTML view.</p></aside><main class="main" id="main-content"><header class="hero"><p class="eyebrow">codeArbiter / plan</p><span class="status">DRAFT · progress and verification tracked separately</span><h1>Implement network marking picker v2</h1><p class="deck">One searchable picker for curated and reusable network diagram markings, with legacy-compatible persistence and consistent read views and exports.</p><div class="meta"><span>PLAN-NETWORK-MARKING-PICKER</span><span>Revision 35 · schema 0.3.2</span><span>19 addressable records</span></div></header><section class="group" id="group-spec_ref"><a class="back" href="#main-content">Top</a><h2>Specification binding</h2><div class="fields"><div class="field"><span class="label">Artifact id</span>SPEC-NETWORK-MARKING-PICKER</div><div class="field"><span class="label">Binding mode</span>draft_preview</div><div class="field"><span class="label">Normative sha256</span>d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff</div></div></section><section class="group" id="group-prerequisites"><a class="back" href="#main-content">Top</a><h2>Prerequisites</h2><span class="missing">None recorded</span></section><section class="group" id="group-tasks"><a class="back" href="#main-content">Top</a><h2>Tasks</h2>
+<!-- CA:BEGIN:WP00 -->
+<article class="record" id="WP00" data-ca-symbol="WP00" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP00">WP00</a><h3>Reconcile baseline and fixtures</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP00</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-001">SPEC-NETWORK-MARKING-PICKER#MK-001</a></li><li><a href="../specs/network-marking-picker.html#MK-002">SPEC-NETWORK-MARKING-PICKER#MK-002</a></li><li><a href="../specs/network-marking-picker.html#MK-003">SPEC-NETWORK-MARKING-PICKER#MK-003</a></li><li><a href="../specs/network-marking-picker.html#MK-004">SPEC-NETWORK-MARKING-PICKER#MK-004</a></li></ul></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Done when</span><ul class="items"><li>git source reconciliation and fictional fixtures</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP00</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>inspect</td><td><code>AGENTS.md</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>HEAD and source tree reconciled</li><li>Existing UI controls inventoried and prior v1 plan retired</li><li>CodeArbiter decisions/gates adhered to</li><li>Fictional fixtures and expected readbacks frozen</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;git&#34;,&#34;rev-parse&#34;,&#34;HEAD&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>git source reconciliation and fictional fixtures</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Pinned baseline reconciled; current form, repository and output paths identified, and fictional fixture/test obligations mapped from the supplied matrix. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;git&#34;,&#34;rev-parse&#34;,&#34;HEAD&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T23:51:16Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>1313f3909f5c53b180fa62dfce8f4d0cafa41ef080f786d15bbda41a004f6dd7</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>git tool output; exact pinned SHA matched fetched origin/main</div><div class="field"><span class="label">Summary</span>Verified both refs at c2c782ab88846ad78664239f648105db66fd2d76; isolated clean worktree and read migration/security context.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP00 -->
+
+<!-- CA:BEGIN:WP01 -->
+<article class="record" id="WP01" data-ca-symbol="WP01" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP01">WP01</a><h3>Install the curated catalog</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP01</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-005">SPEC-NETWORK-MARKING-PICKER#MK-005</a></li><li><a href="../specs/network-marking-picker.html#MK-006">SPEC-NETWORK-MARKING-PICKER#MK-006</a></li><li><a href="../specs/network-marking-picker.html#MK-007">SPEC-NETWORK-MARKING-PICKER#MK-007</a></li><li><a href="../specs/network-marking-picker.html#MK-008">SPEC-NETWORK-MARKING-PICKER#MK-008</a></li><li><a href="../specs/network-marking-picker.html#MK-009">SPEC-NETWORK-MARKING-PICKER#MK-009</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP00">WP00</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>catalog and repository unit tests</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP01</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/domain</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Exactly eight Quick options in declared order</li><li>More contains explicit official-style samples and informal shortcuts labeled as such</li><li>Legacy U//FOUO separated from current choices</li><li>User search matches short, full, explanatory terms</li><li>Presets remain immutable and do not appear as custom rows before use</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>catalog and repository unit tests</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>curated catalog</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Curated presets transcribed from verified handoff catalog and tested. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/domain/network-marking-catalog.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T23:52:17Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>d2f547ba633d827dfe632686376d49c336cb5cf765b0bea8cd3dd60c9aac5d46</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Vitest tool output, 1 test passed</div><div class="field"><span class="label">Summary</span>Curated catalog order, counts, legacy separation, shorthand and identity uniqueness passed.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP01 -->
+
+<!-- CA:BEGIN:WP04 -->
+<article class="record" id="WP04" data-ca-symbol="WP04" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP04">WP04</a><h3>Persist assignments atomically</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP04</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-027">SPEC-NETWORK-MARKING-PICKER#MK-027</a></li><li><a href="../specs/network-marking-picker.html#MK-028">SPEC-NETWORK-MARKING-PICKER#MK-028</a></li><li><a href="../specs/network-marking-picker.html#MK-029">SPEC-NETWORK-MARKING-PICKER#MK-029</a></li><li><a href="../specs/network-marking-picker.html#MK-030">SPEC-NETWORK-MARKING-PICKER#MK-030</a></li><li><a href="../specs/network-marking-picker.html#MK-031">SPEC-NETWORK-MARKING-PICKER#MK-031</a></li><li><a href="../specs/network-marking-picker.html#MK-032">SPEC-NETWORK-MARKING-PICKER#MK-032</a></li><li><a href="../specs/network-marking-picker.html#MK-033">SPEC-NETWORK-MARKING-PICKER#MK-033</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>schema, repository, migration and file roundtrip tests</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP04</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/db</code></td></tr><tr><td>modify</td><td><code>src/domain</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Forward migration preserves legacy recorded network marking</li><li>Every network has zero or one selected label reference</li><li>Atomic network edit + assignment is one undo step</li><li>Database rejects orphaned assignments, invalid base and malformed catalog fields</li><li>Save/reopen and Save As preserve exact custom labels and identities</li><li>Undo/Redo after edit and rename restore correct affected views</li><li>Dataset open still rejects modified schema/tampered preset metadata</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>schema, repository, migration and file roundtrip tests</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>applies a descriptor and grouping in one undo step</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Forward migration and repository lifecycle implemented and checked with v7 and v8 files. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/domain/network-markings.test.ts&#34;,&#34;src/domain/repository.test.ts&#34;,&#34;src/db/schema.test.ts&#34;,&#34;src/db/open.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-18T23:56:02Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>813f3e13593ceb0b973d05fc74bdf958bd98f3613ac05c6f013a1c8d96811966</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Vitest tool output, 149 tests passed</div><div class="field"><span class="label">Summary</span>Atomic assignment and Undo, custom lifecycle, pre-v8 migration, schema and tampered metadata refusal passed.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;,&#34;--&#34;,&#34;src/domain/network-markings.test.ts&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-19T00:25:12Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>ad4330bfb79197d6484625708ab4c461e6ca2d4d506379ad009569d5a02c1c8b</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Focused Vitest output and scoped independent persistence audit.</div><div class="field"><span class="label">Summary</span>Ten tests passed, including late assignment refusal and malformed bytes in SQLite UTF-8 and both UTF-16 encodings.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP04 -->
+
+<!-- CA:BEGIN:WP02 -->
+<article class="record" id="WP02" data-ca-symbol="WP02" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP02">WP02</a><h3>Add one accessible picker</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP02</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-010">SPEC-NETWORK-MARKING-PICKER#MK-010</a></li><li><a href="../specs/network-marking-picker.html#MK-011">SPEC-NETWORK-MARKING-PICKER#MK-011</a></li><li><a href="../specs/network-marking-picker.html#MK-012">SPEC-NETWORK-MARKING-PICKER#MK-012</a></li><li><a href="../specs/network-marking-picker.html#MK-013">SPEC-NETWORK-MARKING-PICKER#MK-013</a></li><li><a href="../specs/network-marking-picker.html#MK-014">SPEC-NETWORK-MARKING-PICKER#MK-014</a></li><li><a href="../specs/network-marking-picker.html#MK-015">SPEC-NETWORK-MARKING-PICKER#MK-015</a></li><li><a href="../specs/network-marking-picker.html#MK-016">SPEC-NETWORK-MARKING-PICKER#MK-016</a></li><li><a href="../specs/network-marking-picker.html#MK-017">SPEC-NETWORK-MARKING-PICKER#MK-017</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP01">WP01</a></li><li><a href="#WP04">WP04</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>Chrome and Edge picker, keyboard and responsive checks</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP02</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Only one marking control visible in ordinary Network form</li><li>SEC-REL selected without advanced panel or country field</li><li>Picker supports arrows Enter Escape and clear focus restoration</li><li>Picker reflows at 320px without clipping and no nested vertical scroll trap</li><li>200/400 percent browser zoom retains visible choice and actions</li><li>Selection changes pending draft only until parent Apply</li><li>Existing editing with no selection change creates no materialized preset</li><li>Changing selection updates base group only inside one draft</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Chrome and Edge picker, keyboard and responsive checks</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>chooses SEC-REL offline</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Implemented the single keyboard-accessible Network marking picker. Narrow and real zoom observations were recorded. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/network-marking-picker.spec.ts&#34;,&#34;e2e/usability-layout.spec.ts&#34;,&#34;e2e/delete-consequences.spec.ts&#34;,&#34;--grep&#34;,&#34;SEC-REL|shared marking|duplicates a preset|network markings|actual browser zoom|realistic marking|Find and map tap&#34;,&#34;--reporter=list,json&#34;,&#34;--workers=4&#34;,&#34;--output&#34;,&#34;C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-marking-evidence-ma00_qdy\\feature&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-19T00:25:13Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>6744c124e5bad5a51ead9400d680a383e50158af4f519b784a860bdaf9665919</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local focused Playwright output feature.log, 20 passes.</div><div class="field"><span class="label">Summary</span>Both browsers passed SEC-REL navigation and actual 200 and 400 percent browser zoom on the focused candidate. Final combined gate in progress.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP02 -->
+
+<!-- CA:BEGIN:WP03 -->
+<article class="record" id="WP03" data-ca-symbol="WP03" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP03">WP03</a><h3>Manage reusable custom markings</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP03</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-018">SPEC-NETWORK-MARKING-PICKER#MK-018</a></li><li><a href="../specs/network-marking-picker.html#MK-019">SPEC-NETWORK-MARKING-PICKER#MK-019</a></li><li><a href="../specs/network-marking-picker.html#MK-020">SPEC-NETWORK-MARKING-PICKER#MK-020</a></li><li><a href="../specs/network-marking-picker.html#MK-021">SPEC-NETWORK-MARKING-PICKER#MK-021</a></li><li><a href="../specs/network-marking-picker.html#MK-022">SPEC-NETWORK-MARKING-PICKER#MK-022</a></li><li><a href="../specs/network-marking-picker.html#MK-023">SPEC-NETWORK-MARKING-PICKER#MK-023</a></li><li><a href="../specs/network-marking-picker.html#MK-024">SPEC-NETWORK-MARKING-PICKER#MK-024</a></li><li><a href="../specs/network-marking-picker.html#MK-025">SPEC-NETWORK-MARKING-PICKER#MK-025</a></li><li><a href="../specs/network-marking-picker.html#MK-026">SPEC-NETWORK-MARKING-PICKER#MK-026</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP02">WP02</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>repository and offline browser custom lifecycle tests</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP03</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/ui</code></td></tr><tr><td>modify</td><td><code>src/domain</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Custom displayed label accepts meaningful slashes and spaces</li><li>Custom short label stays within length and never silently alters full text</li><li>Custom requires one base grouping only in custom authoring</li><li>Custom asset created once and reused by two networks</li><li>Parent form fields survive inline custom create, cancel and validation refusal</li><li>Cancel parent does not delete independently committed custom asset</li><li>Shared custom rename shows affected network count before commit</li><li>Deleting referenced asset is refused and leaves references intact</li><li>Built-in customization uses Duplicate as custom and does not mutate preset</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>repository and offline browser custom lifecycle tests</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>creates and reuses a shared marking</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Shared lifecycle implemented. Both browsers passed custom draft preservation, reuse, rename impact and Save As readback in the focused run. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details></article>
+<!-- CA:END:WP03 -->
+
+<!-- CA:BEGIN:WP05 -->
+<article class="record" id="WP05" data-ca-symbol="WP05" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP05">WP05</a><h3>Expose markings in read views</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP05</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-034">SPEC-NETWORK-MARKING-PICKER#MK-034</a></li><li><a href="../specs/network-marking-picker.html#MK-035">SPEC-NETWORK-MARKING-PICKER#MK-035</a></li><li><a href="../specs/network-marking-picker.html#MK-036">SPEC-NETWORK-MARKING-PICKER#MK-036</a></li><li><a href="../specs/network-marking-picker.html#MK-037">SPEC-NETWORK-MARKING-PICKER#MK-037</a></li><li><a href="../specs/network-marking-picker.html#MK-038">SPEC-NETWORK-MARKING-PICKER#MK-038</a></li><li><a href="../specs/network-marking-picker.html#MK-039">SPEC-NETWORK-MARKING-PICKER#MK-039</a></li><li><a href="../specs/network-marking-picker.html#MK-040">SPEC-NETWORK-MARKING-PICKER#MK-040</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP04">WP04</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>graph, search, scenario and offline client checks</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP05</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/map</code></td></tr><tr><td>modify</td><td><code>src/ui</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Map network title exposes one short label, not duplicated badges</li><li>Inspector exposes exact full label, short label and grouping</li><li>Inventory includes one marking column and searchable full/short text</li><li>Marking filter is optional and inside existing Filters surface</li><li>Network move/rename and scenario view do not change label identity</li><li>Focus/trace of dependencies unaffected by labels</li><li>Large dataset overview remains legible without service-label crowding</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;test&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>graph, search, scenario and offline client checks</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>uses one compact network marking</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Map, inspector, inventory, search and stable saved filters implemented. Inspected narrow and 500-service visual evidence. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;,&#34;--&#34;,&#34;e2e/network-marking-picker.spec.ts&#34;,&#34;--grep&#34;,&#34;realistic marking|network markings&#34;,&#34;--output&#34;,&#34;C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-marking-evidence-ma00_qdy\\density-checked&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-19T00:25:16Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>fad4fad42da11b2f08790b0386a035f2b24795b096a31f20e9a6e69d5ff8a7c3</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>Local density-checked.log and corresponding captured artifacts.</div><div class="field"><span class="label">Summary</span>Eight Edge and Chrome density/export tests passed. Captions stayed readable and clear of all network bodies for the tested layouts.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP05 -->
+
+<!-- CA:BEGIN:WP06 -->
+<article class="record" id="WP06" data-ca-symbol="WP06" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP06">WP06</a><h3>Preserve marking context in exports</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP06</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-041">SPEC-NETWORK-MARKING-PICKER#MK-041</a></li><li><a href="../specs/network-marking-picker.html#MK-042">SPEC-NETWORK-MARKING-PICKER#MK-042</a></li><li><a href="../specs/network-marking-picker.html#MK-043">SPEC-NETWORK-MARKING-PICKER#MK-043</a></li><li><a href="../specs/network-marking-picker.html#MK-044">SPEC-NETWORK-MARKING-PICKER#MK-044</a></li><li><a href="../specs/network-marking-picker.html#MK-045">SPEC-NETWORK-MARKING-PICKER#MK-045</a></li><li><a href="../specs/network-marking-picker.html#MK-046">SPEC-NETWORK-MARKING-PICKER#MK-046</a></li><li><a href="../specs/network-marking-picker.html#MK-047">SPEC-NETWORK-MARKING-PICKER#MK-047</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP04">WP04</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>actual offline downloads with semantic and visual checks</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP06</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>src/assessment</code></td></tr><tr><td>modify</td><td><code>src/map</code></td></tr><tr><td>modify</td><td><code>src/import</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>PNG contains selected short network labels and correct scope disclosure</li><li>SVG export reflects exact same scene labels and scope</li><li>Assessment HTML shows full/short and legacy distinctions</li><li>JSON/CSV include full, short, source and base without formula injection</li><li>Legacy CSV import remains unchanged, preview/commit parity holds</li><li>Saved viewpoints restore network labels from current references</li><li>Mixed network labels do not synthesize a global caveat or document authorization</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;e2e&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>actual offline downloads with semantic and visual checks</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>exports the selected network markings</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Actual file downloads for all five formats were available and checked in both browsers. Importer contract and owner review controls were preserved. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details></article>
+<!-- CA:END:WP06 -->
+
+<!-- CA:BEGIN:WP07 -->
+<article class="record" id="WP07" data-ca-symbol="WP07" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP07">WP07</a><h3>Exercise offline regression and layout</h3><span class="badge">Implementation complete (checks not assessed)</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP07</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-048">SPEC-NETWORK-MARKING-PICKER#MK-048</a></li><li><a href="../specs/network-marking-picker.html#MK-049">SPEC-NETWORK-MARKING-PICKER#MK-049</a></li><li><a href="../specs/network-marking-picker.html#MK-050">SPEC-NETWORK-MARKING-PICKER#MK-050</a></li><li><a href="../specs/network-marking-picker.html#MK-051">SPEC-NETWORK-MARKING-PICKER#MK-051</a></li><li><a href="../specs/network-marking-picker.html#MK-052">SPEC-NETWORK-MARKING-PICKER#MK-052</a></li><li><a href="../specs/network-marking-picker.html#MK-053">SPEC-NETWORK-MARKING-PICKER#MK-053</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP02">WP02</a></li><li><a href="#WP03">WP03</a></li><li><a href="#WP05">WP05</a></li><li><a href="#WP06">WP06</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>npm run check and timed browser viewports</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP07</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>e2e</code></td></tr><tr><td>modify</td><td><code>tests</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Old service marking edit unchanged by network label editor</li><li>No change to existing highest-marking banner algorithm</li><li>No request outside file protocol in offline E2E</li><li>No script or HTML injection from custom labels in any output</li><li>15/100/500 service fixtures include realistic label lengths and measured viewport performance</li><li>Real keyboard, focus trap and screen reader names reviewed</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>npm run check and timed browser viewports</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><ul class="items"><li>renders realistic marking labels at supported widths</li></ul></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span>Full standalone offline gate passed, including actual browser zoom, 15/100/500-service layouts and inspected capture files. Implementation completion only; verification and review are not assessed.</div><div class="field"><span class="label">State</span>DONE</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;npm&#34;,&#34;run&#34;,&#34;check&#34;,&#34;--&#34;,&#34;--&#34;,&#34;--workers=8&#34;,&#34;--reporter=list,json&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-19T00:32:24Z</div><div class="field"><span class="label">Recorded scoped inputs sha256</span>95f33226bc3b781052be8abb27b380c540a84c40dc88fbb80e08e7a28195047d</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>declared_task_paths_and_known_build_inputs_only</div><div class="field"><span class="label">Source</span>verification/network-marking-picker/check.log and browser-results.json</div><div class="field"><span class="label">Summary</span>Exit zero, 480 Vitest and 1,260 Edge and Chrome checks. Candidate SHA-256 1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP07 -->
+
+<!-- CA:BEGIN:WP08 -->
+<article class="record" id="WP08" data-ca-symbol="WP08" data-ca-kind="tasks"><div class="record-head"><a class="id" href="#WP08">WP08</a><h3>Record product and delivery evidence</h3><span class="badge">IN_PROGRESS</span></div><div class="field"><span class="label">Checkpoint</span>CP-WP08</div><div class="field"><span class="label">Acceptance criteria</span><ul class="items"><li><a href="../specs/network-marking-picker.html#MK-054">SPEC-NETWORK-MARKING-PICKER#MK-054</a></li><li><a href="../specs/network-marking-picker.html#MK-055">SPEC-NETWORK-MARKING-PICKER#MK-055</a></li><li><a href="../specs/network-marking-picker.html#MK-056">SPEC-NETWORK-MARKING-PICKER#MK-056</a></li><li><a href="../specs/network-marking-picker.html#MK-057">SPEC-NETWORK-MARKING-PICKER#MK-057</a></li><li><a href="../specs/network-marking-picker.html#MK-058">SPEC-NETWORK-MARKING-PICKER#MK-058</a></li></ul></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#WP07">WP07</a></li></ul></div><div class="field"><span class="label">Done when</span><ul class="items"><li>human walkthrough, hosted CI and release readback when available</li></ul></div><div class="field"><span class="label">Execution scope</span>CP-WP08</div><div class="field"><span class="label">Paths</span><div class="table-wrap"><table><thead><tr><th scope="col">Action</th><th scope="col">Repository path</th></tr></thead><tbody><tr><td>modify</td><td><code>.codearbiter</code></td></tr></tbody></table></div></div><div class="field"><span class="label">Rollback</span>Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.</div><div class="field"><span class="label">Steps</span><ul class="items"><li>Independent first-time engineer completes SEC-REL and custom label journey uncoached</li><li>Separate recipient interprets actual detached capture correctly</li><li>CLI gate and CI logs bound to exact build and source</li><li>Independently downloaded Pages artifact identity matches claimed commit</li><li>Versioned downloadable release identity/digest checked if authorized</li></ul></div><div class="field"><span class="label">Verification</span><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;git&#34;,&#34;diff&#34;,&#34;--check&#34;]</code></pre></div><div class="field"><span class="label">Assertion</span>Check the delivery diff for whitespace errors. Human, hosted and release evidence remain separately recorded.</div><div class="field"><span class="label">Availability</span>existing</div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Expected exit</span>0</div><div class="field"><span class="label">Required tests</span><span class="missing">None recorded</span></div></div></div><details><summary>Execution record</summary><div class="fields"><div class="field"><span class="label">Evidence refs</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Reason</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">State</span>IN_PROGRESS</div></div></details><details><summary>Reported command checks (not independently verified)</summary><div class="fields"><div class="field"><span class="label">Command arguments (not executed by this tool)</span><pre><code>[&#34;git&#34;,&#34;diff&#34;,&#34;--check&#34;]</code></pre></div><div class="field"><span class="label">Cwd</span>.</div><div class="field"><span class="label">Declared command</span>false</div><div class="field"><span class="label">Definition current</span><span class="missing">Not yet supplied</span></div><div class="field"><span class="label">Evidence assessed</span>false</div><div class="field"><span class="label">Exit code</span>0</div><div class="field"><span class="label">History trimmed</span>false</div><div class="field"><span class="label">Named tests verified</span>false</div><div class="field"><span class="label">Origin</span>tool_result</div><div class="field"><span class="label">Provenance</span>caller_reported</div><div class="field"><span class="label">Recorded at</span>2026-11-19T00:32:25Z</div><div class="field"><span class="label">Reported outcome</span>pass</div><div class="field"><span class="label">Scope coverage</span>attempted_unassessed</div><div class="field"><span class="label">Scope reason</span>source_scope_unassessed</div><div class="field"><span class="label">Source</span>Local git diff --check output and .codearbiter/network-marking-picker/acceptance.json</div><div class="field"><span class="label">Summary</span>Working-tree whitespace check passed. The acceptance matrix lists 51 local passes, 3 partial and 4 unrun cases. Human, staged-review and hosted evidence remain pending.</div><div class="field"><span class="label">Worktree freshness</span>unassessed</div></div></details></article>
+<!-- CA:END:WP08 -->
+</section><section class="group" id="group-checkpoints"><a class="back" href="#main-content">Top</a><h2>Checkpoints</h2>
+<!-- CA:BEGIN:CP-WP00 -->
+<article class="record" id="CP-WP00" data-ca-symbol="CP-WP00" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP00">CP-WP00</a><h3>Reconcile baseline and fixtures</h3></div><div class="field"><span class="label">Depends on</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Exit</span>git source reconciliation and fictional fixtures</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP00">WP00</a></li></ul></div></article>
+<!-- CA:END:CP-WP00 -->
+
+<!-- CA:BEGIN:CP-WP01 -->
+<article class="record" id="CP-WP01" data-ca-symbol="CP-WP01" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP01">CP-WP01</a><h3>Install the curated catalog</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP00">CP-WP00</a></li></ul></div><div class="field"><span class="label">Exit</span>catalog and repository unit tests</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP01">WP01</a></li></ul></div></article>
+<!-- CA:END:CP-WP01 -->
+
+<!-- CA:BEGIN:CP-WP04 -->
+<article class="record" id="CP-WP04" data-ca-symbol="CP-WP04" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP04">CP-WP04</a><h3>Persist assignments atomically</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li></ul></div><div class="field"><span class="label">Exit</span>schema, repository, migration and file roundtrip tests</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP04">WP04</a></li></ul></div></article>
+<!-- CA:END:CP-WP04 -->
+
+<!-- CA:BEGIN:CP-WP02 -->
+<article class="record" id="CP-WP02" data-ca-symbol="CP-WP02" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP02">CP-WP02</a><h3>Add one accessible picker</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP01">CP-WP01</a></li><li><a href="#CP-WP04">CP-WP04</a></li></ul></div><div class="field"><span class="label">Exit</span>Chrome and Edge picker, keyboard and responsive checks</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP02">WP02</a></li></ul></div></article>
+<!-- CA:END:CP-WP02 -->
+
+<!-- CA:BEGIN:CP-WP03 -->
+<article class="record" id="CP-WP03" data-ca-symbol="CP-WP03" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP03">CP-WP03</a><h3>Manage reusable custom markings</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP02">CP-WP02</a></li></ul></div><div class="field"><span class="label">Exit</span>repository and offline browser custom lifecycle tests</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP03">WP03</a></li></ul></div></article>
+<!-- CA:END:CP-WP03 -->
+
+<!-- CA:BEGIN:CP-WP05 -->
+<article class="record" id="CP-WP05" data-ca-symbol="CP-WP05" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP05">CP-WP05</a><h3>Expose markings in read views</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP04">CP-WP04</a></li></ul></div><div class="field"><span class="label">Exit</span>graph, search, scenario and offline client checks</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP05">WP05</a></li></ul></div></article>
+<!-- CA:END:CP-WP05 -->
+
+<!-- CA:BEGIN:CP-WP06 -->
+<article class="record" id="CP-WP06" data-ca-symbol="CP-WP06" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP06">CP-WP06</a><h3>Preserve marking context in exports</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP04">CP-WP04</a></li></ul></div><div class="field"><span class="label">Exit</span>actual offline downloads with semantic and visual checks</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP06">WP06</a></li></ul></div></article>
+<!-- CA:END:CP-WP06 -->
+
+<!-- CA:BEGIN:CP-WP07 -->
+<article class="record" id="CP-WP07" data-ca-symbol="CP-WP07" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP07">CP-WP07</a><h3>Exercise offline regression and layout</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP02">CP-WP02</a></li><li><a href="#CP-WP03">CP-WP03</a></li><li><a href="#CP-WP05">CP-WP05</a></li><li><a href="#CP-WP06">CP-WP06</a></li></ul></div><div class="field"><span class="label">Exit</span>npm run check and timed browser viewports</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP07">WP07</a></li></ul></div></article>
+<!-- CA:END:CP-WP07 -->
+
+<!-- CA:BEGIN:CP-WP08 -->
+<article class="record" id="CP-WP08" data-ca-symbol="CP-WP08" data-ca-kind="checkpoints"><div class="record-head"><a class="id" href="#CP-WP08">CP-WP08</a><h3>Record product and delivery evidence</h3></div><div class="field"><span class="label">Depends on</span><ul class="items"><li><a href="#CP-WP07">CP-WP07</a></li></ul></div><div class="field"><span class="label">Exit</span>human walkthrough, hosted CI and release readback when available</div><div class="field"><span class="label">Tasks</span><ul class="items"><li><a href="#WP08">WP08</a></li></ul></div></article>
+<!-- CA:END:CP-WP08 -->
+</section><section class="group" id="group-sections"><a class="back" href="#main-content">Top</a><h2>Sections</h2><span class="missing">None recorded</span></section><section class="group" id="group-sources"><a class="back" href="#main-content">Top</a><h2>Sources</h2>
+<!-- CA:BEGIN:SRC-HANDOFF -->
+<article class="record" id="SRC-HANDOFF" data-ca-symbol="SRC-HANDOFF" data-ca-kind="sources"><div class="record-head"><a class="id" href="#SRC-HANDOFF">SRC-HANDOFF</a><h3>Network Marking Picker v2 CLI handoff</h3></div><div class="field"><span class="label">Locator</span>SIM-Network-Markings-Curated-Picker-v2-CLI-Handoff.zip</div><div class="field"><span class="label">Note</span>Product, persistence, work packages, and acceptance matrix supplied by the user.</div><div class="field"><span class="label">Type</span>local_document</div><div class="field"><span class="label">Url</span><span class="missing">Not yet supplied</span></div></article>
+<!-- CA:END:SRC-HANDOFF -->
+</section><section class="group" id="group-baseline"><a class="back" href="#main-content">Top</a><h2>Baseline</h2><div class="fields"><div class="field"><span class="label">Commit</span>c2c782ab88846ad78664239f648105db66fd2d76</div><div class="field"><span class="label">Observed date</span>2026-11-18</div><div class="field"><span class="label">Repository</span>https://github.com/SUaDtL/SIM</div></div></section><section class="group" id="group-retired_symbols"><a class="back" href="#main-content">Top</a><h2>Retired symbols</h2><span class="missing">None recorded</span></section><section class="group" id="group-criterion_dispositions"><a class="back" href="#main-content">Top</a><h2>Criterion dispositions</h2><span class="missing">None recorded</span></section><section class="group"><h2>Governance record</h2><p class="notice">Hash consistency establishes content identity, not who approved it. Explicit verification or approval claims require their own evidence; recorded progress does not establish those claims.</p><div class="fields"><div class="field"><span class="label">Approvals</span><span class="missing">None recorded</span></div><div class="field"><span class="label">Review notes</span><span class="missing">None recorded</span></div><div class="field"><span class="label">State</span>draft</div></div></section><footer class="footer"><p>codearbiter-html/0.1.0 · self-contained, static HTML · no runtime network resources</p><p class="digest">Normative SHA-256: dab98f432093b6224658aaa97d0e483df3ba2d9f737abcb4e1548888fb34c282<br>Model SHA-256: a87e7e3f2154a653280087527a7abd132e77ca4a752bab26a3884ede00df87ea</p></footer></main></div>
+<script id="ca-artifact-model" type="application/json">
+{
+  "artifact_id": "PLAN-NETWORK-MARKING-PICKER",
+  "execution": {
+    "prerequisite_evidence": {},
+    "prerequisites": {},
+    "scopes": {},
+    "task_check_observations": {
+      "WP00": [
+        {
+          "argv": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "criterion_subject_sha256": "adf78604b0bbd0cbbf952527e81d259c1e85e8207439898147b89d913561c942",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T23:51:16Z",
+          "recording_operation_id": "network-marking-intake-head",
+          "scoped_inputs_sha256": "1313f3909f5c53b180fa62dfce8f4d0cafa41ef080f786d15bbda41a004f6dd7",
+          "source": "git tool output; exact pinned SHA matched fetched origin/main",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Verified both refs at c2c782ab88846ad78664239f648105db66fd2d76; isolated clean worktree and read migration/security context.",
+          "task_subject_sha256": "8a7a28a29ba8a76712a5ea090a733173c3f3368e4d224f71c75a854c471c8502"
+        }
+      ],
+      "WP01": [
+        {
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "src/domain/network-marking-catalog.test.ts"
+          ],
+          "criterion_subject_sha256": "994d1540632a2fe2776fe6fe0741fc2f99bce65e452e8b7f4482fa626894ef03",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T23:52:17Z",
+          "recording_operation_id": "network-marking-catalog-check",
+          "scoped_inputs_sha256": "d2f547ba633d827dfe632686376d49c336cb5cf765b0bea8cd3dd60c9aac5d46",
+          "source": "Vitest tool output, 1 test passed",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Curated catalog order, counts, legacy separation, shorthand and identity uniqueness passed.",
+          "task_subject_sha256": "1e08f7b37105cf1ee2cb612ddbfeadab1ef78b47a711b67149d9116c2a365ab9"
+        }
+      ],
+      "WP02": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/network-marking-picker.spec.ts",
+            "e2e/usability-layout.spec.ts",
+            "e2e/delete-consequences.spec.ts",
+            "--grep",
+            "SEC-REL|shared marking|duplicates a preset|network markings|actual browser zoom|realistic marking|Find and map tap",
+            "--reporter=list,json",
+            "--workers=4",
+            "--output",
+            "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-marking-evidence-ma00_qdy\\feature"
+          ],
+          "criterion_subject_sha256": "c0e34a4e96932c904c5b8229da30c43468cf48f6765343036303fcbcefbd1937",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-19T00:25:13Z",
+          "recording_operation_id": "network-marking-picker-targeted",
+          "scoped_inputs_sha256": "6744c124e5bad5a51ead9400d680a383e50158af4f519b784a860bdaf9665919",
+          "source": "Local focused Playwright output feature.log, 20 passes.",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Both browsers passed SEC-REL navigation and actual 200 and 400 percent browser zoom on the focused candidate. Final combined gate in progress.",
+          "task_subject_sha256": "a17a62f87732d0f98bbf00f347ada2e12d39f4a2da364a018452772e8036e180"
+        }
+      ],
+      "WP04": [
+        {
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "src/domain/network-markings.test.ts",
+            "src/domain/repository.test.ts",
+            "src/db/schema.test.ts",
+            "src/db/open.test.ts"
+          ],
+          "criterion_subject_sha256": "e91f9b2ea5e76e53103451df6a255bb7fedd588decdf65a17391180f512f3015",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-18T23:56:02Z",
+          "recording_operation_id": "network-marking-persistence-check",
+          "scoped_inputs_sha256": "813f3e13593ceb0b973d05fc74bdf958bd98f3613ac05c6f013a1c8d96811966",
+          "source": "Vitest tool output, 149 tests passed",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Atomic assignment and Undo, custom lifecycle, pre-v8 migration, schema and tampered metadata refusal passed.",
+          "task_subject_sha256": "54f17d459bf32d046864c6c3bdd0b6f3380ca4ac72b103b710c511e7174a7d69"
+        },
+        {
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "src/domain/network-markings.test.ts"
+          ],
+          "criterion_subject_sha256": "e91f9b2ea5e76e53103451df6a255bb7fedd588decdf65a17391180f512f3015",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-19T00:25:12Z",
+          "recording_operation_id": "network-marking-data-open-encoding",
+          "scoped_inputs_sha256": "ad4330bfb79197d6484625708ab4c461e6ca2d4d506379ad009569d5a02c1c8b",
+          "source": "Focused Vitest output and scoped independent persistence audit.",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Ten tests passed, including late assignment refusal and malformed bytes in SQLite UTF-8 and both UTF-16 encodings.",
+          "task_subject_sha256": "54f17d459bf32d046864c6c3bdd0b6f3380ca4ac72b103b710c511e7174a7d69"
+        }
+      ],
+      "WP05": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "e2e",
+            "--",
+            "e2e/network-marking-picker.spec.ts",
+            "--grep",
+            "realistic marking|network markings",
+            "--output",
+            "C:\\Users\\brenn\\AppData\\Local\\Temp\\sim-marking-evidence-ma00_qdy\\density-checked"
+          ],
+          "criterion_subject_sha256": "a9c9aabd74737c1f1ec0c39453bf1703ec904e3da5b0fa1580babd4249ea914b",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-19T00:25:16Z",
+          "recording_operation_id": "network-marking-view-targeted",
+          "scoped_inputs_sha256": "fad4fad42da11b2f08790b0386a035f2b24795b096a31f20e9a6e69d5ff8a7c3",
+          "source": "Local density-checked.log and corresponding captured artifacts.",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Eight Edge and Chrome density/export tests passed. Captions stayed readable and clear of all network bodies for the tested layouts.",
+          "task_subject_sha256": "4e74159df90448cba82edca618a402ae74066423d669f8cae9bfa5b804033b1f"
+        }
+      ],
+      "WP07": [
+        {
+          "argv": [
+            "npm",
+            "run",
+            "check",
+            "--",
+            "--",
+            "--workers=8",
+            "--reporter=list,json"
+          ],
+          "criterion_subject_sha256": "98044f1daeeab28c20676c4c43b8d5bd0947901193584357d602a9b9e88df8da",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-19T00:32:24Z",
+          "recording_operation_id": "network-marking-full-gate",
+          "scoped_inputs_sha256": "95f33226bc3b781052be8abb27b380c540a84c40dc88fbb80e08e7a28195047d",
+          "source": "verification/network-marking-picker/check.log and browser-results.json",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Exit zero, 480 Vitest and 1,260 Edge and Chrome checks. Candidate SHA-256 1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682.",
+          "task_subject_sha256": "bb1bb43222cad1a5eca53b211b632f9113e5b19f02066a4e28f44ae7d6a963d4"
+        }
+      ],
+      "WP08": [
+        {
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "criterion_subject_sha256": "5b2be4aeedba8a0fa0dae924a29e871a2e85ff4334a6d230eadae0ab07346e4e",
+          "cwd": ".",
+          "exit_code": 0,
+          "history_trimmed": false,
+          "origin": "tool_result",
+          "outcome": "pass",
+          "provenance": "caller_reported",
+          "recorded_at": "2026-11-19T00:32:25Z",
+          "recording_operation_id": "network-marking-local-evidence",
+          "scope_unassessed_reason": "source_scope_unassessed",
+          "source": "Local git diff --check output and .codearbiter/network-marking-picker/acceptance.json",
+          "source_normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff",
+          "summary": "Working-tree whitespace check passed. The acceptance matrix lists 51 local passes, 3 partial and 4 unrun cases. Human, staged-review and hosted evidence remain pending.",
+          "task_subject_sha256": "2401eb7ea00051a2eab2d95759af99bcf8989b5fd7f174b44108cdaeab3d027f"
+        }
+      ]
+    },
+    "tasks": {
+      "WP00": {
+        "evidence_refs": [],
+        "reason": "Pinned baseline reconciled; current form, repository and output paths identified, and fictional fixture/test obligations mapped from the supplied matrix. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP01": {
+        "evidence_refs": [],
+        "reason": "Curated presets transcribed from verified handoff catalog and tested. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP02": {
+        "evidence_refs": [],
+        "reason": "Implemented the single keyboard-accessible Network marking picker. Narrow and real zoom observations were recorded. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP03": {
+        "evidence_refs": [],
+        "reason": "Shared lifecycle implemented. Both browsers passed custom draft preservation, reuse, rename impact and Save As readback in the focused run. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP04": {
+        "evidence_refs": [],
+        "reason": "Forward migration and repository lifecycle implemented and checked with v7 and v8 files. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP05": {
+        "evidence_refs": [],
+        "reason": "Map, inspector, inventory, search and stable saved filters implemented. Inspected narrow and 500-service visual evidence. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP06": {
+        "evidence_refs": [],
+        "reason": "Actual file downloads for all five formats were available and checked in both browsers. Importer contract and owner review controls were preserved. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP07": {
+        "evidence_refs": [],
+        "reason": "Full standalone offline gate passed, including actual browser zoom, 15/100/500-service layouts and inspected capture files. Implementation completion only; verification and review are not assessed.",
+        "state": "DONE"
+      },
+      "WP08": {
+        "evidence_refs": [],
+        "reason": null,
+        "state": "IN_PROGRESS"
+      }
+    }
+  },
+  "format": "codearbiter.artifact",
+  "format_version": "0.1.0",
+  "governance": {
+    "approvals": [],
+    "review_notes": [],
+    "state": "draft"
+  },
+  "integrity": {
+    "model_sha256": "a87e7e3f2154a653280087527a7abd132e77ca4a752bab26a3884ede00df87ea",
+    "normative_sha256": "dab98f432093b6224658aaa97d0e483df3ba2d9f737abcb4e1548888fb34c282",
+    "symbol_count": 19
+  },
+  "kind": "plan",
+  "normative": {
+    "baseline": {
+      "commit": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "observed_date": "2026-11-18",
+      "repository": "https://github.com/SUaDtL/SIM"
+    },
+    "checkpoints": [
+      {
+        "depends_on": [],
+        "exit": "git source reconciliation and fictional fixtures",
+        "id": "CP-WP00",
+        "tasks": [
+          "WP00"
+        ],
+        "title": "Reconcile baseline and fixtures"
+      },
+      {
+        "depends_on": [
+          "CP-WP00"
+        ],
+        "exit": "catalog and repository unit tests",
+        "id": "CP-WP01",
+        "tasks": [
+          "WP01"
+        ],
+        "title": "Install the curated catalog"
+      },
+      {
+        "depends_on": [
+          "CP-WP01"
+        ],
+        "exit": "schema, repository, migration and file roundtrip tests",
+        "id": "CP-WP04",
+        "tasks": [
+          "WP04"
+        ],
+        "title": "Persist assignments atomically"
+      },
+      {
+        "depends_on": [
+          "CP-WP01",
+          "CP-WP04"
+        ],
+        "exit": "Chrome and Edge picker, keyboard and responsive checks",
+        "id": "CP-WP02",
+        "tasks": [
+          "WP02"
+        ],
+        "title": "Add one accessible picker"
+      },
+      {
+        "depends_on": [
+          "CP-WP02"
+        ],
+        "exit": "repository and offline browser custom lifecycle tests",
+        "id": "CP-WP03",
+        "tasks": [
+          "WP03"
+        ],
+        "title": "Manage reusable custom markings"
+      },
+      {
+        "depends_on": [
+          "CP-WP04"
+        ],
+        "exit": "graph, search, scenario and offline client checks",
+        "id": "CP-WP05",
+        "tasks": [
+          "WP05"
+        ],
+        "title": "Expose markings in read views"
+      },
+      {
+        "depends_on": [
+          "CP-WP04"
+        ],
+        "exit": "actual offline downloads with semantic and visual checks",
+        "id": "CP-WP06",
+        "tasks": [
+          "WP06"
+        ],
+        "title": "Preserve marking context in exports"
+      },
+      {
+        "depends_on": [
+          "CP-WP02",
+          "CP-WP03",
+          "CP-WP05",
+          "CP-WP06"
+        ],
+        "exit": "npm run check and timed browser viewports",
+        "id": "CP-WP07",
+        "tasks": [
+          "WP07"
+        ],
+        "title": "Exercise offline regression and layout"
+      },
+      {
+        "depends_on": [
+          "CP-WP07"
+        ],
+        "exit": "human walkthrough, hosted CI and release readback when available",
+        "id": "CP-WP08",
+        "tasks": [
+          "WP08"
+        ],
+        "title": "Record product and delivery evidence"
+      }
+    ],
+    "criterion_dispositions": [],
+    "prerequisites": [],
+    "retired_symbols": [],
+    "sections": [],
+    "sources": [
+      {
+        "id": "SRC-HANDOFF",
+        "locator": "SIM-Network-Markings-Curated-Picker-v2-CLI-Handoff.zip",
+        "note": "Product, persistence, work packages, and acceptance matrix supplied by the user.",
+        "title": "Network Marking Picker v2 CLI handoff",
+        "type": "local_document",
+        "url": null
+      }
+    ],
+    "spec_ref": {
+      "artifact_id": "SPEC-NETWORK-MARKING-PICKER",
+      "binding_mode": "draft_preview",
+      "normative_sha256": "d979ad306b03d9a92852d95d599c296634759c7e44f15a8c68e4c3c9a952bbff"
+    },
+    "summary": "One searchable picker for curated and reusable network diagram markings, with legacy-compatible persistence and consistent read views and exports.",
+    "tasks": [
+      {
+        "checkpoint": "CP-WP00",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-001",
+          "SPEC-NETWORK-MARKING-PICKER#MK-002",
+          "SPEC-NETWORK-MARKING-PICKER#MK-003",
+          "SPEC-NETWORK-MARKING-PICKER#MK-004"
+        ],
+        "depends_on": [],
+        "done_when": [
+          "git source reconciliation and fictional fixtures"
+        ],
+        "execution_scope": "CP-WP00",
+        "id": "WP00",
+        "paths": [
+          {
+            "action": "inspect",
+            "path": "AGENTS.md"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "HEAD and source tree reconciled",
+          "Existing UI controls inventoried and prior v1 plan retired",
+          "CodeArbiter decisions/gates adhered to",
+          "Fictional fixtures and expected readbacks frozen"
+        ],
+        "title": "Reconcile baseline and fixtures",
+        "verification": [
+          {
+            "argv": [
+              "git",
+              "rev-parse",
+              "HEAD"
+            ],
+            "assertion": "git source reconciliation and fictional fixtures",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP01",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-005",
+          "SPEC-NETWORK-MARKING-PICKER#MK-006",
+          "SPEC-NETWORK-MARKING-PICKER#MK-007",
+          "SPEC-NETWORK-MARKING-PICKER#MK-008",
+          "SPEC-NETWORK-MARKING-PICKER#MK-009"
+        ],
+        "depends_on": [
+          "WP00"
+        ],
+        "done_when": [
+          "catalog and repository unit tests"
+        ],
+        "execution_scope": "CP-WP01",
+        "id": "WP01",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/domain"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Exactly eight Quick options in declared order",
+          "More contains explicit official-style samples and informal shortcuts labeled as such",
+          "Legacy U//FOUO separated from current choices",
+          "User search matches short, full, explanatory terms",
+          "Presets remain immutable and do not appear as custom rows before use"
+        ],
+        "title": "Install the curated catalog",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "catalog and repository unit tests",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "curated catalog"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP04",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-027",
+          "SPEC-NETWORK-MARKING-PICKER#MK-028",
+          "SPEC-NETWORK-MARKING-PICKER#MK-029",
+          "SPEC-NETWORK-MARKING-PICKER#MK-030",
+          "SPEC-NETWORK-MARKING-PICKER#MK-031",
+          "SPEC-NETWORK-MARKING-PICKER#MK-032",
+          "SPEC-NETWORK-MARKING-PICKER#MK-033"
+        ],
+        "depends_on": [
+          "WP01"
+        ],
+        "done_when": [
+          "schema, repository, migration and file roundtrip tests"
+        ],
+        "execution_scope": "CP-WP04",
+        "id": "WP04",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/db"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Forward migration preserves legacy recorded network marking",
+          "Every network has zero or one selected label reference",
+          "Atomic network edit + assignment is one undo step",
+          "Database rejects orphaned assignments, invalid base and malformed catalog fields",
+          "Save/reopen and Save As preserve exact custom labels and identities",
+          "Undo/Redo after edit and rename restore correct affected views",
+          "Dataset open still rejects modified schema/tampered preset metadata"
+        ],
+        "title": "Persist assignments atomically",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "schema, repository, migration and file roundtrip tests",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "applies a descriptor and grouping in one undo step"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP02",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-010",
+          "SPEC-NETWORK-MARKING-PICKER#MK-011",
+          "SPEC-NETWORK-MARKING-PICKER#MK-012",
+          "SPEC-NETWORK-MARKING-PICKER#MK-013",
+          "SPEC-NETWORK-MARKING-PICKER#MK-014",
+          "SPEC-NETWORK-MARKING-PICKER#MK-015",
+          "SPEC-NETWORK-MARKING-PICKER#MK-016",
+          "SPEC-NETWORK-MARKING-PICKER#MK-017"
+        ],
+        "depends_on": [
+          "WP01",
+          "WP04"
+        ],
+        "done_when": [
+          "Chrome and Edge picker, keyboard and responsive checks"
+        ],
+        "execution_scope": "CP-WP02",
+        "id": "WP02",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Only one marking control visible in ordinary Network form",
+          "SEC-REL selected without advanced panel or country field",
+          "Picker supports arrows Enter Escape and clear focus restoration",
+          "Picker reflows at 320px without clipping and no nested vertical scroll trap",
+          "200/400 percent browser zoom retains visible choice and actions",
+          "Selection changes pending draft only until parent Apply",
+          "Existing editing with no selection change creates no materialized preset",
+          "Changing selection updates base group only inside one draft"
+        ],
+        "title": "Add one accessible picker",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "e2e"
+            ],
+            "assertion": "Chrome and Edge picker, keyboard and responsive checks",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "chooses SEC-REL offline"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP03",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-018",
+          "SPEC-NETWORK-MARKING-PICKER#MK-019",
+          "SPEC-NETWORK-MARKING-PICKER#MK-020",
+          "SPEC-NETWORK-MARKING-PICKER#MK-021",
+          "SPEC-NETWORK-MARKING-PICKER#MK-022",
+          "SPEC-NETWORK-MARKING-PICKER#MK-023",
+          "SPEC-NETWORK-MARKING-PICKER#MK-024",
+          "SPEC-NETWORK-MARKING-PICKER#MK-025",
+          "SPEC-NETWORK-MARKING-PICKER#MK-026"
+        ],
+        "depends_on": [
+          "WP02"
+        ],
+        "done_when": [
+          "repository and offline browser custom lifecycle tests"
+        ],
+        "execution_scope": "CP-WP03",
+        "id": "WP03",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/ui"
+          },
+          {
+            "action": "modify",
+            "path": "src/domain"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Custom displayed label accepts meaningful slashes and spaces",
+          "Custom short label stays within length and never silently alters full text",
+          "Custom requires one base grouping only in custom authoring",
+          "Custom asset created once and reused by two networks",
+          "Parent form fields survive inline custom create, cancel and validation refusal",
+          "Cancel parent does not delete independently committed custom asset",
+          "Shared custom rename shows affected network count before commit",
+          "Deleting referenced asset is refused and leaves references intact",
+          "Built-in customization uses Duplicate as custom and does not mutate preset"
+        ],
+        "title": "Manage reusable custom markings",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "repository and offline browser custom lifecycle tests",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "creates and reuses a shared marking"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP05",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-034",
+          "SPEC-NETWORK-MARKING-PICKER#MK-035",
+          "SPEC-NETWORK-MARKING-PICKER#MK-036",
+          "SPEC-NETWORK-MARKING-PICKER#MK-037",
+          "SPEC-NETWORK-MARKING-PICKER#MK-038",
+          "SPEC-NETWORK-MARKING-PICKER#MK-039",
+          "SPEC-NETWORK-MARKING-PICKER#MK-040"
+        ],
+        "depends_on": [
+          "WP04"
+        ],
+        "done_when": [
+          "graph, search, scenario and offline client checks"
+        ],
+        "execution_scope": "CP-WP05",
+        "id": "WP05",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/map"
+          },
+          {
+            "action": "modify",
+            "path": "src/ui"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Map network title exposes one short label, not duplicated badges",
+          "Inspector exposes exact full label, short label and grouping",
+          "Inventory includes one marking column and searchable full/short text",
+          "Marking filter is optional and inside existing Filters surface",
+          "Network move/rename and scenario view do not change label identity",
+          "Focus/trace of dependencies unaffected by labels",
+          "Large dataset overview remains legible without service-label crowding"
+        ],
+        "title": "Expose markings in read views",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "test"
+            ],
+            "assertion": "graph, search, scenario and offline client checks",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "uses one compact network marking"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP06",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-041",
+          "SPEC-NETWORK-MARKING-PICKER#MK-042",
+          "SPEC-NETWORK-MARKING-PICKER#MK-043",
+          "SPEC-NETWORK-MARKING-PICKER#MK-044",
+          "SPEC-NETWORK-MARKING-PICKER#MK-045",
+          "SPEC-NETWORK-MARKING-PICKER#MK-046",
+          "SPEC-NETWORK-MARKING-PICKER#MK-047"
+        ],
+        "depends_on": [
+          "WP04"
+        ],
+        "done_when": [
+          "actual offline downloads with semantic and visual checks"
+        ],
+        "execution_scope": "CP-WP06",
+        "id": "WP06",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "src/assessment"
+          },
+          {
+            "action": "modify",
+            "path": "src/map"
+          },
+          {
+            "action": "modify",
+            "path": "src/import"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "PNG contains selected short network labels and correct scope disclosure",
+          "SVG export reflects exact same scene labels and scope",
+          "Assessment HTML shows full/short and legacy distinctions",
+          "JSON/CSV include full, short, source and base without formula injection",
+          "Legacy CSV import remains unchanged, preview/commit parity holds",
+          "Saved viewpoints restore network labels from current references",
+          "Mixed network labels do not synthesize a global caveat or document authorization"
+        ],
+        "title": "Preserve marking context in exports",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "e2e"
+            ],
+            "assertion": "actual offline downloads with semantic and visual checks",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "exports the selected network markings"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP07",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-048",
+          "SPEC-NETWORK-MARKING-PICKER#MK-049",
+          "SPEC-NETWORK-MARKING-PICKER#MK-050",
+          "SPEC-NETWORK-MARKING-PICKER#MK-051",
+          "SPEC-NETWORK-MARKING-PICKER#MK-052",
+          "SPEC-NETWORK-MARKING-PICKER#MK-053"
+        ],
+        "depends_on": [
+          "WP02",
+          "WP03",
+          "WP05",
+          "WP06"
+        ],
+        "done_when": [
+          "npm run check and timed browser viewports"
+        ],
+        "execution_scope": "CP-WP07",
+        "id": "WP07",
+        "paths": [
+          {
+            "action": "modify",
+            "path": "e2e"
+          },
+          {
+            "action": "modify",
+            "path": "tests"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Old service marking edit unchanged by network label editor",
+          "No change to existing highest-marking banner algorithm",
+          "No request outside file protocol in offline E2E",
+          "No script or HTML injection from custom labels in any output",
+          "15/100/500 service fixtures include realistic label lengths and measured viewport performance",
+          "Real keyboard, focus trap and screen reader names reviewed"
+        ],
+        "title": "Exercise offline regression and layout",
+        "verification": [
+          {
+            "argv": [
+              "npm",
+              "run",
+              "check"
+            ],
+            "assertion": "npm run check and timed browser viewports",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": [
+              "renders realistic marking labels at supported widths"
+            ]
+          }
+        ]
+      },
+      {
+        "checkpoint": "CP-WP08",
+        "criterion_refs": [
+          "SPEC-NETWORK-MARKING-PICKER#MK-054",
+          "SPEC-NETWORK-MARKING-PICKER#MK-055",
+          "SPEC-NETWORK-MARKING-PICKER#MK-056",
+          "SPEC-NETWORK-MARKING-PICKER#MK-057",
+          "SPEC-NETWORK-MARKING-PICKER#MK-058"
+        ],
+        "depends_on": [
+          "WP07"
+        ],
+        "done_when": [
+          "human walkthrough, hosted CI and release readback when available"
+        ],
+        "execution_scope": "CP-WP08",
+        "id": "WP08",
+        "paths": [
+          {
+            "action": "modify",
+            "path": ".codearbiter"
+          }
+        ],
+        "rollback": "Revert this change on the feature branch. Keep the original pre-migration dataset bytes for recovery.",
+        "steps": [
+          "Independent first-time engineer completes SEC-REL and custom label journey uncoached",
+          "Separate recipient interprets actual detached capture correctly",
+          "CLI gate and CI logs bound to exact build and source",
+          "Independently downloaded Pages artifact identity matches claimed commit",
+          "Versioned downloadable release identity/digest checked if authorized"
+        ],
+        "title": "Record product and delivery evidence",
+        "verification": [
+          {
+            "argv": [
+              "git",
+              "diff",
+              "--check"
+            ],
+            "assertion": "Check the delivery diff for whitespace errors. Human, hosted and release evidence remain separately recorded.",
+            "availability": "existing",
+            "cwd": ".",
+            "expected_exit": 0,
+            "required_tests": []
+          }
+        ]
+      }
+    ],
+    "title": "Implement network marking picker v2"
+  },
+  "presentation": {
+    "brand_name": "codeArbiter",
+    "companion_path": "../specs/network-marking-picker.html",
+    "logo_data_uri": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMjgiIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iY29kZUFyYml0ZXIiPgogIDx0aXRsZT5jb2RlQXJiaXRlcjwvdGl0bGU+CiAgPGRlc2M+QW4gdW5wcm92ZW4gY29tbWl0IGNyb3NzZXMgYSBnb3Zlcm5lZCBnYXRlIGFuZCBsZWF2ZXMgYXMgYSBwcm92ZW4gZGVjaXNpb24uPC9kZXNjPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJjYS1nYXRlLWdvbGQiIHgxPSI2IiB5MT0iNCIgeDI9IjI2IiB5Mj0iMjMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2YzYzk1OCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkODk5MjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8ZyBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImNvbW1pdC1saW5lIgogICAgICBkPSJNMiAyMGgyNCIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjNDY1NTY1IgogICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgLz4KICAgIDxjaXJjbGUKICAgICAgZGF0YS1icmFuZC1lbGVtZW50PSJ1bnByb3Zlbi1ub2RlIgogICAgICBjeD0iNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyIgogICAgICBmaWxsPSIjMDkwZDEyIgogICAgICBzdHJva2U9IiM3ZjhkOWQiCiAgICAgIHN0cm9rZS13aWR0aD0iMS4zIgogICAgLz4KICAgIDxnCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0iZ2F0ZS1wb3N0cyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSJ1cmwoI2NhLWdhdGUtZ29sZCkiCiAgICAgIHN0cm9rZS13aWR0aD0iMi4xNSIKICAgICAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgPgogICAgICA8cGF0aCBkPSJNMTEgMTB2MTIiLz4KICAgICAgPHBhdGggZD0iTTE3IDEwdjEyIi8+CiAgICA8L2c+CiAgICA8cmVjdAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9ImdhdGUtYmVhbSIKICAgICAgeD0iNiIKICAgICAgeT0iNyIKICAgICAgd2lkdGg9IjE2IgogICAgICBoZWlnaHQ9IjIuNzUiCiAgICAgIHJ4PSIuNTUiCiAgICAgIGZpbGw9InVybCgjY2EtZ2F0ZS1nb2xkKSIKICAgIC8+CiAgICA8cGF0aAogICAgICBkYXRhLWJyYW5kLWVsZW1lbnQ9InRlcm1pbmFsLWNoZXZyb24iCiAgICAgIGQ9Im0xMS45IDMuNSAyLjEgMyAyLjEtMyIKICAgICAgZmlsbD0ibm9uZSIKICAgICAgc3Ryb2tlPSIjZjNjOTU4IgogICAgICBzdHJva2Utd2lkdGg9IjEuNTUiCiAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIKICAgIC8+CiAgICA8Y2lyY2xlCiAgICAgIGRhdGEtYnJhbmQtZWxlbWVudD0icHJvdmVuLW5vZGUiCiAgICAgIGN4PSIyNCIKICAgICAgY3k9IjIwIgogICAgICByPSIyLjU1IgogICAgICBmaWxsPSIjZTVhZDJjIgogICAgLz4KICA8L2c+CgogIDx0ZXh0CiAgICB4PSIzNCIKICAgIHk9IjIwLjc1IgogICAgZm9udC1mYW1pbHk9IidNYW5yb3BlIFZhcmlhYmxlJywgJ1NlZ29lIFVJIFZhcmlhYmxlJywgJ1NlZ29lIFVJJywgc2Fucy1zZXJpZiIKICAgIGZvbnQtc2l6ZT0iMTYiCiAgICBsZXR0ZXItc3BhY2luZz0iLS4yNSIKICA+CiAgICA8dHNwYW4gZmlsbD0iI2U3ZWRmNCIgZm9udC13ZWlnaHQ9IjQzMCI+Y29kZTwvdHNwYW4+PHRzcGFuIGZpbGw9IiNlNmFkMmMiIGZvbnQtd2VpZ2h0PSI3NTAiPkFyYml0ZXI8L3RzcGFuPgogIDwvdGV4dD4KPC9zdmc+Cg==",
+    "logo_git_blob": null,
+    "logo_origin": "embedded codeArbiter logo",
+    "renderer": "codearbiter-html/0.1.0",
+    "stylesheet_sha256": "584ac549e16aeccd18359cafd3cbfc49339b11d6bf0cbd07727324d93acc6405"
+  },
+  "revision": 35,
+  "schema_version": "0.3.2",
+  "slug": "network-marking-picker"
+}
+</script>
+</body></html>

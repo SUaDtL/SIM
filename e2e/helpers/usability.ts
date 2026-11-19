@@ -58,6 +58,17 @@ export async function editorSection(page: Page, section: "Details" | "Connection
     .click();
 }
 
+export async function chooseNetworkMarking(page: Page, label: string): Promise<void> {
+  await page
+    .getByTestId("editor")
+    .getByRole("button", { name: /^Network marking / })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Choose network marking" })
+    .getByRole("button", { name: label, exact: true })
+    .click();
+}
+
 export async function chooseReference(page: Page, label: string, name: string): Promise<void> {
   await page
     .getByTestId("editor")
