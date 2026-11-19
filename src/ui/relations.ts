@@ -1,3 +1,4 @@
+import { networkMarkingLabel } from "../domain/network-markings";
 import type { Dependency, Snapshot } from "../domain/types";
 import type { EntityType } from "./forms";
 
@@ -13,6 +14,7 @@ export interface EntityMatch {
   readonly target: EntityTarget;
   readonly label: string;
   readonly detail: string;
+  readonly searchText?: string;
 }
 
 export interface RelatedEntity {
@@ -29,12 +31,18 @@ const key = (target: EntityTarget): string => `${target.type}:${String(target.id
 function entityIndex(snapshot: Snapshot): Map<string, EntityMatch> {
   const entries = new Map<string, EntityMatch>();
   const networkNames = new Map(snapshot.networks.map((network) => [network.id, network.name]));
-  const add = (type: EntityType, id: number, label: string, detail: string): void => {
+  const add = (type: EntityType, id: number, label: string, detail: string, searchText?: string): void => {
     const target = { type, id };
-    entries.set(key(target), { target, label, detail });
+    entries.set(key(target), { target, label, detail, ...(searchText ? { searchText } : {}) });
   };
   for (const network of snapshot.networks) {
-    add("network", network.id, network.name, `Network · ${network.kind} · ${network.marking}`);
+    add(
+      "network",
+      network.id,
+      network.name,
+      `Network · ${network.kind} · ${networkMarkingLabel(network)}`,
+      network.diagramMarking?.shortLabel,
+    );
   }
   for (const service of snapshot.services) {
     const network = networkNames.get(service.networkId) ?? `Missing network #${String(service.networkId)}`;
@@ -75,7 +83,9 @@ export function inventoryRecords(snapshot: Snapshot): EntityMatch[] {
 export function searchEntities(snapshot: Snapshot, query: string): EntityMatch[] {
   const needle = query.trim().toLowerCase();
   if (!needle) return [];
-  return inventoryRecords(snapshot).filter((entry) => `${entry.label} ${entry.detail}`.toLowerCase().includes(needle));
+  return inventoryRecords(snapshot).filter((entry) =>
+    [entry.label, entry.detail, entry.searchText].join(" ").toLowerCase().includes(needle),
+  );
 }
 
 /** Derive recorded forward/reverse roles without writing, inferring reachability or inheriting roles. */

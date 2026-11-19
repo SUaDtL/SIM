@@ -1,5 +1,6 @@
 import { MARKINGS, type Marking } from "../db/markings";
 import { ValidationError } from "../domain/errors";
+import { markingSelectionValue, networkMarkingLabel, readMarkingSelection } from "../domain/network-markings";
 import { cleanName } from "../domain/validate";
 import type { Repository } from "../domain/repository";
 import type { NetworkKind, ServiceInput, WriteOptions } from "../domain/types";
@@ -26,7 +27,7 @@ export interface Option {
 export interface FieldDef {
   readonly key: string;
   readonly label: string;
-  readonly kind: "text" | "textarea" | "select" | "checkbox" | "checklist" | "color";
+  readonly kind: "text" | "textarea" | "select" | "checkbox" | "checklist" | "color" | "network-marking";
   readonly required?: boolean;
   /** For an optional select, the label of its empty choice. */
   readonly none?: string;
@@ -38,6 +39,8 @@ export interface ListItem {
   readonly id: number;
   readonly name: string;
   readonly detail: string;
+  readonly marking?: string;
+  readonly shortMarking?: string;
 }
 
 export interface EntityDescriptor {
@@ -118,28 +121,40 @@ const network: EntityDescriptor = {
   fields: [
     NAME,
     { key: "kind", label: "Kind", kind: "select", options: () => KINDS },
-    { key: "marking", label: "Marking", kind: "select", options: markingOptions },
+    { key: "marking", label: "Network marking", kind: "network-marking" },
     DESCRIPTION,
   ],
-  list: (repo) => repo.listNetworks().map((n) => ({ id: n.id, name: n.name, detail: `${n.marking} · ${n.kind}` })),
+  list: (repo) =>
+    repo.listNetworks().map((n) => ({
+      id: n.id,
+      name: n.name,
+      detail: `${networkMarkingLabel(n)} · ${n.kind}`,
+      marking: networkMarkingLabel(n),
+      shortMarking: n.diagramMarking?.shortLabel ?? n.marking,
+    })),
   get: (repo, id) => repo.getNetwork(id),
   values(repo, id) {
     const n = id === null ? undefined : repo.getNetwork(id);
     return {
       name: n?.name ?? "",
       kind: n?.kind ?? "internal",
-      marking: n?.marking ?? "UNCLASSIFIED",
+      marking: n?.diagramMarking ? markingSelectionValue(n.diagramMarking) : (n?.marking ?? "UNCLASSIFIED"),
       description: n?.description ?? "",
     };
   },
   save(repo, id, v, options) {
+    const value = str(v, "marking");
+    const selection = readMarkingSelection(value);
     const input = {
       name: str(v, "name"),
       kind: asKind(str(v, "kind")),
-      marking: asMarking(str(v, "marking")),
+      marking: selection ? (repo.getNetworkMarking(selection)?.base ?? "UNCLASSIFIED") : asMarking(value),
+      ...(selection ? { diagramMarking: selection } : {}),
       description: str(v, "description"),
     };
-    return (id === null ? repo.createNetwork(input, options) : repo.updateNetwork(id, input, options)).id;
+    return repo.atomic(
+      () => (id === null ? repo.createNetwork(input, options) : repo.updateNetwork(id, input, options)).id,
+    );
   },
   remove: (repo, id) => {
     repo.deleteNetwork(id);

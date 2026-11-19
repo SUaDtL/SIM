@@ -1,5 +1,6 @@
 import { bannerText } from "../db/markings";
 import type { AssessmentContext, ExchangeTable } from "../domain/assessment-context";
+import { NETWORK_LABEL_NOTE, networkMarkingLabel } from "../domain/network-markings";
 import type { Repository } from "../domain/repository";
 import type { Snapshot } from "../domain/types";
 import { spreadsheetText, toCsv } from "../import/csv";
@@ -33,6 +34,7 @@ export interface AssessmentOutput {
   readonly build: { readonly version: string; readonly commit: string; readonly modified: boolean };
   readonly marking: Snapshot["marking"];
   readonly caveat: string | null;
+  readonly networkMarkingNote: string;
   readonly fileState: string;
   readonly scope: "all recorded inventory" | "current map scope";
   readonly details: Omit<AssessmentContext, "lineage" | "marking"> | null;
@@ -111,12 +113,19 @@ export function freezeAssessment(
     const names = new Map(data.categories.map((record) => [record.id, record]));
     const applications = new Map(data.applications.map((record) => [record.id, record]));
     const tables: Record<string, readonly Row[]> = {
-      Networks: relevantNetworks.map(({ id, name, kind, description, marking }) => ({
-        id: lookup("network", id),
-        name,
-        kind,
-        description: full ? description : null,
-        marking,
+      Networks: relevantNetworks.map((network) => ({
+        id: lookup("network", network.id),
+        name: network.name,
+        kind: network.kind,
+        description: full ? network.description : null,
+        marking: network.marking,
+        networkMarkingFull: networkMarkingLabel(network),
+        networkMarkingShort: network.diagramMarking?.shortLabel ?? network.marking,
+        networkMarkingSource:
+          network.diagramMarking?.source === "builtin"
+            ? "built-in"
+            : (network.diagramMarking?.source ?? "legacy grouping"),
+        networkMarkingDescription: full ? (network.diagramMarking?.description ?? null) : null,
       })),
       Services: selected.map((row) => ({
         id: serviceRef(row.id),
@@ -302,6 +311,7 @@ export function freezeAssessment(
     scope: mapView ? "current map scope" : "all recorded inventory",
     marking: snapshot.marking,
     caveat: snapshot.caveat,
+    networkMarkingNote: NETWORK_LABEL_NOTE,
     details: mapView ? null : { description, scope, exclusions, assessor, startedOn, asOf },
     inventories,
     map: mapView?.svg ?? null,
@@ -337,6 +347,7 @@ const codeColumns = new Set([
 ]);
 
 const wideTableColumns = new Map<string, readonly string[]>([
+  ["Networks", ["name", "networkMarkingFull", "networkMarkingShort"]],
   ["Services", ["service", "network", "provider"]],
   ["Assessment evidence and questions", ["target", "type", "state"]],
 ]);
@@ -440,6 +451,7 @@ ${tables.map((table) => reportTable(table.label, table.rows, table.id, inventory
 <div class="layout wrap"><nav aria-label="Report contents" id="contents"><h2>Report contents</h2><a class="index-view" href="#overview">Assessment overview</a>
 ${map ? '<a class="index-view" href="#map">Map at export</a>' : ""}${contents}<a class="index-view" href="#source">Source information</a></nav>
 <main><section><h2 id="overview">Assessment overview</h2>${context}
+<p class="scope-note">${htmlText(output.networkMarkingNote)}</p>
 <p class="scope-note">Dependencies point from consumers to providers. Connectivity is unverified. Counts cover recorded relationships in the stated scope. Hiding records does not reduce the source marking. Unrelated records outside the selected scope were omitted.</p></section>
 ${map}${inventories}<section class="source"><h2 id="source">Source information</h2><dl class="context">${field("Data format", output.schema)}${field("SIM build", `${output.build.version} · ${output.build.commit}`)}${field("Source checkpoint", checkpoint)}</dl></section></main></div>
 <div class="marking" aria-hidden="true">${marking}</div></body></html>`;
@@ -456,6 +468,7 @@ export function renderAssessment(output: AssessmentOutput, format: OutputFormat,
     return bounded(JSON.stringify({ ...data, checkpoint, inventories }, null, 2), "application/json");
   const rows: string[][] = [
     ["Marking", bannerText(output.marking, output.caveat)],
+    ["Network marking note", output.networkMarkingNote],
     ["Dataset", output.dataset],
     ["Scope", output.scope],
     ["Generated", output.generated],

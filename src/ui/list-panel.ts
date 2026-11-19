@@ -1,6 +1,6 @@
 import type { Repository } from "../domain/repository";
 import { button, el, option } from "./dom";
-import { descriptor, ENTITY_TYPES, type EntityType, nounOf } from "./forms";
+import { descriptor, ENTITY_TYPES, type EntityType, type ListItem, nounOf } from "./forms";
 
 export interface Selection {
   readonly type: EntityType;
@@ -38,7 +38,7 @@ export interface ListPanel {
 }
 
 /** Bounded discovery retains access to every match, with context included in the search. */
-export function inventoryPage<T extends { name: string; detail: string }>(
+export function inventoryPage<T extends Pick<ListItem, "name" | "detail" | "marking" | "shortMarking">>(
   items: readonly T[],
   query: string,
   requestedPage: number,
@@ -46,7 +46,9 @@ export function inventoryPage<T extends { name: string; detail: string }>(
 ): { rows: readonly T[]; total: number; page: number; pages: number } {
   const needle = query.trim().toLocaleLowerCase();
   const matches = needle
-    ? items.filter((item) => `${item.name} ${item.detail}`.toLocaleLowerCase().includes(needle))
+    ? items.filter((item) =>
+        [item.name, item.detail, item.marking, item.shortMarking].join(" ").toLocaleLowerCase().includes(needle),
+      )
     : items;
   const size = Number.isFinite(pageSize) ? Math.max(1, Math.floor(pageSize)) : 30;
   const pages = Math.max(1, Math.ceil(matches.length / size));
@@ -135,6 +137,12 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     el("span", {}, "Provider"),
     el("span", {}, "Marking"),
   );
+  const networkColumns = el(
+    "div",
+    { class: "inventory-columns", "aria-hidden": "true" },
+    el("span", {}, "Network"),
+    el("span", {}, "Marking"),
+  );
   const body = el("div", { class: "list-body" }, items, empty, pagination);
   const toggle = button("Hide list", () => {
     collapsed = !collapsed;
@@ -156,6 +164,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
       hint,
       count,
       columns,
+      networkColumns,
     ),
     body,
   );
@@ -191,6 +200,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
     toolbar.hidden = collapsed;
     count.hidden = collapsed;
     columns.hidden = collapsed || type !== "service";
+    networkColumns.hidden = collapsed || type !== "network";
     hint.hidden = collapsed || !hint.textContent;
     toggle.textContent = collapsed ? "Show list" : "Hide list";
     toggle.setAttribute("aria-expanded", String(!collapsed));
@@ -217,7 +227,7 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
             provider !== undefined && provider !== null
               ? (organizations.get(provider) ?? "Missing provider")
               : "Provider not recorded",
-          marking: service?.marking ?? "",
+          displayMarking: service?.marking ?? item.marking ?? "",
           detail:
             provider !== undefined && provider !== null
               ? `${item.detail} · ${organizations.get(provider) ?? "Missing provider"}`
@@ -257,8 +267,9 @@ export function createListPanel(ctx: ListPanelContext): ListPanel {
           b.append(
             el("span", { class: "item-network" }, item.network),
             el("span", { class: "item-provider" }, item.provider),
-            el("span", { class: "item-marking" }, item.marking),
+            el("span", { class: "item-marking" }, item.displayMarking),
           );
+        else if (type === "network") b.append(el("span", { class: "item-marking" }, item.displayMarking));
         else b.append(el("span", { class: "item-detail" }, item.detail));
         if (selected?.type === type && selected.id === item.id) b.setAttribute("aria-current", "true");
         return el("li", {}, b);

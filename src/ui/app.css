@@ -1007,6 +1007,94 @@ dialog {
 dialog::backdrop {
   background: #142b3b77;
 }
+.network-marking-picker {
+  width: min(34rem, calc(100vw - 20px));
+  max-height: calc(100dvh - 20px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.network-marking-picker .picker-header,
+.marking-option-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.network-marking-picker .picker-header > button,
+.marking-option-row > button:not(.marking-choice) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.network-marking-picker .picker-header h2 {
+  margin: 0;
+}
+.marking-browse {
+  margin-block: 12px;
+}
+.marking-browse input {
+  width: 100%;
+}
+.marking-status:empty,
+.marking-child .message:empty {
+  display: none;
+}
+.marking-results h3 {
+  margin-block: 12px 6px;
+  font-size: 0.95rem;
+}
+.marking-results ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  list-style: none;
+}
+.marking-results .marking-quick-picks {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.marking-choice.picker-option {
+  min-width: 0;
+  height: 100%;
+  border-radius: 6px;
+  padding: 8px;
+  overflow-wrap: anywhere;
+}
+.marking-choice[aria-pressed="true"] {
+  font-weight: 700;
+  border-color: var(--accent);
+}
+.marking-option-row + .marking-option-row,
+.marking-results details,
+.marking-child {
+  margin-top: 4px;
+}
+.marking-results .marking-quick-picks .marking-option-row {
+  margin-top: 0;
+}
+.marking-results details > summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.network-marking-picker .actions {
+  flex-wrap: wrap;
+}
+.network-marking-field {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.network-marking-field > span {
+  white-space: pre-wrap;
+}
+.network-marking-field::after {
+  content: "▾";
+  margin-inline-start: 8px;
+}
+@media (max-width: 360px) {
+  .network-marking-picker {
+    padding: 12px;
+  }
+}
+
 .reference-picker .picker-header {
   display: flex;
   justify-content: space-between;
@@ -1252,6 +1340,12 @@ details[open] > summary::after {
   color: var(--muted);
   font-size: var(--type-meta);
   font-weight: 600;
+}
+[data-inventory-type="network"] .entity-list button {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+[data-inventory-type="network"] .item-marking {
+  overflow-wrap: anywhere;
 }
 [data-inventory-type="service"] .inventory-columns,
 [data-inventory-type="service"] .entity-list button {

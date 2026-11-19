@@ -1,3 +1,4 @@
+import { NETWORK_LABEL_NOTE } from "../domain/network-markings";
 import type { Repository } from "../domain/repository";
 import type { Dependency, Snapshot } from "../domain/types";
 import { button, el } from "./dom";
@@ -221,7 +222,17 @@ export function recordSummaryModel(
           label: "Kind",
           value: network.kind === "external" ? "External network (SaaS or third party)" : "Internal network",
         },
-        { label: "Classification", value: network.marking },
+        ...(network.diagramMarking
+          ? [
+              { label: "Network label", value: network.diagramMarking.fullLabel },
+              { label: "Short map label", value: network.diagramMarking.shortLabel },
+              { label: "Display grouping", value: network.marking },
+              ...(network.diagramMarking.description
+                ? [{ label: "Label description", value: network.diagramMarking.description }]
+                : []),
+              { label: "Diagram label", value: NETWORK_LABEL_NOTE },
+            ]
+          : [{ label: "Classification", value: network.marking }]),
         { label: "Description", value: network.description ?? "No description recorded." },
       );
       break;

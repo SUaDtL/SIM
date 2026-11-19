@@ -1,4 +1,5 @@
 import { UUID_V4, type ExchangeTable } from "../domain/assessment-context";
+import { validMarkingFilterKey } from "../domain/network-markings";
 import type { MapViewState } from "./map-view";
 import type { Graph, GraphOrigin, MapEntity } from "./graph";
 
@@ -12,6 +13,7 @@ export interface Viewpoint {
     readonly network: string | null;
     readonly category: string | null;
     readonly organization: string | null;
+    readonly marking?: string;
   };
   readonly focus: {
     readonly kind: "depends-on" | "used-by" | "network-connections";
@@ -84,8 +86,10 @@ export function parseViewpoint(text: string): Viewpoint {
   const focus = row["focus"];
   const framing = row["framing"];
   if (
-    !object(filters, ["network", "category", "organization"]) ||
-    !Object.values(filters).every(optionalUuid) ||
+    (!object(filters, ["network", "category", "organization"]) &&
+      !object(filters, ["network", "category", "organization", "marking"])) ||
+    ![filters["network"], filters["category"], filters["organization"]].every(optionalUuid) ||
+    (Object.hasOwn(filters, "marking") && !validMarkingFilterKey(filters["marking"])) ||
     (focus !== null &&
       (!object(focus, ["kind", "subject", "depth"]) ||
         typeof focus["kind"] !== "string" ||
@@ -140,6 +144,7 @@ export function createViewpoint(
       network: filter.networkId === undefined ? null : recordedId(lookup, "network", filter.networkId),
       category: filter.categoryId === undefined ? null : recordedId(lookup, "category", filter.categoryId),
       organization: filter.orgId === undefined ? null : recordedId(lookup, "organization", filter.orgId),
+      ...(filter.markingKey ? { marking: filter.markingKey } : {}),
     },
     focus: state.focus && focus ? { kind: state.focus.kind, depth: state.focus.depth, subject: focus } : null,
     chain: find(state.chainRoot),
@@ -186,6 +191,9 @@ export function resolveViewpoint(
   const networkId = resolveId("network", view.filters.network);
   const categoryId = resolveId("category", view.filters.category);
   const orgId = resolveId("organization", view.filters.organization);
+  const markingKey = view.filters.marking;
+  if (markingKey && !graph.nodes.some(({ data }) => data.markingKey === markingKey))
+    throw new Error("The saved network marking filter is unavailable. Edit the saved view to replace its scope.");
   const { width, height } = dimensions;
   const { framing } = view;
   const scale = Math.min(1, width / framing.width, height / framing.height);
@@ -198,6 +206,7 @@ export function resolveViewpoint(
         ...(networkId === undefined ? {} : { networkId }),
         ...(categoryId === undefined ? {} : { categoryId }),
         ...(orgId === undefined ? {} : { orgId }),
+        ...(markingKey ? { markingKey } : {}),
       },
       chainRoot: resolveSubject(view.chain),
       selectedNode: resolveSubject(view.selection),

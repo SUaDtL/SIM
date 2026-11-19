@@ -257,6 +257,26 @@ for (const factor of [2, 4]) {
       expect(metrics.innerWidth).toBeLessThanOrEqual(1280 / factor);
       await info.attach("actual-browser-zoom", { body: JSON.stringify(metrics), contentType: "application/json" });
       await exerciseLayout(page, info, `browser-zoom-${String(factor * 100)}`);
+      // Start clean so the accessibility check exercises the real network form.
+      await page.goto(simUrl);
+      await showInventory(page);
+      await page.getByLabel("Show", { exact: true }).selectOption("network");
+      await page.getByTestId("list-panel").getByRole("button", { name: "Add network", exact: true }).click();
+      const editor = page.getByTestId("editor");
+      await editor.getByLabel("Name", { exact: true }).fill("Zoom exercise network");
+      const trigger = editor.getByRole("button", { name: /^Network marking / });
+      await trigger.click();
+      const markingPicker = page.getByRole("dialog", { name: "Choose network marking" });
+      const secRel = markingPicker.getByRole("button", { name: "SEC-REL", exact: true });
+      await contained(page, secRel);
+      expect(await markingPicker.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+      await capture(page, info, `network-marking-zoom-${String(factor * 100)}.png`);
+      await secRel.click();
+      await expect(trigger).toBeFocused();
+      const apply = editor.getByRole("button", { name: "Add network", exact: true });
+      await contained(page, apply);
+      await apply.click();
+      await expect(page.getByTestId("banner-top")).toHaveText("SECRET");
     } finally {
       await context.close();
     }

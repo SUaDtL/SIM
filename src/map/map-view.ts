@@ -2,6 +2,7 @@ import cytoscape, { type Core, type NodeCollection, type NodeSingular } from "cy
 import fcose from "cytoscape-fcose";
 import type { History, NodePosition, ScenarioChange, Snapshot } from "../domain/types";
 import { bannerText } from "../db/markings";
+import { NETWORK_LABEL_NOTE, networkMarkingFilterKey, networkMarkingLabel } from "../domain/network-markings";
 import { button, el, option } from "../ui/dom";
 import {
   buildGraph,
@@ -323,12 +324,14 @@ export function createMapView(ctx: MapViewContext): MapView {
     void changeScope(filter, foundationalBox.checked);
   });
   const filterNetwork = el("select", { id: "map-filter-network" });
+  const filterMarking = el("select", { id: "map-filter-marking" });
   const filterCategory = el("select", { id: "map-filter-category" });
   const filterOrg = el("select", {
     id: "map-filter-org",
     title: "Services this organization provides, supports or consumes",
   });
-  for (const select of [filterNetwork, filterCategory, filterOrg]) {
+  const scopeSelects = [filterNetwork, filterCategory, filterOrg, filterMarking];
+  for (const select of scopeSelects) {
     select.addEventListener("change", () => {
       void changeScope(readFilter(), showFoundational);
     });
@@ -430,6 +433,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       "div",
       { class: "map-tools", role: "group", "aria-label": "Filter the map" },
       filterLabel("Network", filterNetwork),
+      filterLabel("Network marking", filterMarking),
       filterLabel("Category", filterCategory),
       filterLabel("Organization", filterOrg),
       el("label", { class: "map-toggle" }, foundationalBox, foundationalLabel),
@@ -773,7 +777,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       }
       const target = cy.getElementById(node.data.id);
       if (revealFiltered && focus === null && target.hasClass("filtered")) {
-        for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
+        for (const select of scopeSelects) select.value = "";
         filter = {};
       }
       selectedNode = node.data.id;
@@ -798,14 +802,24 @@ export function createMapView(ctx: MapViewContext): MapView {
   }
 
   function findRecords(query?: string): FindRecord[] {
-    const nodes = query ? graph.nodes.filter((node) => findName(node).toLowerCase().includes(query)) : graph.nodes;
+    const networks = new Map(snapshot?.networks.map((network) => [network.id, network]));
     const projected = view.kind !== "as-is";
-    const choices: FindRecord[] = nodes.map((node) => ({
-      value: `map:${node.data.id}`,
-      label: findName(node),
-      detail: `${node.data.entity}${projected ? " · projected" : ""}`,
-      inspect: () => navigateFound(node),
-    }));
+    const choices: FindRecord[] = graph.nodes.flatMap((node) => {
+      const label = findName(node);
+      const network = node.data.entity === "network" ? networks.get(node.data.entityId) : undefined;
+      const marking = network?.diagramMarking;
+      const searchText = network && [networkMarkingLabel(network), marking?.shortLabel].join(" ").trim();
+      if (query && ![label, searchText].join(" ").toLowerCase().includes(query)) return [];
+      return [
+        {
+          value: `map:${node.data.id}`,
+          label,
+          detail: `${node.data.entity}${projected ? " · projected" : ""}${marking ? ` · ${marking.fullLabel}` : ""}`,
+          ...(searchText ? { searchText } : {}),
+          inspect: () => navigateFound(node),
+        },
+      ];
+    });
     const baseline = ctx.snapshot();
     const records = (query ? searchEntities(baseline, query) : inventoryRecords(baseline)).filter(
       (match) => view.kind !== "as-is" || !["network", "service", "cds"].includes(match.target.type),
@@ -814,7 +828,8 @@ export function createMapView(ctx: MapViewContext): MapView {
       choices.push({
         value: `record:${match.target.type}:${String(match.target.id)}`,
         label: match.label,
-        detail: `${match.target.type}${projected ? " · As-Is" : ""}`,
+        detail: `${match.target.type}${projected ? " · As-Is" : ""}${match.searchText ? ` · ${match.detail}` : ""}`,
+        ...(match.searchText ? { searchText: match.searchText } : {}),
         inspect: () =>
           guardedMapChange(() => {
             if (["network", "service", "cds"].includes(match.target.type)) showAsIs();
@@ -873,10 +888,12 @@ export function createMapView(ctx: MapViewContext): MapView {
     const networkId = chosen(filterNetwork);
     const categoryId = chosen(filterCategory);
     const orgId = chosen(filterOrg);
+    const markingKey = filterMarking.value;
     return {
       ...(networkId === undefined ? {} : { networkId }),
       ...(categoryId === undefined ? {} : { categoryId }),
       ...(orgId === undefined ? {} : { orgId }),
+      ...(markingKey ? { markingKey } : {}),
     };
   }
 
@@ -898,6 +915,7 @@ export function createMapView(ctx: MapViewContext): MapView {
 
   function showFilterChoices(next: MapFilter, foundational: boolean): void {
     filterNetwork.value = next.networkId === undefined ? "" : String(next.networkId);
+    filterMarking.value = next.markingKey ?? "";
     filterCategory.value = next.categoryId === undefined ? "" : String(next.categoryId);
     filterOrg.value = next.orgId === undefined ? "" : String(next.orgId);
     foundationalBox.checked = foundational;
@@ -912,7 +930,8 @@ export function createMapView(ctx: MapViewContext): MapView {
       if (
         resolved.networkId !== next.networkId ||
         resolved.categoryId !== next.categoryId ||
-        resolved.orgId !== next.orgId
+        resolved.orgId !== next.orgId ||
+        resolved.markingKey !== next.markingKey
       ) {
         showFilterChoices(filter, showFoundational);
         ctx.navigationAborted?.();
@@ -973,9 +992,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     clearHighlight.hidden = chainRoot === null;
     focusTools.hidden = selected === undefined && chainRoot === null;
     focusActions.hidden = focus === null;
-    const activeFilters =
-      [filterNetwork, filterCategory, filterOrg].filter((select) => select.value !== "").length +
-      (showFoundational ? 1 : 0);
+    const activeFilters = scopeSelects.filter((select) => select.value !== "").length + (showFoundational ? 1 : 0);
     filtersTitle.textContent = activeFilters === 0 ? "Filters" : `Filters (${String(activeFilters)})`;
     const chain: Chain | null = chainRoot === null ? null : traceChain(graph, chainRoot);
     const membership = focus ? focusGraph(graph, focus) : null;
@@ -1042,17 +1059,18 @@ export function createMapView(ctx: MapViewContext): MapView {
       const kind = region.kind === "external" ? "External" : "Internal";
       const unit = view.kind === "compare" ? "representation" : "service";
       const countLabel = `${String(count)} ${unit}${count === 1 ? "" : "s"} in scope`;
-      const heading = `${region.name}\n${kind} · ${String(count)} shown\n${region.marking}`;
+      const shortMarking = region.diagramMarking?.shortLabel ?? region.marking;
+      const heading = `${region.name}\n${kind} · ${String(count)} shown\n${shortMarking}`;
       // Keep compact viewport headings close to their own region; the complete regional roster
       // remains available through Reading the map at every viewport size.
       const cyNode = cy.getElementById(id);
-      const compactHeading = `${region.name}\n${region.marking}`;
+      const compactHeading = `${region.name}\n${shortMarking}`;
       cyNode.data({
         heading,
         compactHeading,
         label: detailedRegionHeadings && !chainRoot && !focus ? heading : compactHeading,
       });
-      regions.push(el("li", {}, `${region.name} · ${kind} · ${countLabel} · ${region.marking}`));
+      regions.push(el("li", {}, `${region.name} · ${kind} · ${countLabel} · ${networkMarkingLabel(region)}`));
     }
     regionList.replaceChildren(...regions);
     applyZoom();
@@ -1095,6 +1113,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     const namedFilters = (
       [
         ["Network", filterNetwork],
+        ["Network marking", filterMarking],
         ["Category", filterCategory],
         ["Organization", filterOrg],
       ] as const
@@ -1302,6 +1321,20 @@ export function createMapView(ctx: MapViewContext): MapView {
       ...(edges.filter(".removed").nonempty() ? ["Removed dependency"] : []),
     ];
     if (focus) legend.push("Remote endpoint: service outside the focused network");
+    const markingsInFrame = (snapshot?.networks ?? []).filter(
+      (network) => network.diagramMarking && nodes.getElementById(nodeId("network", network.id)).nonempty(),
+    );
+    if (markingsInFrame.length > 0) {
+      legend.push(NETWORK_LABEL_NOTE);
+      // Bound the caption so the map remains visible on small captures.
+      for (const network of markingsInFrame.slice(0, 3)) {
+        const marking = network.diagramMarking;
+        if (marking && marking.shortLabel !== marking.fullLabel)
+          legend.push(`${network.name} · ${marking.shortLabel} = ${marking.fullLabel}`);
+      }
+      if (markingsInFrame.length > 3)
+        legend.push("See network inspection or an assessment report for additional label details.");
+    }
     return { title: `${name} / ${viewName}`, ...(subject ? { subject } : {}), details, legend, keys };
   }
 
@@ -1462,6 +1495,17 @@ export function createMapView(ctx: MapViewContext): MapView {
       });
   }
 
+  function hasMarkedOverview(): boolean {
+    return (
+      focus === null &&
+      chainRoot === null &&
+      (snapshot?.networks.some(
+        (network) => network.diagramMarking && cy.getElementById(nodeId("network", network.id)).visible(),
+      ) ??
+        false)
+    );
+  }
+
   /** Move visible captions, never nodes, a short distance from their natural anchor. */
   function separateLabels(): void {
     cy.nodes(".network, .cds, .service").forEach((node) => {
@@ -1486,8 +1530,9 @@ export function createMapView(ctx: MapViewContext): MapView {
       const p = node.position();
       return p.x >= extent.x1 && p.x <= extent.x2 && p.y >= extent.y1 && p.y <= extent.y2;
     });
+    const markedOverview = wholeLandscape && hasMarkedOverview();
     const regions =
-      wholeLandscape && cy.width() <= 480
+      wholeLandscape && (cy.width() <= 480 || markedOverview)
         ? cy.nodes(".network:visible").map((node) => ({
             id: node.id(),
             body: node.boundingBox({ includeLabels: false, includeOverlays: false }),
@@ -1534,6 +1579,15 @@ export function createMapView(ctx: MapViewContext): MapView {
       for (let y = placeAroundRegion ? -radius : 0; y <= radius; y += 8)
         for (let x = -Math.ceil(radius / 8) * 8; x <= radius; x += 8)
           if (x * x + y * y <= radius * radius) candidates.push({ x, y: y * direction });
+      if (markedOverview && placeAroundRegion) {
+        const own = regions.find(({ id }) => id === node.id());
+        if (own) {
+          // A dense region can be taller than the caption's search radius.
+          // Try the space immediately below that region as a second anchor.
+          const below = (own.body.y2 - box.y1) * zoom + 4;
+          for (let x = -radius; x <= radius; x += 8) candidates.push({ x, y: below });
+        }
+      }
       // Prefer keeping a network heading close above its own box rather than
       // floating it into the network in the row above.
       const verticalPenalty = node.hasClass("network") ? 4 : 1;
@@ -1558,7 +1612,7 @@ export function createMapView(ctx: MapViewContext): MapView {
         if (
           placeAroundRegion &&
           regions.some(({ id, body }) =>
-            id === node.id()
+            id === node.id() && !markedOverview
               ? candidate.y > 0 && b.y1 < body.y2 + 1 / zoom
               : b.x1 < body.x2 && b.x2 > body.x1 && b.y1 < body.y2 && b.y2 > body.y1,
           )
@@ -1609,22 +1663,26 @@ export function createMapView(ctx: MapViewContext): MapView {
     // Fit the network bodies first so a previous caption offset cannot change
     // the scale or center of the next Fit.
     const narrow = cy.width() <= 480;
-    if (narrow) {
+    const markSpace = hasMarkedOverview();
+    // Wide headings have three screen-sized lines. Preserve enough margin for either anchor.
+    const padding = markSpace ? Math.min(narrow ? 48 : 64, Math.min(cy.width(), cy.height()) / 3) : FIT_MARGIN;
+    const bodyFirst = narrow || markSpace;
+    if (bodyFirst) {
       const bodies = visible.nodes().boundingBox({ includeLabels: false, includeOverlays: false });
       // Cytoscape accepts a model-space bounding box here; its bundled type
       // declares only the element collection and selector overloads.
       const camera = cy as Core & { fit(bounds: typeof bodies, padding: number): Core };
-      camera.fit(bodies, FIT_MARGIN);
+      camera.fit(bodies, padding);
     } else cy.fit(visible, FIT_MARGIN);
     // Fitting switches semantic label density. Plan against the boxes the reader
     // actually sees, including the CDS captions, rather than the pre-fit detail view.
     applyZoom();
     applyRouteOffsets();
-    if (narrow && visible.edges().nonempty()) {
+    if (bodyFirst && visible.edges().nonempty()) {
       const routes = visible.edges().boundingBox({ includeLabels: false, includeOverlays: false });
       const viewport = cy.extent();
       if (routes.x1 < viewport.x1 || routes.x2 > viewport.x2 || routes.y1 < viewport.y1 || routes.y2 > viewport.y2) {
-        cy.fit(visible, FIT_MARGIN);
+        cy.fit(visible, padding);
         applyZoom();
         applyRouteOffsets();
       }
@@ -1748,6 +1806,15 @@ export function createMapView(ctx: MapViewContext): MapView {
     fillFilter(filterNetwork, "All networks", current.networks);
     fillFilter(filterCategory, "All categories", current.categories);
     fillFilter(filterOrg, "All organizations", current.organizations);
+    const keepMarking = filterMarking.value;
+    const markings = new Map(
+      current.networks.map((network) => [networkMarkingFilterKey(network), networkMarkingLabel(network)]),
+    );
+    filterMarking.replaceChildren(
+      option("", "All markings"),
+      ...[...markings].sort((a, b) => a[1].localeCompare(b[1])).map(([key, label]) => option(key, label)),
+    );
+    filterMarking.value = markings.has(keepMarking) ? keepMarking : "";
     filter = readFilter();
     findOptions.replaceChildren(
       ...graph.nodes
@@ -2008,7 +2075,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     foundationalBox.checked = false;
     chainRoot = null;
     selectedNode = null;
-    for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
+    for (const select of scopeSelects) select.value = "";
     cy.elements().remove();
     const fresh = sync();
     if (fresh.nonempty()) {
@@ -2053,9 +2120,7 @@ export function createMapView(ctx: MapViewContext): MapView {
       view = saved.view;
       switchView(persistPositions);
     }
-    filterNetwork.value = saved.filter.networkId === undefined ? "" : String(saved.filter.networkId);
-    filterCategory.value = saved.filter.categoryId === undefined ? "" : String(saved.filter.categoryId);
-    filterOrg.value = saved.filter.orgId === undefined ? "" : String(saved.filter.orgId);
+    showFilterChoices(saved.filter, saved.foundational);
     filter = readFilter();
     chainRoot = saved.chainRoot;
     selectedNode = saved.selectedNode === undefined ? saved.chainRoot : saved.selectedNode;
@@ -2139,7 +2204,7 @@ export function createMapView(ctx: MapViewContext): MapView {
     const node = graph.nodes.find((item) => item.data.id === nodeId(entity, id));
     if (!node) return;
     if (focus === null && !cy.getElementById(node.data.id).visible()) {
-      for (const select of [filterNetwork, filterCategory, filterOrg]) select.value = "";
+      for (const select of scopeSelects) select.value = "";
       filter = {};
     }
     selectedNode = node.data.id;

@@ -8,6 +8,7 @@ import { isValidCaveat, normalizeCaveat } from "./markings";
 import { LATEST_VERSION, migrate, SIM_APPLICATION_ID, userVersion } from "./migrate";
 import { MIGRATIONS } from "./migrations";
 import { openDatabase } from "./sqlite";
+import { parseStoredNetworkMarking } from "../domain/network-markings";
 import { inspectDatasetSemantics } from "./semantics";
 
 export { inspectDatasetSemantics, type DatasetIssue, type DatasetIssueCode } from "./semantics";
@@ -92,6 +93,7 @@ export async function openDataset(bytes: Uint8Array, options: OpenOptions = {}):
     migrate(db);
     if (requiresMigration) migratedOpens.add(db);
     checkAssessmentRecords(db);
+    checkNetworkMarkings(db);
     const lineage = scalar(db, "SELECT lineage FROM assessment_context WHERE id = 1");
     for (const [id, marking, payload] of db.exec("SELECT id, marking, payload FROM review_issuance")[0]?.values ?? []) {
       if (typeof payload !== "string") throw new DatasetError("CORRUPT");
@@ -144,6 +146,38 @@ function checkAssessmentRecords(db: Database): void {
     if (scalar(db, `SELECT 1 FROM ${table} WHERE exchange_id IS NULL LIMIT 1`) === 1) {
       throw new DatasetError("CORRUPT", undefined, "An exchange identity is missing.");
     }
+  }
+}
+
+function checkNetworkMarkings(db: Database): void {
+  // sql.js replaces malformed text when reading it as a string. Reject bad bytes before projecting labels.
+  const encoding = String(scalar(db, "PRAGMA encoding"));
+  const decoder = new TextDecoder(encoding, { fatal: true, ignoreBOM: true });
+  const catalog = db.prepare(`SELECT CAST(exchange_id AS BLOB), CAST(preset_key AS BLOB),
+    CAST(full_label AS BLOB), CAST(short_label AS BLOB), CAST(base_marking AS BLOB),
+    CAST(description AS BLOB), CAST(normalized_label AS BLOB) FROM diagram_marking`);
+  try {
+    while (catalog.step()) {
+      const [id, key, full, short, base, description, normalized] = catalog.get().map((value) => {
+        if (value === null) return null;
+        if (!(value instanceof Uint8Array)) throw new DatasetError("CORRUPT");
+        return decoder.decode(value);
+      });
+      parseStoredNetworkMarking(id, key, full, short, base, description, normalized);
+    }
+  } finally {
+    catalog.free();
+  }
+  if (
+    scalar(
+      db,
+      `SELECT 1 FROM network_marking_assignment a
+      JOIN network n ON n.id = a.network_id
+      JOIN diagram_marking m ON m.exchange_id = a.marking_id
+      WHERE n.marking <> m.base_marking LIMIT 1`,
+    ) === 1
+  ) {
+    throw new DatasetError("CORRUPT", undefined, "A network's display grouping disagrees with its selected marking.");
   }
 }
 

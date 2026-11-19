@@ -1,5 +1,6 @@
 import { button, el, option } from "./dom";
 import "./help.css";
+import { NETWORK_LABEL_NOTE } from "../domain/network-markings";
 
 interface HelpTopic {
   id: string;
@@ -222,6 +223,8 @@ function guideTopics(): HelpTopic[] {
           "p",
           {},
           "The banner and exports show the highest marking anywhere in the dataset, including in a filtered view. Keep real host names and IP addresses out. Input warnings cannot establish classification. SIM does not encrypt the dataset.",
+          NETWORK_LABEL_NOTE +
+            " Choose a preset or create a reusable custom marking within the Network marking picker.",
         ),
       ],
     },

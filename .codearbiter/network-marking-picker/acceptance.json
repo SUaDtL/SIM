@@ -1,0 +1,2145 @@
+{
+  "format": "sim-marking-acceptance/v2",
+  "baseline": "c2c782ab88846ad78664239f648105db66fd2d76",
+  "cases": [
+    {
+      "id": "MK-001",
+      "owner": "WP00",
+      "topic": "Baseline",
+      "requirement": "HEAD and source tree reconciled",
+      "scenario": "Use fictional test data to exercise: HEAD and source tree reconciled.",
+      "oracle": "Observed behavior satisfies “HEAD and source tree reconciled” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        }
+      ],
+      "observed": "Fetched origin/main and the isolated branch start both resolved to the handoff's c2c782a baseline.",
+      "fixture": "Pinned repository and extracted product packet",
+      "steps": "Fetch the maintained branch, compare the pinned revision and inventory current owners, schema and fixture entry points.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-002",
+      "owner": "WP00",
+      "topic": "Baseline",
+      "requirement": "Existing UI controls inventoried and prior v1 plan retired",
+      "scenario": "Use fictional test data to exercise: Existing UI controls inventoried and prior v1 plan retired.",
+      "oracle": "Observed behavior satisfies “Existing UI controls inventoried and prior v1 plan retired” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        }
+      ],
+      "observed": "The baseline used the fixed Marking select in Network and Service. The new implementation replaces the Network control and has one descriptor assignment per network.",
+      "fixture": "Pinned repository and extracted product packet",
+      "steps": "Fetch the maintained branch, compare the pinned revision and inventory current owners, schema and fixture entry points.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-003",
+      "owner": "WP00",
+      "topic": "Baseline",
+      "requirement": "CodeArbiter decisions/gates adhered to",
+      "scenario": "Use fictional test data to exercise: CodeArbiter decisions/gates adhered to.",
+      "oracle": "Observed behavior satisfies “CodeArbiter decisions/gates adhered to” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "partial",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "The feature has a native spec, plan and work record. The append-only triage entry exists. The scoped test audit ran. Staged review and hosted qualification remain pending.",
+      "fixture": "Applicable local source and browser evidence",
+      "steps": "Record the local checks and identify which independent or hosted observation still needs to be performed.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Local evidence with an outstanding acceptance step"
+    },
+    {
+      "id": "MK-004",
+      "owner": "WP00",
+      "topic": "Baseline",
+      "requirement": "Fictional fixtures and expected readbacks frozen",
+      "scenario": "Use fictional test data to exercise: Fictional fixtures and expected readbacks frozen.",
+      "oracle": "Observed behavior satisfies “Fictional fixtures and expected readbacks frozen” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        }
+      ],
+      "observed": "The browser fixture defines four fictional networks and 15, 100 or 500 services. Fixed readback assertions cover preset, shared custom, NATO and legacy fallback values.",
+      "fixture": "Pinned repository and extracted product packet",
+      "steps": "Fetch the maintained branch, compare the pinned revision and inventory current owners, schema and fixture entry points.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-005",
+      "owner": "WP01",
+      "topic": "Catalog",
+      "requirement": "Exactly eight Quick options in declared order",
+      "scenario": "Use fictional test data to exercise: Exactly eight Quick options in declared order.",
+      "oracle": "Observed behavior satisfies “Exactly eight Quick options in declared order” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "Quick order was UNCLASSIFIED, CUI, CONFIDENTIAL, SECRET, SEC-REL, SECRET//NOFORN, TOP SECRET, TS/SCI.",
+      "fixture": "The 20 curated v2 entries",
+      "steps": "Run the Vitest catalog and repository tests, then inspect the browser picker and detached assessment readback.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-006",
+      "owner": "WP01",
+      "topic": "Catalog",
+      "requirement": "More contains explicit official-style samples and informal shortcuts labeled as such",
+      "scenario": "Use fictional test data to exercise: More contains explicit official-style samples and informal shortcuts labeled as such.",
+      "oracle": "Observed behavior satisfies “More contains explicit official-style samples and informal shortcuts labeled as such” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "Eleven More rows shipped. The catalog test found shorthand descriptions on SEC-REL and TS/SCI, and the export journey retained NATO SECRET distinctly.",
+      "fixture": "The 20 curated v2 entries",
+      "steps": "Run the Vitest catalog and repository tests, then inspect the browser picker and detached assessment readback.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-007",
+      "owner": "WP01",
+      "topic": "Catalog",
+      "requirement": "Legacy U//FOUO separated from current choices",
+      "scenario": "Use fictional test data to exercise: Legacy U//FOUO separated from current choices.",
+      "oracle": "Observed behavior satisfies “Legacy U//FOUO separated from current choices” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "U//FOUO was hidden by default and appeared in Legacy after a search for fouo.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-008",
+      "owner": "WP01",
+      "topic": "Catalog",
+      "requirement": "User search matches short, full, explanatory terms",
+      "scenario": "Use fictional test data to exercise: User search matches short, full, explanatory terms.",
+      "oracle": "Observed behavior satisfies “User search matches short, full, explanatory terms” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "Five Eyes, REL FVEY and USA AUS matched the curated example. The browser found the custom asset by COI PLAN.",
+      "fixture": "The 20 curated v2 entries",
+      "steps": "Run the Vitest catalog and repository tests, then inspect the browser picker and detached assessment readback.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-009",
+      "owner": "WP01",
+      "topic": "Catalog",
+      "requirement": "Presets remain immutable and do not appear as custom rows before use",
+      "scenario": "Use fictional test data to exercise: Presets remain immutable and do not appear as custom rows before use.",
+      "oracle": "Observed behavior satisfies “Presets remain immutable and do not appear as custom rows before use” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Opening and querying presets created zero catalog rows. Apply lazily wrote one row, and Undo removed it. Duplicate as custom left SEC-REL in Quick picks.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-010",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Only one marking control visible in ordinary Network form",
+      "scenario": "Use fictional test data to exercise: Only one marking control visible in ordinary Network form.",
+      "oracle": "Observed behavior satisfies “Only one marking control visible in ordinary Network form” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "The Network form exposed one Network marking trigger and zero grouping controls before opening custom authoring.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-011",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "SEC-REL selected without advanced panel or country field",
+      "scenario": "Use fictional test data to exercise: SEC-REL selected without advanced panel or country field.",
+      "oracle": "Observed behavior satisfies “SEC-REL selected without advanced panel or country field” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A descriptive marking must never affect source file classification, authorization or transfer decisions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "SEC-REL was selectable directly in Quick picks and by search, ArrowDown and Enter.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-012",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Picker supports arrows Enter Escape and clear focus restoration",
+      "scenario": "Use fictional test data to exercise: Picker supports arrows Enter Escape and clear focus restoration.",
+      "oracle": "Observed behavior satisfies “Picker supports arrows Enter Escape and clear focus restoration” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "ArrowDown focused SEC-REL, Enter selected it, and Escape restored focus to the marking trigger.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-013",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Picker reflows at 320px without clipping and no nested vertical scroll trap",
+      "scenario": "Use fictional test data to exercise: Picker reflows at 320px without clipping and no nested vertical scroll trap.",
+      "oracle": "Observed behavior satisfies “Picker reflows at 320px without clipping and no nested vertical scroll trap” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "viewport-timing.json",
+          "sha256": "bef02a031920d459d30577d719034602be7544e6e69913d87020057f4fd8a185"
+        },
+        {
+          "path": "browser/chrome/picker-320.png",
+          "sha256": "cef64925ec4e759e479193b0bf0efc0740c46a44f6fd7b5951e319d07c6ae4d0"
+        },
+        {
+          "path": "browser/msedge/map-500-1366.png",
+          "sha256": "c4d2eef554765ce34c078f8c0ba6e5c0fb420fa18d530cfd7e4b6aa2b499d960"
+        },
+        {
+          "path": "density-before.log",
+          "sha256": "140eadd8a50db8f2c108731f5125f6c5c2990bcb03b17757a8d376467f6e39dd"
+        }
+      ],
+      "observed": "At 320 CSS px the picker fit the viewport with zero horizontal overflow and no nested scroll container.",
+      "fixture": "Fictional 15-, 100- and 500-service files with the same curated, custom and legacy labels",
+      "steps": "Open the fixtures in both browsers. Fit the map at 320, 390, 768, 1366 and 1600 CSS px and inspect caption geometry, viewport timing and picker reflow.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-014",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "200/400 percent browser zoom retains visible choice and actions",
+      "scenario": "Use fictional test data to exercise: 200/400 percent browser zoom retains visible choice and actions.",
+      "oracle": "Observed behavior satisfies “200/400 percent browser zoom retains visible choice and actions” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking-zoom-400.png",
+          "sha256": "9147a963a85c9d817e780026197e0ddb764f3430bbc22dab3f43d918621e49b1"
+        },
+        {
+          "path": "browser/msedge/network-marking-zoom-200.png",
+          "sha256": "1c6bed8824821dbdef86f2a186ef710284d0e29aa7f99f50cc5447fce8b9cfb2"
+        }
+      ],
+      "observed": "Isolated Edge and Chrome profiles measured DPR 2 and 4 at visual scale 1. SEC-REL and Add network reached the viewport and saved.",
+      "fixture": "Isolated Chrome and Edge profiles set to actual 200% and 400% browser zoom",
+      "steps": "Measure DPR, visual scale and CSS viewport. Choose SEC-REL with the picker and confirm Add network is reachable.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-015",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Selection changes pending draft only until parent Apply",
+      "scenario": "Use fictional test data to exercise: Selection changes pending draft only until parent Apply.",
+      "oracle": "Observed behavior satisfies “Selection changes pending draft only until parent Apply” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "The banner stayed UNCLASSIFIED after choosing SEC-REL in the draft and changed to SECRET after Add network.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-016",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Existing editing with no selection change creates no materialized preset",
+      "scenario": "Use fictional test data to exercise: Existing editing with no selection change creates no materialized preset.",
+      "oracle": "Observed behavior satisfies “Existing editing with no selection change creates no materialized preset” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Saving a migrated v7 record with its original SECRET grouping left both new marking tables empty.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-017",
+      "owner": "WP02",
+      "topic": "Picker",
+      "requirement": "Changing selection updates base group only inside one draft",
+      "scenario": "Use fictional test data to exercise: Changing selection updates base group only inside one draft.",
+      "oracle": "Observed behavior satisfies “Changing selection updates base group only inside one draft” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "The applied SEC-REL network had SECRET grouping. Undo and Redo moved the network and banner together.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-018",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Custom displayed label accepts meaningful slashes and spaces",
+      "scenario": "Use fictional test data to exercise: Custom displayed label accepts meaningful slashes and spaces.",
+      "oracle": "Observed behavior satisfies “Custom displayed label accepts meaningful slashes and spaces” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Custom data retained case, two internal spaces, slash punctuation, angle brackets and the COI label through the validated write path.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-019",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Custom short label stays within length and never silently alters full text",
+      "scenario": "Use fictional test data to exercise: Custom short label stays within length and never silently alters full text.",
+      "oracle": "Observed behavior satisfies “Custom short label stays within length and never silently alters full text” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "A 21-character short label and invisible-only labels were refused. The full label preserved entered punctuation and internal spacing.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-020",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Custom requires one base grouping only in custom authoring",
+      "scenario": "Use fictional test data to exercise: Custom requires one base grouping only in custom authoring.",
+      "oracle": "Observed behavior satisfies “Custom requires one base grouping only in custom authoring” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Create and use first refused an empty grouping and then accepted SECRET on the child form.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-021",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Custom asset created once and reused by two networks",
+      "scenario": "Use fictional test data to exercise: Custom asset created once and reused by two networks.",
+      "oracle": "Observed behavior satisfies “Custom asset created once and reused by two networks” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Two saved networks joined one custom asset and both read back the same UUID.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-022",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Parent form fields survive inline custom create, cancel and validation refusal",
+      "scenario": "Use fictional test data to exercise: Parent form fields survive inline custom create, cancel and validation refusal.",
+      "oracle": "Observed behavior satisfies “Parent form fields survive inline custom create, cancel and validation refusal” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Escape cancelled a child draft, validation kept the custom form open, and creating the asset preserved the parent Name and Description.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-023",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Cancel parent does not delete independently committed custom asset",
+      "scenario": "Use fictional test data to exercise: Cancel parent does not delete independently committed custom asset.",
+      "oracle": "Observed behavior satisfies “Cancel parent does not delete independently committed custom asset” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Cancelling the pending parent left the created label available for Aurora and Boreal.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-024",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Shared custom rename shows affected network count before commit",
+      "scenario": "Use fictional test data to exercise: Shared custom rename shows affected network count before commit.",
+      "oracle": "Observed behavior satisfies “Shared custom rename shows affected network count before commit” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Editing the reused label showed two affected networks before save. The pending editor and the saved data displayed the new label.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-025",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Deleting referenced asset is refused and leaves references intact",
+      "scenario": "Use fictional test data to exercise: Deleting referenced asset is refused and leaves references intact.",
+      "oracle": "Observed behavior satisfies “Deleting referenced asset is refused and leaves references intact” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Delete custom marking reported both usages. The SQLite readback retained the shared references.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-026",
+      "owner": "WP03",
+      "topic": "Custom",
+      "requirement": "Built-in customization uses Duplicate as custom and does not mutate preset",
+      "scenario": "Use fictional test data to exercise: Built-in customization uses Duplicate as custom and does not mutate preset.",
+      "oracle": "Observed behavior satisfies “Built-in customization uses Duplicate as custom and does not mutate preset” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "Duplicate as custom copied SEC-REL into the child. Submitting that name offered explicit reuse. A distinct label created a custom asset and the preset stayed selectable.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-027",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Forward migration preserves legacy recorded network marking",
+      "scenario": "Use fictional test data to exercise: Forward migration preserves legacy recorded network marking.",
+      "oracle": "Observed behavior satisfies “Forward migration preserves legacy recorded network marking” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Opening a real v7 SQLite fixture kept its SECRET network and added empty marking tables. A second round trip returned the original record.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-028",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Every network has zero or one selected label reference",
+      "scenario": "Use fictional test data to exercise: Every network has zero or one selected label reference.",
+      "oracle": "Observed behavior satisfies “Every network has zero or one selected label reference” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "A primary-keyed assignment replaces the existing row. It links one catalog identity per network and follows foreign-key rules.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-029",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Atomic network edit + assignment is one undo step",
+      "scenario": "Use fictional test data to exercise: Atomic network edit + assignment is one undo step.",
+      "oracle": "Observed behavior satisfies “Atomic network edit + assignment is one undo step” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "One Undo restored the prior network and grouping. A forced late assignment refusal left revision, fields, assignment count, preset count and Undo order intact.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-030",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Database rejects orphaned assignments, invalid base and malformed catalog fields",
+      "scenario": "Use fictional test data to exercise: Database rejects orphaned assignments, invalid base and malformed catalog fields.",
+      "oracle": "Observed behavior satisfies “Database rejects orphaned assignments, invalid base and malformed catalog fields” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Orphan assignments, unknown groupings, empty shorts and malformed text were refused. Literal U+FFFD survived valid UTF-8 and both UTF-16 encodings.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-031",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Save/reopen and Save As preserve exact custom labels and identities",
+      "scenario": "Use fictional test data to exercise: Save/reopen and Save As preserve exact custom labels and identities.",
+      "oracle": "Observed behavior satisfies “Save/reopen and Save As preserve exact custom labels and identities” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "Save As downloaded the marked SQLite file. Repo readback and opening it in the browser restored one shared UUID and the exact label on both networks.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-032",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Undo/Redo after edit and rename restore correct affected views",
+      "scenario": "Use fictional test data to exercise: Undo/Redo after edit and rename restore correct affected views.",
+      "oracle": "Observed behavior satisfies “Undo/Redo after edit and rename restore correct affected views” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Undo/Redo restored the preset, shared-label rename and affected networks in repository tests.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-033",
+      "owner": "WP04",
+      "topic": "Persistence",
+      "requirement": "Dataset open still rejects modified schema/tampered preset metadata",
+      "scenario": "Use fictional test data to exercise: Dataset open still rejects modified schema/tampered preset metadata.",
+      "oracle": "Observed behavior satisfies “Dataset open still rejects modified schema/tampered preset metadata” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Schema fingerprint tests and explicit tampering checks refused altered structure, conflicting preset fields and grouping mismatch.",
+      "fixture": "v7/v8 SQLite fixtures, fictional networks and an injected assignment refusal",
+      "steps": "Run network-markings, open and schema tests. Observe SQLite rows, revision, history, and invalid input and file results.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-034",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Map network title exposes one short label, not duplicated badges",
+      "scenario": "Use fictional test data to exercise: Map network title exposes one short label, not duplicated badges.",
+      "oracle": "Observed behavior satisfies “Map network title exposes one short label, not duplicated badges” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/map-500-320.png",
+          "sha256": "6f4afc4c6056097be8de5b938c5e318f18d64b82b934126a97b51cde8d09125f"
+        },
+        {
+          "path": "browser/chrome/map-500-1366.png",
+          "sha256": "c4d2eef554765ce34c078f8c0ba6e5c0fb420fa18d530cfd7e4b6aa2b499d960"
+        },
+        {
+          "path": "browser/msedge/map-100-1366.png",
+          "sha256": "f570932519deb9f73a3520717a1f4a7ed2a299cc45fcdf9c5d49742ced88d9df"
+        },
+        {
+          "path": "density-before.log",
+          "sha256": "140eadd8a50db8f2c108731f5125f6c5c2990bcb03b17757a8d376467f6e39dd"
+        }
+      ],
+      "observed": "The map used one compact caption for each assigned label and retained the service count at the wide view. The detached capture showed JOINT PLANNING COI on Boreal.",
+      "fixture": "Four simulated networks with 15, 100 and 500 services",
+      "steps": "Inspect the rendered fit at phone and desktop widths and independently check viewport and caption bounds against network bodies.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-035",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Inspector exposes exact full label, short label and grouping",
+      "scenario": "Use fictional test data to exercise: Inspector exposes exact full label, short label and grouping.",
+      "oracle": "Observed behavior satisfies “Inspector exposes exact full label, short label and grouping” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "Inspect exposed Network label, Short map label, Display grouping and the label explanation.",
+      "fixture": "Fictional topology, one saved custom marking, one legacy fallback, and a scenario rehome",
+      "steps": "Exercise filter, Find, view restoration, dependency trace, and inspection with a projected and baseline snapshot.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-036",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Inventory includes one marking column and searchable full/short text",
+      "scenario": "Use fictional test data to exercise: Inventory includes one marking column and searchable full/short text.",
+      "oracle": "Observed behavior satisfies “Inventory includes one marking column and searchable full/short text” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/shared-marking.sqlite",
+          "sha256": "cf76d59a0deac7c16580b9d98eb8fca73b187e3b44c44c53645e90787785fbb8"
+        },
+        {
+          "path": "browser/msedge/shared-marking.sqlite",
+          "sha256": "885b683a12fd438db5e9a7e04bd5f935fd9742d7741b67842ab6b73e1a22c701"
+        }
+      ],
+      "observed": "The Marking column displayed the full label. Searching for COI PLAN after reopen returned both linked rows.",
+      "fixture": "A pending Aurora draft, one custom COI label, and two referencing networks",
+      "steps": "Create or cancel child drafts, reuse the shared marking, inspect its usage, rename, attempt deletion, Save As and reopen.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-037",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Marking filter is optional and inside existing Filters surface",
+      "scenario": "Use fictional test data to exercise: Marking filter is optional and inside existing Filters surface.",
+      "oracle": "Observed behavior satisfies “Marking filter is optional and inside existing Filters surface” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "Network marking was selectable inside Filters. Selecting Boreal’s custom label scoped the capture to one network and four services.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-038",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Network move/rename and scenario view do not change label identity",
+      "scenario": "Use fictional test data to exercise: Network move/rename and scenario view do not change label identity.",
+      "oracle": "Observed behavior satisfies “Network move/rename and scenario view do not change label identity” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "A network rename and a scenario rehome left the shared custom UUID intact. A saved filter resolved after both network and marking renames.",
+      "fixture": "Fictional topology, one saved custom marking, one legacy fallback, and a scenario rehome",
+      "steps": "Exercise filter, Find, view restoration, dependency trace, and inspection with a projected and baseline snapshot.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-039",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Focus/trace of dependencies unaffected by labels",
+      "scenario": "Use fictional test data to exercise: Focus/trace of dependencies unaffected by labels.",
+      "oracle": "Observed behavior satisfies “Focus/trace of dependencies unaffected by labels” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "A graph test followed the same recorded provider through traceChain after a custom label was assigned. Existing Focus and Back journeys passed the browser suite.",
+      "fixture": "Fictional topology, one saved custom marking, one legacy fallback, and a scenario rehome",
+      "steps": "Exercise filter, Find, view restoration, dependency trace, and inspection with a projected and baseline snapshot.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-040",
+      "owner": "WP05",
+      "topic": "UI",
+      "requirement": "Large dataset overview remains legible without service-label crowding",
+      "scenario": "Use fictional test data to exercise: Large dataset overview remains legible without service-label crowding.",
+      "oracle": "Observed behavior satisfies “Large dataset overview remains legible without service-label crowding” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/map-500-320.png",
+          "sha256": "6f4afc4c6056097be8de5b938c5e318f18d64b82b934126a97b51cde8d09125f"
+        },
+        {
+          "path": "browser/chrome/map-500-1366.png",
+          "sha256": "c4d2eef554765ce34c078f8c0ba6e5c0fb420fa18d530cfd7e4b6aa2b499d960"
+        },
+        {
+          "path": "browser/msedge/map-100-1366.png",
+          "sha256": "f570932519deb9f73a3520717a1f4a7ed2a299cc45fcdf9c5d49742ced88d9df"
+        },
+        {
+          "path": "density-before.log",
+          "sha256": "140eadd8a50db8f2c108731f5125f6c5c2990bcb03b17757a8d376467f6e39dd"
+        }
+      ],
+      "observed": "Desktop map samples and compact viewport samples were visually reviewed for the density fixtures.",
+      "fixture": "Four simulated networks with 15, 100 and 500 services",
+      "steps": "Inspect the rendered fit at phone and desktop widths and independently check viewport and caption bounds against network bodies.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-041",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "PNG contains selected short network labels and correct scope disclosure",
+      "scenario": "Use fictional test data to exercise: PNG contains selected short network labels and correct scope disclosure.",
+      "oracle": "Observed behavior satisfies “PNG contains selected short network labels and correct scope disclosure” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "The downloaded PNG decoded and showed the short marking, network name, current scope, grouping banner and labeling legend.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-042",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "SVG export reflects exact same scene labels and scope",
+      "scenario": "Use fictional test data to exercise: SVG export reflects exact same scene labels and scope.",
+      "oracle": "Observed behavior satisfies “SVG export reflects exact same scene labels and scope” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "The downloaded SVG contained the short marking and scope text and omitted the filtered-out NATO label.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-043",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "Assessment HTML shows full/short and legacy distinctions",
+      "scenario": "Use fictional test data to exercise: Assessment HTML shows full/short and legacy distinctions.",
+      "oracle": "Observed behavior satisfies “Assessment HTML shows full/short and legacy distinctions” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "The actual assessment HTML contained the full and short rendering, NATO SECRET, built-in source and legacy grouping.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-044",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "JSON/CSV include full, short, source and base without formula injection",
+      "scenario": "Use fictional test data to exercise: JSON/CSV include full, short, source and base without formula injection.",
+      "oracle": "Observed behavior satisfies “JSON/CSV include full, short, source and base without formula injection” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "Actual JSON and CSV downloads retained full, short, source and base fields. A formula-like custom-label unit fixture preserved JSON and added spreadsheet-safe prefixes to CSV.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-045",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "Legacy CSV import remains unchanged, preview/commit parity holds",
+      "scenario": "Use fictional test data to exercise: Legacy CSV import remains unchanged, preview/commit parity holds.",
+      "oracle": "Observed behavior satisfies “Legacy CSV import remains unchanged, preview/commit parity holds” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A migration or cancelled/failed operation must not silently rewrite existing records.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "Existing CSV import and preview/commit parity checks passed. The importer and templates were untouched.",
+      "fixture": "Full SIM unit, migration, import, browser and local-file suites",
+      "steps": "Run the repository npm run check gate and read type, lint, format, standalone build, Vitest and both browser result summaries.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-046",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "Saved viewpoints restore network labels from current references",
+      "scenario": "Use fictional test data to exercise: Saved viewpoints restore network labels from current references.",
+      "oracle": "Observed behavior satisfies “Saved viewpoints restore network labels from current references” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "A viewpoint round trip stored the custom identity and restored it after rename. The map then rendered the current short label.",
+      "fixture": "Fictional topology, one saved custom marking, one legacy fallback, and a scenario rehome",
+      "steps": "Exercise filter, Find, view restoration, dependency trace, and inspection with a projected and baseline snapshot.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-047",
+      "owner": "WP06",
+      "topic": "Exports",
+      "requirement": "Mixed network labels do not synthesize a global caveat or document authorization",
+      "scenario": "Use fictional test data to exercise: Mixed network labels do not synthesize a global caveat or document authorization.",
+      "oracle": "Observed behavior satisfies “Mixed network labels do not synthesize a global caveat or document authorization” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A descriptive marking must never affect source file classification, authorization or transfer decisions.",
+      "evidenceKinds": [
+        "automated",
+        "detached",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "Detached reports displayed the dataset marking separately from the network descriptors. The preset Apply changed the stored enum without rewriting the caveat.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-048",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "Old service marking edit unchanged by network label editor",
+      "scenario": "Use fictional test data to exercise: Old service marking edit unchanged by network label editor.",
+      "oracle": "Observed behavior satisfies “Old service marking edit unchanged by network label editor” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "The existing new-service default and explicit service override browser check passed. Repository readback kept a service's CUI while its network became SECRET.",
+      "fixture": "Full SIM unit, migration, import, browser and local-file suites",
+      "steps": "Run the repository npm run check gate and read type, lint, format, standalone build, Vitest and both browser result summaries.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-049",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "No change to existing highest-marking banner algorithm",
+      "scenario": "Use fictional test data to exercise: No change to existing highest-marking banner algorithm.",
+      "oracle": "Observed behavior satisfies “No change to existing highest-marking banner algorithm” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "A descriptive marking must never affect source file classification, authorization or transfer decisions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        }
+      ],
+      "observed": "The existing highest-marking banner algorithm remained in place. Tests showed grouping selection and independent service levels contributing to the same existing banner.",
+      "fixture": "Full SIM unit, migration, import, browser and local-file suites",
+      "steps": "Run the repository npm run check gate and read type, lint, format, standalone build, Vitest and both browser result summaries.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-050",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "No request outside file protocol in offline E2E",
+      "scenario": "Use fictional test data to exercise: No request outside file protocol in offline E2E.",
+      "oracle": "Observed behavior satisfies “No request outside file protocol in offline E2E” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        },
+        {
+          "path": "browser/msedge/preset-applied.png",
+          "sha256": "c1a25ead090fdc72421e0618fdcba65ad1ec9d711530eefb5ad2fa83507c8ab5"
+        }
+      ],
+      "observed": "Chrome and Edge were offline for real file:// journeys. Runtime observation reported no requests outside file, blob and data URLs or CSP errors.",
+      "fixture": "Empty offline dataset, SEC-REL, duplicate preset and Legacy",
+      "steps": "Exercise Quick picks, the searchable Legacy section and custom duplicate path in installed Edge and Chrome. Choose a marking, apply, then Undo and Redo.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-051",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "No script or HTML injection from custom labels in any output",
+      "scenario": "Use fictional test data to exercise: No script or HTML injection from custom labels in any output.",
+      "oracle": "Observed behavior satisfies “No script or HTML injection from custom labels in any output” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "browser/chrome/network-marking.png",
+          "sha256": "13a31e32bfc11ffe809ef2ad99aa3e3d871d442ca426e8ad86222186a9375416"
+        },
+        {
+          "path": "browser/chrome/network-marking.svg",
+          "sha256": "cc92f68a62520acf2d77c69a9c24f43b37663708806b4f7c50279aacf75c2e38"
+        },
+        {
+          "path": "browser/chrome/network-marking.html",
+          "sha256": "d13de6497eec8769e49030d52ccb57625ccf2106237dee3eaa911bc61fa33573"
+        },
+        {
+          "path": "browser/chrome/network-marking.json",
+          "sha256": "343e14552025448a334508b9039b8c5f42b1d9774ef1fa20f3c263a139c37510"
+        },
+        {
+          "path": "browser/chrome/network-marking.csv",
+          "sha256": "1c6a05d1fca5427b21ffc17ff48a4ba31b8516d8383ea1f48786b89a65b52de9"
+        }
+      ],
+      "observed": "DOM text, detached HTML escaping and XML rendering preserved safe label text. Formula safety and invalid XML-character refusal had targeted negative checks.",
+      "fixture": "Fictional marked snapshot with NATO, custom and legacy labels",
+      "steps": "Capture scoped PNG and SVG, download all-inventory HTML, JSON and CSV, then inspect the bytes and run the format escaping assertions.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-052",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "15/100/500 service fixtures include realistic label lengths and measured viewport performance",
+      "scenario": "Use fictional test data to exercise: 15/100/500 service fixtures include realistic label lengths and measured viewport performance.",
+      "oracle": "Observed behavior satisfies “15/100/500 service fixtures include realistic label lengths and measured viewport performance” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Overlapping, clipped, repeated or illegible badges must count as failure even with green DOM assertions.",
+      "evidenceKinds": [
+        "automated",
+        "semantic",
+        "source"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "viewport-timing.json",
+          "sha256": "bef02a031920d459d30577d719034602be7544e6e69913d87020057f4fd8a185"
+        },
+        {
+          "path": "browser/chrome/picker-320.png",
+          "sha256": "cef64925ec4e759e479193b0bf0efc0740c46a44f6fd7b5951e319d07c6ae4d0"
+        },
+        {
+          "path": "browser/msedge/map-500-1366.png",
+          "sha256": "c4d2eef554765ce34c078f8c0ba6e5c0fb420fa18d530cfd7e4b6aa2b499d960"
+        },
+        {
+          "path": "density-before.log",
+          "sha256": "140eadd8a50db8f2c108731f5125f6c5c2990bcb03b17757a8d376467f6e39dd"
+        }
+      ],
+      "observed": "Both installed browsers ran 15, 100 and 500 services at 320, 390, 768, 1366 and 1600 CSS px. Local timings and representative screenshots are retained.",
+      "fixture": "Fictional 15-, 100- and 500-service files with the same curated, custom and legacy labels",
+      "steps": "Open the fixtures in both browsers. Fit the map at 320, 390, 768, 1366 and 1600 CSS px and inspect caption geometry, viewport timing and picker reflow.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Verified locally"
+    },
+    {
+      "id": "MK-053",
+      "owner": "WP07",
+      "topic": "Regression",
+      "requirement": "Real keyboard, focus trap and screen reader names reviewed",
+      "scenario": "Use fictional test data to exercise: Real keyboard, focus trap and screen reader names reviewed.",
+      "oracle": "Observed behavior satisfies “Real keyboard, focus trap and screen reader names reviewed” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "native",
+        "semantic",
+        "source"
+      ],
+      "status": "partial",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "Automated keyboard and accessible names passed, including measured real browser zoom. Native screen-reader interaction and independent accessibility acceptance remain pending.",
+      "fixture": "Applicable local source and browser evidence",
+      "steps": "Record the local checks and identify which independent or hosted observation still needs to be performed.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Local evidence with an outstanding acceptance step"
+    },
+    {
+      "id": "MK-054",
+      "owner": "WP08",
+      "topic": "Delivery",
+      "requirement": "Independent first-time engineer completes SEC-REL and custom label journey uncoached",
+      "scenario": "Use fictional test data to exercise: Independent first-time engineer completes SEC-REL and custom label journey uncoached.",
+      "oracle": "Observed behavior satisfies “Independent first-time engineer completes SEC-REL and custom label journey uncoached” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "release",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "not_run",
+      "evidence": [],
+      "observed": "Requires a first-time engineer to complete the SEC-REL and reusable custom marking exercise uncoached, with a follow-up the next day.",
+      "disposition": "Pending external evidence"
+    },
+    {
+      "id": "MK-055",
+      "owner": "WP08",
+      "topic": "Delivery",
+      "requirement": "Separate recipient interprets actual detached capture correctly",
+      "scenario": "Use fictional test data to exercise: Separate recipient interprets actual detached capture correctly.",
+      "oracle": "Observed behavior satisfies “Separate recipient interprets actual detached capture correctly” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "human",
+        "release",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "not_run",
+      "evidence": [],
+      "observed": "Requires a separate recipient to interpret the detached production capture and distinguish network descriptors from the dataset marking.",
+      "disposition": "Pending external evidence"
+    },
+    {
+      "id": "MK-056",
+      "owner": "WP08",
+      "topic": "Delivery",
+      "requirement": "CLI gate and CI logs bound to exact build and source",
+      "scenario": "Use fictional test data to exercise: CLI gate and CI logs bound to exact build and source.",
+      "oracle": "Observed behavior satisfies “CLI gate and CI logs bound to exact build and source” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "release",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "partial",
+      "evidence": [
+        {
+          "path": "check.log",
+          "sha256": "d019c1e196d9671628e07eb1c247d280bf26121cf9c56cdc2bf87e94c334dfbf"
+        },
+        {
+          "path": "browser-results.json",
+          "sha256": "e6fedb51cd48431b135d4e939a8466373709f2d02ff7b311ecabad48fae0228b"
+        },
+        {
+          "path": "source-manifest.json",
+          "sha256": "14d2e84f5fb1573f5ccf6e8c129c0e4e6e2be74c6b52163c26dc3228ffbb4ea2"
+        },
+        {
+          "path": "data-review.md",
+          "sha256": "f52f7becf74a792575e258d5914a9a3e0651771aef11a7885e0f3a799dfa4616"
+        }
+      ],
+      "observed": "The local CLI transcript and evidence manifest bind the working source and standalone HTML. Hosted CI on a branch commit remains pending.",
+      "fixture": "Applicable local source and browser evidence",
+      "steps": "Record the local checks and identify which independent or hosted observation still needs to be performed.",
+      "sourceBase": "c2c782ab88846ad78664239f648105db66fd2d76",
+      "sourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+      "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+      "disposition": "Local evidence with an outstanding acceptance step"
+    },
+    {
+      "id": "MK-057",
+      "owner": "WP08",
+      "topic": "Delivery",
+      "requirement": "Independently downloaded Pages artifact identity matches claimed commit",
+      "scenario": "Use fictional test data to exercise: Independently downloaded Pages artifact identity matches claimed commit.",
+      "oracle": "Observed behavior satisfies “Independently downloaded Pages artifact identity matches claimed commit” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "release",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "not_run",
+      "evidence": [],
+      "observed": "Pages identity requires an independently retrieved artifact from an authorized production deployment.",
+      "disposition": "Pending external evidence"
+    },
+    {
+      "id": "MK-058",
+      "owner": "WP08",
+      "topic": "Delivery",
+      "requirement": "Versioned downloadable release identity/digest checked if authorized",
+      "scenario": "Use fictional test data to exercise: Versioned downloadable release identity/digest checked if authorized.",
+      "oracle": "Observed behavior satisfies “Versioned downloadable release identity/digest checked if authorized” in the real built SIM; prove via source/behavior and readback.",
+      "negativeControl": "Must fail if the control only looks correct but linked data/export is missing.",
+      "evidenceKinds": [
+        "automated",
+        "release",
+        "semantic",
+        "source",
+        "visual"
+      ],
+      "status": "not_run",
+      "evidence": [],
+      "observed": "Versioned release readback applies after release publication is authorized.",
+      "disposition": "Pending external evidence"
+    }
+  ],
+  "source": {
+    "base": "c2c782ab88846ad78664239f648105db66fd2d76",
+    "baseTree": "718ec0511969fec73b12f4018c9a20486da2f1a9",
+    "branch": "codex/sim-network-marking-picker",
+    "testAndBuildSourceSha256": "09354e8a80948f1786e2fedefb0b7780072710fea632cc6fdcc104140bb59dab",
+    "standaloneHtmlSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682",
+    "workingTreeBuild": true
+  },
+  "evidenceRoot": "verification/network-marking-picker (relative to the worktree)",
+  "reviewScope": "Local source, offline browser actions, detached output, and scoped independent persistence review.",
+  "implementationNotes": [
+    "The existing map caption carries the short marking on one line. At narrow widths the service count is available in Reading the map.",
+    "A custom marking's display grouping can be set before assignment. After assignment, rename and description edits preserve the grouping of all linked networks.",
+    "Map marking filters store stable identities. Renaming an asset does not copy its text into saved viewpoints.",
+    "Network descriptors remain read-only in owner review. Existing CSV imports continue using the compatibility grouping."
+  ],
+  "localGate": {
+    "unitTestsPassed": 480,
+    "offlineBrowserTestsPassed": 1260,
+    "buildSha256": "1247f404ad135f98df612c3fece7a6aac55b756360c406425f3218b6ee8dc682"
+  }
+}

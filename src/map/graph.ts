@@ -1,3 +1,4 @@
+import { networkMarkingFilterKey } from "../domain/network-markings";
 import type { Snapshot } from "../domain/types";
 import { serviceOrigin, type ProjectedSnapshot } from "../scenario/scenario";
 
@@ -16,6 +17,7 @@ export interface GraphNode {
     readonly entityId: number;
     readonly origin: GraphOrigin;
     readonly parent?: string;
+    readonly markingKey?: string;
   };
   readonly classes: string;
 }
@@ -69,7 +71,8 @@ export function buildGraph(snapshot: Snapshot): Graph {
       group: "nodes",
       data: {
         id: nodeId("network", n.id),
-        label: `${n.name}\n${n.marking}`,
+        label: `${n.name}\n${n.diagramMarking?.shortLabel ?? n.marking}`,
+        markingKey: networkMarkingFilterKey(n),
         entity: "network",
         entityId: n.id,
         origin: { kind: "baseline", entity: "network", entityId: n.id },
@@ -293,6 +296,7 @@ export function traceChain(graph: Graph, start: string): Chain {
 export interface MapFilter {
   readonly networkId?: number;
   readonly categoryId?: number;
+  readonly markingKey?: string;
   /** An organization that provides, supports or consumes the service. */
   readonly orgId?: number;
 }
@@ -304,8 +308,18 @@ export interface MapFilter {
  */
 export function filterGraph(snapshot: Snapshot, graph: Graph, filter: MapFilter): Set<string> {
   const hidden = new Set<string>();
-  const { networkId, categoryId, orgId } = filter;
-  if (networkId === undefined && categoryId === undefined && orgId === undefined) return hidden;
+  const { networkId, categoryId, orgId, markingKey } = filter;
+  if (networkId === undefined && categoryId === undefined && orgId === undefined && markingKey === undefined)
+    return hidden;
+  const matchingNetworks = new Set(
+    snapshot.networks
+      .filter(
+        (network) =>
+          (networkId === undefined || networkId === network.id) &&
+          (markingKey === undefined || markingKey === networkMarkingFilterKey(network)),
+      )
+      .map((network) => network.id),
+  );
   const involved =
     orgId === undefined
       ? new Set<number>()
@@ -317,7 +331,7 @@ export function filterGraph(snapshot: Snapshot, graph: Graph, filter: MapFilter)
   const matching = new Set<number>();
   for (const s of snapshot.services) {
     const match =
-      (networkId === undefined || s.networkId === networkId) &&
+      matchingNetworks.has(s.networkId) &&
       (categoryId === undefined || s.categoryId === categoryId) &&
       (orgId === undefined || involved.has(s.id));
     if (match) matching.add(s.id);
@@ -326,7 +340,7 @@ export function filterGraph(snapshot: Snapshot, graph: Graph, filter: MapFilter)
   const byService = categoryId !== undefined || orgId !== undefined;
   for (const n of snapshot.networks) {
     const holdsMatch = snapshot.services.some((s) => s.networkId === n.id && matching.has(s.id));
-    if ((networkId !== undefined && n.id !== networkId) || (byService && !holdsMatch)) {
+    if (!matchingNetworks.has(n.id) || (byService && !holdsMatch)) {
       hidden.add(nodeId("network", n.id));
     }
   }

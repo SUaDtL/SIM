@@ -1,5 +1,5 @@
 import { candidateUrl as simUrl } from "./helpers/candidate";
-import { openFileMenu, showInventory, editSelected } from "./helpers/usability";
+import { chooseNetworkMarking, openFileMenu, showInventory, editSelected } from "./helpers/usability";
 import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { createDataset } from "../src/db/dataset";
@@ -45,7 +45,7 @@ async function addNetwork(page: Page, name: string, marking: string): Promise<vo
   await page.getByLabel("Show", { exact: true }).selectOption({ label: "Networks" });
   await page.getByRole("button", { name: "Add network" }).click();
   await editor(page).getByLabel("Name", { exact: true }).fill(name);
-  await editor(page).getByLabel("Marking", { exact: true }).selectOption({ label: marking });
+  await chooseNetworkMarking(page, marking);
   await editor(page).getByRole("button", { name: "Add network" }).click();
   await editSelected(page);
   await expect(editor(page).getByRole("heading", { name: "Edit network" })).toBeVisible();

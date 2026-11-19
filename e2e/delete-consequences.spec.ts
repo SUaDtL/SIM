@@ -209,7 +209,10 @@ test("Find and map tap resolve a dirty editor while view-only actions keep its i
   const name = editor(page).getByLabel("Name", { exact: true });
   await name.fill("Pending Orders");
   await mapFilters(page);
-  await page.getByRole("group", { name: "Filter the map" }).getByLabel("Network").selectOption({ label: "NIPR" });
+  await page
+    .getByRole("group", { name: "Filter the map" })
+    .getByLabel("Network", { exact: true })
+    .selectOption({ label: "NIPR" });
   const scopeGuard = page.getByRole("dialog", { name: "Unapplied changes" });
   await scopeGuard.getByRole("button", { name: "Stay", exact: true }).click();
   await expect(page.locator("#map-filter-network")).toHaveValue("");
@@ -223,7 +226,9 @@ test("Find and map tap resolve a dirty editor while view-only actions keep its i
   await showInventory(page);
   await page.getByRole("button", { name: "Show list" }).click();
   await mapFilters(page);
-  await expect(page.getByRole("group", { name: "Filter the map" }).getByLabel("Network")).toHaveValue("");
+  await expect(page.getByRole("group", { name: "Filter the map" }).getByLabel("Network", { exact: true })).toHaveValue(
+    "",
+  );
 
   await showMap(page);
   const find = page.getByLabel("Find on map");
